@@ -1,0 +1,31 @@
+```mermaid
+flowchart TD
+  D1[Div1.Executive
+CEO / Mission Owner]
+  D2[Div2.MasterPlanner
+Product Planning]
+  D3[Div3.Production
+Delivery]
+  D4[Div4.Operations
+Reliability]
+  D5[Div5.Qualifications
+QA / Security]
+  D6[Div6.Resources
+Budget / Capacity]
+  D7[Div7.Strategy
+Decision Protocol]
+
+  D1 --> D2
+  D1 --> D3
+  D1 --> D4
+  D1 --> D5
+  D1 --> D6
+  D1 --> D7
+
+  D2 -->|blueprint| D3
+  D3 -->|ready for review| D5
+  D5 -->|correction required| D3
+  D4 -->|circuit escalation| D1
+  D6 -->|budget signal| D2
+  D7 -->|strategic recommendation| D1
+```

@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1-draft",
+  "plugin_key": "bos-light",
+  "display_name": "BOS Light",
+  "description": "Organizational intelligence overlay: BPI, Betting Table, Blueprints, Gates, Circuit Breaker.",
+  "note": "Draft manifest. Validate fields against current Paperclip PLUGIN_SPEC/runtime.",
+  "capabilities_requested": [
+    "config.read",
+    "config.write",
+    "events.subscribe",
+    "state.read",
+    "state.write",
+    "entities.read",
+    "entities.write",
+    "issues.read",
+    "issues.write",
+    "activity.write",
+    "data.register",
+    "actions.register",
+    "tools.register"
+  ],
+  "ui": {
+    "dashboard_widgets": ["betting-table"],
+    "issue_detail_tabs": ["bos-status", "circuit-state", "gate-results"]
+  },
+  "tools": [
+    "piko:bpi-score",
+    "piko:blueprint-gen",
+    "piko:eval-gate",
+    "piko:decide"
+  ]
+}

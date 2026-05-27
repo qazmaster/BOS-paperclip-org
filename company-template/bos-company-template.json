@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1-draft",
+  "name": "BOS Light Company Template for Paperclip",
+  "note": "Draft template. Validate against current Paperclip companies.sh/import schema before use.",
+  "mission": "Execute user goals through a 7-division organizational intelligence layer while Paperclip remains the system of record.",
+  "divisions": [
+    {
+      "id": "Div1.Executive",
+      "title": "CEO / Mission Owner",
+      "reports_to": null,
+      "agent_profile": "agents/Div1_Executive/AGENTS.md",
+      "vfp": "Coherent company direction"
+    },
+    {
+      "id": "Div2.MasterPlanner",
+      "title": "Product Planning / Shaping",
+      "reports_to": "Div1.Executive",
+      "agent_profile": "agents/Div2_MasterPlanner/AGENTS.md",
+      "vfp": "Well-shaped work"
+    },
+    {
+      "id": "Div3.Production",
+      "title": "Delivery / Build",
+      "reports_to": "Div1.Executive",
+      "agent_profile": "agents/Div3_Production/AGENTS.md",
+      "vfp": "Completed accepted artifacts"
+    },
+    {
+      "id": "Div4.Operations",
+      "title": "Process / Reliability",
+      "reports_to": "Div1.Executive",
+      "agent_profile": "agents/Div4_Operations/AGENTS.md",
+      "vfp": "Stable execution flow"
+    },
+    {
+      "id": "Div5.Qualifications",
+      "title": "QA / Security / Knowledge",
+      "reports_to": "Div1.Executive",
+      "agent_profile": "agents/Div5_Qualifications/AGENTS.md",
+      "vfp": "Verified work"
+    },
+    {
+      "id": "Div6.Resources",
+      "title": "Budget / Capacity",
+      "reports_to": "Div1.Executive",
+      "agent_profile": "agents/Div6_Resources/AGENTS.md",
+      "vfp": "Budget-fit work"
+    },
+    {
+      "id": "Div7.Strategy",
+      "title": "Decision Protocol / Adaptation",
+      "reports_to": "Div1.Executive",
+      "agent_profile": "agents/Div7_Strategy/AGENTS.md",
+      "vfp": "High-quality decisions under uncertainty"
+    }
+  ],
+  "routing_rules": {
+    "vague_goal": "Div1.Executive -> Div2.MasterPlanner",
+    "backlog_shaping": "Div2.MasterPlanner",
+    "implementation": "Div3.Production",
+    "process_incident": "Div4.Operations",
+    "qa_security_review": "Div5.Qualifications",
+    "budget_capacity": "Div6.Resources",
+    "complex_decision": "Div7.Strategy"
+  },
+  "rituals": [
+    "daily_pulse",
+    "weekly_review",
+    "batch_approval_ritual"
+  ],
+  "bos_config": {
+    "company_token_budget_ref": 100000,
+    "bpi_cutline": 0.35,
+    "betting_table_top_n": 7,
+    "circuit_breaker_max_attempts": 3,
+    "circuit_breaker_half_open_threshold": 2
+  }
+}

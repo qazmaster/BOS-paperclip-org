@@ -1,0 +1,60 @@
+# Manifest
+
+Generated: 2026-05-27
+
+| File | Size | SHA256 |
+|---|---:|---|
+| `00_START_HERE_FOR_NEW_AI_AGENT.md` | 2304 | `ca793da1358eaf4846ebb61b625f0b105f6aaeee94b055b47c4f4eddcb09db97` |
+| `HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md` | 2527 | `e1257b1f7c18e4563d811ef46cb70192e49c4676380d9560e0e89fb9a2a47333` |
+| `README.md` | 3422 | `edf38bd9436831e77a006312ec91dc1d4d75fbe5100012bdb127623003d11bf4` |
+| `agents/Div1_Executive/AGENTS.md` | 1342 | `617b757f0b7c58ad7b35a021f1d13d48fda3def9836fde7d87253f3ff1bde1b8` |
+| `agents/Div2_MasterPlanner/AGENTS.md` | 1034 | `488c8bcf2ccd60ec2a56e18ec3b11a43c78a0dd0b6a1fa7c7368a5b01a907cae` |
+| `agents/Div3_Production/AGENTS.md` | 833 | `86785ae9db9a69cfdf732c4c3dfd8975fb1786ced95b633063f90f12e3076e06` |
+| `agents/Div4_Operations/AGENTS.md` | 940 | `c2c656e7effa55426301e0fe0d871febb5fab24f112d4095bc91988683a4e866` |
+| `agents/Div5_Qualifications/AGENTS.md` | 1100 | `ec8a73942d44e3d280cea55ff7acf17bfc7903ff1af166c875504dfa1402f6f3` |
+| `agents/Div6_Resources/AGENTS.md` | 933 | `84e6396193a5c9870514526ddc61379e4833f0fa0b0f1f28259303b0c2127c7a` |
+| `agents/Div7_Strategy/AGENTS.md` | 1021 | `ab6ca9ffefa8be6b29db8e7940d9d4211b1f00553f243b35b6a09d66782cb121` |
+| `agents/README.md` | 919 | `9523ec99a8d42b04c2dc747e669fc240b523c7f9f8a3341531e5f670fdae44c3` |
+| `company-template/bos-company-template.json` | 2522 | `cda472f85c6bc5216d41a18354fe16a43fd787a77658615a34156ca7883b6e62` |
+| `company-template/import-notes.md` | 417 | `ee03a6973bbb78f39dce18161058aa36bbdc78aab4a0ea27106716cd5a6e57a3` |
+| `company-template/org-chart.mmd` | 550 | `988763ef7fea7633a4f2282fd453bba6666b82e5aa5df9365cba0e0acf0da6af` |
+| `company-template/rituals.md` | 862 | `98077edba67f7ec2e9166db022f273c91df7eeccb8bd152153ac2943eaec75b4` |
+| `company-template/task-routing.md` | 713 | `f18c99c7f44f3eb051248a1959923b0a1896efd26776d5f82032a9360dd8ae06` |
+| `docs/01_CONTEXT_AND_DECISION.md` | 2208 | `d103582764e2b28117c1d720a999fc2867c67d481f0925d33c8fbdc89f650b58` |
+| `docs/02_ARCHITECTURE.md` | 2623 | `6df61e9108eb8855d03ab3fe217eeeb185a4ce0342ae2a778035343a11a60ac5` |
+| `docs/03_IMPLEMENTATION_PLAN_V1_2.md` | 2826 | `a249c1cecb88e971b7344ae52b876223c5bb08dc13827f01290b6fd4fc1ff4d2` |
+| `docs/04_DATA_CONTRACTS.md` | 4143 | `6d60e9de537c0d30c22957c754ca7d6b5ffb411da54e89f423052f77336f7757` |
+| `docs/05_PERSISTENCE_MATRIX.md` | 2055 | `65d22081b5139bd72e0713b43cca5fbde1817875129af01f2d5fd22998f565c8` |
+| `docs/06_ACCEPTANCE_TESTS.md` | 2211 | `819c1f2571551c8c1ca9f6dcc39dc51741821df05a58ad926b686d57b3a08672` |
+| `docs/07_RISKS_AND_SPIKES.md` | 2499 | `396584811cef9639046d10f5e7243e10bdd04187b400d5007af1718301e1c951` |
+| `docs/08_DEMO_SCRIPT.md` | 1135 | `e02578222f04e7e5e607cdeb27d9f2ba965bee3f0ce5600087f369b2539d42b4` |
+| `docs/09_BACKLOG.md` | 1743 | `23ace8693c74e9eef7893db1f71499231565590471e27ade01d39c8bfc28369a` |
+| `docs/10_PAPERCLIP_ASSUMPTIONS.md` | 1520 | `0c8f82e2a43929fc1add442911df1ec071d7195a585cdd6f150d29b2e953b29c` |
+| `plugin-bos-light/README.md` | 928 | `650a91f4ad5d2e56d3e08c1976e7db6eac30681a9d3f77eb47a8683ab281e505` |
+| `plugin-bos-light/manifest.paperclip-plugin.json` | 844 | `ab0bd4c32e941a8dc4cad2d070c63d0abdfd31be170589bf1acba708e57c03e9` |
+| `plugin-bos-light/package.json` | 490 | `d5e4ca6cce5b8facb4872f419b9bd1cdb5fa561d9d1d225e827eaa8dbb67cab3` |
+| `plugin-bos-light/src/bettingTable.ts` | 1616 | `5d02bed1e4d67ec2fdb9876a35f6b53081dbadf80b3a7e990930298de6bcac43` |
+| `plugin-bos-light/src/blueprint.ts` | 1547 | `df4eab1dcdc1e7158ed43bc32cb66e3254c8a933c3e9291113072e0863d5f586` |
+| `plugin-bos-light/src/bpi.ts` | 1533 | `c08d91a6c33976f88bc81b29213221c9582e5e38f9334a69e19837a1c6d031cb` |
+| `plugin-bos-light/src/circuitBreaker.ts` | 2109 | `0e908eb8f05eed5b394b0f957f1bb64225733c8b503fef79a8607b690969b1f5` |
+| `plugin-bos-light/src/contracts.ts` | 3541 | `a0c04234fe4deccf1ab8fc85b87ed84b4ddf0e92c090c9675473edb6287fbe7c` |
+| `plugin-bos-light/src/decision.ts` | 1835 | `4e9d46f6bf27293c04c8046f86a56086a5090390e8ea6580abbda9c06b40f1c6` |
+| `plugin-bos-light/src/evalGates.ts` | 2343 | `2bd904d925f5c34f96679e37cea1023ac5572b728ea3466bafa71dfefbabdd2c` |
+| `plugin-bos-light/src/index.ts` | 297 | `b84b1ad56efbbd45bdeac3a70187ee87b55191b5164bafdad2da3b6f7b85c795` |
+| `plugin-bos-light/src/paperclipAdapter.ts` | 2845 | `4d3bae5515bd1d48a8e9fc71c9919d1a62382049bf06cc9354ccf1919aa2caa7` |
+| `plugin-bos-light/src/persistence.ts` | 2519 | `d597b030f733693aeb0280d522434f4f5ab2282ba9493cb2116a590eecbba884` |
+| `plugin-bos-light/src/worker.ts` | 2031 | `716c4a4488f0c4a6d294c9b89b8d9f34e700caea9ad72c436eef4ee23dcbd04e` |
+| `plugin-bos-light/tests/acceptance.test.ts` | 2184 | `9f07e4b811dd6fdc7245aeccca3f3b9fab951df80ca799d0a8bdd46d23d40cf2` |
+| `plugin-bos-light/tests/bpi.test.ts` | 1285 | `15e9927f40d5baa2cd5cd24caed1937698888a7b5be846ff7d5395a012e8ff98` |
+| `plugin-bos-light/tests/circuitBreaker.test.ts` | 996 | `b8eb18a5566de0ae6d06fae506a4b558e3c37a79a1a5b09073a0b830182d8954` |
+| `plugin-bos-light/tsconfig.json` | 253 | `4c2ff3fe0c3820b07fb4c8e41f1e9636ecf230e5bfd208370386c5dbe05bee62` |
+| `plugin-bos-light/widgets/BettingTableWidget.tsx` | 1198 | `4f128e2c741214eaf95ca467181b6330aaeadbc48988101b0b4c8f7eed7334a1` |
+| `scripts/demo-seed-issues.json` | 853 | `2b4927601c18b0baaefe8032e23f045a1cf7757b82c98b5e70f29bbfa7d12077` |
+| `scripts/event-spike-checklist.md` | 765 | `3597522a39f87dc8339563e03e814171a015e3c48bfb2bbf9ecee6df0fc5a801` |
+| `scripts/import-company-template.sh` | 459 | `d3fc6cf39fb728b8ca7bb60c6d0ed591a190a3f04b9e339df11cfa67f85e7c8f` |
+| `scripts/state-spike-checklist.md` | 969 | `9435057d269a373ab7d953c5025660d01cc0886cd2620b3674400482e24493ef` |
+| `scripts/validate_handoff.py` | 726 | `711ac5a83f369b11a0d410189c6bb97b67ad80a9661dd77dddc84752a6fa655c` |
+| `source-pdfs/BOS_Light_MVP_Integration_Memo.pdf` | 511729 | `4b201a6562a97817d6b3529fe1685454ef398422bf08d0838f5db6ff19d0d0c4` |
+| `source-pdfs/BOS_Light_v1_2_Implementation_Baseline.pdf` | 610880 | `ac8c60e65cb57f88b823b4d0fa6fb8eca5e9b2aba79c5ab9e811233e4e8afa54` |
+| `source-pdfs/BOS_Light_v1_2_Implementation_Plan.pdf` | 602770 | `810127a5d01c2b8964bb795ea128e237041eefb7d2b033f0de5a49d08aaf1c1d` |
+| `source-pdfs/BOS_v411_Critical_Assessment.pdf` | 651116 | `3eb3d14aa15ccf2953c37fc24a06db98bf44666550f47c8d5fbfe38fb1ae9555` |

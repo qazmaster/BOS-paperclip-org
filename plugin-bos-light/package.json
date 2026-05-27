@@ -1,0 +1,22 @@
+{
+  "name": "@bos/plugin-bos-light",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "BOS Light organizational intelligence plugin scaffold for Paperclip.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@paperclipai/plugin-sdk": {
+      "optional": true
+    }
+  }
+}
