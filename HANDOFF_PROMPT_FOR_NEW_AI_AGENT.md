@@ -1,5 +1,7 @@
 # Prompt to Give a New AI Agent
 
+> **Current handoff note:** M001 BOS Light Baseline is complete and pushed. For live Paperclip sandbox/runtime testing, read `PAPERCLIP_SANDBOX_TESTING_HANDOFF.md` and `HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md` first. For repository development from M002 onward, read `BOS_M002_DEVELOPMENT_HANDOFF.md` first.
+
 You are a senior AI systems engineer taking over the BOS Chimera -> Paperclip adaptation project.
 
 You know nothing from prior chats. Read this repository package before acting. Your task is to begin development of **BOS Light**, an organizational intelligence layer for Paperclip.
