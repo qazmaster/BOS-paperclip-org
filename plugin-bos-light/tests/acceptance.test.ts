@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateBPIScore } from "../src/bpi";
 import { generateBlueprintMarkdown } from "../src/blueprint";
-import { buildBettingTable, markApprovalRequested } from "../src/bettingTable";
+import { buildAndSaveBettingCycle, buildBettingTable, loadBettingCycle, markApprovalRequested, saveBettingCycle } from "../src/bettingTable";
 import { runEvalGates } from "../src/evalGates";
 import { runSeededIssueBlueprintFlow } from "../src/issueBlueprintFlow";
 import { InMemoryPaperclipAdapter } from "../src/paperclipAdapter";
@@ -125,6 +125,183 @@ describe("BOS Light acceptance vertical slice", () => {
     });
     expect(pass.overall).toBe("PASSED");
     expect(fail.overall).toBe("FAILED_BLOCKING");
+  });
+});
+
+describe("betting cycle persistence orchestration", () => {
+  const now = "2026-01-01T00:00:00.000Z";
+
+  it("ranks top candidates by BPI, enforces minimum top-N, and excludes non-positive BPI", async () => {
+    const cycle = await buildAndSaveBettingCycle({
+      cycle_id: "cycle_ranked",
+      top_n: 0,
+      now,
+      candidates: [
+        { issue_id: "issue_zero", bpi_score: 0, blueprint_id: "doc_zero" },
+        { issue_id: "issue_low", bpi_score: 2, blueprint_id: "doc_low" },
+        { issue_id: "issue_negative", bpi_score: -5, blueprint_id: "doc_negative" },
+        { issue_id: "issue_high", bpi_score: 9, blueprint_id: "doc_high" }
+      ]
+    });
+
+    expect(cycle.items).toHaveLength(1);
+    expect(cycle.selected_issue_ids).toEqual(["issue_high"]);
+    expect(cycle.items[0]).toMatchObject({
+      cycle_id: "cycle_ranked",
+      issue_id: "issue_high",
+      bpi_score: 9,
+      blueprint_id: "doc_high",
+      status: "CANDIDATE"
+    });
+    expect(cycle.cache_overlay).toMatchObject({
+      durability: "cache-overlay-only",
+      persistence: "missing",
+      save: "not_attempted",
+      load: "not_attempted",
+      error: null,
+      timestamp: now
+    });
+  });
+
+  it("preserves opaque native, comment, markdown-only, and null blueprint_id values exactly", () => {
+    const table = buildBettingTable({
+      cycle_id: "cycle_blueprint_refs",
+      top_n: 4,
+      now,
+      candidates: [
+        { issue_id: "issue_native", bpi_score: 10, blueprint_id: "paperclip://issues/issue_native/documents/doc_1" },
+        { issue_id: "issue_comment", bpi_score: 9, blueprint_id: "paperclip://issues/issue_comment/comments/comment_1" },
+        { issue_id: "issue_markdown", bpi_score: 8, blueprint_id: "markdown-only://issues/issue_markdown/product-blueprint" },
+        { issue_id: "issue_null", bpi_score: 7, blueprint_id: null }
+      ]
+    });
+
+    expect(table.map((item) => item.blueprint_id)).toEqual([
+      "paperclip://issues/issue_native/documents/doc_1",
+      "paperclip://issues/issue_comment/comments/comment_1",
+      "markdown-only://issues/issue_markdown/product-blueprint",
+      null
+    ]);
+  });
+
+  it("saves and loads a betting cycle through the cache-overlay persistence seam", async () => {
+    const persistence = new InMemoryBOSPersistence();
+
+    const saved = await buildAndSaveBettingCycle({
+      cycle_id: "cycle_saved",
+      top_n: 3,
+      now,
+      persistence,
+      candidates: [
+        { issue_id: "issue_mid", bpi_score: 5, blueprint_id: "doc_mid" },
+        { issue_id: "issue_top", bpi_score: 11, blueprint_id: "doc_top" },
+        { issue_id: "issue_bottom", bpi_score: 1, blueprint_id: "doc_bottom" }
+      ]
+    });
+
+    const loaded = await loadBettingCycle({ cycle_id: "cycle_saved", persistence, now });
+
+    expect(saved.selected_issue_ids).toEqual(["issue_top", "issue_mid", "issue_bottom"]);
+    expect(saved.cache_overlay).toMatchObject({
+      persistence: "provided",
+      save: "saved",
+      load: "not_attempted",
+      error: null
+    });
+    expect(loaded.items).toEqual(saved.items);
+    expect(loaded.selected_issue_ids).toEqual(saved.selected_issue_ids);
+    expect(loaded.cache_overlay).toMatchObject({
+      persistence: "provided",
+      save: "not_attempted",
+      load: "loaded",
+      error: null
+    });
+  });
+
+  it("reports missing cache data separately from missing persistence", async () => {
+    const persistence = new InMemoryBOSPersistence();
+
+    const missingPersistenceSave = await saveBettingCycle({ cycle_id: "cycle_missing_persistence", items: [], now });
+    const missingPersistenceLoad = await loadBettingCycle({ cycle_id: "cycle_missing_persistence", now });
+    const missingCycleLoad = await loadBettingCycle({ cycle_id: "cycle_absent", persistence, now });
+
+    expect(missingPersistenceSave).toMatchObject({
+      persistence: "missing",
+      save: "not_attempted",
+      load: "not_attempted",
+      error: null
+    });
+    expect(missingPersistenceLoad.cache_overlay).toMatchObject({
+      persistence: "missing",
+      load: "not_attempted",
+      error: null
+    });
+    expect(missingCycleLoad.cache_overlay).toMatchObject({
+      persistence: "provided",
+      load: "missing",
+      error: null
+    });
+    expect(missingCycleLoad.items).toEqual([]);
+  });
+
+  it("returns explicit sanitized diagnostics for save and load failures", async () => {
+    const failingPersistence = {
+      saveBettingTable: async () => { throw new Error("cache save unavailable\nsecret stack line"); },
+      getBettingTable: async () => { throw new Error("cache load unavailable\twith tab"); }
+    };
+
+    const saved = await buildAndSaveBettingCycle({
+      cycle_id: "cycle_failed",
+      top_n: 2,
+      now,
+      persistence: failingPersistence,
+      candidates: [
+        { issue_id: "issue_kept", bpi_score: 3, blueprint_id: null },
+        { issue_id: "issue_dropped", bpi_score: -1, blueprint_id: "doc_dropped" }
+      ]
+    });
+    const loaded = await loadBettingCycle({ cycle_id: "cycle_failed", persistence: failingPersistence, now });
+
+    expect(saved.items).toHaveLength(1);
+    expect(saved.items[0].blueprint_id).toBeNull();
+    expect(saved.cache_overlay).toMatchObject({
+      persistence: "provided",
+      save: "failed",
+      load: "not_attempted",
+      error: "cache save unavailable secret stack line"
+    });
+    expect(saved.cache_overlay.error).not.toMatch(/[\n\t]/);
+    expect(loaded.items).toEqual([]);
+    expect(loaded.cache_overlay).toMatchObject({
+      persistence: "provided",
+      save: "not_attempted",
+      load: "failed",
+      error: "cache load unavailable with tab"
+    });
+    expect(loaded.cache_overlay.error).not.toMatch(/[\n\t]/);
+  });
+
+  it("returns an empty cycle for empty candidates without claiming durable Paperclip truth", async () => {
+    const persistence = new InMemoryBOSPersistence();
+
+    const cycle = await buildAndSaveBettingCycle({
+      cycle_id: "cycle_empty",
+      top_n: 5,
+      now,
+      persistence,
+      candidates: []
+    });
+
+    expect(cycle.items).toEqual([]);
+    expect(cycle.selected_issue_ids).toEqual([]);
+    expect(cycle.cache_overlay).toMatchObject({
+      durability: "cache-overlay-only",
+      persistence: "provided",
+      save: "saved",
+      load: "not_attempted",
+      error: null
+    });
+    expect(persistence.betting.get("cycle_empty")).toEqual([]);
   });
 });
 
