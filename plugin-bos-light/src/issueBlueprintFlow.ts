@@ -54,9 +54,12 @@ export interface SeededIssueBlueprintFlowResult {
 }
 
 function serializeCacheOverlayError(error: unknown): string {
-  if (error instanceof Error && error.message) return error.message;
-  if (typeof error === "string") return error;
-  return "Unknown cache-overlay persistence error";
+  const raw = error instanceof Error && error.message
+    ? error.message
+    : typeof error === "string"
+      ? error
+      : "Unknown cache-overlay persistence error";
+  return raw.replace(/[\r\n\t]+/g, " ").replace(/\s{2,}/g, " ").trim().slice(0, 500) || "Unknown cache-overlay persistence error";
 }
 
 async function saveCacheOverlay(input: {

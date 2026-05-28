@@ -8,6 +8,7 @@ export * from "./evalGates";
 export * from "./evalGateEvidence";
 export * from "./circuitBreaker";
 export * from "./circuitBreakerFlow";
+export * from "./integratedDemo";
 export * from "./decision";
 export * from "./paperclipAdapter";
 export * from "./persistence";
