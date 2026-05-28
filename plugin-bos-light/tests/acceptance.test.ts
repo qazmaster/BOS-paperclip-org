@@ -3,6 +3,8 @@ import { calculateBPIScore } from "../src/bpi";
 import { generateBlueprintMarkdown } from "../src/blueprint";
 import { buildAndSaveBettingCycle, buildBettingTable, loadBettingCycle, markApprovalRequested, requestBettingCycleApproval, saveBettingCycle } from "../src/bettingTable";
 import { runEvalGates } from "../src/evalGates";
+import { evalGateEvidence } from "../src/evalGateEvidence";
+import { circuitBreakerFlow } from "../src/circuitBreakerFlow";
 import { runSeededIssueBlueprintFlow } from "../src/issueBlueprintFlow";
 import { InMemoryPaperclipAdapter } from "../src/paperclipAdapter";
 import { InMemoryBOSPersistence } from "../src/persistence";
@@ -612,12 +614,231 @@ describe("worker Betting Table data and approve-batch wiring", () => {
       buildAndSaveBettingCycle,
       saveBettingCycle,
       loadBettingCycle,
-      requestBettingCycleApproval
+      requestBettingCycleApproval,
+      evalGateEvidence,
+      circuitBreakerFlow
     });
     expect(tools.has("piko:bpi-score")).toBe(true);
     expect(tools.has("piko:bpi-blueprint-artifact")).toBe(true);
+    expect(tools.has("piko:eval-gate")).toBe(true);
+    expect(tools.has("piko:eval-gate-evidence")).toBe(true);
+    expect(tools.has("piko:circuit-breaker-observe")).toBe(true);
     expect(dataProviders.has("betting-table")).toBe(true);
     expect(actions.has("approve-batch")).toBe(true);
+  });
+
+  it("A6/A7 mirrors pass and fail Eval Gate evidence through the worker tool", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    const paperclipAdapter = new InMemoryPaperclipAdapter();
+    const { tools } = await registerWorkerHarness({ persistence, paperclipAdapter });
+    const evalGateEvidenceTool = tools.get("piko:eval-gate-evidence");
+
+    const pass = await evalGateEvidenceTool?.({
+      issue_id: "issue_worker_gate_pass",
+      run_id: "run_pass",
+      blueprintMarkdown: "# Blueprint",
+      outputMarkdown: "# Output",
+      toolScopeRespected: true,
+      budgetWarning: false,
+      now
+    });
+    const fail = await evalGateEvidenceTool?.({
+      issue_id: "issue_worker_gate_fail",
+      run_id: "run_fail",
+      blueprintMarkdown: "# Blueprint",
+      outputMarkdown: "",
+      toolScopeRespected: true,
+      budgetWarning: false,
+      now
+    });
+
+    expect(pass).toMatchObject({
+      selected_surface: "comments.native",
+      artifact_ref: "paperclip://issues/issue_worker_gate_pass/comments/comment_1",
+      cache_overlay: { persistence: "provided", save: "saved" },
+      fallback: { reason: null },
+      result: { overall: "PASSED" }
+    });
+    expect(fail).toMatchObject({
+      selected_surface: "comments.native",
+      artifact_ref: "paperclip://issues/issue_worker_gate_fail/comments/comment_2",
+      cache_overlay: { persistence: "provided", save: "saved" },
+      fallback: { reason: null },
+      result: { overall: "FAILED_BLOCKING" }
+    });
+    expect(fail.guidance).toContain("Blocking Eval Gate failure");
+    expect(paperclipAdapter.comments).toHaveLength(2);
+    expect(paperclipAdapter.comments[0].markdown).toContain("Overall: PASSED");
+    expect(paperclipAdapter.comments[1].markdown).toContain("Overall: FAILED_BLOCKING");
+    expect(persistence.gates.get("issue_worker_gate_pass")?.overall).toBe("PASSED");
+    expect(persistence.gates.get("issue_worker_gate_fail")?.overall).toBe("FAILED_BLOCKING");
+  });
+
+  it("A8-A10 observes breaker OPEN, HALF_OPEN, and CLOSED transitions with active-runs-only fallback metadata", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    const paperclipAdapter = new InMemoryPaperclipAdapter();
+    const { tools } = await registerWorkerHarness({ persistence, paperclipAdapter });
+    const observe = tools.get("piko:circuit-breaker-observe");
+
+    const first = await observe?.({
+      issue_id: "issue_worker_breaker",
+      run_id: "run_1",
+      observation: "failure",
+      failure_reason: "first worker failure",
+      now
+    });
+    const second = await observe?.({
+      issue_id: "issue_worker_breaker",
+      run_id: "run_2",
+      observation: "failure",
+      failure_reason: "second worker failure",
+      now: "2026-01-03T00:01:00.000Z"
+    });
+    const opened = await observe?.({
+      issue_id: "issue_worker_breaker",
+      run_id: "run_3",
+      observation: "failure",
+      failure_reason: "third worker failure",
+      now: "2026-01-03T00:02:00.000Z"
+    });
+    const halfOpen = await observe?.({
+      issue_id: "issue_worker_breaker",
+      run_id: "run_probe",
+      observation: "half_open",
+      now: "2026-01-03T00:03:00.000Z"
+    });
+    const closed = await observe?.({
+      issue_id: "issue_worker_breaker",
+      run_id: "run_success",
+      observation: "success",
+      now: "2026-01-03T00:04:00.000Z"
+    });
+
+    expect(first).toMatchObject({ previous_state: "CLOSED", next_state: "CLOSED", attempt_count: 1, selected_surface: "cache-overlay" });
+    expect(second).toMatchObject({ previous_state: "CLOSED", next_state: "CLOSED", attempt_count: 2, selected_surface: "cache-overlay" });
+    expect(opened).toMatchObject({
+      previous_state: "CLOSED",
+      next_state: "OPEN",
+      attempt_count: 3,
+      selected_surface: "issues.native",
+      escalation_issue_id: "escalation_1",
+      polling_config: { poll_scope: "ACTIVE_RUNS_ONLY", fallback_source: "activity_log" },
+      cache_overlay: { persistence: "provided", get: "loaded", save: "saved" }
+    });
+    expect(halfOpen).toMatchObject({
+      previous_state: "OPEN",
+      next_state: "HALF_OPEN",
+      transition_reason: "half_open_probe_started",
+      selected_surface: "cache-overlay",
+      polling_config: { poll_scope: "ACTIVE_RUNS_ONLY", fallback_source: "activity_log" }
+    });
+    expect(closed).toMatchObject({
+      previous_state: "HALF_OPEN",
+      next_state: "CLOSED",
+      transition_reason: "half_open_probe_succeeded",
+      attempt_count: 0,
+      failure_reason: null,
+      opened_at: null,
+      selected_surface: "cache-overlay"
+    });
+    expect(paperclipAdapter.issues).toHaveLength(1);
+    expect(paperclipAdapter.issues[0].body).toContain("Attempt count: 3/3");
+    expect(persistence.circuits.get("issue_worker_breaker")?.state).toBe("CLOSED");
+  });
+
+  it("uses comment escalation evidence when the worker breaker adapter lacks native issue creation", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    const comments: Array<{ issueId: string; markdown: string }> = [];
+    const { tools } = await registerWorkerHarness({
+      persistence,
+      paperclipAdapter: {
+        addIssueComment: async (issueId: string, markdown: string) => {
+          comments.push({ issueId, markdown });
+          return { comment_id: "comment_escalation" };
+        }
+      }
+    });
+    const observe = tools.get("piko:circuit-breaker-observe");
+
+    await observe?.({ issue_id: "issue_comment_breaker", observation: "failure", failure_reason: "first", now });
+    await observe?.({ issue_id: "issue_comment_breaker", observation: "failure", failure_reason: "second", now: "2026-01-03T00:01:00.000Z" });
+    const opened = await observe?.({ issue_id: "issue_comment_breaker", observation: "failure", failure_reason: "third", now: "2026-01-03T00:02:00.000Z" });
+
+    expect(opened).toMatchObject({
+      next_state: "OPEN",
+      selected_surface: "comments.native",
+      escalation_issue_id: null,
+      escalation_ref: "paperclip://issues/issue_comment_breaker/comments/comment_escalation",
+      fallback: {
+        reason: "issue_create_failed_comment_escalation_used",
+        escalation_create_error: "issues.native:unavailable"
+      }
+    });
+    expect(comments).toHaveLength(1);
+    expect(comments[0].markdown).toContain("BOS Circuit Breaker Escalation");
+  });
+
+  it("returns worker tool diagnostics for missing seams, malformed params, and registration failures", async () => {
+    const { tools: noSeamTools } = await registerWorkerHarness();
+    const evalEvidence = await noSeamTools.get("piko:eval-gate-evidence")?.({
+      issue_id: "issue_no_seams",
+      run_id: "run_no_seams",
+      blueprintMarkdown: "# Blueprint",
+      outputMarkdown: "# Output",
+      toolScopeRespected: true,
+      budgetWarning: false,
+      now
+    });
+    const malformedEval = await noSeamTools.get("piko:eval-gate-evidence")?.({
+      issue_id: "issue_malformed_eval",
+      blueprintMarkdown: "# Blueprint",
+      outputMarkdown: "# Output",
+      now
+    });
+    const malformedBreaker = await noSeamTools.get("piko:circuit-breaker-observe")?.({
+      issue_id: "issue_malformed_breaker",
+      observation: "bogus",
+      now
+    });
+
+    const seededPersistence = new InMemoryBOSPersistence();
+    const { tools: missingAdapterTools } = await registerWorkerHarness({ persistence: seededPersistence });
+    const observe = missingAdapterTools.get("piko:circuit-breaker-observe");
+    await observe?.({ issue_id: "issue_no_adapter_open", observation: "failure", failure_reason: "first", now });
+    await observe?.({ issue_id: "issue_no_adapter_open", observation: "failure", failure_reason: "second", now: "2026-01-03T00:01:00.000Z" });
+    const noAdapterOpen = await observe?.({ issue_id: "issue_no_adapter_open", observation: "failure", failure_reason: "third", now: "2026-01-03T00:02:00.000Z" });
+
+    const warnMessages: unknown[] = [];
+    await expect(registerBosLightPlugin({
+      logger: { info: () => undefined, warn: (...args: unknown[]) => { warnMessages.push(args); } },
+      tools: { register: async () => { throw new Error("register timeout"); } }
+    })).resolves.toBeUndefined();
+
+    expect(evalEvidence).toMatchObject({
+      selected_surface: "markdown-only",
+      fallback: { reason: "comments.native:unavailable", comment_error: "comments.native:unavailable" },
+      cache_overlay: { persistence: "missing", save: "not_attempted" }
+    });
+    expect(malformedEval).toMatchObject({
+      selected_surface: "markdown-only",
+      fallback: { reason: "invalid_input", validation_error: "toolScopeRespected and budgetWarning are required booleans" },
+      cache_overlay: { persistence: "missing", save: "not_attempted" }
+    });
+    expect(malformedBreaker).toMatchObject({
+      selected_surface: "markdown-only",
+      fallback: { reason: "invalid_input", validation_error: "observation must be failure, success, or half_open" },
+      cache_overlay: { persistence: "missing", save: "not_attempted" }
+    });
+    expect(noAdapterOpen).toMatchObject({
+      next_state: "OPEN",
+      selected_surface: "markdown-only",
+      fallback: {
+        reason: "markdown_only_escalation_required",
+        escalation_create_error: "issues.native:unavailable",
+        comment_error: "comments.native:unavailable"
+      }
+    });
+    expect(warnMessages.length).toBeGreaterThan(0);
   });
 
   it("hydrates persisted S03 blueprint_id Betting Table rows through the worker data provider", async () => {

@@ -9,7 +9,9 @@ import {
   saveBettingCycle
 } from "./bettingTable";
 import { runEvalGates } from "./evalGates";
+import { evalGateEvidence } from "./evalGateEvidence";
 import { createCircuitBreakerRecord, recordFailure, attachEscalationIssue } from "./circuitBreaker";
+import { circuitBreakerFlow } from "./circuitBreakerFlow";
 import { decide } from "./decision";
 import { runSeededIssueBlueprintFlow } from "./issueBlueprintFlow";
 import { PAPERCLIP_RUNTIME_BOUNDARY_RULES } from "./runtimeCapabilities";
@@ -43,9 +45,11 @@ export const BOS_LIGHT_TOOLS = {
   requestBettingCycleApproval,
   markApprovalRequested,
   runEvalGates,
+  evalGateEvidence,
   createCircuitBreakerRecord,
   recordFailure,
   attachEscalationIssue,
+  circuitBreakerFlow,
   decide,
   runSeededIssueBlueprintFlow
 };
@@ -78,19 +82,45 @@ function issueIdsFrom(input: any): string[] {
   return Array.isArray(raw) ? raw.filter((issueId): issueId is string => typeof issueId === "string") : [];
 }
 
+function toolParamsFrom(params: any): Record<string, any> {
+  return params && typeof params === "object" && !Array.isArray(params) ? params : {};
+}
+
+async function registerOptionalTool(ctx: any, name: string, handler: (params?: any) => Promise<any> | any): Promise<void> {
+  if (typeof ctx.tools?.register !== "function") return;
+
+  try {
+    await ctx.tools.register(name, handler);
+  } catch (error) {
+    ctx.logger?.warn?.("Skipped optional BOS Light tool registration", {
+      tool: name,
+      error: error instanceof Error ? error.message : String(error)
+    });
+  }
+}
+
+function adapterFrom(params: Record<string, any>, ctx: any): any {
+  return params.adapter ?? ctx.paperclipAdapter ?? ctx.paperclip ?? null;
+}
+
+function persistenceFrom(params: Record<string, any>, ctx: any): any {
+  return params.persistence ?? ctx.persistence ?? null;
+}
+
 export async function registerBosLightPlugin(ctx: any): Promise<void> {
   ctx.logger?.info?.("Registering BOS Light plugin draft");
 
   // Tool: piko:bpi-score
-  await ctx.tools?.register?.("piko:bpi-score", async (params: any) => calculateBPIScore(params));
+  await registerOptionalTool(ctx, "piko:bpi-score", async (params: any) => calculateBPIScore(params));
 
   // Tool: piko:blueprint-gen
-  await ctx.tools?.register?.("piko:blueprint-gen", async (params: any) => generateBlueprintMarkdown(params));
+  await registerOptionalTool(ctx, "piko:blueprint-gen", async (params: any) => generateBlueprintMarkdown(params));
 
   // Tool: piko:bpi-blueprint-artifact. This is draft wiring only: the host must
   // provide an adapter seam before any document/comment support is implied.
-  await ctx.tools?.register?.("piko:bpi-blueprint-artifact", async (params: any) => {
-    const adapter = params.adapter ?? ctx.paperclipAdapter ?? ctx.paperclip;
+  await registerOptionalTool(ctx, "piko:bpi-blueprint-artifact", async (params: any) => {
+    const input = toolParamsFrom(params);
+    const adapter = adapterFrom(input, ctx);
     if (!adapter?.createIssueDocument || !adapter?.addIssueComment) {
       return {
         error: "adapter_unavailable",
@@ -99,21 +129,45 @@ export async function registerBosLightPlugin(ctx: any): Promise<void> {
     }
 
     return runSeededIssueBlueprintFlow({
-      ...params,
+      ...input,
       adapter,
-      persistence: params.persistence ?? ctx.persistence,
-      capabilities: params.capabilities ?? {
+      persistence: persistenceFrom(input, ctx),
+      capabilities: input.capabilities ?? {
         documents_native: "unvalidated",
         comments_native: "unvalidated"
       }
-    });
+    } as any);
   });
 
   // Tool: piko:eval-gate
-  await ctx.tools?.register?.("piko:eval-gate", async (params: any) => runEvalGates(params));
+  await registerOptionalTool(ctx, "piko:eval-gate", async (params: any) => runEvalGates(params));
+
+  // Tool: piko:eval-gate-evidence. This composes the pure Eval Gate with
+  // cache-overlay and Paperclip-visible evidence seams; absent adapter or
+  // persistence support is reported in the returned envelope, not thrown.
+  await registerOptionalTool(ctx, "piko:eval-gate-evidence", async (params: any) => {
+    const input = toolParamsFrom(params);
+    return evalGateEvidence({
+      ...input,
+      adapter: adapterFrom(input, ctx),
+      persistence: persistenceFrom(input, ctx)
+    } as any);
+  });
+
+  // Tool: piko:circuit-breaker-observe. Each invocation records one bounded
+  // observation only; it does not start a background poller or claim live runtime
+  // event support beyond the adapter/persistence diagnostics in the envelope.
+  await registerOptionalTool(ctx, "piko:circuit-breaker-observe", async (params: any) => {
+    const input = toolParamsFrom(params);
+    return circuitBreakerFlow({
+      ...input,
+      adapter: adapterFrom(input, ctx),
+      persistence: persistenceFrom(input, ctx)
+    } as any);
+  });
 
   // Tool: piko:decide
-  await ctx.tools?.register?.("piko:decide", async (params: any) => decide(params));
+  await registerOptionalTool(ctx, "piko:decide", async (params: any) => decide(params));
 
   // Data provider: Betting Table. Host data-provider hydration remains unvalidated;
   // this reads only the cache-overlay seam and returns diagnostics rather than
