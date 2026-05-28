@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateBPIScore } from "../src/bpi";
 import { generateBlueprintMarkdown } from "../src/blueprint";
-import { buildAndSaveBettingCycle, buildBettingTable, loadBettingCycle, markApprovalRequested, saveBettingCycle } from "../src/bettingTable";
+import { buildAndSaveBettingCycle, buildBettingTable, loadBettingCycle, markApprovalRequested, requestBettingCycleApproval, saveBettingCycle } from "../src/bettingTable";
 import { runEvalGates } from "../src/evalGates";
 import { runSeededIssueBlueprintFlow } from "../src/issueBlueprintFlow";
 import { InMemoryPaperclipAdapter } from "../src/paperclipAdapter";
@@ -302,6 +302,287 @@ describe("betting cycle persistence orchestration", () => {
       error: null
     });
     expect(persistence.betting.get("cycle_empty")).toEqual([]);
+  });
+});
+
+describe("betting cycle approval request orchestration", () => {
+  const now = "2026-01-02T00:00:00.000Z";
+
+  it("creates a native approval request, marks selected rows, and persists the updated betting cycle", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    const adapter = new InMemoryPaperclipAdapter();
+
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_approval_native",
+      top_n: 2,
+      now,
+      persistence,
+      candidates: [
+        { issue_id: "issue_a", bpi_score: 10, blueprint_id: "doc_a" },
+        { issue_id: "issue_b", bpi_score: 9, blueprint_id: "doc_b" }
+      ]
+    });
+
+    const result = await requestBettingCycleApproval({
+      cycle_id: "cycle_approval_native",
+      issue_ids: ["issue_a", "issue_b"],
+      reason: "Approve top BPI candidates for the next cycle",
+      requested_by: "Master.Human",
+      adapter,
+      persistence,
+      now
+    });
+    const persisted = await loadBettingCycle({ cycle_id: "cycle_approval_native", persistence, now });
+
+    expect(result).toMatchObject({
+      schema_version: "1.0",
+      cycle_id: "cycle_approval_native",
+      selected_issue_ids: ["issue_a", "issue_b"],
+      selected_surface: "approvals.native",
+      native_approval_request_id: "approval_1",
+      native_approval_status: "PENDING",
+      approval_request_ref: "paperclip://approval-requests/approval_1",
+      requested_at: now,
+      fallback: { reason: null },
+      cache_overlay: {
+        durability: "cache-overlay-only",
+        persistence: "provided",
+        load: "loaded",
+        save: "saved",
+        error: null,
+        timestamp: now
+      }
+    });
+    expect(result.updated_rows.map((row) => row.status)).toEqual(["APPROVAL_REQUESTED", "APPROVAL_REQUESTED"]);
+    expect(result.updated_rows.map((row) => row.native_approval_request_id)).toEqual(["approval_1", "approval_1"]);
+    expect(result.updated_rows.map((row) => row.approved_by)).toEqual(["Master.Human", "Master.Human"]);
+    expect(persisted.items).toEqual(result.updated_rows);
+    expect(adapter.approvals).toEqual([{ id: "approval_1", issue_ids: ["issue_a", "issue_b"], status: "PENDING" }]);
+  });
+
+  it("records a comment fallback when native approval support is unavailable without mutating rows", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    const comments: Array<{ issueId: string; markdown: string }> = [];
+
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_approval_comment",
+      top_n: 1,
+      now,
+      persistence,
+      candidates: [{ issue_id: "issue_comment", bpi_score: 8, blueprint_id: "doc_comment" }]
+    });
+
+    const result = await requestBettingCycleApproval({
+      cycle_id: "cycle_approval_comment",
+      issue_ids: ["issue_comment"],
+      reason: "Native approvals disabled in this runtime",
+      adapter: {
+        addIssueComment: async (issueId, markdown) => {
+          comments.push({ issueId, markdown });
+          return { comment_id: "comment_approval" };
+        }
+      },
+      persistence,
+      now
+    });
+    const persisted = await loadBettingCycle({ cycle_id: "cycle_approval_comment", persistence, now });
+
+    expect(result.selected_surface).toBe("comments.native");
+    expect(result.native_approval_request_id).toBeNull();
+    expect(result.native_approval_status).toBeNull();
+    expect(result.approval_request_ref).toBe("paperclip://issues/issue_comment/comments/comment_approval");
+    expect(result.fallback).toMatchObject({ reason: "approvals.native:unavailable" });
+    expect(result.cache_overlay).toMatchObject({ load: "loaded", save: "not_attempted", error: null });
+    expect(result.updated_rows[0]).toMatchObject({ status: "CANDIDATE", native_approval_request_id: null, native_approval_status: null });
+    expect(persisted.items[0].status).toBe("CANDIDATE");
+    expect(comments).toHaveLength(1);
+    expect(comments[0].markdown).toContain("Native approval fallback reason: approvals.native:unavailable");
+  });
+
+  it("returns markdown-only diagnostics when native and comment fallbacks fail with sanitized errors", async () => {
+    const persistence = new InMemoryBOSPersistence();
+
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_approval_all_fail",
+      top_n: 1,
+      now,
+      persistence,
+      candidates: [{ issue_id: "issue_fail", bpi_score: 7, blueprint_id: "doc_fail" }]
+    });
+
+    const result = await requestBettingCycleApproval({
+      cycle_id: "cycle_approval_all_fail",
+      issue_ids: ["issue_fail"],
+      reason: "Exercise all fallback diagnostics",
+      adapter: {
+        createApprovalRequest: async () => { throw new Error("native approval down\nsecret stack"); },
+        addIssueComment: async () => { throw new Error("comment down\ttrace"); }
+      },
+      persistence,
+      now
+    });
+
+    expect(result).toMatchObject({
+      selected_surface: "markdown-only",
+      native_approval_request_id: null,
+      native_approval_status: null,
+      approval_request_ref: "markdown-only://betting-cycles/cycle_approval_all_fail/approval-request",
+      fallback: {
+        reason: "comment_write_failed",
+        native_error: "native approval down secret stack",
+        comment_error: "comment down trace"
+      },
+      cache_overlay: { load: "loaded", save: "not_attempted" }
+    });
+    expect(result.fallback.native_error).not.toMatch(/[\n\t]/);
+    expect(result.fallback.comment_error).not.toMatch(/[\n\t]/);
+    expect(result.updated_rows[0].status).toBe("CANDIDATE");
+  });
+
+  it("rejects empty, stale, missing-cycle, and already-decided selections before adapter writes", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    let nativeCalls = 0;
+    const adapter = {
+      createApprovalRequest: async () => {
+        nativeCalls += 1;
+        return { id: "should_not_happen", issue_ids: [], status: "PENDING" as const };
+      },
+      addIssueComment: async () => {
+        throw new Error("comment should not be called for validation failures");
+      }
+    };
+
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_approval_validation",
+      top_n: 1,
+      now,
+      persistence,
+      candidates: [{ issue_id: "issue_valid", bpi_score: 6, blueprint_id: "doc_valid" }]
+    });
+    const decidedRows = buildBettingTable({
+      cycle_id: "cycle_approval_decided",
+      top_n: 1,
+      now,
+      candidates: [{ issue_id: "issue_decided", bpi_score: 5, blueprint_id: "doc_decided" }]
+    });
+    await persistence.saveBettingTable("cycle_approval_decided", [
+      markApprovalRequested(decidedRows[0], "approval_existing", "Master.Human", now)
+    ]);
+
+    const empty = await requestBettingCycleApproval({
+      cycle_id: "cycle_approval_validation",
+      issue_ids: [],
+      reason: "Empty request",
+      adapter,
+      persistence,
+      now
+    });
+    const stale = await requestBettingCycleApproval({
+      cycle_id: "cycle_approval_validation",
+      issue_ids: ["issue_missing"],
+      reason: "Stale request",
+      adapter,
+      persistence,
+      now
+    });
+    const missing = await requestBettingCycleApproval({
+      cycle_id: "cycle_missing",
+      issue_ids: ["issue_missing"],
+      reason: "Missing cycle",
+      adapter,
+      persistence,
+      now
+    });
+    const decided = await requestBettingCycleApproval({
+      cycle_id: "cycle_approval_decided",
+      issue_ids: ["issue_decided"],
+      reason: "Already requested",
+      adapter,
+      persistence,
+      now
+    });
+
+    expect(empty.fallback.reason).toBe("empty_issue_ids");
+    expect(stale.fallback.reason).toBe("stale_issue_id:issue_missing");
+    expect(missing.fallback.reason).toBe("missing_cycle");
+    expect(decided.fallback.reason).toBe("issue_not_requestable:issue_decided:APPROVAL_REQUESTED");
+    expect([empty, stale, missing, decided].map((result) => result.selected_surface)).toEqual([
+      "markdown-only",
+      "markdown-only",
+      "markdown-only",
+      "markdown-only"
+    ]);
+    expect([empty, stale, missing, decided].map((result) => result.native_approval_request_id)).toEqual([null, null, null, null]);
+    expect(nativeCalls).toBe(0);
+  });
+
+  it("falls back on malformed native approval responses and reports cache save failures after native creation", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    const failingSavePersistence = {
+      getBettingTable: persistence.getBettingTable.bind(persistence),
+      saveBettingTable: async () => { throw new Error("cache save failed\nwith stack"); }
+    };
+
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_approval_malformed",
+      top_n: 1,
+      now,
+      persistence,
+      candidates: [{ issue_id: "issue_malformed", bpi_score: 4, blueprint_id: "doc_malformed" }]
+    });
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_approval_save_fail",
+      top_n: 1,
+      now,
+      persistence,
+      candidates: [{ issue_id: "issue_save_fail", bpi_score: 3, blueprint_id: "doc_save_fail" }]
+    });
+
+    const malformed = await requestBettingCycleApproval({
+      cycle_id: "cycle_approval_malformed",
+      issue_ids: ["issue_malformed"],
+      reason: "Bad native response",
+      adapter: {
+        createApprovalRequest: async () => ({ id: "", issue_ids: ["issue_malformed"], status: "PENDING" })
+      },
+      persistence,
+      now
+    });
+    const saveFailed = await requestBettingCycleApproval({
+      cycle_id: "cycle_approval_save_fail",
+      issue_ids: ["issue_save_fail"],
+      reason: "Native succeeds but cache save fails",
+      adapter: new InMemoryPaperclipAdapter(),
+      persistence: failingSavePersistence,
+      now
+    });
+
+    expect(malformed).toMatchObject({
+      selected_surface: "markdown-only",
+      native_approval_request_id: null,
+      native_approval_status: null,
+      fallback: {
+        reason: "native_response_malformed",
+        native_error: "createApprovalRequest returned missing id or invalid status",
+        comment_error: "comments.native:unavailable"
+      }
+    });
+    expect(saveFailed).toMatchObject({
+      selected_surface: "approvals.native",
+      native_approval_request_id: "approval_1",
+      native_approval_status: "PENDING",
+      cache_overlay: {
+        load: "loaded",
+        save: "failed",
+        error: "cache save failed with stack"
+      }
+    });
+    expect(saveFailed.updated_rows[0]).toMatchObject({
+      status: "APPROVAL_REQUESTED",
+      native_approval_request_id: "approval_1",
+      native_approval_status: "PENDING"
+    });
+    expect(saveFailed.cache_overlay.error).not.toMatch(/[\n\t]/);
   });
 });
 
