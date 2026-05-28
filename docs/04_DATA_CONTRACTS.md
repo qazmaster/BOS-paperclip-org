@@ -128,6 +128,49 @@ export interface BettingTableItem {
   updated_at: string;
 }
 
+export interface BettingCycleCacheOverlayDiagnostics {
+  durability: "cache-overlay-only";
+  persistence: "missing" | "provided";
+  save: "saved" | "failed" | "not_attempted";
+  load: "loaded" | "missing" | "failed" | "not_attempted";
+  error: string | null;
+  timestamp: string; // ISO 8601
+}
+
+export interface BettingCycleResult {
+  schema_version: "1.0";
+  cycle_id: string;
+  items: BettingTableItem[];
+  selected_issue_ids: string[];
+  cache_overlay: BettingCycleCacheOverlayDiagnostics;
+}
+
+export type BettingApprovalRequestSurface = "approvals.native" | "comments.native" | "markdown-only";
+
+export interface BettingApprovalRequestFallbackDiagnostics {
+  reason: string | null;
+  native_error?: string;
+  comment_error?: string;
+}
+
+export interface BettingApprovalRequestEnvelope {
+  schema_version: "1.0";
+  cycle_id: string;
+  selected_issue_ids: string[];
+  selected_surface: BettingApprovalRequestSurface;
+  native_approval_request_id: string | null;
+  native_approval_status: "PENDING" | "APPROVED" | "REJECTED" | null;
+  /** Native approval ref, comment ref, or deterministic markdown-only fallback ref. */
+  approval_request_ref: string;
+  requested_at: string; // ISO 8601
+  fallback: BettingApprovalRequestFallbackDiagnostics;
+}
+
+export interface BettingApprovalRequestResult extends BettingApprovalRequestEnvelope {
+  updated_rows: BettingTableItem[];
+  cache_overlay: BettingCycleCacheOverlayDiagnostics;
+}
+
 export interface EvalGateResult {
   schema_version: "1.0";
   issue_id: string;
@@ -200,3 +243,23 @@ Surface selection rules:
 - `BosStatusOverlay.blueprint_id` and `BettingTableItem.blueprint_id` carry `artifact_ref`, not transient plugin-state identity. S04 must pass the value through as an opaque reference and must not infer approval/request scope from it.
 - `IssueBlueprintStatusOverlay.cache_overlay` reports whether optional cache writes happened, but its durability is always `cache-overlay-only`; native document/comment/markdown artifacts remain the recovery surface.
 - Issue title/body/acceptance/resources are untrusted display content. The current Blueprint is inert markdown; consumers must not execute embedded markup or scripts.
+
+## Betting Table cycle and approval request contract
+
+The S04 Betting Table flow is proven at fixture level only. It ranks candidates by BPI, preserves each S03 `blueprint_id` as an opaque artifact reference, and may cache the current cycle for worker data-provider hydration. The `BettingCycleResult` inspection surface is the contract: `cycle_id`, `selected_issue_ids`, ranked `items`, and `cache_overlay` are returned together so consumers can show useful diagnostics without claiming durable Paperclip state.
+
+Cycle cache rules:
+
+- `cache_overlay.durability` is always `cache-overlay-only`, even when `save` or `load` is `saved`/`loaded`.
+- `persistence: "missing"` plus `save`/`load: "not_attempted"` means no cache seam was supplied; it is not an error and not a native Paperclip state claim.
+- `load: "missing"` means a cache seam exists but no cycle was found. Callers must return empty rows plus diagnostics rather than infer a default cycle.
+- `save: "failed"` or `load: "failed"` must include a sanitized single-line `error`. Cache failures must not hide the ranked candidate output or native approval result.
+
+Approval request rules:
+
+- `selected_surface: "approvals.native"` means the adapter seam returned a valid native approval id and status. In this repository that is fixture evidence only while `approvals.native` remains `unvalidated`.
+- `selected_surface: "comments.native"` records a human-visible fallback request comment when native approvals are unavailable or fail. It must not mutate Betting Table rows or simulate approval status.
+- `selected_surface: "markdown-only"` records deterministic fallback diagnostics for empty selections, stale issue ids, missing cycles, already-decided rows, malformed native responses, adapter failures, or missing comment support.
+- `native_approval_request_id` and `native_approval_status` are non-null only for a validated native approval response. Comment and markdown fallbacks keep both fields null.
+- `approval_request_ref` is surface-qualified: `paperclip://approval-requests/{id}` for native approval seams, `paperclip://issues/{issue_id}/comments/{comment_id}` for comment fallback seams, or `markdown-only://betting-cycles/{cycle_id}/approval-request` for diagnostic markdown.
+- Only native approval success may mark selected rows `APPROVAL_REQUESTED` and persist `native_approval_request_id`; fallback paths return/comment-record diagnostics without becoming a plugin-side approval engine.

@@ -11,7 +11,7 @@ Local evidence that does exist:
 - `python3 scripts/validate_company_template.py` proves only the repository-local company template contract.
 - `python3 scripts/probe_paperclip_runtime.py` reports honest-unvalidated posture when no runtime path is supplied.
 - `python3 scripts/validate_runtime_capabilities.py` checks matrix, manifest, source boundary, and this report for drift.
-- `plugin-bos-light` tests exercise the S03 Product Blueprint artifact envelope and fallback branches against in-memory seams only; these tests do not prove Paperclip native document/comment/state support.
+- `plugin-bos-light` tests exercise the S03 Product Blueprint artifact envelope and S04 Betting Table cycle/approval envelopes against in-memory seams only; these tests do not prove Paperclip native document/comment/state/data/action/UI/approval support.
 
 ## C4/C5/C6/C7 Status
 
@@ -78,6 +78,14 @@ S03 adds a Product Blueprint artifact envelope for seeded issues. Inspect `selec
 
 The seeded issue status overlay stores `blueprint_id = artifact.artifact_ref` and reports cache writes under `cache_overlay.durability = "cache-overlay-only"`. This cache overlay is useful for UI speed and diagnostics, but it is not durable truth and must be reconstructable from native/comment/markdown artifacts after plugin state loss.
 
+S04 adds Betting Table cycle and approval-request envelopes for fixture proof. The cycle envelope returns ranked rows, `cycle_id`, `selected_issue_ids`, and cache-overlay diagnostics; the approval envelope returns `selected_surface`, `native_approval_request_id`, `native_approval_status`, `approval_request_ref`, `fallback`, `requested_at`, updated rows, and cache-overlay diagnostics. These are inspection surfaces for local tests and future runtime probes. They do not change the posture of `registration.data`, `registration.actions`, `ui.dashboard_widgets`, `approvals.native`, `state.issue_scoped`, `state.company_scoped`, `entities.api`, or `config.api`.
+
+S04 fallback interpretation:
+
+- `approvals.native` means the adapter seam returned a valid approval id/status and rows were marked `APPROVAL_REQUESTED`; it is fixture evidence only until a real Paperclip host creates and reads back the request.
+- `comments.native` means a review-request comment fallback was recorded through the seam; rows must remain unmutated and native approval fields null.
+- `markdown-only` means validation failed, runtime seams were absent, adapter responses were malformed, or both native/comment paths failed. The fallback ref and sanitized errors are diagnostics, not approval truth.
+
 Plugin state limits:
 
 - `state.issue_scoped` is `unvalidated`; use it only as a cache/overlay after round-trip and restart/readback proof.
@@ -94,16 +102,19 @@ Polling posture remains aligned with `docs/07_RISKS_AND_SPIKES.md`: active runs 
 
 Approval/request ownership stays with Paperclip. `approvals.native` is `unvalidated`; `registration.actions` only requests an action seam and does not prove native approval creation. Fallbacks may create an issue/comment asking humans to review a batch, but must not substitute a local/test-double decision for Paperclip-native approvals.
 
+S04 Approve Batch behavior preserves that boundary. A fixture native approval response can populate `native_approval_request_id` and `native_approval_status` and update selected rows; comment and markdown fallbacks only expose `approval_request_ref`, fallback reason, sanitized native/comment errors when present, and unchanged rows. Future agents must inspect these fields before claiming A5 progress, and must keep `approvals.native` unvalidated until live create/read evidence exists.
+
 ## Known Blockers
 
 - No Paperclip runtime version/build evidence is available.
 - Company template import/export and AGENTS.md syntax have not been exercised against a live Paperclip instance.
 - Plugin registration, tools/data/actions registration, UI slots, native issues/documents/comments, approvals, state/entities/config, and activity/events all lack live behavior proof.
+- Betting Table dashboard hydration, data-provider registration, Approve Batch action invocation, native approval create/read, and fallback-rate observability all remain S06/live-runtime follow-ups.
 - Company-scoped state and terminal-run events remain fallback-only because prior risks say they may not read back or emit in some runtime versions.
 
 ## Downstream Guidance
 
 - **S03**: Build BPI/Blueprint/Eval Gate logic against pure functions and native-artifact fallbacks first. Do not assume `ctx.tools.register`, native documents, comments, issue-scoped state, or issue detail tabs are available. Use the Product Blueprint artifact envelope as the inspection surface for seeded issue proof.
-- **S04**: Treat Betting Table UI/data providers as optional. Use managed native issues/projects or generated markdown until `registration.data`, `ui.dashboard_widgets`, entities, and approvals are proven. Consume `blueprint_id` as an opaque Product Blueprint `artifact_ref`; do not treat it as an approval/request id or as plugin-state durability evidence.
+- **S04**: Treat Betting Table UI/data providers as optional. Use managed native issues/projects or generated markdown until `registration.data`, `ui.dashboard_widgets`, entities, and approvals are proven. Consume `blueprint_id` as an opaque Product Blueprint `artifact_ref`; do not treat it as an approval/request id or as plugin-state durability evidence. Fixture proof may hydrate cache-overlay rows and exercise adapter-seam approval envelopes only.
 - **S05**: Implement Circuit Breaker with polling/activity/comment fallbacks before event-driven paths. Do not rely only on run events or company-scoped state.
-- **S06**: Make runtime smoke tests the closure gate: capture version/build, plugin load, each requested registration surface, native artifacts, approval/request creation, and import/export/AGENTS.md compatibility before any capability becomes `confirmed`.
+- **S06**: Make runtime smoke tests the closure gate: capture version/build, plugin load, each requested registration surface, dashboard data-provider hydration, action invocation, native artifacts, approval/request create/read, fallback-rate observability, and import/export/AGENTS.md compatibility before any capability becomes `confirmed`.

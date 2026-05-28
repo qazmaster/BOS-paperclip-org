@@ -9,7 +9,7 @@ Durable organizational truth must be visible in Paperclip-native artifacts. Priv
 | BPI Score | Issue annotation / plugin data tab (`unvalidated`) | Issue-scoped plugin state as cache/overlay after proof | Product Blueprint artifact envelope plus issue document/comment/markdown fallback | Score visible after issue.created; cache overlay reports `saved`, `failed`, or `not_attempted` |
 | BOS Status | Issue detail tab overlay (`unvalidated`) | Issue-scoped plugin state as cache/overlay after proof | Issue label/comment plus `IssueBlueprintStatusOverlay.cache_overlay` diagnostics | `bos_status` synced with issue lifecycle; plugin cache never sole durable truth |
 | Blueprint | Issue Document (`documents.native` `unvalidated`), 5 sections | Issue Document native only after create/read proof | Comment (`comments.native` `unvalidated`) or `markdown-only://issues/{issue_id}/product-blueprint` artifact ref | Blueprint generated with `artifact_id`, `artifact_ref`, `selected_surface`, `fallback`, `mirrored_at` |
-| Betting Table | Dashboard widget (`unvalidated`) | Plugin entity/config/current cycle after proof | Managed Paperclip issue/project or generated markdown carrying opaque `blueprint_id` | Approve creates native approval request only after `approvals.native` proof |
+| Betting Table | Dashboard widget (`unvalidated`) and Approve Batch action (`unvalidated`) | Cache-overlay cycle only for worker hydration after proof; native approval/request is Paperclip-owned truth only after live proof | Managed Paperclip issue/project or generated markdown carrying opaque `blueprint_id`; comment/markdown approval-request fallback diagnostics | Fixture ranks by BPI and returns cycle/approval envelopes; A4/A5 remain live-runtime pending until dashboard/data/action/approval surfaces are proven |
 | Gate Result | Review checklist/comment | Issue-scoped state + Issue Document after proof | Issue comment | Blocking gate stops release path |
 | Circuit State | Dashboard/detail tab (`unvalidated`) | Issue-scoped plugin state after proof | Polling + activity log/comment scanning | 3 failures -> OPEN + escalation issue |
 | BOS Config | Plugin config (`fallback-only`) | Config JSON | Company template import files | Reload without data loss |
@@ -38,3 +38,14 @@ The Product Blueprint mirror returns a data envelope rather than a bare document
 - `markdown-only`: explicit fallback for hard-gate failure, incomplete Blueprint inputs, adapter failures, or missing usable native/comment support. The markdown payload is the artifact; callers should preserve it or mirror it to a managed issue/project in later slices.
 
 `IssueBlueprintStatusOverlay.cache_overlay` may say BPI/status writes were `saved`, `failed`, or `not_attempted`, but the `durability` field remains `cache-overlay-only` in every case. S04 Betting Table code must consume `blueprint_id` as an opaque artifact reference and avoid approval/request scope bleed: a Blueprint document/comment/markdown reference is not a native approval id, not a cycle id, and not evidence that plugin state can be restored after restart.
+
+## S04 Betting Table persistence and approval request fallback contract
+
+Betting cycle persistence is currently cache-overlay-only. The cache can hydrate the worker data provider in fixture tests and can report `save`, `load`, `persistence`, `error`, and `timestamp`, but it is not a recoverable Paperclip-native cycle store. A11c still requires a managed native issue/project or equivalent live Paperclip artifact before plugin-state loss recovery can be claimed.
+
+Approval request truth is owned by Paperclip-native approvals when the runtime proves `approvals.native`. Until then:
+
+- A native approval seam result may update Betting Table rows only when it returns a non-empty approval id plus valid native status.
+- Comment fallback writes or markdown-only fallback refs are diagnostics and review requests, not approval records.
+- Cache save failure after a native approval is visible in `cache_overlay.error`, but it does not invalidate the native approval envelope fields.
+- Missing cycle ids, missing persistence, empty selections, stale issue ids, already-decided rows, malformed native responses, native adapter failures, and comment fallback failures must return explicit fallback diagnostics instead of throwing or silently mutating rows.

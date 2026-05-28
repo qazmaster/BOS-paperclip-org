@@ -31,9 +31,12 @@
 
 - [ ] Implement top-N selection by BPI.
 - [ ] Implement dashboard data provider.
+- [ ] Prove dashboard data-provider hydration in a live Paperclip runtime before claiming Pitch Deck UI support.
 - [ ] Carry S03 `blueprint_id` through as an opaque artifact reference (`paperclip://.../documents/...`, `paperclip://.../comments/...`, or `markdown-only://...`) without approval/request scope bleed.
 - [ ] Implement Approve Batch action.
-- [ ] Create Paperclip-native approval/request.
+- [ ] Implement adapter-seam path for Paperclip-native approval/request once live proof exists.
+- [ ] Prove native approval/request create/read in a live Paperclip runtime; until then keep comment/markdown fallbacks diagnostic-only.
+- [ ] Add fallback-rate observability for approval native/comment/markdown outcomes and cache-overlay save/load errors.
 - [ ] Mirror cycle state to native issue/project.
 - [ ] Pass A4-A5.
 
