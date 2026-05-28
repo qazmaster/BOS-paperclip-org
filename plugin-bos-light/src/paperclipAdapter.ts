@@ -1,4 +1,5 @@
 import type { BettingTableItem, BPIScore, BosStatusOverlay, CircuitBreakerRecord, DecisionMetadata, EvalGateResult } from "./contracts";
+import { PAPERCLIP_RUNTIME_BOUNDARY_RULES } from "./runtimeCapabilities";
 
 export interface NativeApprovalRequest {
   id: string;
@@ -7,10 +8,23 @@ export interface NativeApprovalRequest {
 }
 
 export interface PaperclipAdapter {
+  /**
+   * Adapter assumption for the `documents.native` surface.
+   * Durable BOS outputs should land in Paperclip-native issue documents when
+   * proven, otherwise fall back to issue descriptions/comments as markdown.
+   */
   createIssueDocument(issueId: string, title: string, markdown: string): Promise<{ document_id: string }>;
+  /** Adapter assumption for `comments.native`; preferred human-visible fallback when available. */
   addIssueComment(issueId: string, markdown: string): Promise<{ comment_id: string }>;
+  /**
+   * Adapter assumption for `approvals.native`.
+   * Paperclip owns native approval/request objects; plugin-side test doubles must
+   * not be treated as approvals that satisfy A5.
+   */
   createApprovalRequest(issueIds: string[], reason: string): Promise<NativeApprovalRequest>;
+  /** Adapter assumption for `issues.native`; escalation issues require live create/read/update proof. */
   createEscalationIssue(input: { title: string; body: string; related_issue_id: string }): Promise<{ issue_id: string }>;
+  /** Adapter assumption for `activity.logging`; use comments/issues if activity visibility is unproven. */
   logActivity(message: string, data?: unknown): Promise<void>;
 }
 
@@ -26,7 +40,10 @@ export interface BOSPersistence {
   saveDecision(decision: DecisionMetadata): Promise<void>;
 }
 
-// Test/draft adapter. Replace with current Paperclip SDK calls after C6/C7.
+// Test/draft adapter only. It exercises BOS Light logic without claiming host support.
+// Boundary rules stay aligned with the capability matrix and source contract.
+export const PAPERCLIP_ADAPTER_BOUNDARY = PAPERCLIP_RUNTIME_BOUNDARY_RULES;
+
 export class InMemoryPaperclipAdapter implements PaperclipAdapter {
   public comments: Array<{ issueId: string; markdown: string }> = [];
   public documents: Array<{ issueId: string; title: string; markdown: string }> = [];

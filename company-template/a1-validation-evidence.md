@@ -55,11 +55,11 @@ This also preserves the S01 slice requirement that validation output identifies 
 
 ## What This Does Not Prove
 
-This does **not** prove that `company-template/bos-company-template.json` currently matches the live Paperclip import/export schema. The template remains a draft semantic package until validated against a real Paperclip instance.
+This does **not** prove that `company-template/bos-company-template.json` currently matches the live Paperclip import/export schema. The template remains a draft semantic package until validated against a real Paperclip instance. S02's runtime health report (`docs/08_RUNTIME_CAPABILITY_HEALTH.md`) records the current status as `company_template.import_export=unvalidated` and `agents.syntax=unvalidated` because there is no live Paperclip runtime evidence.
 
 ## Remaining S02 Unknown
 
-S02 must retire the live Paperclip import/export unknown by using an actual Paperclip company export or import path to confirm the current runtime schema and update this directory with the real importable artifact if the live schema differs from the draft semantic template.
+S02 published `docs/08_RUNTIME_CAPABILITY_HEALTH.md` to make the live Paperclip import/export unknown explicit. The unknown is **not retired** yet: C4 and C5 remain `unvalidated` until an actual Paperclip company export/import path and AGENTS.md syntax validator confirm the current runtime schema. This preserves the S01 proof as local readiness evidence only.
 
 ## Failure Modes
 

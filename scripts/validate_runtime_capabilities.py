@@ -21,9 +21,13 @@ MANIFEST_PATH = Path("plugin-bos-light/manifest.paperclip-plugin.json")
 WORKER_PATH = Path("plugin-bos-light/src/worker.ts")
 ADAPTER_PATH = Path("plugin-bos-light/src/paperclipAdapter.ts")
 PERSISTENCE_PATH = Path("plugin-bos-light/src/persistence.ts")
+RUNTIME_CAPABILITIES_PATH = Path("plugin-bos-light/src/runtimeCapabilities.ts")
+HEALTH_REPORT_PATH = Path("docs/08_RUNTIME_CAPABILITY_HEALTH.md")
 
 STATUS_ENUM = {"confirmed", "unsupported", "fallback-only", "unvalidated"}
 KEY_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
+TS_STRING_RE = re.compile(r'"([a-z0-9]+(?:[._-][a-z0-9]+)+)"')
+HEADING_RE = re.compile(r"^#{1,6}\s+(.+?)\s*$", re.MULTILINE)
 
 REQUIRED_ENTRY_FIELDS = (
     "key",
@@ -73,6 +77,38 @@ CODE_ASSUMPTIONS = (
     (ADAPTER_PATH, "createEscalationIssue", "issues.native", "adapter native issue API"),
     (ADAPTER_PATH, "logActivity", "activity.logging", "adapter activity logging API"),
     (PERSISTENCE_PATH, "InMemoryBOSPersistence", "state.issue_scoped", "draft in-memory persistence fallback"),
+)
+
+FORBIDDEN_SOURCE_CLAIMS = (
+    (re.compile(r"plugin-owned\s+approval", re.IGNORECASE), "approvals must remain Paperclip-owned, not plugin-owned"),
+    (re.compile(r"native\s+approval\s+(?:is\s+)?(?:created|owned)\s+by\s+plugin", re.IGNORECASE), "native approvals must not be described as plugin-created/owned"),
+    (re.compile(r"events?\s+(?:are|is)\s+(?:guaranteed|confirmed)", re.IGNORECASE), "events must remain optional until runtime proof exists"),
+    (re.compile(r"plugin\s+state\s+(?:is\s+)?durable\s+truth", re.IGNORECASE), "plugin state must not be described as durable truth"),
+)
+
+REQUIRED_HEALTH_REPORT_HEADINGS = (
+    "Runtime Evidence",
+    "C4/C5/C6/C7 Status",
+    "Import/Export and AGENTS.md Compatibility",
+    "Per-Surface Matrix Summary",
+    "Adapter Contract Rules",
+    "Persistence and State Boundaries",
+    "Events, Polling, and Activity Fallback",
+    "Approval and Request Ownership",
+    "Known Blockers",
+    "Downstream Guidance",
+)
+
+REQUIRED_HEALTH_REPORT_PHRASES = (
+    "no live Paperclip runtime evidence",
+    "plugin-bos-light/capabilities.paperclip-runtime.json",
+    "unvalidated",
+    "fallback-only",
+    "Paperclip-native approvals",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
 )
 
 
@@ -274,6 +310,80 @@ def _validate_code_assumption_coverage(root: Path, entries_by_key: Mapping[str, 
             errors.add(relative_path, label, f"source assumption token {token!r} is not represented by capability key '{expected_key}'")
 
 
+def _validate_source_capability_contract(root: Path, entries_by_key: Mapping[str, Mapping[str, Any]], errors: ValidationErrorCollector) -> None:
+    source = _read_text(root, RUNTIME_CAPABILITIES_PATH, errors)
+    if not source:
+        return
+
+    if str(MATRIX_PATH) not in source:
+        errors.add(RUNTIME_CAPABILITIES_PATH, "matrix-path", f"source contract must reference {MATRIX_PATH}")
+
+    source_keys = {
+        match.group(1)
+        for match in TS_STRING_RE.finditer(source)
+        if match.group(1) in entries_by_key or match.group(1) in EXPECTED_SURFACE_KEYS
+    }
+    matrix_keys = set(entries_by_key)
+    missing = sorted(matrix_keys - source_keys)
+    extra = sorted(source_keys - matrix_keys)
+    for key in missing:
+        errors.add(RUNTIME_CAPABILITIES_PATH, key, "matrix capability key missing from source-level runtime contract")
+    for key in extra:
+        errors.add(RUNTIME_CAPABILITIES_PATH, key, "source-level runtime contract key is not present in capability matrix")
+
+    for status in STATUS_ENUM:
+        if status not in source:
+            errors.add(RUNTIME_CAPABILITIES_PATH, f"status.{status}", "source-level status vocabulary must mirror matrix enum")
+
+    boundary_terms = ("test/draft", "cache/overlay", "polling", "Paperclip-native approvals")
+    for term in boundary_terms:
+        if term not in source:
+            errors.add(RUNTIME_CAPABILITIES_PATH, f"boundary.{term}", "source-level boundary rules must preserve conservative runtime posture")
+
+
+def _validate_forbidden_source_claims(root: Path, errors: ValidationErrorCollector) -> None:
+    for relative_path in (WORKER_PATH, ADAPTER_PATH, PERSISTENCE_PATH, RUNTIME_CAPABILITIES_PATH):
+        source = _read_text(root, relative_path, errors)
+        for pattern, message in FORBIDDEN_SOURCE_CLAIMS:
+            if pattern.search(source):
+                errors.add(relative_path, "runtime-boundary wording", message)
+
+
+def _validate_manifest_note(manifest: Any, errors: ValidationErrorCollector) -> None:
+    if not isinstance(manifest, dict):
+        return
+    note = str(manifest.get("note") or "")
+    for phrase in ("capabilities.paperclip-runtime.json", "requested", "not confirmed"):
+        if phrase not in note:
+            errors.add(MANIFEST_PATH, "note", f"manifest note must distinguish requested capabilities from confirmed runtime support using phrase {phrase!r}")
+
+
+def _validate_health_report_if_present(root: Path, entries_by_key: Mapping[str, Mapping[str, Any]], errors: ValidationErrorCollector) -> None:
+    report_path = root / HEALTH_REPORT_PATH
+    if not report_path.exists():
+        return
+    text = _read_text(root, HEALTH_REPORT_PATH, errors)
+    if not text.strip():
+        errors.add(HEALTH_REPORT_PATH, "file", "health report must be non-empty")
+        return
+
+    headings = {match.group(1).strip().lower() for match in HEADING_RE.finditer(text)}
+    for heading in REQUIRED_HEALTH_REPORT_HEADINGS:
+        if heading.lower() not in headings:
+            errors.add(HEALTH_REPORT_PATH, f"heading.{heading}", "missing required health report section")
+
+    for phrase in REQUIRED_HEALTH_REPORT_PHRASES:
+        if phrase not in text:
+            errors.add(HEALTH_REPORT_PATH, f"phrase.{phrase}", "missing required health report wording")
+
+    for key in entries_by_key:
+        if key not in text:
+            errors.add(HEALTH_REPORT_PATH, f"capability.{key}", "health report must summarize every capability matrix key")
+
+    if "status: confirmed" in text.lower() and "no live Paperclip runtime evidence" in text:
+        errors.add(HEALTH_REPORT_PATH, "confirmed-claim", "report cannot claim confirmed support when it states no live runtime evidence exists")
+
+
 def validate(
     root: Path,
     matrix_path: Path = MATRIX_PATH,
@@ -290,7 +400,11 @@ def validate(
     entries_by_key = _collect_entries(matrix, errors)
     if manifest is not None:
         _validate_manifest_coverage(manifest, entries_by_key, errors)
+        _validate_manifest_note(manifest, errors)
     _validate_code_assumption_coverage(root, entries_by_key, errors)
+    _validate_source_capability_contract(root, entries_by_key, errors)
+    _validate_forbidden_source_claims(root, errors)
+    _validate_health_report_if_present(root, entries_by_key, errors)
     return errors.errors
 
 

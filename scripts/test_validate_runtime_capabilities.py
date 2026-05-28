@@ -20,6 +20,7 @@ SPEC.loader.exec_module(validator)
 MANIFEST = {
     "schema_version": "0.1-test",
     "plugin_key": "bos-light",
+    "note": "Draft requested-capability manifest only. Runtime confirmation lives in plugin-bos-light/capabilities.paperclip-runtime.json; requested capabilities here are not confirmed Paperclip support.",
     "capabilities_requested": [
         "config.read",
         "config.write",
@@ -92,6 +93,24 @@ export class InMemoryBOSPersistence {}
 """
 
 
+def runtime_capabilities_ts(matrix: dict) -> str:
+    keys = [entry["key"] for entry in matrix["capabilities"] if isinstance(entry, dict) and "key" in entry]
+    keys_text = "\n".join(f'  "{key}",' for key in keys)
+    return f'''export const PAPERCLIP_RUNTIME_CAPABILITY_MATRIX_PATH = "plugin-bos-light/capabilities.paperclip-runtime.json" as const;
+export const PAPERCLIP_RUNTIME_CAPABILITY_STATUSES = ["confirmed", "unsupported", "fallback-only", "unvalidated"] as const;
+export const PAPERCLIP_RUNTIME_CAPABILITY_KEYS = [
+{keys_text}
+] as const;
+export const PAPERCLIP_RUNTIME_BOUNDARY_RULES = {{
+  adapter: "In-memory adapter and persistence are test/draft-only and never prove Paperclip host support.",
+  artifacts: "Issue documents and comments are preferred durable artifact paths when proven.",
+  state: "Plugin state is cache/overlay only unless runtime proof exists.",
+  events: "Event handling is optional behind polling and activity fallback.",
+  approvals: "Approval/request ownership stays with Paperclip-native approvals."
+}} as const;
+'''
+
+
 def valid_matrix() -> dict:
     capabilities: list[dict] = []
     for key in validator.EXPECTED_SURFACE_KEYS:
@@ -132,6 +151,8 @@ def write_fixture(root: Path, matrix: dict | str | None = None, manifest: dict |
     (root / "plugin-bos-light" / "src" / "worker.ts").write_text(WORKER_TS, encoding="utf-8")
     (root / "plugin-bos-light" / "src" / "paperclipAdapter.ts").write_text(ADAPTER_TS, encoding="utf-8")
     (root / "plugin-bos-light" / "src" / "persistence.ts").write_text(PERSISTENCE_TS, encoding="utf-8")
+    runtime_source = runtime_capabilities_ts(matrix_value if isinstance(matrix_value, dict) else valid_matrix())
+    (root / "plugin-bos-light" / "src" / "runtimeCapabilities.ts").write_text(runtime_source, encoding="utf-8")
 
 
 class RuntimeCapabilityValidatorTests(unittest.TestCase):
@@ -209,6 +230,41 @@ class RuntimeCapabilityValidatorTests(unittest.TestCase):
         joined = "\n".join(errors)
         self.assertIn("tools.piko:blueprint-gen", joined)
         self.assertIn("ui.issue_detail_tabs.circuit-state", joined)
+
+    def test_source_contract_missing_matrix_key_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            write_fixture(root, matrix)
+            source_path = root / "plugin-bos-light" / "src" / "runtimeCapabilities.ts"
+            source_path.write_text(source_path.read_text(encoding="utf-8").replace('  "approvals.native",\n', ""), encoding="utf-8")
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("runtimeCapabilities.ts", joined)
+        self.assertIn("approvals.native", joined)
+        self.assertIn("missing from source-level runtime contract", joined)
+
+    def test_forbidden_plugin_owned_approval_wording_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_fixture(root)
+            worker_path = root / "plugin-bos-light" / "src" / "worker.ts"
+            worker_path.write_text(worker_path.read_text(encoding="utf-8") + "\n// plugin-owned approval\n", encoding="utf-8")
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("approvals must remain Paperclip-owned", joined)
+
+    def test_existing_health_report_must_include_required_sections_and_keys(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_fixture(root)
+            docs = root / "docs"
+            docs.mkdir()
+            (docs / "08_RUNTIME_CAPABILITY_HEALTH.md").write_text("# Health\n\nno live Paperclip runtime evidence\n", encoding="utf-8")
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("heading.Runtime Evidence", joined)
+        self.assertIn("capability.approvals.native", joined)
 
 
 if __name__ == "__main__":

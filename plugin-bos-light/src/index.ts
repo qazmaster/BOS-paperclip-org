@@ -7,4 +7,5 @@ export * from "./circuitBreaker";
 export * from "./decision";
 export * from "./paperclipAdapter";
 export * from "./persistence";
+export * from "./runtimeCapabilities";
 export * from "./worker";

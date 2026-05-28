@@ -4,16 +4,26 @@ import { buildBettingTable, markApprovalRequested } from "./bettingTable";
 import { runEvalGates } from "./evalGates";
 import { createCircuitBreakerRecord, recordFailure, attachEscalationIssue } from "./circuitBreaker";
 import { decide } from "./decision";
+import { PAPERCLIP_RUNTIME_BOUNDARY_RULES } from "./runtimeCapabilities";
 
 /*
   Draft worker skeleton.
 
+  Source boundary: runtimeCapabilities.ts mirrors the matrix capability keys, and
+  capabilities.paperclip-runtime.json remains the evidence source of truth. The
+  optional ctx.tools/data/actions calls below are requested runtime surfaces only;
+  optional chaining may skip them and must not be read as Paperclip support.
+
   Replace pseudo SDK wiring after C6/C7:
-  - confirm definePlugin import path;
-  - confirm ctx.tools/data/actions registration API;
-  - confirm issues/documents/comments/approvals API;
-  - confirm state/entity/config APIs.
+  - confirm definePlugin import path and plugin load smoke test;
+  - confirm ctx.tools/data/actions registration API before exposing piko:* as host tools;
+  - confirm issues/documents/comments APIs before treating native artifacts as durable;
+  - keep approvals/request creation Paperclip-owned; fallback comments/issues may request review but do not create native approvals;
+  - treat state/entity/config APIs as cache/overlay until read/write/restart proof exists;
+  - keep issue lifecycle and run-event handling optional behind explicit invocation, bounded polling, and activity fallback.
 */
+
+export const BOS_LIGHT_RUNTIME_BOUNDARY = PAPERCLIP_RUNTIME_BOUNDARY_RULES;
 
 export const BOS_LIGHT_TOOLS = {
   calculateBPIScore,
@@ -42,13 +52,14 @@ export async function registerBosLightPlugin(ctx: any): Promise<void> {
   // Tool: piko:decide
   await ctx.tools?.register?.("piko:decide", async (params: any) => decide(params));
 
-  // Data provider: Betting Table
+  // Data provider: Betting Table. Host data-provider hydration remains unvalidated;
+  // use native issues/projects or markdown artifacts until registration.data is proven.
   await ctx.data?.register?.("betting-table", async (_context: any) => {
-    // TODO: load current cycle from persistence.
+    // TODO: load current cycle from persistence after state/entities have runtime proof.
     return { items: [] };
   });
 
-  // Action: Approve Batch must create Paperclip-native approval/request, not plugin-side approval.
+  // Action: Approve Batch must create Paperclip-native approval/request, not a local/test-double approval.
   await ctx.actions?.register?.("approve-batch", async (input: any) => {
     const issueIds = input.issue_ids ?? [];
     const approval = await ctx.approvals?.create?.({ issueIds, reason: "BOS Light Betting Table batch approval" });
