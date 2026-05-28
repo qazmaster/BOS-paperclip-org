@@ -21,15 +21,17 @@
 
 - [ ] Implement BPI pure function.
 - [ ] Implement BPI agent tool adapter.
-- [ ] Implement issue annotation/storage.
+- [ ] Implement issue annotation/storage as cache-overlay-only until `state.issue_scoped` read/write/restart proof exists.
 - [ ] Implement 5-section blueprint generator.
-- [ ] Mirror blueprint into native issue document.
+- [ ] Mirror blueprint into Product Blueprint artifact envelope with native document preference, comment fallback, and markdown-only fallback diagnostics.
+- [ ] Prove `documents.native` and `comments.native` create/read behavior in a live Paperclip runtime before treating Blueprint artifacts as native host support.
 - [ ] Pass A2-A3.
 
 ## Epic 4 - Betting Table
 
 - [ ] Implement top-N selection by BPI.
 - [ ] Implement dashboard data provider.
+- [ ] Carry S03 `blueprint_id` through as an opaque artifact reference (`paperclip://.../documents/...`, `paperclip://.../comments/...`, or `markdown-only://...`) without approval/request scope bleed.
 - [ ] Implement Approve Batch action.
 - [ ] Create Paperclip-native approval/request.
 - [ ] Mirror cycle state to native issue/project.

@@ -40,9 +40,54 @@ export interface BosStatusOverlay {
   issue_id: string;
   bos_status: BosStatus;
   producer_division: Division;
+  /**
+   * Stable Product Blueprint artifact reference, not a plugin-state primary key.
+   * S03 writes `ProductBlueprintArtifact.artifact_ref` here so downstream
+   * Betting Table work can distinguish document, comment, and markdown fallback
+   * surfaces without treating plugin state as durable truth.
+   */
   blueprint_id: string | null;
   bpi_score: number | null;
   updated_at: string;
+}
+
+export type BlueprintArtifactSurface = "documents.native" | "comments.native" | "markdown-only";
+
+export interface ProductBlueprintArtifact {
+  schema_version: "1.0";
+  /** Adapter/native identifier, or `markdown-only:{issue_id}:product-blueprint` for markdown fallback. */
+  artifact_id: string;
+  /**
+   * Surface-qualified stable reference:
+   * - `paperclip://issues/{issue_id}/documents/{artifact_id}` for `documents.native`
+   * - `paperclip://issues/{issue_id}/comments/{artifact_id}` for `comments.native`
+   * - `markdown-only://issues/{issue_id}/product-blueprint` for markdown fallback
+   */
+  artifact_ref: string;
+  issue_id: string;
+  title: string;
+  selected_surface: BlueprintArtifactSurface;
+  mirrored_at: string; // ISO 8601
+  markdown: string; // five-section Product Blueprint; issue text is inert/untrusted display content
+  bpi: BPIScore;
+  fallback: {
+    /** `null` only when the selected surface required no fallback. */
+    reason: string | null;
+    document_error?: string;
+    comment_error?: string;
+  };
+}
+
+export interface CacheOverlayWriteDiagnostics {
+  durability: "cache-overlay-only";
+  persistence: "missing" | "provided";
+  bpi: "not_attempted" | "saved" | "failed";
+  status: "not_attempted" | "saved" | "failed";
+  error: string | null;
+}
+
+export interface IssueBlueprintStatusOverlay extends BosStatusOverlay {
+  cache_overlay: CacheOverlayWriteDiagnostics;
 }
 
 export enum BosStatus {
@@ -142,3 +187,16 @@ Rules:
 - Clamp all user/model-provided component values.
 - `company_token_budget_ref` must be part of BOS config.
 - If any hard gate fails, mark issue `REJECTED_BPI` or send to manual review depending on product policy.
+
+## Product Blueprint artifact contract
+
+The S03 seeded issue path computes BPI, generates the required five-section Product Blueprint, and returns a `ProductBlueprintArtifact` envelope. Consumers must inspect `selected_surface`, `artifact_ref`, `fallback.reason`, `document_error`/`comment_error`, and `mirrored_at` before deciding whether the artifact is a confirmed Paperclip native document, a comment fallback, or markdown-only diagnostic output.
+
+Surface selection rules:
+
+- Prefer `documents.native` only when `documents_native` is runtime `confirmed` or an explicit local `enabled` adapter-seam exercise. `enabled` is not Paperclip proof and must not promote `documents.native` in the capability matrix.
+- Fall back to `comments.native` when document support is unvalidated, unsupported, or a document write fails and comments are not explicitly unsupported/failed.
+- Return `markdown-only` when hard gates fail, required Blueprint inputs are missing, comment writes fail, or no native/comment fallback is usable.
+- `BosStatusOverlay.blueprint_id` and `BettingTableItem.blueprint_id` carry `artifact_ref`, not transient plugin-state identity. S04 must pass the value through as an opaque reference and must not infer approval/request scope from it.
+- `IssueBlueprintStatusOverlay.cache_overlay` reports whether optional cache writes happened, but its durability is always `cache-overlay-only`; native document/comment/markdown artifacts remain the recovery surface.
+- Issue title/body/acceptance/resources are untrusted display content. The current Blueprint is inert markdown; consumers must not execute embedded markup or scripts.

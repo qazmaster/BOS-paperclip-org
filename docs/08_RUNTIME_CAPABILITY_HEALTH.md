@@ -11,6 +11,7 @@ Local evidence that does exist:
 - `python3 scripts/validate_company_template.py` proves only the repository-local company template contract.
 - `python3 scripts/probe_paperclip_runtime.py` reports honest-unvalidated posture when no runtime path is supplied.
 - `python3 scripts/validate_runtime_capabilities.py` checks matrix, manifest, source boundary, and this report for drift.
+- `plugin-bos-light` tests exercise the S03 Product Blueprint artifact envelope and fallback branches against in-memory seams only; these tests do not prove Paperclip native document/comment/state support.
 
 ## C4/C5/C6/C7 Status
 
@@ -69,6 +70,14 @@ Status totals: `fallback-only`=4, `unvalidated`=16. `confirmed`=0.
 
 Native artifact-first persistence remains the durable policy. Issue documents/comments are the preferred Paperclip-visible artifact path once native behavior is proven; until then, markdown issue descriptions, comments, managed issues/projects, and config JSON remain the recoverable fallback.
 
+S03 adds a Product Blueprint artifact envelope for seeded issues. Inspect `selected_surface`, `artifact_ref`, `fallback.reason`, `document_error`, `comment_error`, and `mirrored_at` to determine what happened:
+
+- `documents.native` means the adapter document seam returned an id. It is preferred, but local in-memory success is not live host proof while `documents.native` remains `unvalidated`.
+- `comments.native` means document support was unvalidated/failed or intentionally bypassed and the comment seam returned an id. It remains runtime-unproven while `comments.native` is `unvalidated`.
+- `markdown-only` means no Paperclip-visible native/comment artifact was proven or usable. The markdown payload and `markdown-only://issues/{issue_id}/product-blueprint` reference are the explicit fallback handoff.
+
+The seeded issue status overlay stores `blueprint_id = artifact.artifact_ref` and reports cache writes under `cache_overlay.durability = "cache-overlay-only"`. This cache overlay is useful for UI speed and diagnostics, but it is not durable truth and must be reconstructable from native/comment/markdown artifacts after plugin state loss.
+
 Plugin state limits:
 
 - `state.issue_scoped` is `unvalidated`; use it only as a cache/overlay after round-trip and restart/readback proof.
@@ -94,7 +103,7 @@ Approval/request ownership stays with Paperclip. `approvals.native` is `unvalida
 
 ## Downstream Guidance
 
-- **S03**: Build BPI/Blueprint/Eval Gate logic against pure functions and native-artifact fallbacks first. Do not assume `ctx.tools.register`, native documents, or issue detail tabs are available.
-- **S04**: Treat Betting Table UI/data providers as optional. Use managed native issues/projects or generated markdown until `registration.data`, `ui.dashboard_widgets`, entities, and approvals are proven.
+- **S03**: Build BPI/Blueprint/Eval Gate logic against pure functions and native-artifact fallbacks first. Do not assume `ctx.tools.register`, native documents, comments, issue-scoped state, or issue detail tabs are available. Use the Product Blueprint artifact envelope as the inspection surface for seeded issue proof.
+- **S04**: Treat Betting Table UI/data providers as optional. Use managed native issues/projects or generated markdown until `registration.data`, `ui.dashboard_widgets`, entities, and approvals are proven. Consume `blueprint_id` as an opaque Product Blueprint `artifact_ref`; do not treat it as an approval/request id or as plugin-state durability evidence.
 - **S05**: Implement Circuit Breaker with polling/activity/comment fallbacks before event-driven paths. Do not rely only on run events or company-scoped state.
 - **S06**: Make runtime smoke tests the closure gate: capture version/build, plugin load, each requested registration surface, native artifacts, approval/request creation, and import/export/AGENTS.md compatibility before any capability becomes `confirmed`.
