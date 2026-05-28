@@ -2,6 +2,7 @@ export * from "./contracts";
 export * from "./bpi";
 export * from "./blueprint";
 export * from "./blueprintArtifact";
+export * from "./issueBlueprintFlow";
 export * from "./bettingTable";
 export * from "./evalGates";
 export * from "./circuitBreaker";

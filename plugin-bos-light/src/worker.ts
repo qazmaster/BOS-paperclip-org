@@ -4,6 +4,7 @@ import { buildBettingTable, markApprovalRequested } from "./bettingTable";
 import { runEvalGates } from "./evalGates";
 import { createCircuitBreakerRecord, recordFailure, attachEscalationIssue } from "./circuitBreaker";
 import { decide } from "./decision";
+import { runSeededIssueBlueprintFlow } from "./issueBlueprintFlow";
 import { PAPERCLIP_RUNTIME_BOUNDARY_RULES } from "./runtimeCapabilities";
 
 /*
@@ -34,7 +35,8 @@ export const BOS_LIGHT_TOOLS = {
   createCircuitBreakerRecord,
   recordFailure,
   attachEscalationIssue,
-  decide
+  decide,
+  runSeededIssueBlueprintFlow
 };
 
 export async function registerBosLightPlugin(ctx: any): Promise<void> {
@@ -45,6 +47,28 @@ export async function registerBosLightPlugin(ctx: any): Promise<void> {
 
   // Tool: piko:blueprint-gen
   await ctx.tools?.register?.("piko:blueprint-gen", async (params: any) => generateBlueprintMarkdown(params));
+
+  // Tool: piko:bpi-blueprint-artifact. This is draft wiring only: the host must
+  // provide an adapter seam before any document/comment support is implied.
+  await ctx.tools?.register?.("piko:bpi-blueprint-artifact", async (params: any) => {
+    const adapter = params.adapter ?? ctx.paperclipAdapter ?? ctx.paperclip;
+    if (!adapter?.createIssueDocument || !adapter?.addIssueComment) {
+      return {
+        error: "adapter_unavailable",
+        message: "piko:bpi-blueprint-artifact requires a caller-provided adapter seam; Paperclip document/comment support remains unproven."
+      };
+    }
+
+    return runSeededIssueBlueprintFlow({
+      ...params,
+      adapter,
+      persistence: params.persistence ?? ctx.persistence,
+      capabilities: params.capabilities ?? {
+        documents_native: "unvalidated",
+        comments_native: "unvalidated"
+      }
+    });
+  });
 
   // Tool: piko:eval-gate
   await ctx.tools?.register?.("piko:eval-gate", async (params: any) => runEvalGates(params));
