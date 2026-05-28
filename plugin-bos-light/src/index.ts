@@ -5,6 +5,7 @@ export * from "./blueprintArtifact";
 export * from "./issueBlueprintFlow";
 export * from "./bettingTable";
 export * from "./evalGates";
+export * from "./evalGateEvidence";
 export * from "./circuitBreaker";
 export * from "./decision";
 export * from "./paperclipAdapter";
