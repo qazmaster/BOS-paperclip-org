@@ -43,10 +43,13 @@
 ## Epic 5 - Safety Loop
 
 - [ ] Implement Eval Gates.
-- [ ] Implement gate results persistence.
+- [ ] Keep `piko:eval-gate` pure and expose `piko:eval-gate-evidence` as the explicit evidence-mirroring tool; prove tool registration/invocation in a live Paperclip runtime before claiming host availability.
+- [ ] Persist gate results as cache-overlay-only diagnostics and mirror pass/fail guidance to comment or markdown-only evidence until `comments.native` create/read proof exists.
 - [ ] Implement Circuit Breaker pure state machine.
-- [ ] Implement run polling fallback.
-- [ ] Create escalation issue on OPEN.
+- [ ] Expose `piko:circuit-breaker-observe` for one bounded observation at a time with CLOSED, HALF_OPEN, and OPEN envelopes; do not claim background event support without C2/C7 proof.
+- [ ] Implement run polling fallback with active-runs-only scope, jitter/backoff, and activity/comment/manual fallback; keep terminal run events fallback-only until live emitted-event evidence exists.
+- [ ] Create escalation issue on OPEN through the adapter seam when available, but keep native issue creation unvalidated until live create/read proof; otherwise fall back to comment or markdown-only instructions.
+- [ ] Add fallback-rate observability for gate evidence surface, circuit evidence surface, cache-overlay get/save failures, escalation issue/comment fallback, and activity-log failures.
 - [ ] Pass A6-A10.
 
 ## Epic 6 - State Resilience

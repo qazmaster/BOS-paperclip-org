@@ -189,6 +189,34 @@ export interface EvalGateResult {
   evaluated_by: "Div5.Qualifications";
 }
 
+export type EvalGateEvidenceSurface = "comments.native" | "markdown-only";
+
+export interface EvalGateEvidenceEnvelope {
+  schema_version: "1.0";
+  issue_id: string;
+  run_id: string | null;
+  selected_surface: EvalGateEvidenceSurface;
+  artifact_id: string;
+  artifact_ref: string; // `paperclip://issues/{issue}/comments/{id}` or `markdown-only://issues/{issue}/eval-gates/{run}`
+  evaluated_at: string;
+  mirrored_at: string;
+  result: EvalGateResult;
+  guidance: string;
+  markdown: string;
+  cache_overlay: {
+    durability: "cache-overlay-only";
+    persistence: "missing" | "provided";
+    save: "saved" | "failed" | "not_attempted";
+    error: string | null;
+    timestamp: string;
+  };
+  fallback: {
+    reason: string | null;
+    validation_error?: string;
+    comment_error?: string;
+  };
+}
+
 export interface CircuitBreakerRecord {
   schema_version: "1.0";
   issue_id: string;
@@ -201,6 +229,58 @@ export interface CircuitBreakerRecord {
   opened_at: string | null;
   escalation_issue_id: string | null;
   updated_at: string;
+}
+
+export type CircuitBreakerEvidenceSurface = "issues.native" | "comments.native" | "cache-overlay" | "markdown-only";
+
+export interface CircuitBreakerEvidenceEnvelope {
+  schema_version: "1.0";
+  issue_id: string;
+  run_id: string | null;
+  observation: "failure" | "success" | "half_open";
+  previous_state: "CLOSED" | "HALF_OPEN" | "OPEN";
+  next_state: "CLOSED" | "HALF_OPEN" | "OPEN";
+  attempt_count: number;
+  max_attempts: number;
+  half_open_threshold: number;
+  transition_reason: "failure_recorded" | "failure_threshold_reached" | "success_recorded" | "half_open_probe_succeeded" | "half_open_probe_started" | "half_open_ignored_non_open_record" | "invalid_input";
+  failure_reason: string | null;
+  opened_at: string | null;
+  observed_at: string;
+  selected_surface: CircuitBreakerEvidenceSurface;
+  escalation_issue_id: string | null;
+  escalation_ref: string | null;
+  artifact_ref: string; // escalation issue/comment ref, cache-overlay ref, or markdown-only ref
+  record: CircuitBreakerRecord;
+  polling_config: {
+    poll_scope: "ACTIVE_RUNS_ONLY";
+    interval_ms: 30000;
+    jitter_ms: 5000;
+    backoff_after_attempts: 10;
+    max_retries: 3;
+    fallback_source: "activity-log";
+  };
+  cache_overlay: {
+    durability: "cache-overlay-only";
+    persistence: "missing" | "provided";
+    get: "loaded" | "missing" | "failed" | "malformed" | "not_attempted";
+    save: "saved" | "failed" | "not_attempted";
+    get_error: string | null;
+    save_error: string | null;
+    timestamp: string;
+  };
+  activity: {
+    status: "logged" | "failed" | "not_attempted";
+    error: string | null;
+  };
+  fallback: {
+    reason: string | null;
+    validation_error?: string;
+    escalation_create_error?: string;
+    comment_error?: string;
+    activity_error?: string;
+  };
+  markdown: string;
 }
 
 export interface DecisionMetadata {
@@ -263,3 +343,23 @@ Approval request rules:
 - `native_approval_request_id` and `native_approval_status` are non-null only for a validated native approval response. Comment and markdown fallbacks keep both fields null.
 - `approval_request_ref` is surface-qualified: `paperclip://approval-requests/{id}` for native approval seams, `paperclip://issues/{issue_id}/comments/{comment_id}` for comment fallback seams, or `markdown-only://betting-cycles/{cycle_id}/approval-request` for diagnostic markdown.
 - Only native approval success may mark selected rows `APPROVAL_REQUESTED` and persist `native_approval_request_id`; fallback paths return/comment-record diagnostics without becoming a plugin-side approval engine.
+
+## S05 Eval Gate and Circuit Breaker evidence contracts
+
+S05 adds explicit evidence envelopes for A6-A10 without changing the runtime capability posture. `piko:eval-gate` remains a pure gate calculation. `piko:eval-gate-evidence` composes that result with cache-overlay save diagnostics and a Paperclip-visible comment seam when available; `piko:circuit-breaker-observe` records one bounded Circuit Breaker observation at a time. Tool registration remains `unvalidated` until a live Paperclip host proves `registration.tools` and returns registered/invokable tool keys.
+
+Eval Gate evidence rules:
+
+- `selected_surface: "comments.native"` means the adapter seam returned a non-empty `comment_id`. Because `comments.native` is still `unvalidated`, this is fixture/adapter evidence, not live Paperclip proof.
+- `selected_surface: "markdown-only"` is returned for invalid inputs, missing comment support, malformed comment responses, or comment write failures. The `markdown` payload and `markdown-only://issues/{issue_id}/eval-gates/{run_id}` reference are the deterministic handoff.
+- `cache_overlay.durability` is always `cache-overlay-only`; `save: "saved"` means the supplied persistence seam accepted the gate result, not that Paperclip state is durable.
+- `guidance`, `result.overall`, blocking counts, `fallback.reason`, `validation_error`, and `comment_error` are the inspection fields that future agents should use before moving status to `ACCEPTED` or `CORRECTION_REQUIRED`.
+
+Circuit Breaker evidence rules:
+
+- The envelope exposes `previous_state`, `next_state`, `attempt_count`, `failure_reason`, `transition_reason`, `selected_surface`, `escalation_ref`, `cache_overlay`, `activity`, `fallback`, `observed_at`, and the full `record` so CLOSED, HALF_OPEN, and OPEN behavior is inspectable without hidden plugin state.
+- `selected_surface: "cache-overlay"` is the normal non-OPEN observation surface. It is diagnostic only and must not be described as durable Paperclip storage.
+- `selected_surface: "issues.native"` or `"comments.native"` means the adapter seam returned an escalation issue/comment reference. Both native issues and comments remain `unvalidated` until live create/read evidence exists.
+- `selected_surface: "markdown-only"` is returned for invalid input, missing issue/comment support, malformed escalation creation, or escalation/comment write failures. Operators must preserve or copy the markdown into a visible Paperclip artifact before retrying an OPEN issue.
+- Activity logging is non-blocking. `activity.status` can be `logged`, `failed`, or `not_attempted`; an activity log alone is diagnostic and is never the durable evidence path while `activity.logging` is `unvalidated`.
+- `polling_config` preserves the fallback posture: active runs only, 30000 ms interval, 5000 ms jitter, backoff after 10 attempts, max 3 retries, and activity-log fallback. Terminal run events remain `fallback-only`; do not claim event-driven run support without live C2/C7 proof.

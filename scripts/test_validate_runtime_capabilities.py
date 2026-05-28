@@ -40,7 +40,15 @@ MANIFEST = {
         "dashboard_widgets": ["betting-table"],
         "issue_detail_tabs": ["bos-status", "circuit-state", "gate-results"],
     },
-    "tools": ["piko:bpi-score", "piko:blueprint-gen", "piko:eval-gate", "piko:decide"],
+    "tools": [
+        "piko:bpi-score",
+        "piko:blueprint-gen",
+        "piko:bpi-blueprint-artifact",
+        "piko:eval-gate",
+        "piko:eval-gate-evidence",
+        "piko:circuit-breaker-observe",
+        "piko:decide",
+    ],
 }
 
 MANIFEST_CAPABILITIES_BY_KEY = {
@@ -56,7 +64,15 @@ MANIFEST_CAPABILITIES_BY_KEY = {
 }
 
 MANIFEST_TOOLS_BY_KEY = {
-    "registration.tools": ["piko:bpi-score", "piko:blueprint-gen", "piko:eval-gate", "piko:decide"],
+    "registration.tools": [
+        "piko:bpi-score",
+        "piko:blueprint-gen",
+        "piko:bpi-blueprint-artifact",
+        "piko:eval-gate",
+        "piko:eval-gate-evidence",
+        "piko:circuit-breaker-observe",
+        "piko:decide",
+    ],
 }
 
 MANIFEST_UI_BY_KEY = {
@@ -254,6 +270,8 @@ class RuntimeCapabilityValidatorTests(unittest.TestCase):
         errors = self.validate_fixture(mutate)
         joined = "\n".join(errors)
         self.assertIn("tools.piko:blueprint-gen", joined)
+        self.assertIn("tools.piko:eval-gate-evidence", joined)
+        self.assertIn("tools.piko:circuit-breaker-observe", joined)
         self.assertIn("ui.issue_detail_tabs.circuit-state", joined)
 
     def test_source_contract_missing_matrix_key_fails(self):

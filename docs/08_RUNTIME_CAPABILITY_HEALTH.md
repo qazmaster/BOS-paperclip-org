@@ -11,7 +11,7 @@ Local evidence that does exist:
 - `python3 scripts/validate_company_template.py` proves only the repository-local company template contract.
 - `python3 scripts/probe_paperclip_runtime.py` reports honest-unvalidated posture when no runtime path is supplied.
 - `python3 scripts/validate_runtime_capabilities.py` checks matrix, manifest, source boundary, and this report for drift.
-- `plugin-bos-light` tests exercise the S03 Product Blueprint artifact envelope and S04 Betting Table cycle/approval envelopes against in-memory seams only; these tests do not prove Paperclip native document/comment/state/data/action/UI/approval support.
+- `plugin-bos-light` tests exercise the S03 Product Blueprint artifact envelope, S04 Betting Table cycle/approval envelopes, and S05 Eval Gate evidence / Circuit Breaker observation envelopes against in-memory seams only; these tests do not prove Paperclip native document/comment/state/data/action/UI/approval/issue/activity/event support.
 
 ## C4/C5/C6/C7 Status
 
@@ -42,7 +42,7 @@ Status totals: `fallback-only`=4, `unvalidated`=16. `confirmed`=0.
 | `agents.syntax` | `unvalidated` | AGENTS.md profile syntax compatibility | Local files exist and reference BOS Light divisions; current Paperclip agent profile parser has not validated the syntax. | Treat AGENTS.md profiles as markdown operating briefs that can be manually copied or converted if Paperclip syntax rejects them. | Do not mark template release syntax-compatible until Paperclip accepts the AGENTS.md files. |
 | `plugin.runtime.version_build` | `unvalidated` | Plugin runtime version and build metadata | No runtime probe has captured Paperclip version/build in this repository. | Fail closed in health reports by showing runtime version/build as unknown and keeping SDK-dependent capabilities unvalidated. | Cannot set minimum supported runtime or breaking-change posture without live version/build evidence. |
 | `plugin.runtime.registration` | `unvalidated` | Plugin entrypoint and definePlugin/import-path runtime | worker.ts explicitly says the definePlugin import path and SDK wiring are draft pseudo wiring. | Keep pure BOS Light logic callable directly while plugin entrypoint support is unknown. | Do not ship runtime plugin registration until current Paperclip SDK entrypoint is confirmed. |
-| `registration.tools` | `unvalidated` | ctx.tools.register tool registration API | Draft manifest requests tools.register and worker.ts calls ctx.tools?.register with optional chaining; no host response evidence exists. | Run pure TypeScript functions directly in local tests or expose results through manual issue comments until host tool registration is proven. | Do not present piko:* tools as host-available until registration and invocation are observed. |
+| `registration.tools` | `unvalidated` | ctx.tools.register tool registration API | Draft manifest requests tools.register and worker.ts calls ctx.tools?.register with optional chaining for piko:* tools, including S05 Eval Gate evidence and Circuit Breaker observation tools; no host response evidence exists. | Run pure TypeScript functions directly in local tests or expose Eval Gate and Circuit Breaker evidence through manual issue comments/markdown until host tool registration is proven. | Do not present piko:* tools as host-available until registration and invocation are observed. |
 | `registration.data` | `unvalidated` | ctx.data.register data provider API | Draft manifest requests data.register and worker.ts calls ctx.data?.register; no Paperclip host registration evidence exists. | Render betting candidates from managed Paperclip issue/project artifacts or generated markdown if data providers are absent. | Do not rely on dashboard data provider hydration until Paperclip confirms data.register. |
 | `registration.actions` | `unvalidated` | ctx.actions.register action API | Draft manifest requests actions.register and worker.ts calls ctx.actions?.register; no host action invocation evidence exists. | Use a managed approval issue/comment workflow when host actions are unavailable. | Do not expose Approve Batch as a working native action until action registration and invocation are proven. |
 | `config.api` | `fallback-only` | Plugin config read/write API | Draft manifest requests config.read/config.write, but no ctx.config call or runtime evidence exists yet. | Restore BOS config from config JSON and company-template artifacts; do not store durable config only in plugin state. | Native plugin config cannot be treated as durable until read/write round-trip is proven. |
@@ -63,7 +63,7 @@ Status totals: `fallback-only`=4, `unvalidated`=16. `confirmed`=0.
 
 - `plugin-bos-light/src/runtimeCapabilities.ts` mirrors capability keys and status vocabulary only; `plugin-bos-light/capabilities.paperclip-runtime.json` remains the evidence source of truth.
 - `InMemoryPaperclipAdapter` and `InMemoryBOSPersistence` are test/draft-only seams. They keep pure BOS Light logic executable without implying Paperclip support.
-- Requested manifest capabilities distinguish integration intent from confirmed runtime capabilities; manifest entries are not proof that the host can load, register, render, or invoke them.
+- Requested manifest capabilities distinguish integration intent from confirmed runtime capabilities; manifest entries are not proof that the host can load, register, render, or invoke them. Current requested tools are `piko:bpi-score`, `piko:blueprint-gen`, `piko:bpi-blueprint-artifact`, `piko:eval-gate`, `piko:eval-gate-evidence`, `piko:circuit-breaker-observe`, and `piko:decide`; all remain under `registration.tools` with status `unvalidated`.
 - No BPI, Blueprint, Betting Table, Eval Gate, or Circuit Breaker feature flow should depend on a runtime surface until that surface has proof evidence.
 
 ## Persistence and State Boundaries
@@ -86,6 +86,12 @@ S04 fallback interpretation:
 - `comments.native` means a review-request comment fallback was recorded through the seam; rows must remain unmutated and native approval fields null.
 - `markdown-only` means validation failed, runtime seams were absent, adapter responses were malformed, or both native/comment paths failed. The fallback ref and sanitized errors are diagnostics, not approval truth.
 
+S05 adds Eval Gate evidence and Circuit Breaker observation envelopes for A6-A10. They are returned by explicit tools and can be inspected directly in tests or copied into issue artifacts, but they do not change capability status.
+
+- Eval Gate evidence returns `selected_surface`, `artifact_ref`, `result`, `guidance`, `cache_overlay`, `fallback`, timestamps, and markdown. Comment refs are adapter seam results only while `comments.native` remains `unvalidated`; markdown-only refs are the deterministic fallback for invalid input or failed/unavailable comments.
+- Circuit Breaker observations return `previous_state`, `next_state`, `transition_reason`, attempts, failure reason, escalation refs, cache-overlay get/save posture, activity status, polling config, fallback diagnostics, and markdown. OPEN transitions prefer issue escalation, then comment escalation, then markdown-only instructions; native issue/comment refs remain unvalidated host support.
+- Cache-overlay saves and loads remain `cache-overlay-only` even when successful. Activity logging remains non-blocking diagnostics; `activity.status: "logged"` is not durable evidence while `activity.logging` is `unvalidated`.
+
 Plugin state limits:
 
 - `state.issue_scoped` is `unvalidated`; use it only as a cache/overlay after round-trip and restart/readback proof.
@@ -95,6 +101,8 @@ Plugin state limits:
 ## Events, Polling, and Activity Fallback
 
 `events.issue_lifecycle` is `unvalidated` and `events.terminal_runs` is `fallback-only`. Circuit Breaker and gate transitions must work through explicit tool/action invocation and bounded polling before they depend on event delivery. When events are missing, use active-run polling with jitter/backoff and activity-log or issue-comment fallback.
+
+S05 evidence envelopes preserve that boundary. `piko:circuit-breaker-observe` records one observation per call and returns polling/activity diagnostics; it does not start a hidden background poller and does not prove terminal run events. `piko:eval-gate-evidence` returns comment/markdown evidence from explicit invocation; it does not prove issue lifecycle event delivery.
 
 Polling posture remains aligned with `docs/07_RISKS_AND_SPIKES.md`: active runs only, `interval_ms=30000`, `jitter_ms=5000`, `backoff_after_attempts=10`, and no archived/completed issue scans.
 
@@ -109,6 +117,7 @@ S04 Approve Batch behavior preserves that boundary. A fixture native approval re
 - No Paperclip runtime version/build evidence is available.
 - Company template import/export and AGENTS.md syntax have not been exercised against a live Paperclip instance.
 - Plugin registration, tools/data/actions registration, UI slots, native issues/documents/comments, approvals, state/entities/config, and activity/events all lack live behavior proof.
+- S05 `piko:eval-gate-evidence` and `piko:circuit-breaker-observe` are requested manifest tools only; live registration/invocation, native comment creation, native escalation issue creation, activity visibility, and event delivery remain unproven.
 - Betting Table dashboard hydration, data-provider registration, Approve Batch action invocation, native approval create/read, and fallback-rate observability all remain S06/live-runtime follow-ups.
 - Company-scoped state and terminal-run events remain fallback-only because prior risks say they may not read back or emit in some runtime versions.
 
@@ -116,5 +125,5 @@ S04 Approve Batch behavior preserves that boundary. A fixture native approval re
 
 - **S03**: Build BPI/Blueprint/Eval Gate logic against pure functions and native-artifact fallbacks first. Do not assume `ctx.tools.register`, native documents, comments, issue-scoped state, or issue detail tabs are available. Use the Product Blueprint artifact envelope as the inspection surface for seeded issue proof.
 - **S04**: Treat Betting Table UI/data providers as optional. Use managed native issues/projects or generated markdown until `registration.data`, `ui.dashboard_widgets`, entities, and approvals are proven. Consume `blueprint_id` as an opaque Product Blueprint `artifact_ref`; do not treat it as an approval/request id or as plugin-state durability evidence. Fixture proof may hydrate cache-overlay rows and exercise adapter-seam approval envelopes only.
-- **S05**: Implement Circuit Breaker with polling/activity/comment fallbacks before event-driven paths. Do not rely only on run events or company-scoped state.
+- **S05**: Eval Gate and Circuit Breaker evidence is available through explicit envelope-returning tools and adapter seams only. Inspect `selected_surface`, `artifact_ref`/`escalation_ref`, `cache_overlay`, `activity`, `polling_config`, `transition_reason`, attempts, failure reason, fallback diagnostics, and timestamps. Keep Circuit Breaker detection on polling/activity/comment/manual fallbacks before event-driven paths; do not rely only on run events, activity logs, native comments/issues, tool registration, or company-scoped state.
 - **S06**: Make runtime smoke tests the closure gate: capture version/build, plugin load, each requested registration surface, dashboard data-provider hydration, action invocation, native artifacts, approval/request create/read, fallback-rate observability, and import/export/AGENTS.md compatibility before any capability becomes `confirmed`.

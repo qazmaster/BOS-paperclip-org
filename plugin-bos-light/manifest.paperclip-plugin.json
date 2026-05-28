@@ -32,7 +32,10 @@
   "tools": [
     "piko:bpi-score",
     "piko:blueprint-gen",
+    "piko:bpi-blueprint-artifact",
     "piko:eval-gate",
+    "piko:eval-gate-evidence",
+    "piko:circuit-breaker-observe",
     "piko:decide"
   ]
 }

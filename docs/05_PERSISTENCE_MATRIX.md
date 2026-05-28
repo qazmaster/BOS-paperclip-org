@@ -10,8 +10,8 @@ Durable organizational truth must be visible in Paperclip-native artifacts. Priv
 | BOS Status | Issue detail tab overlay (`unvalidated`) | Issue-scoped plugin state as cache/overlay after proof | Issue label/comment plus `IssueBlueprintStatusOverlay.cache_overlay` diagnostics | `bos_status` synced with issue lifecycle; plugin cache never sole durable truth |
 | Blueprint | Issue Document (`documents.native` `unvalidated`), 5 sections | Issue Document native only after create/read proof | Comment (`comments.native` `unvalidated`) or `markdown-only://issues/{issue_id}/product-blueprint` artifact ref | Blueprint generated with `artifact_id`, `artifact_ref`, `selected_surface`, `fallback`, `mirrored_at` |
 | Betting Table | Dashboard widget (`unvalidated`) and Approve Batch action (`unvalidated`) | Cache-overlay cycle only for worker hydration after proof; native approval/request is Paperclip-owned truth only after live proof | Managed Paperclip issue/project or generated markdown carrying opaque `blueprint_id`; comment/markdown approval-request fallback diagnostics | Fixture ranks by BPI and returns cycle/approval envelopes; A4/A5 remain live-runtime pending until dashboard/data/action/approval surfaces are proven |
-| Gate Result | Review checklist/comment | Issue-scoped state + Issue Document after proof | Issue comment | Blocking gate stops release path |
-| Circuit State | Dashboard/detail tab (`unvalidated`) | Issue-scoped plugin state after proof | Polling + activity log/comment scanning | 3 failures -> OPEN + escalation issue |
+| Gate Result | Review checklist/comment (`comments.native` `unvalidated`) plus `piko:eval-gate-evidence` envelope | Issue-scoped state/cache overlay after proof; native comment only after create/read proof | `markdown-only://issues/{issue_id}/eval-gates/{run_id}` envelope with guidance, cache-overlay save status, and fallback diagnostics | A6/A7 fixture coverage returns pass/fail/incomplete guidance and comment/markdown evidence without promoting native comments or tool registration |
+| Circuit State | Dashboard/detail tab (`unvalidated`) plus `piko:circuit-breaker-observe` envelope | Issue-scoped plugin state after proof; escalation issue/comment only after native create/read proof | Cache-overlay diagnostics for non-OPEN observations; OPEN falls back from native issue to comment to markdown-only instructions; polling/activity fallback remains diagnostic | A8/A9/A10 fixture coverage shows CLOSED, HALF_OPEN, OPEN transitions, attempt counts, escalation refs, polling config, activity status, and fallback reasons |
 | BOS Config | Plugin config (`fallback-only`) | Config JSON | Company template import files | Reload without data loss |
 | Decision Record | Issue comment/document (`unvalidated`) | Paperclip issue comment native after create/read proof | Issue Document/description markdown | Decision visible in issue history |
 
@@ -49,3 +49,21 @@ Approval request truth is owned by Paperclip-native approvals when the runtime p
 - Comment fallback writes or markdown-only fallback refs are diagnostics and review requests, not approval records.
 - Cache save failure after a native approval is visible in `cache_overlay.error`, but it does not invalidate the native approval envelope fields.
 - Missing cycle ids, missing persistence, empty selections, stale issue ids, already-decided rows, malformed native responses, native adapter failures, and comment fallback failures must return explicit fallback diagnostics instead of throwing or silently mutating rows.
+
+## S05 Eval Gate and Circuit Breaker evidence persistence
+
+Eval Gate and Circuit Breaker evidence now use bounded envelopes as the persistence boundary for A6-A10. The envelopes are intentionally inspectable from tests, returned tool results, adapter comment/issue arrays, and docs; they do not require hidden plugin state or unproven Paperclip runtime events.
+
+Eval Gate persistence posture:
+
+- `piko:eval-gate-evidence` attempts `saveGateResult` only as a cache overlay. The returned `cache_overlay` states `persistence`, `save`, `error`, `timestamp`, and `durability: "cache-overlay-only"` every time.
+- Comment evidence is preferred for human visibility when the adapter seam supports `addIssueComment`, but `comments.native` remains `unvalidated`. A comment id from an in-memory adapter is not live host proof.
+- Invalid inputs, absent comments, malformed comment responses, or comment exceptions produce `selected_surface: "markdown-only"`, a deterministic `markdown-only://issues/.../eval-gates/...` ref, and fallback diagnostics.
+
+Circuit Breaker persistence posture:
+
+- `piko:circuit-breaker-observe` attempts `getCircuitBreaker` and `saveCircuitBreaker` only as cache-overlay operations. Malformed/failed cache reads reset to a fresh CLOSED record and report `get: "malformed"` or `"failed"` rather than crashing.
+- Non-OPEN observations normally return `selected_surface: "cache-overlay"`; this is useful for state/attempt inspection but is not durable truth.
+- OPEN observations prefer `issues.native` escalation, then `comments.native`, then `markdown-only`. Native issue/comment refs remain adapter evidence until live create/read proof exists; markdown-only output must be copied to a visible issue/comment by an operator if both native paths are absent.
+- Activity logging is non-blocking observability only. `activity.status: "logged"` does not make `activity.logging` a durable fallback while the capability matrix keeps that surface `unvalidated`.
+- Terminal run events stay fallback-only. Circuit Breaker detection must preserve active-runs-only polling with jitter/backoff and activity/comment/manual fallback semantics until C2/C7 produce live event delivery evidence.
