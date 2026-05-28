@@ -28,6 +28,10 @@ STATUS_ENUM = {"confirmed", "unsupported", "fallback-only", "unvalidated"}
 KEY_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
 TS_STRING_RE = re.compile(r'"([a-z0-9]+(?:[._-][a-z0-9]+)+)"')
 HEADING_RE = re.compile(r"^#{1,6}\s+(.+?)\s*$", re.MULTILINE)
+CONFIRMED_PLACEHOLDER_RE = re.compile(
+    r"\b(?:fixture|future|planned|placeholder|todo|tbd|when available|no live|unvalidated|fallback-only)\b",
+    re.IGNORECASE,
+)
 
 REQUIRED_ENTRY_FIELDS = (
     "key",
@@ -175,6 +179,45 @@ def _entry_context(entry: Any, index: int) -> str:
     return f"capabilities[{index}:<missing-key>]"
 
 
+def _is_placeholder_evidence(value: Any) -> bool:
+    return not isinstance(value, str) or not value.strip() or bool(CONFIRMED_PLACEHOLDER_RE.search(value))
+
+
+def _validate_confirmed_runtime_evidence(
+    entry: Mapping[str, Any],
+    context: str,
+    has_proof_command: bool,
+    has_runtime_field: bool,
+    errors: ValidationErrorCollector,
+) -> None:
+    if not has_proof_command or not has_runtime_field:
+        errors.add(MATRIX_PATH, context, "confirmed capability requires both proof_command and runtime_evidence_field")
+
+    proof_command = entry.get("proof_command")
+    runtime_field = entry.get("runtime_evidence_field")
+    evidence_source = entry.get("evidence_source")
+    evidence_text = " ".join(
+        str(value)
+        for value in (proof_command, runtime_field, evidence_source, entry.get("notes"))
+        if isinstance(value, str)
+    )
+
+    for field_name, value in (
+        ("proof_command", proof_command),
+        ("runtime_evidence_field", runtime_field),
+        ("evidence_source", evidence_source),
+    ):
+        if _is_placeholder_evidence(value):
+            errors.add(
+                MATRIX_PATH,
+                context,
+                f"confirmed capability field '{field_name}' must contain live Paperclip runtime evidence, not placeholder/future/local-only text",
+            )
+
+    if not re.search(r"\bversion\b", evidence_text, re.IGNORECASE) or not re.search(r"\bbuild\b", evidence_text, re.IGNORECASE):
+        errors.add(MATRIX_PATH, context, "confirmed capability requires live Paperclip runtime version and build evidence")
+
+
 def _validate_entry_shape(entry: Any, index: int, errors: ValidationErrorCollector) -> str | None:
     context = _entry_context(entry, index)
     if not isinstance(entry, dict):
@@ -221,8 +264,8 @@ def _validate_entry_shape(entry: Any, index: int, errors: ValidationErrorCollect
         errors.add(MATRIX_PATH, context, "non-confirmed capability must name fallback_path or blocker_text")
     if status == "unsupported" and not has_fallback and not has_blocker:
         errors.add(MATRIX_PATH, context, "unsupported capability must name fallback_path or blocker_text")
-    if status == "confirmed" and not has_proof_command and not has_runtime_field:
-        errors.add(MATRIX_PATH, context, "confirmed capability requires proof evidence")
+    if status == "confirmed":
+        _validate_confirmed_runtime_evidence(entry, context, has_proof_command, has_runtime_field, errors)
 
     for optional_list_field in ("manifest_capabilities", "manifest_tools", "adapter_assumptions"):
         if optional_list_field in entry and not isinstance(entry[optional_list_field], list):

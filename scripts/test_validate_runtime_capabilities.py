@@ -216,7 +216,32 @@ class RuntimeCapabilityValidatorTests(unittest.TestCase):
 
         errors = self.validate_fixture(mutate)
         joined = "\n".join(errors)
-        self.assertIn("confirmed capability requires proof evidence", joined)
+        self.assertIn("confirmed capability requires both proof_command and runtime_evidence_field", joined)
+
+    def test_confirmed_status_with_placeholder_runtime_evidence_fails(self):
+        def mutate(matrix: dict) -> None:
+            target = matrix["capabilities"][0]
+            target["status"] = "confirmed"
+            target["proof_command"] = "fixture proof command"
+            target["runtime_evidence_field"] = "future.paperclip.version_build"
+            target["evidence_source"] = "Future Paperclip runtime evidence when available."
+
+        errors = self.validate_fixture(mutate)
+        joined = "\n".join(errors)
+        self.assertIn("live Paperclip runtime evidence", joined)
+        self.assertIn("placeholder/future/local-only", joined)
+
+    def test_confirmed_status_requires_version_and_build_evidence(self):
+        def mutate(matrix: dict) -> None:
+            target = matrix["capabilities"][0]
+            target["status"] = "confirmed"
+            target["proof_command"] = "paperclip-runtime --print-version"
+            target["runtime_evidence_field"] = "paperclip.runtime.version"
+            target["evidence_source"] = "Live Paperclip runtime version probe."
+
+        errors = self.validate_fixture(mutate)
+        joined = "\n".join(errors)
+        self.assertIn("runtime version and build evidence", joined)
 
     def test_manifest_ui_and_tools_are_required(self):
         def mutate(matrix: dict) -> None:
