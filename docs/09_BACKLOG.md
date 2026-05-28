@@ -69,3 +69,14 @@
 - [ ] Implement Cynefin classifier.
 - [ ] Implement OODA recommendation.
 - [ ] Store decision record in issue comments/documents.
+
+## Epic 8 - A1-A10 Integrated Demo and Live Runtime Closure
+
+- [x] Publish the fixture-first A1-A10 baseline runbook in `docs/10_A1_A10_DEMO.md`.
+- [x] Add the deterministic demo command `python3 scripts/run_a1_a10_demo.py` for local A1-A10 evidence reproduction.
+- [x] Add docs validation for the A1-A10 table, fixture proof boundary, command reference, and live runtime gap ledger.
+- [ ] Run the A1-A10 baseline against a real live Paperclip runtime path and preserve the resulting evidence envelope.
+- [ ] Capture live Paperclip runtime version/build before any capability promotion.
+- [ ] Prove plugin load, `piko:*` tool registration/invocation, data provider hydration, action invocation, dashboard widget rendering, and issue detail tab rendering.
+- [ ] Prove native issue/document/comment create-read, native approval/request create-read, config/state/entities round trips, activity write/read visibility, issue lifecycle events, and terminal run event emission.
+- [ ] Update `plugin-bos-light/capabilities.paperclip-runtime.json` only after live Paperclip runtime proof exists, then re-run `python3 scripts/validate_runtime_capabilities.py` and `python3 scripts/validate_a1_a10_demo_docs.py`.

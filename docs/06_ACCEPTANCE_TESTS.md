@@ -70,3 +70,15 @@ A8/A9/A10 Circuit Breaker coverage:
 - Polling fallback posture is documented and returned as `poll_scope=ACTIVE_RUNS_ONLY`, `interval_ms=30000`, `jitter_ms=5000`, `backoff_after_attempts=10`, `max_retries=3`, and `fallback_source=activity-log`; terminal run events remain `fallback-only`.
 
 Negative coverage protecting A6-A10 includes invalid Eval Gate input, missing comment adapter, malformed comment response, comment write exception, gate cache save failure, invalid Circuit Breaker input, missing failure reason, missing cache persistence, cache get failure, malformed cache record, cache save failure, escalation issue creation failure, malformed escalation response, missing comment fallback, comment fallback exception, activity log exception, absent worker registration surfaces, manifest tool drift, unsupported/unknown capability statuses, confirmed claims without live version/build proof, placeholder proof text, missing fallback/blocker text, malformed capability JSON, missing health-report sections, and forbidden wording that overclaims events, durable plugin state, or plugin-owned approvals.
+
+## S06 A1-A10 baseline integrated demo
+
+The current integrated baseline is reproducible with:
+
+```bash
+python3 scripts/run_a1_a10_demo.py
+```
+
+The S06 runbook lives at `docs/10_A1_A10_DEMO.md`. It maps A1-A10 to concrete evidence paths, expected fixture output fields, and the live runtime gap ledger. The fixture proof boundary remains explicit: A3-A10 adapter-seam success demonstrates orchestration behavior only and does not promote Paperclip native runtime support. Future acceptance closure must inspect the runner's `runtime_capability_posture`, `gap_ledger`, per-phase selected surfaces, cache-overlay diagnostics, fallback reasons, and timestamps before claiming a live capability.
+
+Negative coverage protecting the runbook lives in `scripts/test_validate_a1_a10_demo_docs.py` and rejects missing A-step entries, missing fixture proof boundary wording, missing live runtime gap ledger heading, and missing `python3 scripts/run_a1_a10_demo.py` command references. `python3 scripts/validate_a1_a10_demo_docs.py` is the deterministic documentation-drift check.
