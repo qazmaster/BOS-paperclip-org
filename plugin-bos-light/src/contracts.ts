@@ -59,6 +59,8 @@ export interface BosStatusOverlay {
   updated_at: string;
 }
 
+export type NativeApprovalStatus = "PENDING" | "APPROVED" | "REJECTED";
+
 export interface BettingTableItem {
   schema_version: "1.0";
   cycle_id: string;
@@ -67,10 +69,30 @@ export interface BettingTableItem {
   blueprint_id: string | null;
   status: "CANDIDATE" | "APPROVAL_REQUESTED" | "APPROVED_FOR_CYCLE" | "REJECTED" | "COMPLETED";
   native_approval_request_id: string | null;
-  native_approval_status: "PENDING" | "APPROVED" | "REJECTED" | null;
+  native_approval_status: NativeApprovalStatus | null;
   approved_by: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export type BettingApprovalRequestSurface = "approvals.native" | "comments.native" | "markdown-only";
+
+export interface BettingApprovalRequestFallbackDiagnostics {
+  reason: string | null;
+  native_error?: string;
+  comment_error?: string;
+}
+
+export interface BettingApprovalRequestEnvelope {
+  schema_version: "1.0";
+  cycle_id: string;
+  selected_issue_ids: string[];
+  selected_surface: BettingApprovalRequestSurface;
+  native_approval_request_id: string | null;
+  native_approval_status: NativeApprovalStatus | null;
+  approval_request_ref: string;
+  requested_at: string;
+  fallback: BettingApprovalRequestFallbackDiagnostics;
 }
 
 export interface EvalGateResult {

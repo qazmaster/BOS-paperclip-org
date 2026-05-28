@@ -2,7 +2,7 @@
 
 ## Umbrella risk: Paperclip plugin runtime caveat
 
-The Paperclip plugin spec is rich, but the current runtime may not implement every part exactly as described. Treat plugin API details as assumptions until validated against the current Paperclip commit/version.
+The Paperclip plugin spec is rich, but the current runtime may not implement every part exactly as described. Treat plugin API details as assumptions until validated against the current Paperclip commit/version. S02 captures the current conservative posture in `docs/08_RUNTIME_CAPABILITY_HEALTH.md`: there is no live Paperclip runtime evidence yet, so requested manifest capabilities are not confirmed runtime capabilities.
 
 Mitigation:
 
@@ -56,10 +56,10 @@ Mitigation:
 | C1 | Conceptual approval | Pitch + feedback thread | public/core integration |
 | C2 | Event emission | Subscribe and trigger run failure | Circuit Breaker event path |
 | C3 | Plugin state | Write/read company-scoped and issue-scoped state | persistence design freeze |
-| C4 | Company template import/export | Test `companies.sh` or current import flow | Phase 1 acceptance |
-| C5 | AGENTS.md syntax compatibility | Validate against current Paperclip agent config | template release |
-| C6 | Plugin runtime version check | Confirm min version and breaking changes | plugin implementation |
-| C7 | Plugin capability set confirmed | Verify issues, approvals, state, data/actions, UI slots | plugin implementation |
+| C4 | Company template import/export | Test `companies.sh` or current import flow, then update `docs/08_RUNTIME_CAPABILITY_HEALTH.md` | Phase 1 acceptance |
+| C5 | AGENTS.md syntax compatibility | Validate against current Paperclip agent config, then update health report | template release |
+| C6 | Plugin runtime version check | Confirm min version/build and breaking changes in health report | plugin implementation |
+| C7 | Plugin capability set confirmed | Verify issues, approvals, state, data/actions, UI slots and update matrix/report evidence | plugin implementation |
 
 ## Polling config
 

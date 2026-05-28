@@ -1,7 +1,12 @@
 import type { BettingTableItem, BPIScore, BosStatusOverlay, CircuitBreakerRecord, DecisionMetadata, EvalGateResult } from "./contracts";
 import type { BOSPersistence, PaperclipAdapter } from "./paperclipAdapter";
+import { PAPERCLIP_RUNTIME_BOUNDARY_RULES } from "./runtimeCapabilities";
 
-// Draft in-memory persistence for tests and local logic. Replace with issue-scoped state + native artifacts.
+// Draft in-memory persistence for tests and local logic only. It is cache/overlay
+// behavior, not durable Paperclip state proof; native issue documents/comments
+// remain the recovery path until issue/company state round trips are proven.
+export const BOS_PERSISTENCE_BOUNDARY = PAPERCLIP_RUNTIME_BOUNDARY_RULES;
+
 export class InMemoryBOSPersistence implements BOSPersistence {
   bpi = new Map<string, BPIScore>();
   status = new Map<string, BosStatusOverlay>();

@@ -1,15 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Draft helper. Adjust to current Paperclip import/export CLI.
-# Expected use after C4 validation:
-#   ./scripts/import-company-template.sh /path/to/paperclip
+# Draft safety helper. This intentionally does NOT import into Paperclip.
+# C4/C5 are still unproven, so use this to validate the local template and
+# record runtime capability posture before attempting any real import elsewhere.
+#
+# Usage:
+#   ./scripts/import-company-template.sh [optional /path/to/paperclip]
 
-PAPERCLIP_DIR="${1:-}" 
-if [[ -z "$PAPERCLIP_DIR" ]]; then
-  echo "Usage: $0 /path/to/paperclip" >&2
-  exit 1
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+PAPERCLIP_DIR="${1:-}"
+
+echo "DRAFT WARNING: no Paperclip import is performed by this helper."
+echo "C4/C5 remain unproven until a real Paperclip import/export path and AGENTS.md parser accept this package."
+echo "Validating local BOS Light company template contract..."
+python3 "$REPO_ROOT/scripts/validate_company_template.py" --root "$REPO_ROOT"
+
+echo "Recording Paperclip runtime capability posture..."
+if [[ -n "$PAPERCLIP_DIR" ]]; then
+  python3 "$REPO_ROOT/scripts/probe_paperclip_runtime.py" --root "$REPO_ROOT" --paperclip-dir "$PAPERCLIP_DIR"
+else
+  python3 "$REPO_ROOT/scripts/probe_paperclip_runtime.py" --root "$REPO_ROOT"
 fi
 
-echo "TODO: map company-template/bos-company-template.json to current Paperclip companies.sh/import schema."
-echo "Paperclip dir: $PAPERCLIP_DIR"
+echo "No Paperclip import was attempted. Use the probe output and current Paperclip import/export docs before creating an import artifact."
