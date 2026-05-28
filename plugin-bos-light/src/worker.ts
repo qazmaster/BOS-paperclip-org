@@ -1,6 +1,13 @@
 import { calculateBPIScore } from "./bpi";
 import { generateBlueprintMarkdown } from "./blueprint";
-import { buildBettingTable, markApprovalRequested } from "./bettingTable";
+import {
+  buildAndSaveBettingCycle,
+  buildBettingTable,
+  loadBettingCycle,
+  markApprovalRequested,
+  requestBettingCycleApproval,
+  saveBettingCycle
+} from "./bettingTable";
 import { runEvalGates } from "./evalGates";
 import { createCircuitBreakerRecord, recordFailure, attachEscalationIssue } from "./circuitBreaker";
 import { decide } from "./decision";
@@ -30,6 +37,10 @@ export const BOS_LIGHT_TOOLS = {
   calculateBPIScore,
   generateBlueprintMarkdown,
   buildBettingTable,
+  buildAndSaveBettingCycle,
+  saveBettingCycle,
+  loadBettingCycle,
+  requestBettingCycleApproval,
   markApprovalRequested,
   runEvalGates,
   createCircuitBreakerRecord,
@@ -38,6 +49,34 @@ export const BOS_LIGHT_TOOLS = {
   decide,
   runSeededIssueBlueprintFlow
 };
+
+function firstNonEmptyString(...values: unknown[]): string | null {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim().length > 0) return value.trim();
+  }
+  return null;
+}
+
+function bettingCycleIdFrom(input: any, ctx: any): string | null {
+  return firstNonEmptyString(
+    input?.cycle_id,
+    input?.cycleId,
+    input?.betting_cycle_id,
+    input?.input?.cycle_id,
+    input?.input?.cycleId,
+    input?.params?.cycle_id,
+    input?.params?.cycleId,
+    input?.context?.cycle_id,
+    input?.context?.cycleId,
+    ctx?.config?.current_betting_cycle_id,
+    ctx?.config?.currentBettingCycleId
+  );
+}
+
+function issueIdsFrom(input: any): string[] {
+  const raw = input?.issue_ids ?? input?.issueIds ?? input?.selected_issue_ids ?? input?.selectedIssueIds ?? [];
+  return Array.isArray(raw) ? raw.filter((issueId): issueId is string => typeof issueId === "string") : [];
+}
 
 export async function registerBosLightPlugin(ctx: any): Promise<void> {
   ctx.logger?.info?.("Registering BOS Light plugin draft");
@@ -77,16 +116,58 @@ export async function registerBosLightPlugin(ctx: any): Promise<void> {
   await ctx.tools?.register?.("piko:decide", async (params: any) => decide(params));
 
   // Data provider: Betting Table. Host data-provider hydration remains unvalidated;
-  // use native issues/projects or markdown artifacts until registration.data is proven.
-  await ctx.data?.register?.("betting-table", async (_context: any) => {
-    // TODO: load current cycle from persistence after state/entities have runtime proof.
-    return { items: [] };
+  // this reads only the cache-overlay seam and returns diagnostics rather than
+  // claiming durable Paperclip state support.
+  await ctx.data?.register?.("betting-table", async (context: any = {}) => {
+    const cycle_id = bettingCycleIdFrom(context, ctx);
+    if (!cycle_id) {
+      return {
+        items: [],
+        diagnostics: {
+          cycle_id: null,
+          error: "missing_cycle_id",
+          persistence: ctx.persistence ? "provided" : "missing"
+        }
+      };
+    }
+
+    const cycle = await loadBettingCycle({
+      cycle_id,
+      persistence: context.persistence ?? ctx.persistence
+    });
+
+    return {
+      items: cycle.items,
+      diagnostics: {
+        cycle_id: cycle.cycle_id,
+        selected_issue_ids: cycle.selected_issue_ids,
+        cache_overlay: cycle.cache_overlay
+      }
+    };
   });
 
-  // Action: Approve Batch must create Paperclip-native approval/request, not a local/test-double approval.
-  await ctx.actions?.register?.("approve-batch", async (input: any) => {
-    const issueIds = input.issue_ids ?? [];
-    const approval = await ctx.approvals?.create?.({ issueIds, reason: "BOS Light Betting Table batch approval" });
-    return { approval };
+  // Action: Approve Batch delegates to the adapter seam. It never creates a
+  // plugin-side approval object and falls back through requestBettingCycleApproval
+  // diagnostics when the native Paperclip adapter is unavailable.
+  await ctx.actions?.register?.("approve-batch", async (input: any = {}) => {
+    const cycle_id = bettingCycleIdFrom(input, ctx);
+    if (!cycle_id) {
+      return {
+        error: "missing_cycle_id",
+        selected_issue_ids: issueIdsFrom(input),
+        selected_surface: "markdown-only",
+        message: "approve-batch requires cycle_id or ctx.config.current_betting_cycle_id; no approval request was created."
+      };
+    }
+
+    return requestBettingCycleApproval({
+      cycle_id,
+      issue_ids: issueIdsFrom(input),
+      reason: firstNonEmptyString(input.reason, input.message) ?? "BOS Light Betting Table batch approval",
+      requested_by: firstNonEmptyString(input.requested_by, input.requestedBy) ?? "BOS.Light.Worker",
+      adapter: input.adapter ?? ctx.paperclipAdapter ?? ctx.paperclip,
+      persistence: input.persistence ?? ctx.persistence,
+      now: firstNonEmptyString(input.now) ?? undefined
+    });
   });
 }

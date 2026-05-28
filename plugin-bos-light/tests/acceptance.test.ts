@@ -6,7 +6,7 @@ import { runEvalGates } from "../src/evalGates";
 import { runSeededIssueBlueprintFlow } from "../src/issueBlueprintFlow";
 import { InMemoryPaperclipAdapter } from "../src/paperclipAdapter";
 import { InMemoryBOSPersistence } from "../src/persistence";
-import { registerBosLightPlugin } from "../src/worker";
+import { BOS_LIGHT_TOOLS, registerBosLightPlugin } from "../src/worker";
 
 const allHardGatesPass = {
   strategic_weight_passed: true,
@@ -583,6 +583,215 @@ describe("betting cycle approval request orchestration", () => {
       native_approval_status: "PENDING"
     });
     expect(saveFailed.cache_overlay.error).not.toMatch(/[\n\t]/);
+  });
+});
+
+describe("worker Betting Table data and approve-batch wiring", () => {
+  const now = "2026-01-03T00:00:00.000Z";
+
+  async function registerWorkerHarness(ctxOverrides: Record<string, unknown> = {}) {
+    const tools = new Map<string, (input?: any) => Promise<any> | any>();
+    const dataProviders = new Map<string, (input?: any) => Promise<any> | any>();
+    const actions = new Map<string, (input?: any) => Promise<any> | any>();
+    const ctx = {
+      logger: { info: () => undefined },
+      tools: { register: async (name: string, handler: (input?: any) => Promise<any> | any) => { tools.set(name, handler); } },
+      data: { register: async (name: string, handler: (input?: any) => Promise<any> | any) => { dataProviders.set(name, handler); } },
+      actions: { register: async (name: string, handler: (input?: any) => Promise<any> | any) => { actions.set(name, handler); } },
+      ...ctxOverrides
+    };
+
+    await registerBosLightPlugin(ctx);
+    return { tools, dataProviders, actions, ctx };
+  }
+
+  it("exposes betting-cycle helpers and registers fake ctx data/action surfaces", async () => {
+    const { tools, dataProviders, actions } = await registerWorkerHarness();
+
+    expect(BOS_LIGHT_TOOLS).toMatchObject({
+      buildAndSaveBettingCycle,
+      saveBettingCycle,
+      loadBettingCycle,
+      requestBettingCycleApproval
+    });
+    expect(tools.has("piko:bpi-score")).toBe(true);
+    expect(tools.has("piko:bpi-blueprint-artifact")).toBe(true);
+    expect(dataProviders.has("betting-table")).toBe(true);
+    expect(actions.has("approve-batch")).toBe(true);
+  });
+
+  it("hydrates persisted S03 blueprint_id Betting Table rows through the worker data provider", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    const adapter = new InMemoryPaperclipAdapter();
+    const flow = await runSeededIssueBlueprintFlow({
+      issue: {
+        issue_id: "issue_worker_seeded",
+        title: "Seed worker Betting Table",
+        problem_statement: "Worker provider should hydrate the persisted cycle by current config.",
+        producer_division: "Div3.Production",
+        acceptance_criteria: ["Seeded Blueprint artifact ref appears in provider rows"],
+        resources: ["In-memory Paperclip adapter", "In-memory cache overlay"]
+      },
+      bpi: {
+        expected_value: 0.85,
+        urgency: 0.9,
+        estimated_token_cost: 10000,
+        risk_factor: 1,
+        company_token_budget_ref: 100000,
+        hard_gates: allHardGatesPass
+      },
+      adapter,
+      persistence,
+      capabilities: { documents_native: "enabled", comments_native: "enabled" },
+      now
+    });
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_worker_hydrated",
+      top_n: 2,
+      now,
+      persistence,
+      candidates: [
+        { issue_id: "issue_lower", bpi_score: 0.1, blueprint_id: "markdown-only://issues/issue_lower/product-blueprint" },
+        { issue_id: "issue_worker_seeded", bpi_score: flow.bpi.score, blueprint_id: flow.status_overlay.blueprint_id }
+      ]
+    });
+    const { dataProviders } = await registerWorkerHarness({
+      persistence,
+      config: { current_betting_cycle_id: "cycle_worker_hydrated" }
+    });
+
+    const result = await dataProviders.get("betting-table")?.({});
+
+    expect(result.items.map((item: any) => item.issue_id)).toEqual(["issue_worker_seeded", "issue_lower"]);
+    expect(result.items[0].blueprint_id).toBe(flow.artifact.artifact_ref);
+    expect(result.diagnostics).toMatchObject({
+      cycle_id: "cycle_worker_hydrated",
+      selected_issue_ids: ["issue_worker_seeded", "issue_lower"],
+      cache_overlay: {
+        durability: "cache-overlay-only",
+        persistence: "provided",
+        load: "loaded",
+        save: "not_attempted",
+        error: null
+      }
+    });
+  });
+
+  it("approve-batch uses the adapter seam for native approvals, updates persistence, and never calls ctx.approvals", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    const paperclipAdapter = new InMemoryPaperclipAdapter();
+    let directApprovalCalls = 0;
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_worker_native",
+      top_n: 2,
+      now,
+      persistence,
+      candidates: [
+        { issue_id: "issue_worker_a", bpi_score: 12, blueprint_id: "doc_a" },
+        { issue_id: "issue_worker_b", bpi_score: 10, blueprint_id: "doc_b" }
+      ]
+    });
+    const { actions } = await registerWorkerHarness({
+      persistence,
+      paperclipAdapter,
+      approvals: { create: async () => { directApprovalCalls += 1; throw new Error("direct approvals surface must not be used"); } }
+    });
+
+    const result = await actions.get("approve-batch")?.({
+      cycle_id: "cycle_worker_native",
+      issue_ids: ["issue_worker_a", "issue_worker_b"],
+      reason: "Approve worker batch",
+      requested_by: "Master.Human",
+      now
+    });
+    const persisted = await loadBettingCycle({ cycle_id: "cycle_worker_native", persistence, now });
+
+    expect(directApprovalCalls).toBe(0);
+    expect(result.approval).toBeUndefined();
+    expect(result).toMatchObject({
+      selected_surface: "approvals.native",
+      native_approval_request_id: "approval_1",
+      native_approval_status: "PENDING",
+      fallback: { reason: null },
+      cache_overlay: { load: "loaded", save: "saved", error: null }
+    });
+    expect(paperclipAdapter.approvals).toEqual([{ id: "approval_1", issue_ids: ["issue_worker_a", "issue_worker_b"], status: "PENDING" }]);
+    expect(persisted.items.map((item) => item.status)).toEqual(["APPROVAL_REQUESTED", "APPROVAL_REQUESTED"]);
+    expect(persisted.items.map((item) => item.native_approval_request_id)).toEqual(["approval_1", "approval_1"]);
+  });
+
+  it("approve-batch returns explicit fallback diagnostics when the adapter is unavailable without mutating rows", async () => {
+    const persistence = new InMemoryBOSPersistence();
+    await buildAndSaveBettingCycle({
+      cycle_id: "cycle_worker_fallback",
+      top_n: 1,
+      now,
+      persistence,
+      candidates: [{ issue_id: "issue_worker_fallback", bpi_score: 7, blueprint_id: "doc_fallback" }]
+    });
+    const { actions } = await registerWorkerHarness({ persistence });
+
+    const result = await actions.get("approve-batch")?.({
+      cycle_id: "cycle_worker_fallback",
+      issue_ids: ["issue_worker_fallback"],
+      reason: "Runtime lacks native approval adapter",
+      now
+    });
+    const persisted = await loadBettingCycle({ cycle_id: "cycle_worker_fallback", persistence, now });
+
+    expect(result).toMatchObject({
+      selected_surface: "markdown-only",
+      native_approval_request_id: null,
+      native_approval_status: null,
+      approval_request_ref: "markdown-only://betting-cycles/cycle_worker_fallback/approval-request",
+      fallback: {
+        reason: "approvals.native:unavailable",
+        comment_error: "comments.native:unavailable"
+      },
+      cache_overlay: { load: "loaded", save: "not_attempted", error: null }
+    });
+    expect(persisted.items[0]).toMatchObject({
+      status: "CANDIDATE",
+      native_approval_request_id: null,
+      native_approval_status: null
+    });
+  });
+
+  it("returns no-crash diagnostics for missing cycle ids and missing persistence", async () => {
+    const { dataProviders: noCycleDataProviders, actions } = await registerWorkerHarness();
+
+    const missingCycleData = await noCycleDataProviders.get("betting-table")?.({});
+    const missingCycleAction = await actions.get("approve-batch")?.({ issue_ids: ["issue_no_cycle"] });
+
+    expect(missingCycleData).toMatchObject({
+      items: [],
+      diagnostics: { cycle_id: null, error: "missing_cycle_id", persistence: "missing" }
+    });
+    expect(missingCycleAction).toMatchObject({
+      error: "missing_cycle_id",
+      selected_issue_ids: ["issue_no_cycle"],
+      selected_surface: "markdown-only"
+    });
+
+    const { dataProviders: noPersistenceDataProviders } = await registerWorkerHarness({
+      config: { current_betting_cycle_id: "cycle_without_persistence" }
+    });
+    const missingPersistenceData = await noPersistenceDataProviders.get("betting-table")?.({});
+
+    expect(missingPersistenceData).toMatchObject({
+      items: [],
+      diagnostics: {
+        cycle_id: "cycle_without_persistence",
+        selected_issue_ids: [],
+        cache_overlay: {
+          durability: "cache-overlay-only",
+          persistence: "missing",
+          load: "not_attempted",
+          save: "not_attempted",
+          error: null
+        }
+      }
+    });
   });
 });
 
