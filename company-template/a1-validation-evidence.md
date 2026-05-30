@@ -12,7 +12,7 @@ Run from the repository root:
 python3 scripts/validate_company_template.py
 ```
 
-Captured successful output during `M001-bo1jcm / S01 / T03`:
+Captured successful output during `M004-osbua3 / S02 / T03`:
 
 ```text
 Company template OK: 7 divisions, 7 agent profiles, org chart, routing, rituals, and agents README are compatible.
@@ -28,13 +28,13 @@ The local validator inspected the BOS Light company package without calling Pape
   - valid `reports_to` references
   - valid `agent_profile` paths
   - valid routing-rule target references
-- `agents/Div1_Executive/AGENTS.md`
+- `agents/Div7_MissionControl/AGENTS.md`
+- `agents/Div1_HCO/AGENTS.md`
 - `agents/Div2_MasterPlanner/AGENTS.md`
-- `agents/Div3_Production/AGENTS.md`
-- `agents/Div4_Operations/AGENTS.md`
-- `agents/Div5_Qualifications/AGENTS.md`
-- `agents/Div6_Resources/AGENTS.md`
-- `agents/Div7_Strategy/AGENTS.md`
+- `agents/Div3_Treasury/AGENTS.md`
+- `agents/Div4_Production/AGENTS.md`
+- `agents/Div5_QualificationsLibraryLearning/AGENTS.md`
+- `agents/Div6_External/AGENTS.md`
 - `agents/README.md`
 - `company-template/org-chart.mmd`
 - `company-template/task-routing.md`
