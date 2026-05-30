@@ -14,14 +14,49 @@ import sys
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
-EXPECTED_DIVISION_IDS = (
-    "Div7.MissionControl",
-    "Div1.HCO",
-    "Div2.MasterPlanner",
-    "Div3.Treasury",
-    "Div4.Production",
-    "Div5.QualificationsLibraryLearning",
-    "Div6.External",
+EXPECTED_DIVISION_PROFILES = {
+    "Div7.MissionControl": "agents/Div7_MissionControl/AGENTS.md",
+    "Div1.HCO": "agents/Div1_HCO/AGENTS.md",
+    "Div2.MasterPlanner": "agents/Div2_MasterPlanner/AGENTS.md",
+    "Div3.Treasury": "agents/Div3_Treasury/AGENTS.md",
+    "Div4.Production": "agents/Div4_Production/AGENTS.md",
+    "Div5.QualificationsLibraryLearning": "agents/Div5_QualificationsLibraryLearning/AGENTS.md",
+    "Div6.External": "agents/Div6_External/AGENTS.md",
+}
+EXPECTED_DIVISION_IDS = tuple(EXPECTED_DIVISION_PROFILES)
+EXPECTED_REPORTING_LINES = {
+    "Div7.MissionControl": None,
+    "Div1.HCO": "Div7.MissionControl",
+    "Div2.MasterPlanner": "Div1.HCO",
+    "Div3.Treasury": "Div1.HCO",
+    "Div4.Production": "Div1.HCO",
+    "Div5.QualificationsLibraryLearning": "Div1.HCO",
+    "Div6.External": "Div1.HCO",
+}
+EXPECTED_ROUTING_RULES = {
+    "high_level_mission": "Div7.MissionControl -> Div1.HCO",
+    "backlog_shaping": "Div1.HCO -> Div2.MasterPlanner",
+    "budget_capacity": "Div1.HCO -> Div3.Treasury",
+    "implementation": "Div1.HCO -> Div4.Production",
+    "qa_security_review": "Div1.HCO -> Div5.QualificationsLibraryLearning",
+    "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External",
+    "complex_decision": "Div1.HCO -> Div7.MissionControl",
+}
+LEGACY_DIVISION_IDS = {
+    "Div1.Executive",
+    "Div3.Production",
+    "Div4.Operations",
+    "Div5.Qualifications",
+    "Div6.Resources",
+    "Div7.Strategy",
+}
+LEGACY_PROFILE_PREFIXES = (
+    "agents/Div1_Executive/",
+    "agents/Div3_Production/",
+    "agents/Div4_Operations/",
+    "agents/Div5_Qualifications/",
+    "agents/Div6_Resources/",
+    "agents/Div7_Strategy/",
 )
 
 TEMPLATE_PATH = Path("company-template/bos-company-template.json")
@@ -120,9 +155,12 @@ def _validate_divisions(template: Mapping[str, Any], root: Path, errors: Validat
     actual_ids = set(division_ids)
     expected_ids = set(EXPECTED_DIVISION_IDS)
     missing_ids = sorted(expected_ids - actual_ids)
+    legacy_ids = sorted(actual_ids & LEGACY_DIVISION_IDS)
     extra_ids = sorted(actual_ids - expected_ids)
     if missing_ids:
         errors.add(TEMPLATE_PATH, "divisions", f"compatibility issue: missing BOS Light v1.4.1 division ids: {', '.join(missing_ids)}")
+    if legacy_ids:
+        errors.add(TEMPLATE_PATH, "divisions", f"compatibility issue: legacy division ids are not active BOS Light v1.4.1 ids: {', '.join(legacy_ids)}")
     if extra_ids:
         errors.add(TEMPLATE_PATH, "divisions", f"compatibility issue: unknown BOS Light v1.4.1 division ids: {', '.join(extra_ids)}")
 
@@ -171,6 +209,16 @@ def _validate_agent_profile(
         return
 
     division_id = division.get("id")
+    expected_profile = EXPECTED_DIVISION_PROFILES.get(division_id) if isinstance(division_id, str) else None
+    if expected_profile is not None and profile_value != expected_profile:
+        stale_prefix = next((prefix for prefix in LEGACY_PROFILE_PREFIXES if profile_value.startswith(prefix)), None)
+        reason = "stale legacy profile path" if stale_prefix is not None else "non-canonical profile path"
+        errors.add(
+            TEMPLATE_PATH,
+            f"{context_id}.agent_profile",
+            f"{reason}: expected '{expected_profile}', found '{profile_value}'",
+        )
+
     if isinstance(division_id, str) and division_id not in profile_text:
         errors.add(display_profile, division_id, "compatibility issue: profile does not mention its division id")
 
@@ -187,6 +235,15 @@ def _validate_reports_to(
             errors.add(TEMPLATE_PATH, f"{division_id}.reports_to", f"unknown reporting target '{reports_to}'")
         if reports_to == division_id:
             errors.add(TEMPLATE_PATH, f"{division_id}.reports_to", "division cannot report to itself")
+        expected_reports_to = EXPECTED_REPORTING_LINES.get(division_id) if isinstance(division_id, str) else None
+        if division_id in EXPECTED_REPORTING_LINES and reports_to != expected_reports_to:
+            expected_display = "null" if expected_reports_to is None else repr(expected_reports_to)
+            found_display = "null" if reports_to is None else repr(reports_to)
+            errors.add(
+                TEMPLATE_PATH,
+                f"{division_id}.reports_to",
+                f"compatibility issue: expected v1.4.1 reporting target {expected_display}, found {found_display}",
+            )
 
 
 def _parse_route_targets(route_value: str) -> tuple[list[str], list[str]]:
@@ -208,6 +265,15 @@ def _validate_routing_rules(template: Mapping[str, Any], division_ids: set[str],
         errors.add(TEMPLATE_PATH, "routing_rules", "missing field or value is not a non-empty object")
         return referenced_targets
 
+    expected_rule_names = set(EXPECTED_ROUTING_RULES)
+    actual_rule_names = {rule_name for rule_name in routing_rules if isinstance(rule_name, str)}
+    missing_rules = sorted(expected_rule_names - actual_rule_names)
+    extra_rules = sorted(actual_rule_names - expected_rule_names)
+    for rule_name in missing_rules:
+        errors.add(TEMPLATE_PATH, f"routing_rules.{rule_name}", f"missing v1.4.1 routing rule; expected route '{EXPECTED_ROUTING_RULES[rule_name]}'")
+    for rule_name in extra_rules:
+        errors.add(TEMPLATE_PATH, f"routing_rules.{rule_name}", "unknown routing rule is not part of the active v1.4.1 contract")
+
     for rule_name, route_value in sorted(routing_rules.items()):
         context = f"routing_rules.{rule_name}"
         if not isinstance(rule_name, str) or not rule_name.strip():
@@ -215,6 +281,14 @@ def _validate_routing_rules(template: Mapping[str, Any], division_ids: set[str],
         if not isinstance(route_value, str) or not route_value.strip():
             errors.add(TEMPLATE_PATH, context, "malformed route: value must be a non-empty string")
             continue
+
+        expected_route = EXPECTED_ROUTING_RULES.get(rule_name)
+        if expected_route is not None and route_value != expected_route:
+            errors.add(
+                TEMPLATE_PATH,
+                context,
+                f"compatibility issue: expected v1.4.1 route '{expected_route}', found '{route_value}'",
+            )
 
         targets, malformed_segments = _parse_route_targets(route_value)
         if malformed_segments:

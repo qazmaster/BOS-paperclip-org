@@ -58,7 +58,7 @@ def valid_template() -> dict:
 def write_fixture(root: Path, template: dict | None = None) -> None:
     template = copy.deepcopy(template if template is not None else valid_template())
     (root / "company-template").mkdir(parents=True)
-    (root / "agents").mkdir(parents=True)
+    (root / "agents").mkdir(parents=True, exist_ok=True)
     for division_id, _title, _reports_to, folder, _vfp in DIVISIONS:
         profile_dir = root / "agents" / folder
         profile_dir.mkdir(parents=True)
@@ -128,6 +128,41 @@ class CompanyTemplateValidatorTests(unittest.TestCase):
         self.assertIn("company-template/org-chart.mmd", joined)
         self.assertIn("compatibility issue", joined)
         self.assertIn("Div1.HCO", joined)
+
+    def test_legacy_division_id_is_rejected_as_inactive_contract(self):
+        def mutate(_root: Path, template: dict) -> None:
+            template["divisions"][0]["id"] = "Div7.Strategy"
+
+        errors = self.validate_fixture(mutate)
+        joined = "\n".join(errors)
+        self.assertIn("legacy division ids are not active BOS Light v1.4.1 ids", joined)
+        self.assertIn("Div7.Strategy", joined)
+        self.assertIn("missing BOS Light v1.4.1 division ids", joined)
+        self.assertIn("Div7.MissionControl", joined)
+
+    def test_stale_agent_profile_path_reports_expected_profile(self):
+        def mutate(root: Path, template: dict) -> None:
+            stale_profile = root / "agents" / "Div1_Executive" / "AGENTS.md"
+            stale_profile.parent.mkdir(parents=True)
+            stale_profile.write_text("# Div1.HCO\n\nStale legacy profile path fixture.\n", encoding="utf-8")
+            template["divisions"][1]["agent_profile"] = "agents/Div1_Executive/AGENTS.md"
+
+        errors = self.validate_fixture(mutate)
+        joined = "\n".join(errors)
+        self.assertIn("Div1.HCO.agent_profile", joined)
+        self.assertIn("stale legacy profile path", joined)
+        self.assertIn("expected 'agents/Div1_HCO/AGENTS.md'", joined)
+        self.assertIn("found 'agents/Div1_Executive/AGENTS.md'", joined)
+
+    def test_unexpected_route_semantics_report_expected_route(self):
+        def mutate(_root: Path, template: dict) -> None:
+            template["routing_rules"]["implementation"] = "Div1.HCO -> Div3.Treasury -> Div4.Production"
+
+        errors = self.validate_fixture(mutate)
+        joined = "\n".join(errors)
+        self.assertIn("routing_rules.implementation", joined)
+        self.assertIn("expected v1.4.1 route 'Div1.HCO -> Div4.Production'", joined)
+        self.assertIn("found 'Div1.HCO -> Div3.Treasury -> Div4.Production'", joined)
 
     def test_exactly_seven_divisions_boundary(self):
         def mutate(_root: Path, template: dict) -> None:

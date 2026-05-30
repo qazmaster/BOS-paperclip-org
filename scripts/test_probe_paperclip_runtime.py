@@ -118,6 +118,40 @@ class PaperclipRuntimeProbeTests(unittest.TestCase):
         self.assertLessEqual(statuses, {"unvalidated", "fallback-only", "unsupported"})
         self.assertIn("unvalidated", statuses)
 
+    def test_local_contract_reports_stale_profile_path_exactly(self):
+        def run(root: Path):
+            stale_profile = root / "agents" / "Div1_Executive" / "AGENTS.md"
+            stale_profile.parent.mkdir(parents=True)
+            stale_profile.write_text("# Div1.HCO\n\nStale legacy profile path fixture.\n", encoding="utf-8")
+            template_path = root / "company-template" / "bos-company-template.json"
+            template = json.loads(template_path.read_text(encoding="utf-8"))
+            template["divisions"][1]["agent_profile"] = "agents/Div1_Executive/AGENTS.md"
+            template_path.write_text(json.dumps(template, indent=2), encoding="utf-8")
+            return probe.build_report(root, None)
+
+        report = self.with_fixture(run)
+        self.assertEqual("local-contract-invalid", report["local_contract"]["company_template"]["status"])
+        joined = "\n".join(report["local_contract"]["company_template"]["errors"])
+        self.assertIn("Div1.HCO.agent_profile", joined)
+        self.assertIn("stale legacy profile path", joined)
+        self.assertIn("agents/Div1_Executive/AGENTS.md", joined)
+        self.assertIn("agents/Div1_HCO/AGENTS.md", joined)
+
+    def test_local_contract_reports_stale_route_exactly(self):
+        def run(root: Path):
+            template_path = root / "company-template" / "bos-company-template.json"
+            template = json.loads(template_path.read_text(encoding="utf-8"))
+            template["routing_rules"]["external_io_request"] = "Div1.HCO -> Div6.External"
+            template_path.write_text(json.dumps(template, indent=2), encoding="utf-8")
+            return probe.build_report(root, None)
+
+        report = self.with_fixture(run)
+        self.assertEqual("local-contract-invalid", report["local_contract"]["company_template"]["status"])
+        joined = "\n".join(report["local_contract"]["company_template"]["errors"])
+        self.assertIn("routing_rules.external_io_request", joined)
+        self.assertIn("expected v1.4.1 route 'Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External'", joined)
+        self.assertIn("found 'Div1.HCO -> Div6.External'", joined)
+
     def test_missing_paperclip_path_is_unvalidated_health_not_failure(self):
         def run(root: Path):
             return probe.build_report(root, root / "missing-paperclip")
