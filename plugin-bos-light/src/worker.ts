@@ -99,6 +99,32 @@ async function registerOptionalTool(ctx: any, name: string, handler: (params?: a
   }
 }
 
+async function registerOptionalDataProvider(ctx: any, name: string, handler: (context?: any) => Promise<any> | any): Promise<void> {
+  if (typeof ctx.data?.register !== "function") return;
+
+  try {
+    await ctx.data.register(name, handler);
+  } catch (error) {
+    ctx.logger?.warn?.("Skipped optional BOS Light data provider registration", {
+      dataProvider: name,
+      error: error instanceof Error ? error.message : String(error)
+    });
+  }
+}
+
+async function registerOptionalAction(ctx: any, name: string, handler: (input?: any) => Promise<any> | any): Promise<void> {
+  if (typeof ctx.actions?.register !== "function") return;
+
+  try {
+    await ctx.actions.register(name, handler);
+  } catch (error) {
+    ctx.logger?.warn?.("Skipped optional BOS Light action registration", {
+      action: name,
+      error: error instanceof Error ? error.message : String(error)
+    });
+  }
+}
+
 function adapterFrom(params: Record<string, any>, ctx: any): any {
   return params.adapter ?? ctx.paperclipAdapter ?? ctx.paperclip ?? null;
 }
@@ -172,7 +198,7 @@ export async function registerBosLightPlugin(ctx: any): Promise<void> {
   // Data provider: Betting Table. Host data-provider hydration remains unvalidated;
   // this reads only the cache-overlay seam and returns diagnostics rather than
   // claiming durable Paperclip state support.
-  await ctx.data?.register?.("betting-table", async (context: any = {}) => {
+  await registerOptionalDataProvider(ctx, "betting-table", async (context: any = {}) => {
     const cycle_id = bettingCycleIdFrom(context, ctx);
     if (!cycle_id) {
       return {
@@ -203,7 +229,7 @@ export async function registerBosLightPlugin(ctx: any): Promise<void> {
   // Action: Approve Batch delegates to the adapter seam. It never creates a
   // plugin-side approval object and falls back through requestBettingCycleApproval
   // diagnostics when the native Paperclip adapter is unavailable.
-  await ctx.actions?.register?.("approve-batch", async (input: any = {}) => {
+  await registerOptionalAction(ctx, "approve-batch", async (input: any = {}) => {
     const cycle_id = bettingCycleIdFrom(input, ctx);
     if (!cycle_id) {
       return {

@@ -4,10 +4,10 @@
 |---|---|---|---|---|
 | A1 | Company Template | Fresh Paperclip company | Import BOS template | 7 agents created with AGENTS.md; org chart rendered |
 | A2 | BPI Score | Issue created in backlog | Div2 calls `piko:bpi-score` or the seeded issue flow computes BPI locally | Score 0.0-1.0 is returned, cache-overlay write posture is explicit, and no plugin state is treated as durable truth |
-| A3 | Blueprint Gen | Issue approved by BPI | `piko:blueprint-gen` or seeded issue flow invoked | Five-section Product Blueprint returned in a `ProductBlueprintArtifact` envelope with `artifact_id`, `artifact_ref`, `selected_surface`, `fallback`, and `mirrored_at`; native document status remains unvalidated until runtime proof |
+| A3 | Blueprint Gen | Issue approved by BPI | `piko:blueprint-gen` or seeded issue flow invoked | Five-section Product Blueprint returned in a `ProductBlueprintArtifact` envelope with `artifact_id`, `artifact_ref`, `selected_surface`, `fallback`, and `mirrored_at`; native document status is confirmed only for the bounded S04 live readback proof |
 | A4 | Betting Table | 5+ issues with BPI score | Widget/data provider renders Pitch Deck | Fixture-level provider returns top-N rows ranked by BPI with `cycle_id`, `selected_issue_ids`, opaque `blueprint_id`, and cache-overlay diagnostics; dashboard rendering remains unvalidated until live UI proof |
-| A5 | Batch Approval | Betting Table with candidates | User clicks Approve Batch | Native approval adapter seam creates a Paperclip-owned request in fixture proof; otherwise comment/markdown fallback diagnostics are returned without plugin-side approval decisions |
-| A6 | Eval Gate Pass | Issue in `QA_REVIEW` | `piko:eval-gate-evidence` runs and all blocking gates pass | Envelope returns `overall=PASSED`/`PASSED_WITH_WARNINGS`, pass guidance, cache-overlay save posture, and comment or markdown-only evidence; native comments and tool registration remain unvalidated until live proof |
+| A5 | Batch Approval | Betting Table with candidates | User clicks Approve Batch | Native approval adapter seam remains fixture proof only; S04 confirms comment/document artifact visibility, but approval create/read stays unvalidated and comment/markdown review requests remain diagnostics |
+| A6 | Eval Gate Pass | Issue in `QA_REVIEW` | `piko:eval-gate-evidence` runs and all blocking gates pass | Envelope returns `overall=PASSED`/`PASSED_WITH_WARNINGS`, pass guidance, cache-overlay save posture, and comment or markdown-only evidence; native comments are confirmed only for S04 bounded artifact readback; tool registration remains unvalidated until live proof |
 | A7 | Eval Gate Fail | Issue in `QA_REVIEW` | `piko:eval-gate-evidence` runs and a blocking gate fails | Envelope returns `overall=FAILED_BLOCKING`, correction guidance, fallback diagnostics, and comment or markdown-only evidence; status movement to `CORRECTION_REQUIRED` must inspect the envelope |
 | A8 | Circuit Breaker Close | Issue with failed attempts or HALF_OPEN probe | `piko:circuit-breaker-observe` records a success | Envelope returns `next_state=CLOSED`, `attempt_count=0`, cache-overlay save posture, activity diagnostics, and no hidden event dependency |
 | A9 | Circuit Breaker Open | Issue reaches failure threshold | `piko:circuit-breaker-observe` records the threshold failure | Envelope returns `next_state=OPEN`, failure reason, attempt count, escalation issue/comment/markdown ref, cache-overlay status, activity diagnostics, and fallback reason |
@@ -34,13 +34,13 @@ Current local S03 proof covers the seeded issue path without live Paperclip runt
 - The returned artifact envelope exposes `artifact_id`, `artifact_ref`, `selected_surface`, `fallback.reason`, optional adapter errors, and `mirrored_at` for inspection.
 - The status overlay stores `blueprint_id = artifact.artifact_ref` and carries `cache_overlay.durability = "cache-overlay-only"` so S04 can pass the Blueprint reference into Betting Table candidates without treating cache state as recoverable truth.
 
-Negative coverage required for A2/A3 includes adapter document failure, adapter comment failure, missing persistence, cache write failure, hard-gated BPI scores, incomplete Blueprint inputs, and absent worker registration surfaces. Runtime capability validation must continue rejecting unproven `confirmed`/native claims; S03 does not change `documents.native`, `comments.native`, or `state.issue_scoped` to confirmed.
+Negative coverage required for A2/A3 includes adapter document failure, adapter comment failure, missing persistence, cache write failure, hard-gated BPI scores, incomplete Blueprint inputs, and absent worker registration surfaces. Runtime capability validation must continue rejecting unproven `confirmed`/native claims; S03 does not change `documents.native`, `state.issue_scoped` to confirmed; S04 separately confirms bounded native document/comment artifact readback.
 
 S04 acceptance consumes `blueprint_id` as an opaque artifact reference. It must not parse `paperclip://.../documents/...`, `paperclip://.../comments/...`, or `markdown-only://...` references as approval ids, cycle ids, or proof that Paperclip-native approvals/documents exist.
 
 ## S04 Betting Table fixture proof and negative coverage
 
-Current S04 proof is fixture-integrated and intentionally does not promote dashboard, data-provider, action, approval, entity, config, or state capabilities to live runtime support:
+Current Betting Table proof is fixture-integrated and intentionally does not promote dashboard, data-provider, action, approval, entity, config, or state capabilities to live runtime support. Separately, final S04 live artifact proof confirms only bounded issue/document/comment create-readback for the generated BOS artifact body:
 
 - Betting cycle construction ranks positive-BPI candidates descending, enforces a minimum top-N of one, excludes non-positive BPI rows, returns `cycle_id`, `selected_issue_ids`, `items`, and `cache_overlay`, and preserves native/comment/markdown/null `blueprint_id` values exactly.
 - Cache-overlay persistence can save and load cycles for worker hydration in tests, but every result reports `durability: "cache-overlay-only"` and exposes missing, failed, or absent persistence explicitly.
@@ -51,16 +51,29 @@ Current S04 proof is fixture-integrated and intentionally does not promote dashb
 
 Negative coverage protecting A4/A5 includes missing persistence, missing cache data, cache save/load failures, empty candidates, empty issue selections, stale issue ids, missing cycles, already-decided rows, malformed native approval responses, native adapter exceptions, comment fallback exceptions, cache save failure after native approval creation, absent worker cycle id, absent worker persistence, and absent adapter seams. Runtime capability validation remains responsible for rejecting promoted `confirmed` claims without live Paperclip evidence.
 
+
+## S04 live BOS artifact flow proof
+
+Final S04 proof is live rather than fixture-only. The canonical artifact is `runtime-evidence/M002-S04-live-artifact-flow.json`; it validates with `python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final` and records one issue, one document, and one comment read back from Paperclip runtime `0.3.1` / build `health.version:0.3.1`.
+
+Acceptance impact:
+
+- `issues.native`, `documents.native`, and `comments.native` are confirmed for bounded artifact create/readback.
+- A2/A3/A6/A7/A8/A9/A10 may mirror reader-facing evidence to those native surfaces when available.
+- A4 dashboard/data-provider rendering, A5 native approval/request creation, plugin action/tool registration, state recovery, activity logs, events, Hermes execution, and GSD-Pi execution remain unvalidated or no-go.
+
+Negative coverage protecting the live proof includes final-phase S04 evidence validation, S04 readback/side-effect/no-go guard checks in `scripts/test_run_s04_live_artifact_flow.py`, and T04 capability-matrix tests that reject confirmed native artifact claims without canonical S04 evidence or with missing readbacks.
+
 ## S05 Eval Gate and Circuit Breaker fixture proof and negative coverage
 
-Current S05 proof is deterministic and adapter-seam based. It adds worker-registered explicit tools to the manifest and fixture validator expectations, but the capability matrix still keeps `registration.tools`, `events.issue_lifecycle`, `events.terminal_runs`, `activity.logging`, `issues.native`, `comments.native`, and `state.issue_scoped` unvalidated or fallback-only according to available proof.
+The current S05 proof is deterministic and adapter-seam based. It adds worker-registered explicit tools to the manifest and fixture validator expectations, while the S04 live artifact proof separately confirms only `issues.native`, `documents.native`, and `comments.native` for bounded create/readback. The capability matrix still keeps `registration.tools`, `events.issue_lifecycle`, `events.terminal_runs`, `activity.logging`, and `state.issue_scoped` unvalidated or fallback-only according to available proof.
 
 A6/A7 Eval Gate coverage:
 
 - `piko:eval-gate` remains pure; `piko:eval-gate-evidence` returns a bounded envelope with `result`, `guidance`, `selected_surface`, `artifact_ref`, `cache_overlay`, `fallback`, `evaluated_at`, and `mirrored_at`.
 - Passing, warning, blocking-failure, and incomplete results are visible through the returned envelope and markdown/comment body.
 - Cache-overlay saves are reported as `saved`, `failed`, or `not_attempted` without blocking comment/markdown evidence.
-- Comment support is fixture-only while `comments.native` remains `unvalidated`; missing, malformed, or throwing comment adapters fall back to markdown-only diagnostics.
+- Comment support in S05 fixture tests remains adapter-seam-only. S04 separately confirms `comments.native` for bounded create/readback in the sandbox, but missing, malformed, or throwing comment adapters still fall back to markdown-only diagnostics and do not prove activity, events, approvals, or tool registration.
 
 A8/A9/A10 Circuit Breaker coverage:
 

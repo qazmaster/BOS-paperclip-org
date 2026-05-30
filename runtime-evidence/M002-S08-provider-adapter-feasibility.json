@@ -1,0 +1,375 @@
+{
+  "schema_version": "s08-provider-adapter-feasibility/v1",
+  "artifact_type": "provider-adapter-feasibility-inventory",
+  "generated_at": "2026-05-29T02:30:00Z",
+  "scope": {
+    "milestone": "M002",
+    "slice": "S08",
+    "task": "T01",
+    "method": "Repository-local evidence reads plus read-only host CLI availability probes; no Paperclip source patch, direct database mutation, private module import, adapter registry mutation, secret configuration, or new agent execution was performed.",
+    "supported_boundaries_used": [
+      "Existing S02/S03 runtime evidence artifacts",
+      "Existing Paperclip adapter registry readback embedded in S02 evidence",
+      "Existing Paperclip testEnvironment/run readbacks embedded in S02/S03 evidence",
+      "Local command discovery with command --version probes",
+      "Repository-local adapter package/source/test inspection"
+    ],
+    "unsupported_paths_not_used": [
+      "Plaintext provider credential collection or logging",
+      "Paperclip core source patch",
+      "Direct Paperclip database mutation",
+      "Runtime monkey patch or private registry import",
+      "Fabricated smoke-run result evidence"
+    ]
+  },
+  "input_artifacts": [
+    {
+      "path": "runtime-evidence/M002-S02-hermes-smoke.json",
+      "schema_version": "s02-hermes-smoke/v1",
+      "artifact_type": "fail-closed-blocker",
+      "phase": "agent-smoke"
+    },
+    {
+      "path": "runtime-evidence/M002-S03-gsdpi-smoke.json",
+      "schema_version": "s03-gsdpi-smoke/v1",
+      "artifact_type": "fail-closed-blocker",
+      "phase": "execute"
+    },
+    {
+      "path": "adapters/gsdpi-local/package.json",
+      "package": "@bos/adapter-gsdpi-local",
+      "exports": "createServerAdapter"
+    },
+    {
+      "path": "docs/08_RUNTIME_CAPABILITY_HEALTH.md",
+      "purpose": "reader-facing runtime diagnostic surface"
+    }
+  ],
+  "provider_commands": [
+    {
+      "provider": "Hermes Agent",
+      "command": "hermes --version",
+      "host_available": true,
+      "host_version_excerpt": "Hermes Agent v0.14.0 (2026.5.16)",
+      "paperclip_test_environment_excerpt": "Hermes Agent v0.15.0 (2026.5.28)",
+      "notes": "Host probe and Paperclip adapter evidence report different Hermes installs; Paperclip testEnvironment nevertheless passed in S02. No secrets were printed."
+    },
+    {
+      "provider": "GSD-Pi CLI",
+      "command": "gsd --version",
+      "host_available": true,
+      "host_version_excerpt": "1.0.2",
+      "adapter_default_command": "gsd",
+      "notes": "The standalone gsdpi_local adapter candidate defaults to the gsd command and can version-probe it, but Paperclip did not recognize adapter type gsdpi_local in S03."
+    },
+    {
+      "provider": "Pi CLI alias",
+      "command": "pi --version",
+      "host_available": false,
+      "host_version_excerpt": null,
+      "notes": "No pi executable was found in the autonomous host PATH; this weakens the built-in pi_local path even though gsd itself is available."
+    },
+    {
+      "provider": "Codex CLI",
+      "command": "codex --version",
+      "host_available": true,
+      "host_version_excerpt": "codex-cli 0.133.0",
+      "paperclip_registry_type": "codex_local",
+      "notes": "S02 adapter registry readback listed codex_local as a loaded built-in adapter with 10 models. No Codex smoke run was attempted by this inventory task."
+    }
+  ],
+  "adapter_registry_status": {
+    "source": "runtime-evidence/M002-S02-hermes-smoke.json diagnostics.environment.diagnostics.adapters.json",
+    "observed_loaded_builtin_types": [
+      "acpx_local",
+      "claude_local",
+      "codex_local",
+      "cursor",
+      "cursor_cloud",
+      "gemini_local",
+      "grok_local",
+      "hermes_local",
+      "http",
+      "openclaw_gateway",
+      "opencode_local",
+      "pi_local",
+      "process"
+    ],
+    "hermes_local": {
+      "registered": true,
+      "loaded": true,
+      "disabled": false,
+      "source": "builtin",
+      "test_environment_status": "pass"
+    },
+    "gsdpi_local": {
+      "registered": false,
+      "registry_readback": null,
+      "test_environment_status": "fail",
+      "test_environment_error": "Unknown adapter type: gsdpi_local",
+      "source": "standalone candidate package only"
+    },
+    "codex_local": {
+      "registered": true,
+      "loaded": true,
+      "disabled": false,
+      "source": "builtin",
+      "models_count": 10,
+      "test_environment_status": "not_attempted_in_this_task"
+    },
+    "pi_local": {
+      "registered": true,
+      "loaded": true,
+      "disabled": false,
+      "source": "builtin",
+      "models_count": 0,
+      "host_pi_cli_available": false,
+      "test_environment_status": "not_attempted_in_this_task"
+    }
+  },
+  "secret_handling_posture": {
+    "credential_values_logged": false,
+    "evidence_redaction": "S02/S03 artifacts show sensitive adapter fields and auth token inputs as <redacted>; this inventory records only key names/classes and command availability.",
+    "hermes_local": {
+      "posture": "blocked_for_execution_until_supported_secret_materialization_is_proven",
+      "evidence": "S02 testEnvironment passed and detected API keys, but the bounded run failed with adapter_failed and provider error: Missing Authentication header. Do not retry by inlining plaintext secrets."
+    },
+    "gsdpi_local": {
+      "posture": "candidate_code_redacts_values_but_runtime_registration_absent",
+      "evidence": "Adapter diagnostics expose envKeys and secretEnvKeys, not values; tests assert secret-like values are absent from serialized diagnostics."
+    },
+    "codex_local": {
+      "posture": "no_plaintext_secret_path_selected_for_next_probe",
+      "evidence": "Use the already-registered built-in local provider path if a later bounded smoke is authorized; this inventory does not configure or log Codex credentials."
+    }
+  },
+  "candidate_paths": [
+    {
+      "path_id": "hermes_local_builtin",
+      "label": "Hermes built-in Paperclip adapter",
+      "supported_boundary_status": "registered_and_environment_passed",
+      "host_availability": "available",
+      "latest_smoke": {
+        "artifact": "runtime-evidence/M002-S02-hermes-smoke.json",
+        "run_started": true,
+        "run_id": "391841b8-b878-4fa1-acb2-f0b30520924f",
+        "status": "failed",
+        "error_code": "adapter_failed",
+        "result_shape": {
+          "resultJson_present": true,
+          "bos_result_present": false,
+          "bosAdapterResult_present": false,
+          "observed_keys": [
+            "cost_usd",
+            "effectiveTimeoutSec",
+            "result",
+            "session_id",
+            "stopReason",
+            "summary",
+            "timeoutConfigured",
+            "timeoutFired",
+            "timeoutSource",
+            "usage"
+          ]
+        }
+      },
+      "feasibility": "blocked",
+      "blockers": [
+        "Execution-time provider authentication was not materialized for the run; provider returned Missing Authentication header.",
+        "No passing resultJson.bos or resultJson.bosAdapterResult proof exists.",
+        "Retrying by plaintext env injection would violate strict secret posture."
+      ],
+      "safe_next_step": "Only retry Hermes after a supported Paperclip secret_ref/materialization path is recorded and testEnvironment plus bounded smoke can prove credentials without plaintext logging."
+    },
+    {
+      "path_id": "gsdpi_local_external_candidate",
+      "label": "Standalone @bos/adapter-gsdpi-local external adapter candidate",
+      "supported_boundary_status": "not_registered",
+      "host_availability": "gsd command available; pi alias unavailable",
+      "candidate_code": {
+        "package": "@bos/adapter-gsdpi-local",
+        "entrypoint": "adapters/gsdpi-local/src/index.ts",
+        "factory": "createServerAdapter",
+        "default_command": "gsd",
+        "result_shape_if_executed": "{ resultJson: { bosAdapterResult: { schemaVersion, runId, adapterType: 'gsdpi_local', status, gateResults?, summary?, error? } } }",
+        "fail_closed_behaviors": [
+          "testEnvironment returns fail when command unavailable or version probe times out",
+          "execute returns blocked BosAdapterResult when stdout lacks parseable JSON",
+          "execute returns blocked BosAdapterResult on timeout",
+          "diagnostics expose secret key names but not secret values"
+        ]
+      },
+      "latest_smoke": {
+        "artifact": "runtime-evidence/M002-S03-gsdpi-smoke.json",
+        "run_started": false,
+        "run_id": null,
+        "status": "blocked_before_agent_creation",
+        "result_shape": {
+          "resultJson_present": false,
+          "bosAdapterResult_present": false
+        }
+      },
+      "feasibility": "blocked",
+      "blockers": [
+        "Paperclip testEnvironment returned Unknown adapter type: gsdpi_local.",
+        "No supported adapter registry/install readback exists for gsdpi_local.",
+        "Autonomous host command access for Paperclip-side installation/list/inspect remained unavailable in S03."
+      ],
+      "safe_next_step": "Do not patch Paperclip or mutate the registry directly. Revisit only if Paperclip exposes a supported external-adapter registration/install boundary."
+    },
+    {
+      "path_id": "codex_local_builtin",
+      "label": "Codex built-in Paperclip local adapter",
+      "supported_boundary_status": "registered_in_existing_adapter_readback",
+      "host_availability": "codex command available",
+      "latest_smoke": {
+        "artifact": null,
+        "run_started": false,
+        "run_id": null,
+        "status": "not_attempted_by_S02_or_S03",
+        "result_shape": {
+          "resultJson_present": false,
+          "bos_result_present": false,
+          "bosAdapterResult_present": false
+        }
+      },
+      "feasibility": "feasible_candidate_for_next_bounded_smoke_not_yet_proven",
+      "blockers": [
+        "No Codex testEnvironment or bounded Paperclip smoke evidence has been recorded in this slice yet.",
+        "Codex credential/session posture is not proven by this read-only inventory."
+      ],
+      "safe_next_step": "Prefer a later bounded smoke through the built-in codex_local provider before any custom adapter registration attempt, because registry readback and host CLI availability are already present without core patching."
+    },
+    {
+      "path_id": "pi_local_builtin",
+      "label": "Pi built-in Paperclip local adapter",
+      "supported_boundary_status": "registered_in_existing_adapter_readback",
+      "host_availability": "pi command unavailable; gsd command available",
+      "latest_smoke": {
+        "artifact": null,
+        "run_started": false,
+        "run_id": null,
+        "status": "not_attempted_by_S02_or_S03",
+        "result_shape": {
+          "resultJson_present": false,
+          "bosAdapterResult_present": false
+        }
+      },
+      "feasibility": "weak_candidate_blocked_by_host_alias_uncertainty",
+      "blockers": [
+        "No pi executable was found in PATH during read-only host probing.",
+        "The built-in pi_local adapter had zero models in existing registry readback.",
+        "No Paperclip testEnvironment proof exists for pi_local in the inspected evidence."
+      ],
+      "safe_next_step": "Prefer codex_local before pi_local unless Paperclip documentation or testEnvironment confirms pi_local uses the available gsd command rather than a missing pi executable."
+    }
+  ],
+  "selected_execution_path": {
+    "selection": "codex_local_builtin_as_next_remediation_probe",
+    "status": "selected_candidate_not_execution_proof",
+    "rationale": "Among inspected paths, codex_local is already present in supported Paperclip adapter registry readback and the host Codex CLI is available. Hermes has a concrete execution-time authentication blocker, and gsdpi_local has no supported Paperclip registry/testEnvironment boundary despite a plausible local adapter package.",
+    "guardrails": [
+      "A later task must perform a bounded smoke through supported Paperclip APIs before promoting Codex execution.",
+      "Do not configure plaintext provider secrets or print credential values.",
+      "Do not patch Paperclip core, mutate database rows, or import private registry internals.",
+      "If Codex smoke lacks a structured BOS result shape, keep execution no-go."
+    ],
+    "required_result_shape_for_promotion": {
+      "accepted_any_of": [
+        "resultJson.bos",
+        "resultJson.bosAdapterResult"
+      ],
+      "minimum_fields": [
+        "schemaVersion or schema_version",
+        "runId or run_id",
+        "adapterType or adapter_type",
+        "status",
+        "summary"
+      ]
+    }
+  },
+  "quality_gates": {
+    "failure_modes": {
+      "verdict": "flag",
+      "dependencies": [
+        {
+          "dependency": "filesystem evidence inputs",
+          "failure_path": "Missing or malformed S02/S03/package/docs files would make feasibility unknown.",
+          "handling": "Inventory is evidence-only; absent evidence must leave the path blocked or unknown rather than promoted. JSON validation verifies the generated artifact is parseable."
+        },
+        {
+          "dependency": "local host CLI discovery subprocesses",
+          "failure_path": "Command missing, nonzero --version, timeout, or malformed output.",
+          "handling": "Record availability and excerpts only; do not infer runtime execution success from CLI presence."
+        },
+        {
+          "dependency": "Paperclip adapter registry/testEnvironment evidence",
+          "failure_path": "401/403/422 responses, unknown adapter type, stale registry readback, or missing model/session data.",
+          "handling": "Use existing response diagnostics and keep affected paths blocked until a supported readback passes."
+        },
+        {
+          "dependency": "provider credential/session materialization",
+          "failure_path": "Missing authentication headers, expired local session, rejected secret refs, or inline secret rejection.",
+          "handling": "Do not collect or log plaintext credentials; require supported secret_ref/session evidence before promotion."
+        },
+        {
+          "dependency": "agent execution result shape",
+          "failure_path": "Run finishes without resultJson.bos or resultJson.bosAdapterResult, emits malformed JSON, times out, or fails adapter-side.",
+          "handling": "Classify as fail-closed blocker; no capability promotion from partial stdout, warnings, or run creation alone."
+        }
+      ]
+    },
+    "load_profile": {
+      "verdict": "omitted",
+      "reason": "This task is a one-time read-only inventory artifact and starts zero provider runs. There is no runtime traffic path, queue, pool, or user-facing load dimension to benchmark at 10x. Later smoke tasks should bound concurrency to one run and enforce timeouts."
+    },
+    "negative_tests": {
+      "verdict": "pass",
+      "covered_by": [
+        {
+          "case": "GSD-Pi adapter testEnvironment fails closed when command is unavailable.",
+          "file": "adapters/gsdpi-local/tests/execute.test.ts"
+        },
+        {
+          "case": "GSD-Pi adapter execute returns blocked result when stdout lacks parseable BosAdapterResult JSON.",
+          "file": "adapters/gsdpi-local/tests/execute.test.ts"
+        },
+        {
+          "case": "GSD-Pi adapter execute reports timeout as blocked result.",
+          "file": "adapters/gsdpi-local/tests/execute.test.ts"
+        },
+        {
+          "case": "GSD-Pi adapter diagnostics expose secret key names but not secret values.",
+          "file": "adapters/gsdpi-local/tests/execute.test.ts"
+        },
+        {
+          "case": "S03 smoke validator accepts valid fail-closed blocker artifacts without promoting execution.",
+          "file": "scripts/validate_s03_gsdpi_smoke.py"
+        }
+      ],
+      "not_added_reason": "T01 only creates an evidence inventory under runtime-evidence; no production behavior was changed. Existing adapter negative tests and JSON validation cover the inspected failure surfaces."
+    }
+  },
+  "observability": {
+    "diagnostic_surface": "runtime-evidence/M002-S08-provider-adapter-feasibility.json",
+    "records": [
+      "candidate provider commands and version excerpts",
+      "adapter registry status from existing supported readback",
+      "secret handling posture without credential values",
+      "selected next remediation probe and guardrails",
+      "smoke run ids or explicit not-started status",
+      "structured result-shape requirements and blockers"
+    ],
+    "credential_redaction": "No credential values are present; only command names, availability, non-secret version excerpts, and secret key classes are described."
+  },
+  "overall": {
+    "passing_execution_provider_confirmed": false,
+    "safe_runtime_execution_path_selected_for_next_probe": true,
+    "selected_path_id": "codex_local_builtin",
+    "blocker_summary": [
+      "Hermes: registered and environment-passing, but execution failed without BOS result due provider authentication materialization.",
+      "GSD-Pi external candidate: local code and gsd CLI exist, but gsdpi_local is not registered in Paperclip via a supported boundary.",
+      "Codex: strongest next candidate because both built-in registry presence and host CLI availability are observed, but no smoke proof exists yet."
+    ]
+  }
+}

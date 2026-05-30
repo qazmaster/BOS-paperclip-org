@@ -1,0 +1,146 @@
+{
+  "adapter": {
+    "adapterConfig": {
+      "graceSec": 5,
+      "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+      "model": "gpt-5.3-codex",
+      "provider": "openai-codex",
+      "timeoutSec": 90
+    },
+    "adapterType": "hermes_local",
+    "registry_readback": {},
+    "testEnvironment": {
+      "http_status": 401,
+      "response": {
+        "duration_ms": 1107,
+        "error": "http_error",
+        "json": {
+          "error": "Unauthorized"
+        },
+        "ok": false,
+        "status": 401,
+        "text": null,
+        "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+      },
+      "status": "fail"
+    }
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "adapter_registry_auth_denied",
+    "missing_auth",
+    "test_environment_auth_denied"
+  ],
+  "blocker_reason": "adapter_registry_auth_denied,missing_auth,test_environment_auth_denied",
+  "capability_promotions": [],
+  "diagnostics": {
+    "adapters": {
+      "duration_ms": 1125,
+      "error": "http_error",
+      "json": {
+        "error": "Board access required"
+      },
+      "ok": false,
+      "status": 403,
+      "text": null,
+      "url": "https://paperclip.oysana.com/api/adapters"
+    },
+    "health": {
+      "duration_ms": 1303,
+      "json": {
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentMode": "authenticated",
+        "status": "ok"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/health"
+    },
+    "runSkipped": {
+      "bounded_runtime_invocations": 0,
+      "codes": [
+        "adapter_registry_auth_denied",
+        "missing_auth",
+        "test_environment_auth_denied"
+      ],
+      "reason": "preflight_not_supported_or_not_authenticated"
+    },
+    "testEnvironment": {
+      "duration_ms": 1107,
+      "error": "http_error",
+      "json": {
+        "error": "Unauthorized"
+      },
+      "ok": false,
+      "status": 401,
+      "text": null,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+    },
+    "version": {}
+  },
+  "generated_at": "2026-05-30T06:40:16.048512Z",
+  "inputs": {
+    "auth": {
+      "available_env": [
+        {
+          "env_name": "PAPERCLIP_API_KEY",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_AUTH_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_COOKIE",
+          "header": "Cookie",
+          "present": false
+        }
+      ],
+      "selected_env_name": null
+    },
+    "base_url_present": true,
+    "base_url_source": "env_or_prior_s08_artifact",
+    "company_id_present": true,
+    "origin_present": false,
+    "previous_evidence": {
+      "decision_packet": "runtime-evidence/M002-S08-execution-path-decision-packet.json",
+      "remediation": "runtime-evidence/M002-S08-hermes-cli-environment-remediation.json",
+      "remediation_ready_for_bounded_smoke": true,
+      "smoke": "runtime-evidence/M002-S08-runtime-execution-smoke.json",
+      "smoke_artifact_type": "fail-closed-blocker",
+      "smoke_blocker_reason": "run_status_not_succeeded,missing_resultJson_bos"
+    }
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "unknown"
+  },
+  "passing": false,
+  "phase": "hermes",
+  "safety": {
+    "max_runtime_invocations": 1,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "s10-runtime-execution/v1",
+  "selected_path": "hermes_local_with_codex_cli_backend"
+}

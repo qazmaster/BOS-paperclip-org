@@ -1,0 +1,78 @@
+{
+  "adapter": {
+    "adapterType": "hermes_local",
+    "registry_readback": {},
+    "testEnvironment": {
+      "response": {
+        "duration_ms": 1058,
+        "error": "http_error",
+        "json": {
+          "error": "Board mutation requires trusted browser origin"
+        },
+        "ok": false,
+        "status": 403,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+      },
+      "status": "fail"
+    }
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_reason": "adapter_registry_unavailable",
+  "diagnostics": {
+    "adapters": {
+      "duration_ms": 1057,
+      "error": "http_error",
+      "json": {
+        "error": "Company membership or instance admin access required"
+      },
+      "ok": false,
+      "status": 403,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/adapters"
+    },
+    "health": {
+      "duration_ms": 737,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "http://127.0.0.1:3131/api/health"
+    },
+    "version": {}
+  },
+  "generated_at": "2026-05-28T23:33:09.500460Z",
+  "inputs": {
+    "agentId": null,
+    "auth_header_name": "Cookie",
+    "auth_token_env": "<redacted>",
+    "base_url": "http://127.0.0.1:3131",
+    "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "issueId": "BOS-2",
+    "runId": null
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP API/browser-authenticated endpoints only; no source patch, subprocess, or direct DB write."
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "0.3.1"
+  },
+  "phase": "environment",
+  "schema_version": "s02-hermes-smoke/v1"
+}

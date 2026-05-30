@@ -1,0 +1,224 @@
+{
+  "schema_version": "s08-execution-path-decision-packet/v1",
+  "artifact_type": "execution-path-decision-packet",
+  "generated_at": "2026-05-29T14:55:00Z",
+  "milestone": "M002",
+  "slice": "S08",
+  "task": "T02",
+  "input_artifacts": [
+    {
+      "path": "runtime-evidence/M002-S08-provider-adapter-feasibility.json",
+      "schema_version": "s08-provider-adapter-feasibility/v1",
+      "note": "T01 read-only inventory selected codex_local_builtin as the preliminary next remediation probe. This T02 packet records the subsequent human-approved refinement: keep Paperclip-owned hermes_local execution and configure Hermes to use Codex CLI as its internal LLM backend."
+    },
+    {
+      "path": ".gsd/DECISIONS.md",
+      "decision_id": "D011",
+      "note": "Collaborative decision saved after user confirmed the Hermes-local plus Codex-backend path."
+    }
+  ],
+  "approval_required": true,
+  "approval_scope": {
+    "path_selection_approved": true,
+    "path_selection_source": "Human confirmed: use Paperclip-owned hermes_local execution with Hermes using Codex CLI internally as the LLM/backend provider.",
+    "mutation_or_provider_execution_approval": "required_fresh_yes_before_T03_or_T04",
+    "why_still_required": "The selected path is approved, but any Paperclip sandbox mutation, adapter configuration change, or provider execution remains an outward-facing state-changing action and requires fresh explicit confirmation immediately before execution."
+  },
+  "mutation_attempted": false,
+  "provider_execution_attempted": false,
+  "paperclip_core_patched": false,
+  "direct_database_mutation": false,
+  "private_internals_used": false,
+  "plaintext_secrets_requested_or_logged": false,
+  "selected_path": "hermes_local_with_codex_cli_backend",
+  "selected_path_status": "approved_for_next_registration_probe_not_execution_proof",
+  "selected_path_summary": {
+    "description": "Paperclip invokes the registered hermes_local adapter; Hermes runs inside that Paperclip-owned adapter/run lifecycle; Hermes is configured to use Codex CLI as its internal LLM/backend provider instead of the OpenAI/Xiaomi env-key path that failed in S02.",
+    "boundary_classification": "valid_BYOA_if_Paperclip_owns_agent_run_lifecycle",
+    "what_it_proves_if_smoke_passes": [
+      "Paperclip can execute a hermes_local agent when Hermes is backed by Codex CLI.",
+      "The run can produce BOS-shaped structured result evidence through Paperclip readback.",
+      "The remediation avoids plaintext provider key injection, core patches, direct DB mutation, and private registry internals."
+    ],
+    "what_it_does_not_prove": [
+      "It does not prove the original OpenAI/Xiaomi secret_ref materialization path is fixed.",
+      "It does not prove generic codex_local adapter execution unless a separate codex_local smoke is run.",
+      "It does not prove gsdpi_local registration or Div4 GSD-Pi automation."
+    ]
+  },
+  "path_comparison": [
+    {
+      "path_id": "fix_hermes_local_secret_materialization",
+      "label": "Fix hermes_local OpenAI/Xiaomi secret_ref materialization",
+      "status": "not_selected_for_immediate_probe",
+      "supported_boundary": "Paperclip hermes_local adapter plus supported secret_ref resolution into runtime config",
+      "benefits": [
+        "Would directly resolve the S02 blocker for the original provider setup.",
+        "Keeps Paperclip adapter lifecycle and result readback intact."
+      ],
+      "risks": [
+        "Existing evidence shows hermes-paperclip-adapter@0.2.0 uses persisted agent adapterConfig.env rather than resolved runtime config for subprocess env.",
+        "Fix may require upstream adapter/runtime change not available through current supported project boundaries."
+      ],
+      "security_posture": "Safe only if secret refs are resolved by Paperclip at execution time without plaintext persistence or logging.",
+      "proof_required": [
+        "Passing hermes_local testEnvironment using secret refs.",
+        "One bounded Paperclip run with resultJson.bos or resultJson.bosAdapterResult.",
+        "Redaction proof and no-core/no-DB audit."
+      ],
+      "reason_not_selected": "It targets the root bug but appears blocked by installed adapter behavior unless Paperclip exposes a supported fix."
+    },
+    {
+      "path_id": "register_gsdpi_local_external_adapter",
+      "label": "Register gsdpi_local through supported external adapter mechanism",
+      "status": "blocked",
+      "supported_boundary": "Documented Paperclip external-adapter/plugin registration plus registry/testEnvironment readback",
+      "benefits": [
+        "Would support Div4/GSD-Pi-specific quality automation with a BOS-shaped BosAdapterResult contract.",
+        "Local adapter candidate already has fail-closed tests and secret redaction behavior."
+      ],
+      "risks": [
+        "Paperclip currently returns Unknown adapter type: gsdpi_local.",
+        "No supported registration/install readback is available in existing evidence.",
+        "Attempting direct registry mutation, core patching, or private module imports would violate S08 constraints."
+      ],
+      "security_posture": "Potentially safe after supported registration, but currently unproved and not executable.",
+      "proof_required": [
+        "Supported adapter install/registration evidence.",
+        "Registry readback showing gsdpi_local loaded and enabled.",
+        "Passing testEnvironment and one bounded BosAdapterResult smoke."
+      ],
+      "reason_not_selected": "Blocked before execution by missing Paperclip adapter registration boundary."
+    },
+    {
+      "path_id": "codex_local_builtin_direct",
+      "label": "Use Paperclip codex_local built-in adapter directly",
+      "status": "fallback_candidate_not_selected",
+      "supported_boundary": "Paperclip codex_local built-in adapter registry and future bounded smoke",
+      "benefits": [
+        "Existing registry readback shows codex_local loaded with models.",
+        "Host Codex CLI is available.",
+        "Avoids custom adapter registration."
+      ],
+      "risks": [
+        "No codex_local testEnvironment or runtime smoke evidence exists yet.",
+        "This would prove Codex execution, not Hermes remediation.",
+        "Codex session/credential posture still needs redacted proof."
+      ],
+      "security_posture": "Potentially safe if invoked only through Paperclip adapter lifecycle and no plaintext secrets are configured.",
+      "proof_required": [
+        "codex_local testEnvironment/readback if available.",
+        "One bounded Paperclip run with BOS-shaped structured result.",
+        "No side effects, no plaintext credentials, no core changes."
+      ],
+      "reason_not_selected": "Useful fallback, but the human-selected path is Hermes remediation via Codex as Hermes backend, preserving hermes_local semantics."
+    },
+    {
+      "path_id": "hermes_local_with_codex_cli_backend",
+      "label": "Paperclip hermes_local adapter with Hermes using Codex CLI internally",
+      "status": "selected",
+      "supported_boundary": "Paperclip registered hermes_local adapter owns agent/run lifecycle; Hermes provider/backend configuration points to Codex CLI without Paperclip core patches or plaintext key injection.",
+      "benefits": [
+        "Preserves Paperclip lifecycle, run ids, status, logs/readback, permissions, and resultJson contract.",
+        "Avoids the failed OpenAI/Xiaomi env-key materialization path if Hermes can use local Codex auth/session as backend.",
+        "Keeps the proof focused on Hermes agent execution rather than replacing Hermes with Codex."
+      ],
+      "risks": [
+        "Host-local Codex auth/session may sit outside Paperclip secret management and may not be portable to another host.",
+        "If Hermes cannot be configured to use Codex CLI through a supported runtime config, the path remains blocked.",
+        "A passing smoke must not be worded as fixing OpenAI/Xiaomi secret_ref materialization."
+      ],
+      "security_posture": "Acceptable as local BYOA remediation if no credential values are logged or persisted plaintext and Paperclip remains the execution orchestrator; classify as host-session-dependent unless Paperclip explicitly manages Codex credentials/config.",
+      "proof_required": [
+        "Readback showing selected agent uses adapterType hermes_local.",
+        "Registration/testEnvironment readiness for hermes_local under Codex-backed Hermes config, or a blocked artifact explaining which supported config boundary is missing.",
+        "One bounded Paperclip run only after fresh explicit execution approval.",
+        "Structured result shape: resultJson.bos or resultJson.bosAdapterResult with schema/version, run id, adapter type/path, status, and summary.",
+        "Side-effect controls: exactly one wake/run where applicable, zero approvals, zero source writes, no duplicate wake behavior, bounded timeout.",
+        "Redaction proof: no provider credential values, auth tokens, session material, or secret-like literals in evidence/log excerpts."
+      ],
+      "selection_rationale": "This is the lowest-violation path that still proves Hermes execution through a Paperclip-owned adapter boundary. It avoids the known hermes_local OpenAI/Xiaomi secret_ref materialization failure without treating Codex as an out-of-band launcher."
+    }
+  ],
+  "next_task_contract": {
+    "t03_goal": "Prove or block registration/readiness for hermes_local with Codex-backed Hermes configuration through supported Paperclip boundaries only.",
+    "t03_allowed_actions_after_fresh_yes": [
+      "Inspect supported Paperclip agent/adapter configuration surfaces for hermes_local runtime/provider settings.",
+      "Configure or select a hermes_local agent only through supported Paperclip API/UI boundaries if the required setting is available.",
+      "Run adapter registry/testEnvironment/readback probes before any smoke execution."
+    ],
+    "t03_stop_conditions": [
+      "No supported Hermes provider/backend config boundary exists.",
+      "Configuration would require plaintext provider keys, direct DB mutation, Paperclip core patch, private module import, or runtime monkey patch.",
+      "testEnvironment/readback cannot prove hermes_local readiness under the selected backend."
+    ],
+    "t04_allowed_only_if_t03_passes": "One bounded Paperclip runtime smoke requiring BOS-shaped result evidence.",
+    "fresh_human_approval_text_required": "Yes, proceed with T03 using Paperclip-owned hermes_local plus Codex CLI backend; do not use plaintext secrets, core patches, direct DB mutation, or private internals."
+  },
+  "quality_gates": {
+    "failure_modes": {
+      "verdict": "flag",
+      "dependencies": [
+        {
+          "dependency": "Paperclip hermes_local adapter lifecycle",
+          "failure_path": "Adapter unavailable, disabled, malformed readback, or unsupported configuration surface.",
+          "handling": "Stop at T03 with a blocked registration/readiness artifact; do not fabricate execution proof."
+        },
+        {
+          "dependency": "Hermes Codex backend configuration",
+          "failure_path": "Hermes cannot use Codex CLI through supported config or requires manual plaintext credentials.",
+          "handling": "Mark selected remediation blocked and leave Hermes execution unpromoted."
+        },
+        {
+          "dependency": "Codex CLI host session",
+          "failure_path": "Codex command missing, auth/session unavailable, malformed output, or timeout.",
+          "handling": "Record host-session-dependent blocker without logging credentials or session material."
+        },
+        {
+          "dependency": "Paperclip smoke result contract",
+          "failure_path": "Run returns text only, no resultJson.bos/resultJson.bosAdapterResult, duplicate wake, side effects, or adapter failure.",
+          "handling": "Fail closed with run id/status/log excerpts and no capability promotion."
+        }
+      ]
+    },
+    "load_profile": {
+      "verdict": "flag",
+      "expected_load": "one bounded registration/readiness probe and, only after T03 passes, one bounded runtime smoke",
+      "ten_x_breakpoint": "At ten repeated attempts the first likely saturation is Paperclip run scheduling/local subprocess slots or Codex CLI session rate/serialization limits.",
+      "protection": "Keep S08 proof to a single approved smoke with bounded timeout; no polling loops, no retry storms, no parallel provider executions."
+    },
+    "negative_tests": {
+      "verdict": "pass",
+      "covered_by": [
+        {
+          "case": "T02 verification asserts approval_required=true.",
+          "file": "inline verification command in T02 plan"
+        },
+        {
+          "case": "T02 verification asserts mutation_attempted=false.",
+          "file": "inline verification command in T02 plan"
+        },
+        {
+          "case": "T02 verification asserts provider_execution_attempted=false.",
+          "file": "inline verification command in T02 plan"
+        },
+        {
+          "case": "Existing S02/S03 validators reject missing BOS result, wrong adapter type, unredacted secrets, direct DB/core modification claims, and fail-open blocker handling.",
+          "file": "scripts/test_validate_s02_hermes_smoke.py and scripts/test_validate_s03_gsdpi_smoke.py"
+        }
+      ]
+    }
+  },
+  "observability": {
+    "diagnostic_surface": "runtime-evidence/M002-S08-execution-path-decision-packet.json",
+    "records": [
+      "human-approved selected path",
+      "comparison of original three planned paths plus selected Hermes-Codex backend refinement",
+      "approval boundaries for path selection versus mutation/provider execution",
+      "proof requirements and stop conditions",
+      "security and portability risks",
+      "no-mutation/no-execution flags"
+    ],
+    "redaction_posture": "This packet contains no credential values, no auth tokens, and no session material."
+  }
+}

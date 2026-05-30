@@ -23,6 +23,8 @@ ADAPTER_PATH = Path("plugin-bos-light/src/paperclipAdapter.ts")
 PERSISTENCE_PATH = Path("plugin-bos-light/src/persistence.ts")
 RUNTIME_CAPABILITIES_PATH = Path("plugin-bos-light/src/runtimeCapabilities.ts")
 HEALTH_REPORT_PATH = Path("docs/08_RUNTIME_CAPABILITY_HEALTH.md")
+S04_LIVE_ARTIFACT_EVIDENCE_PATH = Path("runtime-evidence/M002-S04-live-artifact-flow.json")
+S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH = Path("runtime-evidence/M002-S05-plugin-ui-surface-probe.json")
 
 STATUS_ENUM = {"confirmed", "unsupported", "fallback-only", "unvalidated"}
 KEY_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
@@ -69,6 +71,30 @@ EXPECTED_SURFACE_KEYS = (
     "ui.dashboard_widgets",
     "ui.issue_detail_tabs",
 )
+
+S04_NATIVE_ARTIFACT_CONFIRMED_KEYS = {
+    "issues.native": ("issue", "issues_created"),
+    "documents.native": ("document", "documents_created"),
+    "comments.native": ("comments", "comments_created"),
+}
+S04_REQUIRED_ARTIFACT_FAMILIES = ("BPI", "Blueprint", "Betting Table", "Eval Gate", "Circuit Breaker")
+S04_ZERO_SIDE_EFFECT_COUNTS = (
+    "approval_requests_created",
+    "hermes_runs_started",
+    "gsd_pi_runs_started",
+    "activity_logs_written",
+)
+
+S05_PLUGIN_UI_CONFIRMED_KEYS = {
+    "plugin.runtime.registration": "plugin_registration",
+    "registration.tools": "tools",
+    "registration.data": "data_providers",
+    "registration.actions": "actions",
+    "ui.dashboard_widgets": "dashboard_widgets",
+    "ui.issue_detail_tabs": "issue_detail_tabs",
+}
+
+S05_ALL_CONFIRMATION_KEYS = set(S05_PLUGIN_UI_CONFIRMED_KEYS) | {"plugin.runtime.version_build"}
 
 CODE_ASSUMPTIONS = (
     (WORKER_PATH, "ctx.tools?.register", "registration.tools", "worker tool registration"),
@@ -216,6 +242,262 @@ def _validate_confirmed_runtime_evidence(
 
     if not re.search(r"\bversion\b", evidence_text, re.IGNORECASE) or not re.search(r"\bbuild\b", evidence_text, re.IGNORECASE):
         errors.add(MATRIX_PATH, context, "confirmed capability requires live Paperclip runtime version and build evidence")
+
+
+def _non_empty_runtime_string(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip()) and value.strip().lower() not in {"unknown", "n/a", "none"}
+
+
+def _readback_is_live(readback: Any) -> bool:
+    return (
+        isinstance(readback, Mapping)
+        and readback.get("ok") is True
+        and isinstance(readback.get("ref"), str)
+        and bool(readback.get("ref", "").strip())
+        and isinstance(readback.get("sha256"), str)
+        and bool(readback.get("sha256", "").strip())
+        and int(readback.get("status_code") or 0) < 300
+    )
+
+
+def _s05_route_ids_from_proof(proof: Any) -> list[str]:
+    if not isinstance(proof, Mapping):
+        return []
+    route_ids: list[str] = []
+    route_id = proof.get("route_attempt_id")
+    if isinstance(route_id, str) and route_id.strip():
+        route_ids.append(route_id)
+    raw_route_ids = proof.get("route_attempt_ids")
+    if isinstance(raw_route_ids, list):
+        route_ids.extend(item for item in raw_route_ids if isinstance(item, str) and item.strip())
+    return route_ids
+
+
+def _s05_route_attempts_by_id(evidence: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
+    attempts = evidence.get("route_attempts")
+    if not isinstance(attempts, list):
+        return {}
+    route_map: dict[str, Mapping[str, Any]] = {}
+    for attempt in attempts:
+        if not isinstance(attempt, Mapping):
+            continue
+        route_id = attempt.get("id")
+        if isinstance(route_id, str) and route_id.strip():
+            route_map[route_id] = attempt
+    return route_map
+
+
+def _s05_route_id_is_live(route_map: Mapping[str, Mapping[str, Any]], route_id: str) -> bool:
+    route = route_map.get(route_id)
+    if not isinstance(route, Mapping):
+        return False
+    status_code = route.get("status_code")
+    return (
+        route.get("ok") is True
+        and isinstance(status_code, int)
+        and 200 <= status_code < 300
+        and not route.get("malformed_json_reason")
+        and route.get("truncated") is not True
+    )
+
+
+def _s05_has_successful_piko_invocation(row: Mapping[str, Any]) -> bool:
+    invocations = row.get("piko_invocation_results")
+    return isinstance(invocations, list) and any(isinstance(item, Mapping) and item.get("ok") is True for item in invocations)
+
+
+def _artifact_readback(evidence: Mapping[str, Any], readback_key: str) -> Any:
+    readbacks = evidence.get("readbacks")
+    if not isinstance(readbacks, Mapping):
+        return None
+    value = readbacks.get(readback_key)
+    if readback_key == "comments":
+        if not isinstance(value, list) or not value:
+            return None
+        return value[0]
+    return value
+
+
+def _validate_s04_live_artifact_evidence(
+    root: Path,
+    entries_by_key: Mapping[str, Mapping[str, Any]],
+    errors: ValidationErrorCollector,
+) -> None:
+    confirmed_entries = {
+        key: entry
+        for key, entry in entries_by_key.items()
+        if entry.get("status") == "confirmed"
+    }
+    if not confirmed_entries:
+        return
+
+    for key, entry in confirmed_entries.items():
+        evidence_text = " ".join(
+            str(value)
+            for value in (entry.get("evidence_source"), entry.get("proof_command"), entry.get("runtime_evidence_field"), entry.get("notes"))
+            if isinstance(value, str)
+        )
+        if (str(S04_LIVE_ARTIFACT_EVIDENCE_PATH) in evidence_text or "s04-live-artifact-flow" in evidence_text) and key not in S04_NATIVE_ARTIFACT_CONFIRMED_KEYS:
+            errors.add(
+                MATRIX_PATH,
+                f"capability.{key}",
+                "S04 live artifact evidence may confirm only issues.native, documents.native, and comments.native",
+            )
+
+    required_confirmed = [key for key in S04_NATIVE_ARTIFACT_CONFIRMED_KEYS if key in confirmed_entries]
+    if not required_confirmed:
+        return
+
+    evidence = _load_json(root, S04_LIVE_ARTIFACT_EVIDENCE_PATH, errors)
+    if not isinstance(evidence, Mapping):
+        return
+
+    runtime = evidence.get("runtime")
+    side_effect_counts = evidence.get("side_effect_counts")
+    invariants = evidence.get("invariants")
+    no_go_guards = evidence.get("no_go_guards")
+    artifact_families = evidence.get("artifact_families")
+
+    if evidence.get("phase") != "live" or evidence.get("artifact_type") != "live-evidence":
+        errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, "phase", "confirmed native artifacts require final live S04 evidence")
+    if not isinstance(runtime, Mapping) or not _non_empty_runtime_string(runtime.get("version")) or not _non_empty_runtime_string(runtime.get("build")):
+        errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, "runtime", "confirmed native artifacts require runtime version and build")
+    if not isinstance(side_effect_counts, Mapping):
+        errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, "side_effect_counts", "missing side-effect counts")
+    else:
+        for field in S04_ZERO_SIDE_EFFECT_COUNTS:
+            if side_effect_counts.get(field) != 0:
+                errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, f"side_effect_counts.{field}", "S04 confirmed artifact evidence must not include approvals, agent runs, or activity-log writes")
+
+    if not isinstance(invariants, Mapping):
+        errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, "invariants", "missing invariant flags")
+    else:
+        for field in ("no_core_patch", "no_direct_db_access", "no_secret_diagnostics"):
+            if invariants.get(field) is not True:
+                errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, f"invariants.{field}", "confirmed native artifacts require no-core/no-DB/no-secret proof")
+
+    if not isinstance(no_go_guards, Mapping):
+        errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, "no_go_guards", "missing S02/S03 no-go guard propagation")
+    else:
+        for guard in ("hermes", "gsd_pi"):
+            value = no_go_guards.get(guard)
+            if not isinstance(value, Mapping) or value.get("status") != "blocked" or value.get("execution_allowed") is not False or value.get("no_go") is not True:
+                errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, f"no_go_guards.{guard}", "S04 must propagate Hermes and GSD-Pi no-go guards")
+
+    if not isinstance(artifact_families, Mapping):
+        errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, "artifact_families", "missing BOS artifact family readback summary")
+    else:
+        for family in S04_REQUIRED_ARTIFACT_FAMILIES:
+            value = artifact_families.get(family)
+            if not isinstance(value, Mapping) or value.get("present") is not True:
+                errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, f"artifact_families.{family}", "missing visible BOS artifact family proof")
+
+    for key in required_confirmed:
+        readback_key, count_key = S04_NATIVE_ARTIFACT_CONFIRMED_KEYS[key]
+        entry = confirmed_entries[key]
+        evidence_text = " ".join(
+            str(value)
+            for value in (entry.get("evidence_source"), entry.get("proof_command"), entry.get("runtime_evidence_field"))
+            if isinstance(value, str)
+        )
+        if str(S04_LIVE_ARTIFACT_EVIDENCE_PATH) not in evidence_text:
+            errors.add(MATRIX_PATH, f"capability.{key}", "confirmed S04 native artifact surface must name the canonical S04 evidence path")
+        if isinstance(side_effect_counts, Mapping) and int(side_effect_counts.get(count_key) or 0) < 1:
+            errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, f"side_effect_counts.{count_key}", f"confirmed {key} requires at least one live side effect")
+        if not _readback_is_live(_artifact_readback(evidence, readback_key)):
+            errors.add(S04_LIVE_ARTIFACT_EVIDENCE_PATH, f"readbacks.{readback_key}", f"confirmed {key} requires successful live readback ref, sha256, and <300 status")
+
+
+
+def _validate_s05_plugin_ui_surface_evidence(
+    root: Path,
+    entries_by_key: Mapping[str, Mapping[str, Any]],
+    errors: ValidationErrorCollector,
+) -> None:
+    confirmed_s05_entries = {
+        key: entry
+        for key, entry in entries_by_key.items()
+        if key in S05_ALL_CONFIRMATION_KEYS and entry.get("status") == "confirmed"
+    }
+    if not confirmed_s05_entries:
+        return
+
+    evidence_text_by_key = {
+        key: " ".join(
+            str(value)
+            for value in (entry.get("evidence_source"), entry.get("proof_command"), entry.get("runtime_evidence_field"), entry.get("notes"))
+            if isinstance(value, str)
+        )
+        for key, entry in confirmed_s05_entries.items()
+    }
+    for key, evidence_text in evidence_text_by_key.items():
+        if str(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH) not in evidence_text:
+            errors.add(
+                MATRIX_PATH,
+                f"capability.{key}",
+                f"confirmed S05 plugin/UI capability must name canonical evidence path {S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH}",
+            )
+
+    evidence = _load_json(root, S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, errors)
+    if not isinstance(evidence, Mapping):
+        return
+
+    runtime = evidence.get("runtime")
+    if evidence.get("phase") != "live" or evidence.get("artifact_type") != "live-evidence":
+        errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, "artifact_type", "confirmed S05 plugin/UI capabilities require final live-evidence")
+    if not isinstance(runtime, Mapping) or not _non_empty_runtime_string(runtime.get("version")) or not _non_empty_runtime_string(runtime.get("build")):
+        errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, "runtime", "confirmed S05 plugin/UI capabilities require runtime version and build")
+
+    route_map = _s05_route_attempts_by_id(evidence)
+    observed_runtime_routes = runtime.get("observed_from_route_ids") if isinstance(runtime, Mapping) else None
+    if "plugin.runtime.version_build" in confirmed_s05_entries:
+        if not isinstance(observed_runtime_routes, list) or not any(
+            isinstance(route_id, str) and _s05_route_id_is_live(route_map, route_id) for route_id in observed_runtime_routes
+        ):
+            errors.add(
+                S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH,
+                "runtime.observed_from_route_ids",
+                "confirmed plugin.runtime.version_build requires a live S05 runtime route readback",
+            )
+
+    surfaces = evidence.get("surfaces")
+    if not isinstance(surfaces, Mapping):
+        errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, "surfaces", "missing S05 surface evidence")
+        return
+
+    for key, surface_name in S05_PLUGIN_UI_CONFIRMED_KEYS.items():
+        if key not in confirmed_s05_entries:
+            continue
+        row = surfaces.get(surface_name)
+        if not isinstance(row, Mapping):
+            errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, f"surfaces.{surface_name}", f"confirmed {key} requires S05 surface row")
+            continue
+        if row.get("status") != "confirmed":
+            errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, f"surfaces.{surface_name}.status", f"confirmed matrix capability {key} requires confirmed S05 surface status")
+        proof = row.get("readback_proof")
+        route_ids = _s05_route_ids_from_proof(proof)
+        if not route_ids:
+            errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, f"surfaces.{surface_name}.readback_proof", f"confirmed {key} requires S05 route readback proof")
+        for route_id in route_ids:
+            if not _s05_route_id_is_live(route_map, route_id):
+                errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, f"surfaces.{surface_name}.readback_proof", f"route {route_id!r} is not a live 2xx S05 readback")
+        requested = [item for item in row.get("requested_keys", []) if isinstance(item, str) and item.strip()] if isinstance(row.get("requested_keys"), list) else []
+        if surface_name in {"plugin_registration", "tools", "data_providers", "actions"}:
+            observed = {item for item in row.get("observed_registered_keys", []) if isinstance(item, str) and item.strip()} if isinstance(row.get("observed_registered_keys"), list) else set()
+            missing = [item for item in requested if item not in observed]
+            if missing:
+                errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, f"surfaces.{surface_name}.observed_registered_keys", f"missing requested keys: {', '.join(missing)}")
+        if surface_name in {"dashboard_widgets", "issue_detail_tabs"}:
+            render_ids = row.get("render_ids")
+            if not isinstance(render_ids, Mapping):
+                errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, f"surfaces.{surface_name}.render_ids", f"confirmed {key} requires render ids")
+            else:
+                for requested_key in requested:
+                    render_id = render_ids.get(requested_key)
+                    if not isinstance(render_id, str) or not render_id.strip():
+                        errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, f"surfaces.{surface_name}.render_ids.{requested_key}", "missing rendered id")
+        if surface_name == "tools" and not _s05_has_successful_piko_invocation(row):
+            errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, "surfaces.tools.piko_invocation_results", "confirmed registration.tools requires a successful piko invocation result")
 
 
 def _validate_entry_shape(entry: Any, index: int, errors: ValidationErrorCollector) -> str | None:
@@ -441,6 +723,8 @@ def validate(
         return errors.errors
 
     entries_by_key = _collect_entries(matrix, errors)
+    _validate_s04_live_artifact_evidence(root, entries_by_key, errors)
+    _validate_s05_plugin_ui_surface_evidence(root, entries_by_key, errors)
     if manifest is not None:
         _validate_manifest_coverage(manifest, entries_by_key, errors)
         _validate_manifest_note(manifest, errors)

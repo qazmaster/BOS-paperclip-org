@@ -1,0 +1,237 @@
+{
+  "adapter": {
+    "adapterType": "gsdpi_local",
+    "registry_readback": null,
+    "testEnvironment": {
+      "response": {
+        "duration_ms": 1058,
+        "json": {
+          "error": "Unknown adapter type: gsdpi_local"
+        },
+        "ok": false,
+        "status": 422,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/test-environment"
+      },
+      "status": "fail"
+    }
+  },
+  "agent": {
+    "agentId": null,
+    "config": {
+      "adapterType": "gsdpi_local"
+    },
+    "created": false,
+    "not_created_reason": "registration gate did not prove gsdpi_local registry readback or passing testEnvironment",
+    "readback": null
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_reason": "gsdpi_local_execution_not_attempted_registration_blocked",
+  "capability_promotions": [],
+  "diagnostics": {
+    "bounded_job_requested": {
+      "adapterType": "gsdpi_local",
+      "division": "Div4 Quality",
+      "intent": "harmless no-source-write quality smoke"
+    },
+    "environment_artifact": "runtime-evidence/M002-S03-gsdpi-environment.json",
+    "environment_artifact_type": "smoke-evidence",
+    "environment_phase": "environment",
+    "execute_decision": "blocked_before_agent_creation",
+    "log_excerpt": [
+      "T05 inspected environment and registration evidence.",
+      "Registration prerequisite is fail-closed: Paperclip testEnvironment returned Unknown adapter type: gsdpi_local.",
+      "No agent, run, wake, approval, or source-write operation was attempted."
+    ],
+    "registration_artifact": "runtime-evidence/M002-S03-gsdpi-registration.json",
+    "registration_artifact_type": "fail-closed-blocker",
+    "registration_diagnostics": {
+      "adapters": {
+        "duration_ms": 1058,
+        "json": {
+          "error": "Board access required"
+        },
+        "ok": false,
+        "status": 403,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/adapters"
+      },
+      "health": {
+        "duration_ms": 749,
+        "json": {
+          "bootstrapInviteActive": false,
+          "bootstrapStatus": "ready",
+          "deploymentMode": "authenticated",
+          "status": "ok"
+        },
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/health"
+      },
+      "host_cli_probe": {
+        "command_class": "ssh paperclip host docs/cli discovery",
+        "exit_code": 255,
+        "note": "No install/list/inspect CLI command was executed because host command access was denied; no secret values were requested or printed.",
+        "status": "not_available_in_current_autonomous_session"
+      },
+      "models": {
+        "duration_ms": 1059,
+        "json": {
+          "error": "Unauthorized"
+        },
+        "ok": false,
+        "status": 401,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/models"
+      },
+      "package_candidate": {
+        "core_dependency": "none",
+        "exports": "createServerAdapter",
+        "package": "@bos/adapter-gsdpi-local",
+        "path": "adapters/gsdpi-local"
+      },
+      "test_environment": {
+        "duration_ms": 1058,
+        "json": {
+          "error": "Unknown adapter type: gsdpi_local"
+        },
+        "ok": false,
+        "status": 422,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/test-environment"
+      },
+      "unsupported_paths_not_used": [
+        "Paperclip core source patch",
+        "direct database mutation",
+        "runtime monkey patch",
+        "private module import as production dependency"
+      ]
+    },
+    "registration_phase": "registration",
+    "registration_test_environment": {
+      "response": {
+        "duration_ms": 1058,
+        "json": {
+          "error": "Unknown adapter type: gsdpi_local"
+        },
+        "ok": false,
+        "status": 422,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/test-environment"
+      },
+      "status": "fail"
+    }
+  },
+  "generated_at": "2026-05-29T02:11:54Z",
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Stopped at supported Paperclip external-adapter/API boundary. No Paperclip source patch, package monkey patch, private module import, direct database write, or adapter-registry mutation was performed."
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "unknown"
+  },
+  "passing": false,
+  "phase": "execute",
+  "quality_gates": {
+    "failure_modes": {
+      "dependencies": [
+        {
+          "dependency": "filesystem evidence inputs",
+          "failure_path": "missing or malformed JSON prevents artifact generation/validation",
+          "handling": "validator fails closed and T05 does not infer registration or execution success"
+        },
+        {
+          "dependency": "Paperclip HTTP adapter/testEnvironment surfaces",
+          "failure_path": "403/401/422 responses or malformed payloads prevent supported readback",
+          "handling": "preserve response diagnostics and block execution"
+        },
+        {
+          "dependency": "GSD-Pi subprocess via adapter",
+          "failure_path": "timeout, malformed BosAdapterResult, or nonzero exit would fail execute validation",
+          "handling": "not invoked because registration prerequisite failed"
+        },
+        {
+          "dependency": "local network to Paperclip sandbox",
+          "failure_path": "connection loss or timeout leaves registration unproven",
+          "handling": "keep blocker artifact and no capability promotion"
+        }
+      ],
+      "verdict": "flag"
+    },
+    "load_profile": {
+      "expected_load": "one bounded smoke run",
+      "protection": "T05 starts zero runs when prerequisites fail; future passing runs must remain one wake, no duplicate side effects, bounded timeout, and no source writes",
+      "ten_x_load": "ten smoke attempts would first saturate Paperclip agent/run scheduling and local subprocess slots",
+      "verdict": "flag"
+    },
+    "negative_tests": {
+      "covered_by": [
+        {
+          "case": "validator rejects missing execute resultJson/BosAdapterResult for passing evidence",
+          "file": "scripts/test_validate_s03_gsdpi_smoke.py"
+        },
+        {
+          "case": "validator rejects wrong adapter type and unredacted secret-like values",
+          "file": "scripts/test_validate_s03_gsdpi_smoke.py"
+        },
+        {
+          "case": "validator rejects core source patch or direct database mutation claims",
+          "file": "scripts/test_validate_s03_gsdpi_smoke.py"
+        },
+        {
+          "case": "--allow-blocker accepts valid fail-closed blocker artifacts without marking adapter proof passing",
+          "file": "scripts/validate_s03_gsdpi_smoke.py"
+        }
+      ],
+      "verdict": "pass"
+    }
+  },
+  "registration": {
+    "adapterType": "gsdpi_local",
+    "method": "Documented Paperclip external adapter package loaded via plugin system/startup; probed only through supported HTTP adapter registry, models, and testEnvironment readback.",
+    "prerequisite_artifact": "runtime-evidence/M002-S03-gsdpi-registration.json",
+    "prerequisite_blocker_reason": "gsdpi_local_not_registered_via_supported_runtime_boundary",
+    "prerequisite_status": "fail-closed-blocker",
+    "readback": null,
+    "registered": false,
+    "supported_boundary_used": [
+      "GET /api/health",
+      "GET /api/adapters",
+      "GET /api/companies/{companyId}/adapters/gsdpi_local/models",
+      "POST /api/companies/{companyId}/adapters/gsdpi_local/test-environment"
+    ]
+  },
+  "run": {
+    "approvalCounts": {
+      "after": 0,
+      "before": 0,
+      "created": 0,
+      "status": "not_attempted"
+    },
+    "duplicateSideEffects": {
+      "observed": false,
+      "reason": "no Paperclip run was started"
+    },
+    "not_started_reason": "T05 fail-closed because T04 registration evidence reports Unknown adapter type: gsdpi_local",
+    "resultJson": null,
+    "runId": null,
+    "sourceWriteCounts": {
+      "created": 0,
+      "deleted": 0,
+      "modified": 0,
+      "status": "not_attempted"
+    },
+    "started": false,
+    "wakeCounts": {
+      "after": 0,
+      "before": 0,
+      "delta": 0,
+      "status": "not_attempted"
+    }
+  },
+  "schema_version": "s03-gsdpi-smoke/v1"
+}

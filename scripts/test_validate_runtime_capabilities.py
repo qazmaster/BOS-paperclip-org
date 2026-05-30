@@ -152,6 +152,141 @@ def valid_matrix() -> dict:
     return {"schema_version": "0.1-test", "plugin_key": "bos-light", "capabilities": capabilities}
 
 
+def s04_live_artifact_evidence() -> dict:
+    return {
+        "schema_version": "s04-live-artifact-flow/v1",
+        "artifact_type": "live-evidence",
+        "phase": "live",
+        "runtime": {"version": "0.3.1", "build": "health.version:0.3.1"},
+        "side_effect_counts": {
+            "issues_created": 1,
+            "documents_created": 1,
+            "comments_created": 1,
+            "approval_requests_created": 0,
+            "hermes_runs_started": 0,
+            "gsd_pi_runs_started": 0,
+            "activity_logs_written": 0,
+        },
+        "invariants": {
+            "no_core_patch": True,
+            "no_direct_db_access": True,
+            "no_secret_diagnostics": True,
+        },
+        "no_go_guards": {
+            "hermes": {"status": "blocked", "execution_allowed": False, "no_go": True},
+            "gsd_pi": {"status": "blocked", "execution_allowed": False, "no_go": True},
+        },
+        "artifact_families": {
+            family: {"present": True, "surfaces": ["document", "comment"]}
+            for family in validator.S04_REQUIRED_ARTIFACT_FAMILIES
+        },
+        "readbacks": {
+            "issue": {"ok": True, "ref": "issue-1", "sha256": "a" * 64, "status_code": 200},
+            "document": {"ok": True, "ref": "document-1", "sha256": "b" * 64, "status_code": 200},
+            "comments": [{"ok": True, "ref": "comment-1", "sha256": "c" * 64, "status_code": 200}],
+        },
+    }
+
+
+def write_s04_evidence(root: Path, evidence: dict | None = None) -> None:
+    path = root / validator.S04_LIVE_ARTIFACT_EVIDENCE_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(copy.deepcopy(evidence if evidence is not None else s04_live_artifact_evidence()), indent=2), encoding="utf-8")
+
+
+def s05_plugin_ui_surface_evidence(confirmed: bool = True) -> dict:
+    surface_names = [
+        "plugin_registration",
+        "tools",
+        "data_providers",
+        "actions",
+        "dashboard_widgets",
+        "issue_detail_tabs",
+    ]
+    requested_by_surface = {
+        "plugin_registration": ["bos-light"],
+        "tools": ["piko:bpi-score"],
+        "data_providers": ["betting-table"],
+        "actions": ["approve-batch"],
+        "dashboard_widgets": ["betting-table"],
+        "issue_detail_tabs": ["bos-status", "circuit-state", "gate-results"],
+    }
+    surfaces = {}
+    route_attempts = [
+        {
+            "id": "runtime-health",
+            "surface": "runtime",
+            "method": "GET",
+            "path": "/api/health",
+            "ok": True,
+            "status_code": 200,
+            "malformed_json_reason": None,
+            "truncated": False,
+            "response_summary": {"text_snippet": "ok"},
+        }
+    ]
+    for name in surface_names:
+        requested = requested_by_surface[name]
+        route_id = f"{name}-readback"
+        route_attempts.append(
+            {
+                "id": route_id,
+                "surface": name,
+                "method": "GET",
+                "path": f"/api/probe/{name}",
+                "ok": confirmed,
+                "status_code": 200 if confirmed else 404,
+                "malformed_json_reason": None,
+                "truncated": False,
+                "response_summary": {"text_snippet": name},
+            }
+        )
+        row = {
+            "status": "confirmed" if confirmed else "fallback-only",
+            "requested_keys": requested,
+            "observed_registered_keys": requested if confirmed else [],
+            "readback_proof": {"route_attempt_id": route_id} if confirmed else None,
+            "fallback_reason": "" if confirmed else "fixture fallback",
+            "validation_errors": [],
+        }
+        if name == "dashboard_widgets":
+            row["render_ids"] = {"betting-table": "widget-1"} if confirmed else {}
+        if name == "issue_detail_tabs":
+            row["render_ids"] = {key: f"tab-{index}" for index, key in enumerate(requested, start=1)} if confirmed else {}
+        if name == "tools":
+            row["piko_invocation_results"] = [{"tool_key": "piko:bpi-score", "ok": True}] if confirmed else []
+        surfaces[name] = row
+    return {
+        "schema_version": "s05-plugin-ui-surface-probe/v1",
+        "artifact_type": "live-evidence" if confirmed else "fail-closed-unsupported",
+        "phase": "live",
+        "generated_at": "2026-05-29T00:00:00Z",
+        "runtime": {
+            "version": "0.3.1" if confirmed else "unknown",
+            "build": "health.version:0.3.1" if confirmed else "unknown",
+            "observed_from_route_ids": ["runtime-health"] if confirmed else [],
+        },
+        "route_attempts": route_attempts if confirmed else [],
+        "surfaces": surfaces,
+    }
+
+
+def write_s05_evidence(root: Path, evidence: dict | None = None) -> None:
+    path = root / validator.S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(copy.deepcopy(evidence if evidence is not None else s05_plugin_ui_surface_evidence()), indent=2), encoding="utf-8")
+
+
+def mark_s04_native_confirmed(matrix: dict) -> None:
+    for entry in matrix["capabilities"]:
+        key = entry.get("key")
+        if key in validator.S04_NATIVE_ARTIFACT_CONFIRMED_KEYS:
+            entry["status"] = "confirmed"
+            entry["evidence_source"] = f"S04 live Paperclip runtime version 0.3.1 and build health.version:0.3.1 in {validator.S04_LIVE_ARTIFACT_EVIDENCE_PATH}."
+            entry["proof_command"] = f"python3 scripts/validate_s04_live_artifact_flow.py --evidence {validator.S04_LIVE_ARTIFACT_EVIDENCE_PATH} --phase final verifies version and build."
+            entry["runtime_evidence_field"] = f"{validator.S04_LIVE_ARTIFACT_EVIDENCE_PATH}: runtime.version, runtime.build, readbacks"
+
+
 def write_fixture(root: Path, matrix: dict | str | None = None, manifest: dict | None = None) -> None:
     (root / "plugin-bos-light" / "src").mkdir(parents=True)
     (root / "plugin-bos-light" / "manifest.paperclip-plugin.json").write_text(
@@ -308,6 +443,106 @@ class RuntimeCapabilityValidatorTests(unittest.TestCase):
         joined = "\n".join(errors)
         self.assertIn("heading.Runtime Evidence", joined)
         self.assertIn("capability.approvals.native", joined)
+
+    def test_s04_native_artifact_confirmations_require_canonical_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            mark_s04_native_confirmed(matrix)
+            write_fixture(root, matrix)
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn(str(validator.S04_LIVE_ARTIFACT_EVIDENCE_PATH), joined)
+        self.assertIn("missing required JSON file", joined)
+
+    def test_s04_native_artifact_confirmations_pass_with_live_readbacks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            mark_s04_native_confirmed(matrix)
+            write_fixture(root, matrix)
+            write_s04_evidence(root)
+            errors = validator.validate(root)
+        self.assertEqual([], errors)
+
+    def test_s04_native_artifact_confirmations_reject_missing_readback(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            mark_s04_native_confirmed(matrix)
+            write_fixture(root, matrix)
+            evidence = s04_live_artifact_evidence()
+            evidence["readbacks"]["document"]["ok"] = False
+            write_s04_evidence(root, evidence)
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("readbacks.document", joined)
+        self.assertIn("documents.native", joined)
+
+    def test_s04_evidence_cannot_confirm_unrelated_surfaces(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            for entry in matrix["capabilities"]:
+                if entry.get("key") == "approvals.native":
+                    entry["status"] = "confirmed"
+                    entry["evidence_source"] = f"S04 live Paperclip runtime version 0.3.1 and build health.version:0.3.1 in {validator.S04_LIVE_ARTIFACT_EVIDENCE_PATH}."
+                    entry["proof_command"] = f"python3 scripts/validate_s04_live_artifact_flow.py --evidence {validator.S04_LIVE_ARTIFACT_EVIDENCE_PATH} --phase final verifies version and build."
+                    entry["runtime_evidence_field"] = f"{validator.S04_LIVE_ARTIFACT_EVIDENCE_PATH}: runtime.version, runtime.build, readbacks"
+            write_fixture(root, matrix)
+            write_s04_evidence(root)
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("S04 live artifact evidence may confirm only issues.native, documents.native, and comments.native", joined)
+
+    def test_s05_plugin_ui_confirmations_require_canonical_evidence_path(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            for entry in matrix["capabilities"]:
+                if entry.get("key") == "registration.tools":
+                    entry["status"] = "confirmed"
+                    entry["evidence_source"] = "Live Paperclip runtime version 0.3.1 and build health.version:0.3.1 registered piko tools."
+                    entry["proof_command"] = "paperclip tools readback recorded version and build"
+                    entry["runtime_evidence_field"] = "paperclip.registration.tools.registered_tool_keys"
+            write_fixture(root, matrix)
+            write_s05_evidence(root)
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn(str(validator.S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH), joined)
+        self.assertIn("confirmed S05 plugin/UI capability must name canonical evidence path", joined)
+
+    def test_s05_fallback_artifact_cannot_confirm_plugin_ui_surfaces(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            for entry in matrix["capabilities"]:
+                if entry.get("key") == "ui.dashboard_widgets":
+                    entry["status"] = "confirmed"
+                    entry["evidence_source"] = f"Live Paperclip runtime version 0.3.1 and build health.version:0.3.1 in {validator.S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH}."
+                    entry["proof_command"] = f"python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence {validator.S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH} --phase final"
+                    entry["runtime_evidence_field"] = f"{validator.S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH}: surfaces.dashboard_widgets.render_ids"
+            write_fixture(root, matrix)
+            write_s05_evidence(root, s05_plugin_ui_surface_evidence(confirmed=False))
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("confirmed S05 plugin/UI capabilities require final live-evidence", joined)
+        self.assertIn("confirmed matrix capability ui.dashboard_widgets requires confirmed S05 surface status", joined)
+
+    def test_s05_live_artifact_can_confirm_plugin_ui_surface(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            for entry in matrix["capabilities"]:
+                if entry.get("key") == "ui.issue_detail_tabs":
+                    entry["status"] = "confirmed"
+                    entry["evidence_source"] = f"S05 live Paperclip runtime version 0.3.1 and build health.version:0.3.1 in {validator.S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH}."
+                    entry["proof_command"] = f"python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence {validator.S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH} --phase final"
+                    entry["runtime_evidence_field"] = f"{validator.S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH}: surfaces.issue_detail_tabs.render_ids, surfaces.issue_detail_tabs.readback_proof"
+            write_fixture(root, matrix)
+            write_s05_evidence(root)
+            errors = validator.validate(root)
+        self.assertEqual([], errors)
 
 
 if __name__ == "__main__":

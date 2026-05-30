@@ -1,0 +1,987 @@
+{
+  "adapter": {
+    "adapterConfig": {
+      "graceSec": 5,
+      "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+      "model": "gpt-5.3-codex",
+      "provider": "openai-codex",
+      "timeoutSec": 90
+    },
+    "adapterType": "hermes_local"
+  },
+  "agent": {
+    "agentId": "5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+    "create_body": {
+      "adapterConfig": {
+        "graceSec": 5,
+        "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+        "model": "gpt-5.3-codex",
+        "provider": "openai-codex",
+        "timeoutSec": 90
+      },
+      "adapterType": "hermes_local",
+      "enabled": true,
+      "graceSec": 5,
+      "heartbeatEnabled": false,
+      "name": "BOS Light S08 Hermes Codex Runtime Smoke",
+      "systemPrompt": "You are a bounded BOS Light Paperclip runtime smoke agent. Do not modify files, create approvals, access secrets, or call external project services except the configured LLM backend. Respond with only compact JSON shaped as {\"bos\":{\"schemaVersion\":\"s08-runtime-smoke/v1\",\"ok\":true,\"summary\":\"...\",\"sideEffects\":[]}}.",
+      "timeoutSec": 90,
+      "wakeOnDemand": true
+    },
+    "create_response": {
+      "duration_ms": 1123,
+      "json": {
+        "adapterConfig": {
+          "graceSec": 5,
+          "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+          "model": "gpt-5.3-codex",
+          "provider": "openai-codex",
+          "timeoutSec": 90
+        },
+        "adapterType": "hermes_local",
+        "budgetMonthlyCents": 0,
+        "capabilities": null,
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "createdAt": "2026-05-29T18:09:36.192Z",
+        "defaultEnvironmentId": null,
+        "icon": null,
+        "id": "5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+        "lastHeartbeatAt": null,
+        "metadata": null,
+        "name": "BOS Light S08 Hermes Codex Runtime Smoke",
+        "pauseReason": null,
+        "pausedAt": null,
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "reportsTo": null,
+        "role": "general",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "spentMonthlyCents": 0,
+        "status": "idle",
+        "title": null,
+        "updatedAt": "2026-05-29T18:09:36.192Z",
+        "urlKey": "bos-light-s08-hermes-codex-runtime-smoke"
+      },
+      "ok": true,
+      "status": 201,
+      "text": null,
+      "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+    }
+  },
+  "approval": {
+    "approval_text": "User selected Yes, run T04 (Recommended) for one bounded Paperclip-owned runtime smoke after T05 readiness-repeat evidence.",
+    "fresh_human_approval_received": true,
+    "scope": "One bounded Paperclip-owned hermes_local runtime smoke; no plaintext secrets, no Paperclip core patches, no direct DB mutation, stop on unsupported behavior."
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_reason": "run_status_not_succeeded,missing_resultJson_bos",
+  "diagnostics": {
+    "adapters": {
+      "duration_ms": 1128,
+      "json": [
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "acpx_local",
+          "loaded": true,
+          "modelsCount": 16,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "acpx_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "claude_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "claude_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "codex_local",
+          "loaded": true,
+          "modelsCount": 10,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "codex_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "cursor",
+          "loaded": true,
+          "modelsCount": 39,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "cursor_cloud",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor_cloud"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "gemini_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "gemini_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "grok_local",
+          "loaded": true,
+          "modelsCount": 1,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "grok_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "hermes_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "hermes_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "http",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "http"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "openclaw_gateway",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "openclaw_gateway"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "opencode_local",
+          "loaded": true,
+          "modelsCount": 5,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "opencode_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "pi_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "pi_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "process",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "process"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/adapters"
+    },
+    "health": {
+      "duration_ms": 1212,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/health"
+    },
+    "testEnvironment": {
+      "duration_ms": 1591,
+      "json": {
+        "adapterType": "hermes_local",
+        "checks": [
+          {
+            "code": "hermes_version",
+            "level": "info",
+            "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+          },
+          {
+            "code": "hermes_model_configured",
+            "level": "info",
+            "message": "Model: gpt-5.3-codex"
+          },
+          {
+            "code": "hermes_no_api_keys",
+            "hint": "Set ANTHROPIC_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ZAI_API_KEY in the agent's env secrets. Hermes may also have keys configured in ~/.hermes/.env",
+            "level": "warn",
+            "message": "No LLM API keys found in environment"
+          }
+        ],
+        "status": "warn",
+        "testedAt": "2026-05-29T18:09:35.074Z"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+    }
+  },
+  "generated_at": "2026-05-29T18:09:31.298973Z",
+  "generated_at_completed": "2026-05-29T18:09:40.825216Z",
+  "operation_flags": {
+    "agent_created_or_updated": true,
+    "direct_database_mutation": false,
+    "paperclip_core_patched": false,
+    "plaintext_secrets_requested_or_logged": false,
+    "private_internals_used": false,
+    "provider_execution_attempted": true,
+    "runtime_smoke_attempted": true
+  },
+  "paperclip": {
+    "base_url": "https://paperclip.oysana.com",
+    "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d"
+  },
+  "run": {
+    "final_readback": {
+      "duration_ms": 1136,
+      "json": {
+        "agentId": "5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "contextSnapshot": {
+          "actorId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+          "paperclipEnvironment": {
+            "driver": "local",
+            "id": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+            "leaseId": "237bc5e8-9a35-42bd-921d-6ce4d8b8a716",
+            "name": "Local",
+            "workspaceRealization": {
+              "bootstrap": {
+                "command": null
+              },
+              "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+              "leaseId": "237bc5e8-9a35-42bd-921d-6ce4d8b8a716",
+              "local": {
+                "branchName": null,
+                "path": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                "projectId": null,
+                "projectWorkspaceId": null,
+                "repoRef": null,
+                "repoUrl": null,
+                "source": "agent_home",
+                "strategy": "project_primary",
+                "worktreePath": null
+              },
+              "provider": "local",
+              "providerLeaseId": null,
+              "rebuild": {
+                "executionWorkspaceId": null,
+                "localPath": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                "metadata": {
+                  "environmentDriver": "local",
+                  "provider": "local",
+                  "providerMetadata": {},
+                  "runtimeOverlay": {
+                    "cleanupCommand": null,
+                    "provisionCommand": null,
+                    "teardownCommand": null,
+                    "workspaceRuntime": null
+                  },
+                  "source": {
+                    "branchName": null,
+                    "kind": "agent_home",
+                    "localPath": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                    "projectId": null,
+                    "projectWorkspaceId": null,
+                    "repoRef": null,
+                    "repoUrl": null,
+                    "strategy": "project_primary",
+                    "worktreePath": null
+                  }
+                },
+                "mode": "shared_workspace",
+                "providerLeaseId": null,
+                "remotePath": null,
+                "repoRef": null,
+                "repoUrl": null
+              },
+              "remote": {
+                "path": null
+              },
+              "summary": "Local workspace realized at /paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a.",
+              "sync": {
+                "prepare": "Use the realized local execution workspace directly.",
+                "strategy": "none",
+                "syncBack": null
+              },
+              "transport": "local",
+              "version": 1
+            }
+          },
+          "paperclipWorkspace": {
+            "agentHome": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+            "branchName": null,
+            "cwd": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+            "mode": "shared_workspace",
+            "projectId": null,
+            "realization": {
+              "bootstrap": {
+                "command": null
+              },
+              "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+              "leaseId": "237bc5e8-9a35-42bd-921d-6ce4d8b8a716",
+              "local": {
+                "branchName": null,
+                "path": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                "projectId": null,
+                "projectWorkspaceId": null,
+                "repoRef": null,
+                "repoUrl": null,
+                "source": "agent_home",
+                "strategy": "project_primary",
+                "worktreePath": null
+              },
+              "provider": "local",
+              "providerLeaseId": null,
+              "rebuild": {
+                "executionWorkspaceId": null,
+                "localPath": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                "metadata": {
+                  "environmentDriver": "local",
+                  "provider": "local",
+                  "providerMetadata": {},
+                  "runtimeOverlay": {
+                    "cleanupCommand": null,
+                    "provisionCommand": null,
+                    "teardownCommand": null,
+                    "workspaceRuntime": null
+                  },
+                  "source": {
+                    "branchName": null,
+                    "kind": "agent_home",
+                    "localPath": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                    "projectId": null,
+                    "projectWorkspaceId": null,
+                    "repoRef": null,
+                    "repoUrl": null,
+                    "strategy": "project_primary",
+                    "worktreePath": null
+                  }
+                },
+                "mode": "shared_workspace",
+                "providerLeaseId": null,
+                "remotePath": null,
+                "repoRef": null,
+                "repoUrl": null
+              },
+              "remote": {
+                "path": null
+              },
+              "summary": "Local workspace realized at /paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a.",
+              "sync": {
+                "prepare": "Use the realized local execution workspace directly.",
+                "strategy": "none",
+                "syncBack": null
+              },
+              "transport": "local",
+              "version": 1
+            },
+            "repoRef": null,
+            "repoUrl": null,
+            "source": "agent_home",
+            "strategy": "project_primary",
+            "workspaceId": null,
+            "worktreePath": null
+          },
+          "paperclipWorkspaces": [],
+          "triggeredBy": "board",
+          "wakeReason": "bos-light-s08-hermes-codex-runtime-smoke",
+          "wakeSource": "on_demand",
+          "wakeTriggerDetail": "manual"
+        },
+        "continuationAttempt": 0,
+        "createdAt": "2026-05-29T18:09:38.409Z",
+        "error": "Adapter failed",
+        "errorCode": "adapter_failed",
+        "exitCode": 1,
+        "externalRunId": null,
+        "finishedAt": "2026-05-29T18:09:38.948Z",
+        "id": "9f7c4b62-5970-4416-b4e5-a55b8f99fb0f",
+        "invocationSource": "on_demand",
+        "issueCommentRetryQueuedAt": null,
+        "issueCommentSatisfiedByCommentId": null,
+        "issueCommentStatus": "not_applicable",
+        "lastOutputAt": "2026-05-29T18:09:38.943Z",
+        "lastOutputBytes": 1184,
+        "lastOutputSeq": 4,
+        "lastOutputStream": "stdout",
+        "lastUsefulActionAt": null,
+        "livenessReason": "Run ended with failed (adapter_failed)",
+        "livenessState": "failed",
+        "logBytes": 1184,
+        "logCompressed": false,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/5475a6a0-3668-4763-9bf8-651bbdf94f4a/9f7c4b62-5970-4416-b4e5-a55b8f99fb0f.ndjson",
+        "logSha256": "c99bc724adb7cac7868c84c9b103087ab123f8a6878ce4bd606c6cbca200582c",
+        "logStore": "local_file",
+        "nextAction": null,
+        "outputSilence": {
+          "criticalThresholdMs": 14400000,
+          "evaluationIssueAssigneeAgentId": null,
+          "evaluationIssueId": null,
+          "evaluationIssueIdentifier": null,
+          "lastOutputAt": "2026-05-29T18:09:38.943Z",
+          "lastOutputSeq": 4,
+          "lastOutputStream": "stdout",
+          "level": "not_applicable",
+          "silenceAgeMs": null,
+          "silenceStartedAt": "2026-05-29T18:09:38.943Z",
+          "snoozedUntil": null,
+          "suspicionThresholdMs": 3600000
+        },
+        "processGroupId": null,
+        "processLossRetryCount": 0,
+        "processPid": null,
+        "processStartedAt": null,
+        "resultJson": {
+          "cost_usd": null,
+          "effectiveTimeoutSec": 90,
+          "result": "It looks like Hermes isn't configured yet -- no API keys or providers found.\n\nRun:  hermes setup\n\n\u2695 Hermes Setup \u2014 Non-interactive mode\n\nNo interactive TTY detected for the first-run setup prompt.\nThe interactive wizard cannot be used here.\n\nConfigure Hermes using environment variables or config commands:\nhermes config set model.provider custom\nhermes config set model.base_url http://localhost:8080/v1\nhermes config set model.default your-model-name\n\nOr set OPENROUTER_API_KEY / OPENAI_API_KEY in your environment.\nRun 'hermes setup' in an interactive terminal to use the full wizard.",
+          "session_id": null,
+          "stopReason": "adapter_failed",
+          "summary": "It looks like Hermes isn't configured yet -- no API keys or providers found.\n\nRun:  hermes setup\n\n\u2695 Hermes Setup \u2014 Non-interactive mode\n\nNo interactive TTY detected for the first-run setup prompt.\nThe interactive wizard cannot be used here.\n\nConfigure Hermes using environment variables or config commands:\nhermes config set model.provider custom\nhermes config set model.base_url http://localhost:8080/v1\nhermes config set model.default your-model-name\n\nOr set OPENROUTER_API_KEY / OPENAI_API_KEY in your environment.\nRun 'hermes setup' in an interactive terminal to use the full wizard.",
+          "timeoutConfigured": true,
+          "timeoutFired": false,
+          "timeoutSource": "config",
+          "usage": null
+        },
+        "retryExhaustedReason": null,
+        "retryOfRunId": null,
+        "scheduledRetryAt": null,
+        "scheduledRetryAttempt": 0,
+        "scheduledRetryReason": null,
+        "sessionIdAfter": null,
+        "sessionIdBefore": null,
+        "signal": null,
+        "startedAt": "2026-05-29T18:09:38.416Z",
+        "status": "failed",
+        "stderrExcerpt": "",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a\" for this run.\n[hermes] Starting Hermes Agent (model=gpt-5.3-codex, timeout=90s)\n\nIt looks like Hermes isn't configured yet -- no API keys or providers found.\n\n  Run:  hermes setup\n\n\n\u2695 Hermes Setup \u2014 Non-interactive mode\n\n  No interactive TTY detected for the first-run setup prompt.\n  The interactive wizard cannot be used here.\n\n  Configure Hermes using environment variables or config commands:\n    hermes config set model.provider custom\n    hermes config set model.base_url http://localhost:8080/v1\n    hermes config set model.default your-model-name\n\n  Or set OPENROUTER_API_KEY / OPENAI_API_KEY in your environment.\n  Run 'hermes setup' in an interactive terminal to use the full wizard.\n\n[hermes] Exit code: 1, timed out: false\n",
+        "triggerDetail": "manual",
+        "updatedAt": "2026-05-29T18:09:38.952Z",
+        "usageJson": null,
+        "wakeupRequestId": "03104c95-e2df-4e58-b1fa-4ade2d692a49"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/heartbeat-runs/9f7c4b62-5970-4416-b4e5-a55b8f99fb0f"
+    },
+    "invoke_body": {
+      "metadata": {
+        "expectedResultJson": "bos",
+        "schema_version": "s08-runtime-execution-smoke/v1",
+        "selected_path": "hermes_local_with_codex_cli_backend"
+      },
+      "prompt": "Run the S08 bounded runtime smoke. Return only JSON with top-level bos. Include schemaVersion s08-runtime-smoke/v1, ok true if you are executing inside Paperclip-owned Hermes, adapter hermes_local, provider openai-codex, a one-sentence summary, and sideEffects as an empty array. Do not create approvals or modify any source.",
+      "reason": "bos-light-s08-hermes-codex-runtime-smoke"
+    },
+    "invoke_response": {
+      "duration_ms": 1111,
+      "json": {
+        "agentId": "5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "contextSnapshot": {
+          "actorId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+          "triggeredBy": "board",
+          "wakeReason": "bos-light-s08-hermes-codex-runtime-smoke",
+          "wakeSource": "on_demand",
+          "wakeTriggerDetail": "manual"
+        },
+        "continuationAttempt": 0,
+        "createdAt": "2026-05-29T18:09:38.409Z",
+        "error": null,
+        "errorCode": null,
+        "exitCode": null,
+        "externalRunId": null,
+        "finishedAt": null,
+        "id": "9f7c4b62-5970-4416-b4e5-a55b8f99fb0f",
+        "invocationSource": "on_demand",
+        "issueCommentRetryQueuedAt": null,
+        "issueCommentSatisfiedByCommentId": null,
+        "issueCommentStatus": "not_applicable",
+        "lastOutputAt": null,
+        "lastOutputBytes": null,
+        "lastOutputSeq": 0,
+        "lastOutputStream": null,
+        "lastUsefulActionAt": null,
+        "livenessReason": null,
+        "livenessState": null,
+        "logBytes": null,
+        "logCompressed": false,
+        "logRef": null,
+        "logSha256": null,
+        "logStore": null,
+        "nextAction": null,
+        "processGroupId": null,
+        "processLossRetryCount": 0,
+        "processPid": null,
+        "processStartedAt": null,
+        "resultJson": null,
+        "retryOfRunId": null,
+        "scheduledRetryAt": null,
+        "scheduledRetryAttempt": 0,
+        "scheduledRetryReason": null,
+        "sessionIdAfter": null,
+        "sessionIdBefore": null,
+        "signal": null,
+        "startedAt": null,
+        "status": "queued",
+        "stderrExcerpt": null,
+        "stdoutExcerpt": null,
+        "triggerDetail": "manual",
+        "updatedAt": "2026-05-29T18:09:38.409Z",
+        "usageJson": null,
+        "wakeupRequestId": "03104c95-e2df-4e58-b1fa-4ade2d692a49"
+      },
+      "ok": true,
+      "status": 202,
+      "text": null,
+      "url": "/api/agents/5475a6a0-3668-4763-9bf8-651bbdf94f4a/heartbeat/invoke"
+    },
+    "readback_attempts": 1,
+    "readback_history_tail": [
+      {
+        "duration_ms": 1136,
+        "json": {
+          "agentId": "5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "contextSnapshot": {
+            "actorId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+            "paperclipEnvironment": {
+              "driver": "local",
+              "id": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+              "leaseId": "237bc5e8-9a35-42bd-921d-6ce4d8b8a716",
+              "name": "Local",
+              "workspaceRealization": {
+                "bootstrap": {
+                  "command": null
+                },
+                "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+                "leaseId": "237bc5e8-9a35-42bd-921d-6ce4d8b8a716",
+                "local": {
+                  "branchName": null,
+                  "path": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                  "projectId": null,
+                  "projectWorkspaceId": null,
+                  "repoRef": null,
+                  "repoUrl": null,
+                  "source": "agent_home",
+                  "strategy": "project_primary",
+                  "worktreePath": null
+                },
+                "provider": "local",
+                "providerLeaseId": null,
+                "rebuild": {
+                  "executionWorkspaceId": null,
+                  "localPath": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                  "metadata": {
+                    "environmentDriver": "local",
+                    "provider": "local",
+                    "providerMetadata": {},
+                    "runtimeOverlay": {
+                      "cleanupCommand": null,
+                      "provisionCommand": null,
+                      "teardownCommand": null,
+                      "workspaceRuntime": null
+                    },
+                    "source": {
+                      "branchName": null,
+                      "kind": "agent_home",
+                      "localPath": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                      "projectId": null,
+                      "projectWorkspaceId": null,
+                      "repoRef": null,
+                      "repoUrl": null,
+                      "strategy": "project_primary",
+                      "worktreePath": null
+                    }
+                  },
+                  "mode": "shared_workspace",
+                  "providerLeaseId": null,
+                  "remotePath": null,
+                  "repoRef": null,
+                  "repoUrl": null
+                },
+                "remote": {
+                  "path": null
+                },
+                "summary": "Local workspace realized at /paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a.",
+                "sync": {
+                  "prepare": "Use the realized local execution workspace directly.",
+                  "strategy": "none",
+                  "syncBack": null
+                },
+                "transport": "local",
+                "version": 1
+              }
+            },
+            "paperclipWorkspace": {
+              "agentHome": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+              "branchName": null,
+              "cwd": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+              "mode": "shared_workspace",
+              "projectId": null,
+              "realization": {
+                "bootstrap": {
+                  "command": null
+                },
+                "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+                "leaseId": "237bc5e8-9a35-42bd-921d-6ce4d8b8a716",
+                "local": {
+                  "branchName": null,
+                  "path": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                  "projectId": null,
+                  "projectWorkspaceId": null,
+                  "repoRef": null,
+                  "repoUrl": null,
+                  "source": "agent_home",
+                  "strategy": "project_primary",
+                  "worktreePath": null
+                },
+                "provider": "local",
+                "providerLeaseId": null,
+                "rebuild": {
+                  "executionWorkspaceId": null,
+                  "localPath": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                  "metadata": {
+                    "environmentDriver": "local",
+                    "provider": "local",
+                    "providerMetadata": {},
+                    "runtimeOverlay": {
+                      "cleanupCommand": null,
+                      "provisionCommand": null,
+                      "teardownCommand": null,
+                      "workspaceRuntime": null
+                    },
+                    "source": {
+                      "branchName": null,
+                      "kind": "agent_home",
+                      "localPath": "/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+                      "projectId": null,
+                      "projectWorkspaceId": null,
+                      "repoRef": null,
+                      "repoUrl": null,
+                      "strategy": "project_primary",
+                      "worktreePath": null
+                    }
+                  },
+                  "mode": "shared_workspace",
+                  "providerLeaseId": null,
+                  "remotePath": null,
+                  "repoRef": null,
+                  "repoUrl": null
+                },
+                "remote": {
+                  "path": null
+                },
+                "summary": "Local workspace realized at /paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a.",
+                "sync": {
+                  "prepare": "Use the realized local execution workspace directly.",
+                  "strategy": "none",
+                  "syncBack": null
+                },
+                "transport": "local",
+                "version": 1
+              },
+              "repoRef": null,
+              "repoUrl": null,
+              "source": "agent_home",
+              "strategy": "project_primary",
+              "workspaceId": null,
+              "worktreePath": null
+            },
+            "paperclipWorkspaces": [],
+            "triggeredBy": "board",
+            "wakeReason": "bos-light-s08-hermes-codex-runtime-smoke",
+            "wakeSource": "on_demand",
+            "wakeTriggerDetail": "manual"
+          },
+          "continuationAttempt": 0,
+          "createdAt": "2026-05-29T18:09:38.409Z",
+          "error": "Adapter failed",
+          "errorCode": "adapter_failed",
+          "exitCode": 1,
+          "externalRunId": null,
+          "finishedAt": "2026-05-29T18:09:38.948Z",
+          "id": "9f7c4b62-5970-4416-b4e5-a55b8f99fb0f",
+          "invocationSource": "on_demand",
+          "issueCommentRetryQueuedAt": null,
+          "issueCommentSatisfiedByCommentId": null,
+          "issueCommentStatus": "not_applicable",
+          "lastOutputAt": "2026-05-29T18:09:38.943Z",
+          "lastOutputBytes": 1184,
+          "lastOutputSeq": 4,
+          "lastOutputStream": "stdout",
+          "lastUsefulActionAt": null,
+          "livenessReason": "Run ended with failed (adapter_failed)",
+          "livenessState": "failed",
+          "logBytes": 1184,
+          "logCompressed": false,
+          "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/5475a6a0-3668-4763-9bf8-651bbdf94f4a/9f7c4b62-5970-4416-b4e5-a55b8f99fb0f.ndjson",
+          "logSha256": "c99bc724adb7cac7868c84c9b103087ab123f8a6878ce4bd606c6cbca200582c",
+          "logStore": "local_file",
+          "nextAction": null,
+          "outputSilence": {
+            "criticalThresholdMs": 14400000,
+            "evaluationIssueAssigneeAgentId": null,
+            "evaluationIssueId": null,
+            "evaluationIssueIdentifier": null,
+            "lastOutputAt": "2026-05-29T18:09:38.943Z",
+            "lastOutputSeq": 4,
+            "lastOutputStream": "stdout",
+            "level": "not_applicable",
+            "silenceAgeMs": null,
+            "silenceStartedAt": "2026-05-29T18:09:38.943Z",
+            "snoozedUntil": null,
+            "suspicionThresholdMs": 3600000
+          },
+          "processGroupId": null,
+          "processLossRetryCount": 0,
+          "processPid": null,
+          "processStartedAt": null,
+          "resultJson": {
+            "cost_usd": null,
+            "effectiveTimeoutSec": 90,
+            "result": "It looks like Hermes isn't configured yet -- no API keys or providers found.\n\nRun:  hermes setup\n\n\u2695 Hermes Setup \u2014 Non-interactive mode\n\nNo interactive TTY detected for the first-run setup prompt.\nThe interactive wizard cannot be used here.\n\nConfigure Hermes using environment variables or config commands:\nhermes config set model.provider custom\nhermes config set model.base_url http://localhost:8080/v1\nhermes config set model.default your-model-name\n\nOr set OPENROUTER_API_KEY / OPENAI_API_KEY in your environment.\nRun 'hermes setup' in an interactive terminal to use the full wizard.",
+            "session_id": null,
+            "stopReason": "adapter_failed",
+            "summary": "It looks like Hermes isn't configured yet -- no API keys or providers found.\n\nRun:  hermes setup\n\n\u2695 Hermes Setup \u2014 Non-interactive mode\n\nNo interactive TTY detected for the first-run setup prompt.\nThe interactive wizard cannot be used here.\n\nConfigure Hermes using environment variables or config commands:\nhermes config set model.provider custom\nhermes config set model.base_url http://localhost:8080/v1\nhermes config set model.default your-model-name\n\nOr set OPENROUTER_API_KEY / OPENAI_API_KEY in your environment.\nRun 'hermes setup' in an interactive terminal to use the full wizard.",
+            "timeoutConfigured": true,
+            "timeoutFired": false,
+            "timeoutSource": "config",
+            "usage": null
+          },
+          "retryExhaustedReason": null,
+          "retryOfRunId": null,
+          "scheduledRetryAt": null,
+          "scheduledRetryAttempt": 0,
+          "scheduledRetryReason": null,
+          "sessionIdAfter": null,
+          "sessionIdBefore": null,
+          "signal": null,
+          "startedAt": "2026-05-29T18:09:38.416Z",
+          "status": "failed",
+          "stderrExcerpt": "",
+          "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/5475a6a0-3668-4763-9bf8-651bbdf94f4a\" for this run.\n[hermes] Starting Hermes Agent (model=gpt-5.3-codex, timeout=90s)\n\nIt looks like Hermes isn't configured yet -- no API keys or providers found.\n\n  Run:  hermes setup\n\n\n\u2695 Hermes Setup \u2014 Non-interactive mode\n\n  No interactive TTY detected for the first-run setup prompt.\n  The interactive wizard cannot be used here.\n\n  Configure Hermes using environment variables or config commands:\n    hermes config set model.provider custom\n    hermes config set model.base_url http://localhost:8080/v1\n    hermes config set model.default your-model-name\n\n  Or set OPENROUTER_API_KEY / OPENAI_API_KEY in your environment.\n  Run 'hermes setup' in an interactive terminal to use the full wizard.\n\n[hermes] Exit code: 1, timed out: false\n",
+          "triggerDetail": "manual",
+          "updatedAt": "2026-05-29T18:09:38.952Z",
+          "usageJson": null,
+          "wakeupRequestId": "03104c95-e2df-4e58-b1fa-4ade2d692a49"
+        },
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "url": "/api/heartbeat-runs/9f7c4b62-5970-4416-b4e5-a55b8f99fb0f"
+      }
+    ],
+    "runId": "9f7c4b62-5970-4416-b4e5-a55b8f99fb0f",
+    "runListAfter": {
+      "duration_ms": 1111,
+      "json": [
+        {
+          "agentId": "5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "contextSnapshot": {
+            "wakeReason": "bos-light-s08-hermes-codex-runtime-smoke",
+            "wakeSource": "on_demand",
+            "wakeTriggerDetail": "manual"
+          },
+          "continuationAttempt": 0,
+          "createdAt": "2026-05-29T18:09:38.409Z",
+          "error": "Adapter failed",
+          "errorCode": "adapter_failed",
+          "exitCode": 1,
+          "externalRunId": null,
+          "finishedAt": "2026-05-29T18:09:38.948Z",
+          "id": "9f7c4b62-5970-4416-b4e5-a55b8f99fb0f",
+          "invocationSource": "on_demand",
+          "lastOutputAt": "2026-05-29T18:09:38.943Z",
+          "lastOutputBytes": 1184,
+          "lastOutputSeq": 4,
+          "lastOutputStream": "stdout",
+          "lastUsefulActionAt": null,
+          "livenessReason": "Run ended with failed (adapter_failed)",
+          "livenessState": "failed",
+          "logBytes": 1184,
+          "logCompressed": false,
+          "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/5475a6a0-3668-4763-9bf8-651bbdf94f4a/9f7c4b62-5970-4416-b4e5-a55b8f99fb0f.ndjson",
+          "logSha256": "c99bc724adb7cac7868c84c9b103087ab123f8a6878ce4bd606c6cbca200582c",
+          "logStore": "local_file",
+          "nextAction": null,
+          "processGroupId": null,
+          "processLossRetryCount": 0,
+          "processPid": null,
+          "processStartedAt": null,
+          "resultJson": {
+            "result": "It looks like Hermes isn't configured yet -- no API keys or providers found.\n\nRun:  hermes setup\n\n\u2695 Hermes Setup \u2014 Non-interactive mode\n\nNo interactive TTY detected for the first-run setup prompt.\nThe interactive wizard cannot be used here.\n\nConfigure Hermes using environment variables or config commands:\nhermes config set model.provider custom\nhermes config set model.base_url http://localhost:8080/v1\nhermes config set model.default your-model-name\n\nOr set OPENROUTER_API_KEY / OPENAI_API_KEY in ",
+            "summary": "It looks like Hermes isn't configured yet -- no API keys or providers found.\n\nRun:  hermes setup\n\n\u2695 Hermes Setup \u2014 Non-interactive mode\n\nNo interactive TTY detected for the first-run setup prompt.\nThe interactive wizard cannot be used here.\n\nConfigure Hermes using environment variables or config commands:\nhermes config set model.provider custom\nhermes config set model.base_url http://localhost:8080/v1\nhermes config set model.default your-model-name\n\nOr set OPENROUTER_API_KEY / OPENAI_API_KEY in "
+          },
+          "retryOfRunId": null,
+          "scheduledRetryAt": null,
+          "scheduledRetryAttempt": 0,
+          "scheduledRetryReason": null,
+          "sessionIdAfter": null,
+          "sessionIdBefore": null,
+          "signal": null,
+          "startedAt": "2026-05-29T18:09:38.416Z",
+          "status": "failed",
+          "stderrExcerpt": null,
+          "stdoutExcerpt": null,
+          "triggerDetail": "manual",
+          "updatedAt": "2026-05-29T18:09:38.952Z",
+          "usageJson": null,
+          "wakeupRequestId": "03104c95-e2df-4e58-b1fa-4ade2d692a49"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/heartbeat-runs?agentId=5475a6a0-3668-4763-9bf8-651bbdf94f4a"
+    },
+    "runListAfterCount": 1,
+    "runListBefore": {
+      "duration_ms": 1102,
+      "json": [],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/heartbeat-runs?agentId=5475a6a0-3668-4763-9bf8-651bbdf94f4a"
+    },
+    "runListBeforeCount": 0,
+    "wakeCountDelta": 1
+  },
+  "schema_version": "s08-runtime-execution-smoke/v1",
+  "selected_path": "hermes_local_with_codex_cli_backend"
+}

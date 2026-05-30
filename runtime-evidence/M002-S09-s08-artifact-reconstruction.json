@@ -1,0 +1,122 @@
+{
+  "schema_version": "s09-s08-artifact-reconstruction/v1",
+  "artifact_type": "s08-canonical-artifact-reconstruction-audit",
+  "generated_at": "2026-05-30T00:00:00Z",
+  "milestone": "M002",
+  "slice": "S09",
+  "task": "T01",
+  "reconstructed_slice": "S08",
+  "purpose": "Record that missing canonical S08 slice-level artifacts were reconstructed from existing task summaries and runtime evidence without changing completed task facts or promoting runtime capability.",
+  "repaired_artifacts": [
+    {
+      "path": ".gsd/milestones/M002/slices/S08/S08-SUMMARY.md",
+      "status": "created",
+      "posture": "fail-closed-summary"
+    },
+    {
+      "path": ".gsd/milestones/M002/slices/S08/S08-ASSESSMENT.md",
+      "status": "created",
+      "posture": "requirement-coverage-no-promotion"
+    },
+    {
+      "path": ".gsd/milestones/M002/slices/S08/S08-UAT.md",
+      "status": "created",
+      "posture": "conservative-uat-blocked"
+    }
+  ],
+  "source_task_summaries": [
+    ".gsd/milestones/M002/slices/S08/tasks/T01-SUMMARY.md",
+    ".gsd/milestones/M002/slices/S08/tasks/T02-SUMMARY.md",
+    ".gsd/milestones/M002/slices/S08/tasks/T03-SUMMARY.md",
+    ".gsd/milestones/M002/slices/S08/tasks/T04-SUMMARY.md",
+    ".gsd/milestones/M002/slices/S08/tasks/T05-SUMMARY.md"
+  ],
+  "source_evidence_paths": [
+    "runtime-evidence/M002-S08-provider-adapter-feasibility.json",
+    "runtime-evidence/M002-S08-execution-path-decision-packet.json",
+    "runtime-evidence/M002-S08-adapter-registration-evidence.json",
+    "runtime-evidence/M002-S08-hermes-cli-environment-remediation.json",
+    "runtime-evidence/M002-S08-runtime-execution-smoke.json"
+  ],
+  "redacted_status_summary": {
+    "d011": {
+      "decision": "Use Paperclip-owned hermes_local execution with Hermes configured to use Codex CLI as its internal LLM backend, and prove it with bounded Paperclip readback before promoting capability.",
+      "selected_path": "hermes_local_with_codex_cli_backend"
+    },
+    "t01_feasibility_path": {
+      "path": "codex_local_builtin",
+      "status": "feasible_candidate_for_next_bounded_smoke_not_execution_proof",
+      "note": "T01 feasibility is distinct from the final D011 selected path."
+    },
+    "hermes_cli_remediation": {
+      "status": "remediated_for_readiness_repeat",
+      "hermes_cli_not_found_cleared": true,
+      "readiness_status": "ready_with_warning",
+      "remaining_warning_codes": [
+        "hermes_no_api_keys"
+      ]
+    },
+    "paperclip_owned_smoke": {
+      "agent_id": "5475a6a0-3668-4763-9bf8-651bbdf94f4a",
+      "run_id": "9f7c4b62-5970-4416-b4e5-a55b8f99fb0f",
+      "run_status": "failed",
+      "error_code": "adapter_failed",
+      "exit_code": 1,
+      "wake_count_delta": 1,
+      "result_json_bos_present": false,
+      "blocker_reason": "run_status_not_succeeded,missing_resultJson_bos",
+      "log_ref": "43c74adb-b194-44d1-8f8e-ba142544bb9d/5475a6a0-3668-4763-9bf8-651bbdf94f4a/9f7c4b62-5970-4416-b4e5-a55b8f99fb0f.ndjson",
+      "log_sha256": "c99bc724adb7cac7868c84c9b103087ab123f8a6878ce4bd606c6cbca200582c"
+    }
+  },
+  "operation_flags": {
+    "new_runtime_execution_attempted_by_s09": false,
+    "capability_matrix_modified": false,
+    "capability_promoted": false,
+    "paperclip_core_patched": false,
+    "direct_database_mutation": false,
+    "private_internals_used": false,
+    "plaintext_secrets_recorded": false,
+    "completed_task_facts_changed": false
+  },
+  "requirement_posture": {
+    "R011": "advanced/preserved by supported-boundary evidence, but runtime execution proof remains blocked",
+    "R009": "preserved as existing fixture/fallback posture; not promoted by S08",
+    "R010": "preserved with no duplicate wake observed in S08 smoke; not promoted because runtime execution failed"
+  },
+  "no_promotion_posture": {
+    "summary": "S08 remains fail-closed. The only promoted fact is artifact completeness for inspection, not runtime capability.",
+    "blocked_capabilities": [
+      "hermes_runtime_execution",
+      "direct_codex_runtime_execution",
+      "gsdpi_runtime_execution",
+      "runtime_capability_matrix_promotion"
+    ],
+    "required_future_proof": "A successful bounded Paperclip run with BOS-shaped resultJson.bos or equivalent adapter proof is still required before any runtime capability promotion."
+  },
+  "consistency_checks_performed": [
+    "Confirmed all five S08 task summaries exist and are non-empty.",
+    "Confirmed all five required S08 runtime-evidence JSON files exist.",
+    "Confirmed canonical S08 SUMMARY, ASSESSMENT, and UAT artifacts were previously absent and are now created.",
+    "Kept T01 codex_local_builtin feasibility distinct from D011 selected hermes_local_with_codex_cli_backend path.",
+    "Recorded adapter_failed, wakeCountDelta=1, and missing resultJson.bos as fail-closed markers."
+  ],
+  "quality_gates": {
+    "failure_modes": {
+      "verdict": "pass",
+      "evidence": "The reconstruction bubbles malformed/missing source evidence through verification instead of inventing facts; artifacts explicitly treat failed runtime readback and missing BOS result as blockers."
+    },
+    "load_profile": {
+      "verdict": "omitted",
+      "reason": "This task writes local documentation/audit artifacts from existing evidence and has no runtime load dimension. The underlying S08 smoke remains one bounded run with no retry loop."
+    },
+    "negative_tests": {
+      "verdict": "planned_for_later_validator",
+      "evidence": "Artifacts define negative guardrails for S09 validator: missing artifacts, overclaiming passing resultJson.bos, omitting adapter_failed/wakeCountDelta=1, or capability promotion drift must fail."
+    }
+  },
+  "redaction": {
+    "credential_values_included": false,
+    "status": "Only paths, statuses, path identifiers, run IDs, log references, and hashes already present in committed evidence are recorded."
+  }
+}

@@ -42,7 +42,7 @@ export type PaperclipRuntimeCapabilityKey = typeof PAPERCLIP_RUNTIME_CAPABILITY_
 
 export const PAPERCLIP_RUNTIME_BOUNDARY_RULES = {
   adapter: "In-memory adapter and persistence are test/draft-only and never prove Paperclip host support.",
-  artifacts: "Issue documents and comments are the preferred durable artifact path when native APIs are proven; until then they are adapter assumptions with markdown fallback.",
+  artifacts: "S04 confirms bounded issue/document/comment readback for visible artifacts; fallback diagnostics and markdown refs still are not durable truth beyond their surfaced artifact.",
   state: "Plugin state is cache/overlay only unless a runtime round-trip and restart/readback proof exists.",
   events: "Event handling is optional behind explicit tool/action invocation, bounded polling, and activity fallback.",
   approvals: "Approval/request ownership stays with Paperclip-native approvals; plugin fallbacks may ask for review but must not simulate native approval objects."

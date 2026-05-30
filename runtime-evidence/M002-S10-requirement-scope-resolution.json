@@ -1,0 +1,66 @@
+{
+  "schema_version": "s10-requirement-scope-resolution/v1",
+  "artifact_type": "requirement-scope-resolution",
+  "generated_at": "2026-05-30T04:30:00Z",
+  "milestone": "M002",
+  "slice": "S10",
+  "task": "T04",
+  "proof_posture": {
+    "hermes": {
+      "evidence_path": "runtime-evidence/M002-S10-hermes-runtime-execution-proof.json",
+      "artifact_type": "fail-closed-blocker",
+      "passing": false,
+      "capability_promoted": false,
+      "reason": "Supported Paperclip health was reachable, but adapter registry/testEnvironment auth/preflight failed before any bounded runtime invocation; no resultJson.bos or wake proof exists."
+    },
+    "gsdpi": {
+      "evidence_path": "runtime-evidence/M002-S10-gsdpi-runtime-execution-proof.json",
+      "artifact_type": "fail-closed-blocker",
+      "passing": false,
+      "capability_promoted": false,
+      "reason": "Local adapter package readiness passed, but supported Paperclip health/registry/version/testEnvironment routes were unavailable; no registry readback, execute status, or BosAdapterResult exists."
+    }
+  },
+  "requirement_resolution": {
+    "R009": {
+      "covered_by_existing_requirement": true,
+      "requirement_update_used": false,
+      "resolution": "No re-scope required. R009 already prevents capability promotion drift; S10 records no Hermes or GSD-Pi execution promotion and keeps docs/matrix proof-gated."
+    },
+    "R010": {
+      "covered_by_existing_requirement": true,
+      "requirement_update_used": false,
+      "resolution": "No re-scope required. R010 still requires wakeCountDelta=1 for passing Hermes proof. S10 explicitly records a non-proof because no bounded runtime run started and wakeCountDelta was therefore unmeasurable."
+    },
+    "R011": {
+      "covered_by_existing_requirement": true,
+      "requirement_update_used": false,
+      "resolution": "No re-scope required. R011 is preserved: S10 evidence records no Paperclip core patch, no private internal import, no direct database mutation, and no plaintext credential logging."
+    }
+  },
+  "scope_change": {
+    "requirements_broadened": false,
+    "success_criteria_broadened": false,
+    "manual_requirements_file_edit": false,
+    "gsd_requirement_update_called": false,
+    "rationale": "The conservative fail-closed outcome is already permitted by the milestone and requirement posture: unsupported or unproved runtime surfaces remain blockers/fallback-only rather than simulated success."
+  },
+  "quality_gates": {
+    "failure_modes": {
+      "verdict": "pass",
+      "evidence": "External dependencies are Paperclip HTTP/admin routes, local filesystem artifacts, and validator subprocesses. Auth denial, connection refusal, missing artifacts, malformed JSON, unsupported-boundary flags, and promotion drift all fail closed or are surfaced as validator errors."
+    },
+    "load_profile": {
+      "verdict": "omitted",
+      "reason": "T04 reconciles local documentation, JSON posture, and validators from fixed evidence files. It does not introduce a runtime service or repeated workload; the underlying smoke runners remain bounded to at most one runtime invocation."
+    },
+    "negative_tests": {
+      "verdict": "pass",
+      "evidence": "scripts/test_validate_s10_runtime_execution.py covers duplicate wake, missing resultJson.bos, missing BosAdapterResult, unredacted token-like strings, direct DB/core/private-import flags, malformed timestamps, confirmed-row promotion drift, fail-closed rows without S10 evidence paths, and CLI audit writing."
+    }
+  },
+  "redaction": {
+    "credential_values_included": false,
+    "notes": "Only artifact paths, status codes, blocker classifications, and requirement posture are recorded. No credential values are requested or stored."
+  }
+}

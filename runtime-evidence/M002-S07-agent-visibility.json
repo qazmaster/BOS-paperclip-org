@@ -1,0 +1,1493 @@
+{
+  "adapter_registry_readonly": {
+    "gsdpi_local_loaded": false,
+    "loaded_types": [
+      "acpx_local",
+      "claude_local",
+      "codex_local",
+      "cursor",
+      "cursor_cloud",
+      "gemini_local",
+      "grok_local",
+      "hermes_local",
+      "http",
+      "openclaw_gateway",
+      "opencode_local",
+      "pi_local",
+      "process"
+    ],
+    "response": {
+      "duration_ms": 1202,
+      "json": [
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "acpx_local",
+          "loaded": true,
+          "modelsCount": 16,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "acpx_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "claude_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "claude_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "codex_local",
+          "loaded": true,
+          "modelsCount": 10,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "codex_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "cursor",
+          "loaded": true,
+          "modelsCount": 39,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "cursor_cloud",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor_cloud"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "gemini_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "gemini_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "grok_local",
+          "loaded": true,
+          "modelsCount": 1,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "grok_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "hermes_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "hermes_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "http",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "http"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "openclaw_gateway",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "openclaw_gateway"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "opencode_local",
+          "loaded": true,
+          "modelsCount": 5,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "opencode_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "pi_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "pi_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "process",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "process"
+        }
+      ],
+      "method": "GET",
+      "ok": true,
+      "path": "/api/adapters",
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/adapters"
+    }
+  },
+  "approval": {
+    "approval_received": true,
+    "approval_text_summary": "User approved S07 agent creation with hermes_local. User requested GSD local for Div4; Paperclip rejected gsdpi_local as unregistered, then user selected hermes_local fallback for Div4 visibility.",
+    "scope": "Paperclip sandbox only; supported API; no production mutation; no core patch; no direct DB mutation; no plaintext secrets; no heartbeat execution."
+  },
+  "auth": {
+    "api_key_env_present": true,
+    "value_persisted": false
+  },
+  "createdAt": "2026-05-29T13:43:37Z",
+  "operations": {
+    "created": [
+      {
+        "agent_id": "3a11730b-b4c5-443c-a217-7e7b35ca9a52",
+        "division_id": "Div4.Operations",
+        "name": "Div4.Operations - Process / Reliability",
+        "request": {
+          "adapterType": "hermes_local",
+          "enabled": true,
+          "heartbeatEnabled": false,
+          "role": "devops",
+          "wakeOnDemand": false
+        },
+        "response": {
+          "duration_ms": 1118,
+          "json": {
+            "adapterConfig": {},
+            "adapterType": "hermes_local",
+            "budgetMonthlyCents": 0,
+            "capabilities": null,
+            "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+            "createdAt": "2026-05-29T13:43:36.275Z",
+            "defaultEnvironmentId": null,
+            "icon": null,
+            "id": "3a11730b-b4c5-443c-a217-7e7b35ca9a52",
+            "lastHeartbeatAt": null,
+            "metadata": {
+              "bosLightDivisionId": "Div4.Operations",
+              "bosLightReportsTo": "Div1.Executive",
+              "bosLightTitle": "Process / Reliability",
+              "m002Slice": "S07",
+              "requestedAdapterAfterGsdpiBlocker": "hermes_local",
+              "visibilityOnly": true
+            },
+            "name": "Div4.Operations - Process / Reliability",
+            "pauseReason": null,
+            "pausedAt": null,
+            "permissions": {
+              "canCreateAgents": false
+            },
+            "reportsTo": null,
+            "role": "devops",
+            "runtimeConfig": {
+              "heartbeat": {
+                "enabled": false,
+                "maxConcurrentRuns": 20
+              }
+            },
+            "spentMonthlyCents": 0,
+            "status": "idle",
+            "title": null,
+            "updatedAt": "2026-05-29T13:43:36.275Z",
+            "urlKey": "div4-operations-process-reliability"
+          },
+          "method": "POST",
+          "ok": true,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents",
+          "status": 201,
+          "text_present": false,
+          "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+        }
+      }
+    ],
+    "created_count": 1,
+    "failed": [],
+    "failed_count": 0,
+    "skipped": [
+      {
+        "adapterType": "hermes_local",
+        "agent": {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:38.693Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "20a39ec5-b89f-4e4b-8667-421849c3ed69",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div1.Executive",
+            "bosLightReportsTo": null,
+            "bosLightTitle": "CEO / Mission Owner",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div1.Executive - CEO / Mission Owner",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": true
+          },
+          "reportsTo": null,
+          "role": "ceo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:38.693Z",
+          "urlKey": "div1-executive-ceo-mission-owner"
+        },
+        "division_id": "Div1.Executive",
+        "name": "Div1.Executive - CEO / Mission Owner",
+        "reason": "exact_name_already_exists"
+      },
+      {
+        "adapterType": "hermes_local",
+        "agent": {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:40.019Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "697b3552-c3d4-48e5-bc2d-e7269198f5f0",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div2.MasterPlanner",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Product Planning / Shaping",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div2.MasterPlanner - Product Planning / Shaping",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "pm",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:40.019Z",
+          "urlKey": "div2-masterplanner-product-planning-shaping"
+        },
+        "division_id": "Div2.MasterPlanner",
+        "name": "Div2.MasterPlanner - Product Planning / Shaping",
+        "reason": "exact_name_already_exists"
+      },
+      {
+        "adapterType": "hermes_local",
+        "agent": {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:41.342Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "1114c226-1065-4ebe-9d9d-dfe183041915",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div3.Production",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Delivery / Build",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div3.Production - Delivery / Build",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "engineer",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:41.342Z",
+          "urlKey": "div3-production-delivery-build"
+        },
+        "division_id": "Div3.Production",
+        "name": "Div3.Production - Delivery / Build",
+        "reason": "exact_name_already_exists"
+      },
+      {
+        "adapterType": "hermes_local",
+        "agent": {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:43.977Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "2295b62e-e769-48f8-b5f8-9d9fcdb92b6b",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div5.Qualifications",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "QA / Security / Knowledge",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div5.Qualifications - QA / Security / Knowledge",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "qa",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:43.977Z",
+          "urlKey": "div5-qualifications-qa-security-knowledge"
+        },
+        "division_id": "Div5.Qualifications",
+        "name": "Div5.Qualifications - QA / Security / Knowledge",
+        "reason": "exact_name_already_exists"
+      },
+      {
+        "adapterType": "hermes_local",
+        "agent": {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:45.293Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "38a07842-b3b1-4d17-a5c8-3b958c642c2a",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div6.Resources",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Budget / Capacity",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div6.Resources - Budget / Capacity",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "cfo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:45.293Z",
+          "urlKey": "div6-resources-budget-capacity"
+        },
+        "division_id": "Div6.Resources",
+        "name": "Div6.Resources - Budget / Capacity",
+        "reason": "exact_name_already_exists"
+      },
+      {
+        "adapterType": "hermes_local",
+        "agent": {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:46.607Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "81d43c83-b8b8-43e8-bf93-cbe69056fb00",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div7.Strategy",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Decision Protocol / Adaptation",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div7.Strategy - Decision Protocol / Adaptation",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "researcher",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:46.607Z",
+          "urlKey": "div7-strategy-decision-protocol-adaptation"
+        },
+        "division_id": "Div7.Strategy",
+        "name": "Div7.Strategy - Decision Protocol / Adaptation",
+        "reason": "exact_name_already_exists"
+      }
+    ],
+    "skipped_existing_count": 6
+  },
+  "phase": "approved-agent-create-readback",
+  "preflight": {
+    "agents_before_count": 7,
+    "response": {
+      "duration_ms": 1208,
+      "json": [
+        {
+          "adapterConfig": {
+            "dangerouslySkipPermissions": true,
+            "graceSec": 15,
+            "instructionsBundleMode": "managed",
+            "instructionsEntryFile": "AGENTS.md",
+            "instructionsFilePath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions/AGENTS.md",
+            "instructionsRootPath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions",
+            "maxTurnsPerRun": 1000,
+            "timeoutSec": 0
+          },
+          "adapterType": "claude_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-28T10:49:42.827Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "lastHeartbeatAt": "2026-05-28T10:50:28.457Z",
+          "metadata": null,
+          "name": "BOS CEO",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": true
+          },
+          "reportsTo": null,
+          "role": "ceo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "cooldownSec": 10,
+              "enabled": false,
+              "intervalSec": 300,
+              "maxConcurrentRuns": 20,
+              "wakeOnDemand": true
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "error",
+          "title": null,
+          "updatedAt": "2026-05-28T10:50:28.457Z",
+          "urlKey": "bos-ceo"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:38.693Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "20a39ec5-b89f-4e4b-8667-421849c3ed69",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div1.Executive",
+            "bosLightReportsTo": null,
+            "bosLightTitle": "CEO / Mission Owner",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div1.Executive - CEO / Mission Owner",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": true
+          },
+          "reportsTo": null,
+          "role": "ceo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:38.693Z",
+          "urlKey": "div1-executive-ceo-mission-owner"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:40.019Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "697b3552-c3d4-48e5-bc2d-e7269198f5f0",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div2.MasterPlanner",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Product Planning / Shaping",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div2.MasterPlanner - Product Planning / Shaping",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "pm",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:40.019Z",
+          "urlKey": "div2-masterplanner-product-planning-shaping"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:41.342Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "1114c226-1065-4ebe-9d9d-dfe183041915",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div3.Production",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Delivery / Build",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div3.Production - Delivery / Build",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "engineer",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:41.342Z",
+          "urlKey": "div3-production-delivery-build"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:43.977Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "2295b62e-e769-48f8-b5f8-9d9fcdb92b6b",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div5.Qualifications",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "QA / Security / Knowledge",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div5.Qualifications - QA / Security / Knowledge",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "qa",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:43.977Z",
+          "urlKey": "div5-qualifications-qa-security-knowledge"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:45.293Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "38a07842-b3b1-4d17-a5c8-3b958c642c2a",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div6.Resources",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Budget / Capacity",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div6.Resources - Budget / Capacity",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "cfo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:45.293Z",
+          "urlKey": "div6-resources-budget-capacity"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:46.607Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "81d43c83-b8b8-43e8-bf93-cbe69056fb00",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div7.Strategy",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Decision Protocol / Adaptation",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div7.Strategy - Decision Protocol / Adaptation",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "researcher",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:46.607Z",
+          "urlKey": "div7-strategy-decision-protocol-adaptation"
+        }
+      ],
+      "method": "GET",
+      "ok": true,
+      "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents",
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+    }
+  },
+  "prior_attempts": [
+    {
+      "createdAt": "2026-05-29T13:40:48Z",
+      "failed_operations": [
+        {
+          "agent_id": null,
+          "division_id": "Div4.Operations",
+          "name": "Div4.Operations - Process / Reliability",
+          "request": {
+            "adapterType": "gsdpi_local",
+            "enabled": true,
+            "heartbeatEnabled": false,
+            "role": "devops",
+            "wakeOnDemand": false
+          },
+          "response": {
+            "duration_ms": 1115,
+            "json": {
+              "error": "Unknown adapter type: gsdpi_local"
+            },
+            "method": "POST",
+            "ok": false,
+            "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents",
+            "status": 422,
+            "text": null,
+            "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+          }
+        }
+      ],
+      "reason": "Documents previous approved attempt where Div4 gsdpi_local failed because the adapter is unregistered.",
+      "summary": {
+        "all_seven_visible": false,
+        "created_count": 6,
+        "div4_requested_adapter": "gsdpi_local",
+        "execution_proof": false,
+        "failed_count": 1,
+        "gsdpi_local_registry_loaded": false,
+        "note": "S07 proves agent visibility/config readback only. It does not prove Hermes, GSD-Pi, or Codex runtime execution.",
+        "skipped_existing_count": 0,
+        "verdict": "needs-attention",
+        "visible_expected_agents_count": 6
+      }
+    }
+  ],
+  "readback": {
+    "all_seven_visible": true,
+    "missing_expected_agents": [],
+    "response": {
+      "duration_ms": 1143,
+      "json": [
+        {
+          "adapterConfig": {
+            "dangerouslySkipPermissions": true,
+            "graceSec": 15,
+            "instructionsBundleMode": "managed",
+            "instructionsEntryFile": "AGENTS.md",
+            "instructionsFilePath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions/AGENTS.md",
+            "instructionsRootPath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions",
+            "maxTurnsPerRun": 1000,
+            "timeoutSec": 0
+          },
+          "adapterType": "claude_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-28T10:49:42.827Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "lastHeartbeatAt": "2026-05-28T10:50:28.457Z",
+          "metadata": null,
+          "name": "BOS CEO",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": true
+          },
+          "reportsTo": null,
+          "role": "ceo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "cooldownSec": 10,
+              "enabled": false,
+              "intervalSec": 300,
+              "maxConcurrentRuns": 20,
+              "wakeOnDemand": true
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "error",
+          "title": null,
+          "updatedAt": "2026-05-28T10:50:28.457Z",
+          "urlKey": "bos-ceo"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:38.693Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "20a39ec5-b89f-4e4b-8667-421849c3ed69",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div1.Executive",
+            "bosLightReportsTo": null,
+            "bosLightTitle": "CEO / Mission Owner",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div1.Executive - CEO / Mission Owner",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": true
+          },
+          "reportsTo": null,
+          "role": "ceo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:38.693Z",
+          "urlKey": "div1-executive-ceo-mission-owner"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:40.019Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "697b3552-c3d4-48e5-bc2d-e7269198f5f0",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div2.MasterPlanner",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Product Planning / Shaping",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div2.MasterPlanner - Product Planning / Shaping",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "pm",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:40.019Z",
+          "urlKey": "div2-masterplanner-product-planning-shaping"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:41.342Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "1114c226-1065-4ebe-9d9d-dfe183041915",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div3.Production",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Delivery / Build",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div3.Production - Delivery / Build",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "engineer",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:41.342Z",
+          "urlKey": "div3-production-delivery-build"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:43.977Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "2295b62e-e769-48f8-b5f8-9d9fcdb92b6b",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div5.Qualifications",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "QA / Security / Knowledge",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div5.Qualifications - QA / Security / Knowledge",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "qa",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:43.977Z",
+          "urlKey": "div5-qualifications-qa-security-knowledge"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:45.293Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "38a07842-b3b1-4d17-a5c8-3b958c642c2a",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div6.Resources",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Budget / Capacity",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div6.Resources - Budget / Capacity",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "cfo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:45.293Z",
+          "urlKey": "div6-resources-budget-capacity"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:40:46.607Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "81d43c83-b8b8-43e8-bf93-cbe69056fb00",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div7.Strategy",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Decision Protocol / Adaptation",
+            "m002Slice": "S07",
+            "requestedAdapterByHuman": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div7.Strategy - Decision Protocol / Adaptation",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "researcher",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:40:46.607Z",
+          "urlKey": "div7-strategy-decision-protocol-adaptation"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-29T13:43:36.275Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "3a11730b-b4c5-443c-a217-7e7b35ca9a52",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div4.Operations",
+            "bosLightReportsTo": "Div1.Executive",
+            "bosLightTitle": "Process / Reliability",
+            "m002Slice": "S07",
+            "requestedAdapterAfterGsdpiBlocker": "hermes_local",
+            "visibilityOnly": true
+          },
+          "name": "Div4.Operations - Process / Reliability",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "devops",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-29T13:43:36.275Z",
+          "urlKey": "div4-operations-process-reliability"
+        }
+      ],
+      "method": "GET",
+      "ok": true,
+      "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents",
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+    },
+    "visible_expected_agents": [
+      {
+        "adapterType": "hermes_local",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "id": "20a39ec5-b89f-4e4b-8667-421849c3ed69",
+        "metadata": {
+          "bosLightDivisionId": "Div1.Executive",
+          "bosLightReportsTo": null,
+          "bosLightTitle": "CEO / Mission Owner",
+          "m002Slice": "S07",
+          "requestedAdapterByHuman": "hermes_local",
+          "visibilityOnly": true
+        },
+        "name": "Div1.Executive - CEO / Mission Owner",
+        "permissions": {
+          "canCreateAgents": true
+        },
+        "role": "ceo",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "status": "idle"
+      },
+      {
+        "adapterType": "hermes_local",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "id": "697b3552-c3d4-48e5-bc2d-e7269198f5f0",
+        "metadata": {
+          "bosLightDivisionId": "Div2.MasterPlanner",
+          "bosLightReportsTo": "Div1.Executive",
+          "bosLightTitle": "Product Planning / Shaping",
+          "m002Slice": "S07",
+          "requestedAdapterByHuman": "hermes_local",
+          "visibilityOnly": true
+        },
+        "name": "Div2.MasterPlanner - Product Planning / Shaping",
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "role": "pm",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "status": "idle"
+      },
+      {
+        "adapterType": "hermes_local",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "id": "1114c226-1065-4ebe-9d9d-dfe183041915",
+        "metadata": {
+          "bosLightDivisionId": "Div3.Production",
+          "bosLightReportsTo": "Div1.Executive",
+          "bosLightTitle": "Delivery / Build",
+          "m002Slice": "S07",
+          "requestedAdapterByHuman": "hermes_local",
+          "visibilityOnly": true
+        },
+        "name": "Div3.Production - Delivery / Build",
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "role": "engineer",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "status": "idle"
+      },
+      {
+        "adapterType": "hermes_local",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "id": "3a11730b-b4c5-443c-a217-7e7b35ca9a52",
+        "metadata": {
+          "bosLightDivisionId": "Div4.Operations",
+          "bosLightReportsTo": "Div1.Executive",
+          "bosLightTitle": "Process / Reliability",
+          "m002Slice": "S07",
+          "requestedAdapterAfterGsdpiBlocker": "hermes_local",
+          "visibilityOnly": true
+        },
+        "name": "Div4.Operations - Process / Reliability",
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "role": "devops",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "status": "idle"
+      },
+      {
+        "adapterType": "hermes_local",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "id": "2295b62e-e769-48f8-b5f8-9d9fcdb92b6b",
+        "metadata": {
+          "bosLightDivisionId": "Div5.Qualifications",
+          "bosLightReportsTo": "Div1.Executive",
+          "bosLightTitle": "QA / Security / Knowledge",
+          "m002Slice": "S07",
+          "requestedAdapterByHuman": "hermes_local",
+          "visibilityOnly": true
+        },
+        "name": "Div5.Qualifications - QA / Security / Knowledge",
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "role": "qa",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "status": "idle"
+      },
+      {
+        "adapterType": "hermes_local",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "id": "38a07842-b3b1-4d17-a5c8-3b958c642c2a",
+        "metadata": {
+          "bosLightDivisionId": "Div6.Resources",
+          "bosLightReportsTo": "Div1.Executive",
+          "bosLightTitle": "Budget / Capacity",
+          "m002Slice": "S07",
+          "requestedAdapterByHuman": "hermes_local",
+          "visibilityOnly": true
+        },
+        "name": "Div6.Resources - Budget / Capacity",
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "role": "cfo",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "status": "idle"
+      },
+      {
+        "adapterType": "hermes_local",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "id": "81d43c83-b8b8-43e8-bf93-cbe69056fb00",
+        "metadata": {
+          "bosLightDivisionId": "Div7.Strategy",
+          "bosLightReportsTo": "Div1.Executive",
+          "bosLightTitle": "Decision Protocol / Adaptation",
+          "m002Slice": "S07",
+          "requestedAdapterByHuman": "hermes_local",
+          "visibilityOnly": true
+        },
+        "name": "Div7.Strategy - Decision Protocol / Adaptation",
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "role": "researcher",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "status": "idle"
+      }
+    ],
+    "visible_expected_agents_count": 7,
+    "wrong_adapter": []
+  },
+  "runtime": {
+    "health": {
+      "duration_ms": 1125,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "method": "GET",
+      "ok": true,
+      "path": "/api/health",
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/health"
+    }
+  },
+  "safety": {
+    "approvals_created_intentionally": 0,
+    "core_patch": false,
+    "direct_db_mutation": false,
+    "heartbeat_invoked": false,
+    "mutation_attempted": true,
+    "plaintext_secret_used": false,
+    "provider_execution_attempted": false,
+    "write_methods_attempted": [
+      "POST /api/companies/{companyId}/agents"
+    ]
+  },
+  "schemaVersion": "m002-s07-agent-visibility/v1",
+  "summary": {
+    "all_seven_visible": true,
+    "created_count": 1,
+    "div4_gsdpi_local_blocker": "Unknown adapter type: gsdpi_local; adapter registry readback does not include gsdpi_local",
+    "div4_requested_adapter_final": "hermes_local",
+    "execution_proof": false,
+    "failed_count": 0,
+    "gsdpi_local_registry_loaded": false,
+    "note": "S07 proves agent visibility/config readback only. It does not prove Hermes, GSD-Pi, or Codex runtime execution.",
+    "skipped_existing_count": 6,
+    "verdict": "pass",
+    "visible_expected_agents_count": 7
+  },
+  "target": {
+    "base_url_redacted": "https://paperclip.oysana.com",
+    "company_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "default_adapterType": "hermes_local",
+    "div4_adapterType": "hermes_local",
+    "div4_gsdpi_requested_but_blocked": true
+  }
+}

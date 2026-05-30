@@ -1,0 +1,110 @@
+{
+  "adapter": {
+    "adapterType": "gsdpi_local",
+    "registry_readback": null,
+    "testEnvironment": {
+      "response": {
+        "duration_ms": 1058,
+        "json": {
+          "error": "Unknown adapter type: gsdpi_local"
+        },
+        "ok": false,
+        "status": 422,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/test-environment"
+      },
+      "status": "fail"
+    }
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_reason": "gsdpi_local_not_registered_via_supported_runtime_boundary",
+  "diagnostics": {
+    "adapters": {
+      "duration_ms": 1058,
+      "json": {
+        "error": "Board access required"
+      },
+      "ok": false,
+      "status": 403,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/adapters"
+    },
+    "health": {
+      "duration_ms": 749,
+      "json": {
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentMode": "authenticated",
+        "status": "ok"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/health"
+    },
+    "host_cli_probe": {
+      "command_class": "ssh paperclip host docs/cli discovery",
+      "exit_code": 255,
+      "note": "No install/list/inspect CLI command was executed because host command access was denied; no secret values were requested or printed.",
+      "status": "not_available_in_current_autonomous_session"
+    },
+    "models": {
+      "duration_ms": 1059,
+      "json": {
+        "error": "Unauthorized"
+      },
+      "ok": false,
+      "status": 401,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/models"
+    },
+    "package_candidate": {
+      "core_dependency": "none",
+      "exports": "createServerAdapter",
+      "package": "@bos/adapter-gsdpi-local",
+      "path": "adapters/gsdpi-local"
+    },
+    "test_environment": {
+      "duration_ms": 1058,
+      "json": {
+        "error": "Unknown adapter type: gsdpi_local"
+      },
+      "ok": false,
+      "status": 422,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/test-environment"
+    },
+    "unsupported_paths_not_used": [
+      "Paperclip core source patch",
+      "direct database mutation",
+      "runtime monkey patch",
+      "private module import as production dependency"
+    ]
+  },
+  "generated_at": "2026-05-29T02:05:53Z",
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Stopped at supported Paperclip external-adapter/API boundary. No Paperclip source patch, package monkey patch, private module import, direct database write, or adapter-registry mutation was performed."
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "unknown"
+  },
+  "passing": false,
+  "phase": "registration",
+  "registration": {
+    "adapterType": "gsdpi_local",
+    "method": "Documented Paperclip external adapter package loaded via plugin system/startup; probed only through supported HTTP adapter registry, models, and testEnvironment readback.",
+    "readback": null,
+    "registered": false,
+    "supported_boundary_used": [
+      "GET /api/health",
+      "GET /api/adapters",
+      "GET /api/companies/{companyId}/adapters/gsdpi_local/models",
+      "POST /api/companies/{companyId}/adapters/gsdpi_local/test-environment"
+    ]
+  },
+  "schema_version": "s03-gsdpi-smoke/v1"
+}

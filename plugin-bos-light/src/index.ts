@@ -13,4 +13,7 @@ export * from "./decision";
 export * from "./paperclipAdapter";
 export * from "./persistence";
 export * from "./runtimeCapabilities";
+export * from "./livePaperclipAdapter";
+export * from "./liveArtifactFlow";
 export * from "./worker";
+export * from "./registrationProbe";

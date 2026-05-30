@@ -1,0 +1,290 @@
+{
+  "adapter": {
+    "adapterType": "gsdpi_local",
+    "registry_readback": null,
+    "testEnvironment": {
+      "checks": [
+        {
+          "code": "gsd_version",
+          "level": "info",
+          "message": "gsd --version returned 1.0.2"
+        }
+      ],
+      "status": "pass"
+    }
+  },
+  "artifact_type": "smoke-evidence",
+  "diagnostics": {
+    "adapter_registered": false,
+    "adapters": {
+      "duration_ms": 1052,
+      "json": [
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "acpx_local",
+          "loaded": true,
+          "modelsCount": 16,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "acpx_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "claude_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "claude_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "codex_local",
+          "loaded": true,
+          "modelsCount": 10,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "codex_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "cursor",
+          "loaded": true,
+          "modelsCount": 39,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "cursor_cloud",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor_cloud"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "gemini_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "gemini_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "grok_local",
+          "loaded": true,
+          "modelsCount": 1,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "grok_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "hermes_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "hermes_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "http",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "http"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "openclaw_gateway",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "openclaw_gateway"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "opencode_local",
+          "loaded": true,
+          "modelsCount": 5,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "opencode_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "pi_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "pi_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "process",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "process"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/adapters"
+    },
+    "health": {
+      "duration_ms": 747,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/health"
+    },
+    "runtime_facts_source": "/tmp/s03-gsdpi-runtime-facts.json",
+    "version": {
+      "duration_ms": 1049,
+      "json": null,
+      "ok": false,
+      "status": 404,
+      "text": "{\"error\":\"API route not found\"}",
+      "url": "http://127.0.0.1:3131/api/version"
+    }
+  },
+  "generated_at": "2026-05-29T01:46:41Z",
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP readback plus sandbox/container package administration only; no Paperclip source patch, monkey patch, private module import, or direct DB write."
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "unknown"
+  },
+  "phase": "environment",
+  "runtime": {
+    "command": "gsd",
+    "install": {
+      "method": "npm install -g @opengsd/gsd-pi@1.0.2",
+      "sandbox_container": "paperclip_sandbox-paperclip-1",
+      "secret_required": false
+    },
+    "node": "v24.16.0",
+    "npm": "11.13.0",
+    "pnpm": "9.15.4",
+    "version": "1.0.2"
+  },
+  "schema_version": "s03-gsdpi-smoke/v1"
+}

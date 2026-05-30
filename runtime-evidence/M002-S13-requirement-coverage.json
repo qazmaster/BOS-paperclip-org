@@ -1,0 +1,175 @@
+{
+  "schema_version": "s13-requirement-coverage/v1",
+  "artifact_type": "requirement-coverage-ledger",
+  "generated_at": "2026-05-30T08:00:00Z",
+  "milestone": "M002",
+  "slice": "S13",
+  "validation_round": 1,
+  "source_of_truth": "Seeded from the canonical active R012 through R015 text in the GSD requirements store context embedded in .gsd/milestones/M002/slices/S13/tasks/T01-PLAN.md because this worktree does not contain .gsd/REQUIREMENTS.md.",
+  "inputs": {
+    "m002_context_path": ".gsd/milestones/M002/M002-CONTEXT.md",
+    "m002_assessment_path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+    "s11_uat_path": ".gsd/milestones/M002/slices/S11/S11-UAT.md",
+    "s10_requirement_scope_resolution_path": "runtime-evidence/M002-S10-requirement-scope-resolution.json",
+    "s12_runtime_proof_or_rescope_path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+    "s12_validation_closeout_path": "runtime-evidence/M002-S12-validation-closeout.json"
+  },
+  "requirements": [
+    {
+      "requirement_id": "R012",
+      "status": "active",
+      "requirement_class": "constraint",
+      "canonical_requirement_text": "R012 active constraint: The canonical v1.4.1 division map must be the active company and org contract; legacy v1.3 division names may appear only in historical/deprecated context. Primary owning slice: M004-osbua3. Validation: active company template, AGENTS profiles, validators, and plugin contracts all use v1.4.1 division ids; deprecated ids remain only in historical notes or deprecated sections.",
+      "primary_owning_slice": "M004-osbua3",
+      "m002_disposition": "out_of_scope_for_m002",
+      "runtime_proof_claimed": false,
+      "coverage_summary": "M002 explicitly does not alter or reinterpret active M004 organization-boundary requirements. R012 remains active for M004 and is not validated by M002 runtime evidence.",
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M002/M002-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "contract_drift",
+          "note": "Requirement Posture states that M002 context does not alter or reinterpret active M004 organization-boundary requirements R012 through R015."
+        },
+        {
+          "path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+          "validation_class": "Integration",
+          "problem_kind": "documentation_mismatch",
+          "note": "Requirement Assessment states that M002 does not alter active M004 organization-boundary requirements R012 through R015."
+        },
+        {
+          "path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+          "validation_class": "Operational",
+          "problem_kind": "operational_posture",
+          "note": "S12 outcome is approved_rescope for R009 through R011 only and records no_capability_promotions=true with blocker_evidence_promoted=false."
+        },
+        {
+          "path": ".gsd/milestones/M002/slices/S11/S11-UAT.md",
+          "validation_class": "UAT",
+          "problem_kind": "uat_readability",
+          "note": "S11 expected outcomes state R012-R015 remain out of scope for M002 artifact repair and are not reinterpreted."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R013",
+      "status": "active",
+      "requirement_class": "compliance/security",
+      "canonical_requirement_text": "R013 active compliance/security: Only Div6.External may interact with the external world; internal divisions must not receive raw web, API, customer, or vendor tools. Primary owning slice: M004-osbua3. Validation: tool permission matrix blocks external IO for Div1, Div2, Div3, Div4, Div5, and Div7; external requests route via Div1 and execute by Div6.",
+      "primary_owning_slice": "M004-osbua3",
+      "m002_disposition": "out_of_scope_for_m002",
+      "runtime_proof_claimed": false,
+      "coverage_summary": "M002 does not grant raw external IO tools or validate the M004 permission matrix. R013 remains active for M004 and is not validated by M002 runtime evidence.",
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M002/M002-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "contract_drift",
+          "note": "Requirement Posture states that M002 context does not alter or reinterpret active M004 organization-boundary requirements R012 through R015."
+        },
+        {
+          "path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+          "validation_class": "Integration",
+          "problem_kind": "documentation_mismatch",
+          "note": "Requirement Assessment states that M002 does not alter active M004 organization-boundary requirements R012 through R015."
+        },
+        {
+          "path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+          "validation_class": "Operational",
+          "problem_kind": "operational_posture",
+          "note": "S12 outcome is approved_rescope for R009 through R011 only and records no_capability_promotions=true with blocker_evidence_promoted=false."
+        },
+        {
+          "path": ".gsd/milestones/M002/slices/S11/S11-UAT.md",
+          "validation_class": "UAT",
+          "problem_kind": "uat_readability",
+          "note": "S11 expected outcomes state R012-R015 remain out of scope for M002 artifact repair and are not reinterpreted."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R014",
+      "status": "active",
+      "requirement_class": "compliance/security",
+      "canonical_requirement_text": "R014 active compliance/security: Div5.QualificationsLibraryLearning must quarantine, validate, and sanitize raw external evidence before any internal division can consume it. Primary owning slice: M004-osbua3. Validation: ExternalEvidencePacket flows into a Div5-approved SanitizedKnowledgePacket before internal use.",
+      "primary_owning_slice": "M004-osbua3",
+      "m002_disposition": "out_of_scope_for_m002",
+      "runtime_proof_claimed": false,
+      "coverage_summary": "M002 does not introduce or validate raw-external-evidence quarantine flow. R014 remains active for M004 and is not validated by M002 runtime evidence.",
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M002/M002-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "contract_drift",
+          "note": "Requirement Posture states that M002 context does not alter or reinterpret active M004 organization-boundary requirements R012 through R015."
+        },
+        {
+          "path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+          "validation_class": "Integration",
+          "problem_kind": "documentation_mismatch",
+          "note": "Requirement Assessment states that M002 does not alter active M004 organization-boundary requirements R012 through R015."
+        },
+        {
+          "path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+          "validation_class": "Operational",
+          "problem_kind": "operational_posture",
+          "note": "S12 outcome is approved_rescope for R009 through R011 only and records no_capability_promotions=true with blocker_evidence_promoted=false."
+        },
+        {
+          "path": ".gsd/milestones/M002/slices/S11/S11-UAT.md",
+          "validation_class": "UAT",
+          "problem_kind": "uat_readability",
+          "note": "S11 expected outcomes state R012-R015 remain out of scope for M002 artifact repair and are not reinterpreted."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R015",
+      "status": "active",
+      "requirement_class": "core-capability",
+      "canonical_requirement_text": "R015 active core-capability: Div1.HCO must own routing, escalation, Circuit Breaker control, and staffing/workload coordination while routine routing remains automated under Div1 policy. Primary owning slice: M004-osbua3. Validation: routing docs and contracts show Div1.HCO as policy owner; deterministic automation handles routine routes; escalations and staffing changes route through Div1.",
+      "primary_owning_slice": "M004-osbua3",
+      "m002_disposition": "out_of_scope_for_m002",
+      "runtime_proof_claimed": false,
+      "coverage_summary": "M002 does not validate the M004 Div1.HCO routing, escalation, Circuit Breaker, staffing, or workload contract. R015 remains active for M004 and is not validated by M002 runtime evidence.",
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M002/M002-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "contract_drift",
+          "note": "Requirement Posture states that M002 context does not alter or reinterpret active M004 organization-boundary requirements R012 through R015."
+        },
+        {
+          "path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+          "validation_class": "Integration",
+          "problem_kind": "documentation_mismatch",
+          "note": "Requirement Assessment states that M002 does not alter active M004 organization-boundary requirements R012 through R015."
+        },
+        {
+          "path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+          "validation_class": "Operational",
+          "problem_kind": "operational_posture",
+          "note": "S12 outcome is approved_rescope for R009 through R011 only and records no_capability_promotions=true with blocker_evidence_promoted=false."
+        },
+        {
+          "path": ".gsd/milestones/M002/slices/S11/S11-UAT.md",
+          "validation_class": "UAT",
+          "problem_kind": "uat_readability",
+          "note": "S11 expected outcomes state R012-R015 remain out of scope for M002 artifact repair and are not reinterpreted."
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "preserves_s12_approved_rescope": true,
+    "s12_disposition_path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+    "s12_validation_closeout_path": "runtime-evidence/M002-S12-validation-closeout.json",
+    "no_capability_promotions": true,
+    "blocker_evidence_promoted": false,
+    "requirements_broadened": false,
+    "success_criteria_broadened": false,
+    "plaintext_credentials_logged": false,
+    "capability_promotions": [],
+    "notes": "S13 records coverage metadata only. It does not promote Hermes or GSD-Pi execution, does not alter R009/R010/R011, and does not validate R012/R013/R014/R015 runtime behavior inside M002."
+  }
+}

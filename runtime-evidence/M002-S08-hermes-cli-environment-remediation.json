@@ -1,0 +1,378 @@
+{
+  "approval": {
+    "approval_text": "User selected option 1: unblock Hermes CLI in Paperclip environment through supported env/admin path, then repeat T03.",
+    "fresh_human_approval_received": true,
+    "scope": "Hermes CLI environment remediation and readiness repeat only; no runtime smoke/provider task execution."
+  },
+  "artifact_type": "environment-remediation-evidence",
+  "conclusion": {
+    "do_not_claim": [
+      "original secret materialization bug fixed",
+      "runtime smoke completed",
+      "Hermes provider task executed"
+    ],
+    "hermes_cli_blocker_removed": true,
+    "ready_for_bounded_t04_candidate": true,
+    "remaining_warning": "hermes_no_api_keys from generic testEnvironment; not treated as an OpenAI/Xiaomi secret materialization fix and still requires bounded T04 proof with fresh approval."
+  },
+  "environment_before": {
+    "ensurepip": "missing",
+    "hermes_cli_status": "missing from PATH",
+    "pip": "missing as python3 -m pip",
+    "python": "Python 3.13.5",
+    "writable_target": "/paperclip owned by node; /paperclip/.local and /usr/local avoided"
+  },
+  "generated_at": "2026-05-29T15:24:18.128762Z",
+  "installed_runtime": {
+    "codex_cli_observed": "/usr/local/bin/codex; codex-cli 0.134.0; /paperclip/.codex present",
+    "hermes_command_for_paperclip": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+    "hermes_userbase": "/paperclip/hermes-runtime",
+    "hermes_version_observed": "Hermes Agent v0.15.2 (2026.5.29.2)"
+  },
+  "operation_flags": {
+    "direct_database_mutation": false,
+    "package_install_attempted": true,
+    "package_install_succeeded": true,
+    "paperclip_core_patched": false,
+    "plaintext_secrets_requested_or_logged": false,
+    "private_internals_used": false,
+    "process_agents_created": true,
+    "process_runs_started": true,
+    "provider_execution_attempted": false,
+    "runtime_smoke_attempted": false,
+    "wrapper_created": true
+  },
+  "remediation_steps": [
+    {
+      "run": {
+        "errorCode": null,
+        "exitCode": 0,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/8086182a-4ff4-4961-ab3e-4d2088eeb194/6ef5ecf3-82e1-4838-9adf-8c69ab1a9297.ndjson",
+        "logSha256": "cad99399f7e7ce42c64363330ff128fc2bb316010fad94fb6e9193779e6cdcdd",
+        "resultJson": {
+          "stderr_tail": "/usr/bin/python3: No module named pip\n",
+          "stdout_tail": "uid=1000(node) gid=1000(node) groups=1000(node)\nHOME=/paperclip\nPATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games\n/usr/bin/python3\nPython 3.13.5\n/paperclip/.local\n",
+          "stopReason": "completed",
+          "timeoutFired": false
+        },
+        "run_id": "6ef5ecf3-82e1-4838-9adf-8c69ab1a9297",
+        "status": "succeeded",
+        "stderrExcerpt": "/usr/bin/python3: No module named pip\n",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/8086182a-4ff4-4961-ab3e-4d2088eeb194\" for this run.\nuid=1000(node) gid=1000(node) groups=1000(node)\nHOME=/paperclip\nPATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games\n/usr/bin/python3\nPython 3.13.5\n/paperclip/.local\n"
+      },
+      "step": "read_only_environment_diagnostic"
+    },
+    {
+      "run": {
+        "errorCode": null,
+        "exitCode": 0,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/8db1e5a9-0eb5-4d09-8c54-249e9fee2bb1/eb12a1e2-69fe-4de5-bf53-ca440221d3ff.ndjson",
+        "logSha256": "5001a0a9547269e2c371c0b2ddc1c6638d1160aaf333b793bea371065379a573",
+        "resultJson": {
+          "stderr_tail": "",
+          "stdout_tail": "uv=pip=pip3=pipx=python3=/usr/bin/python3\ncurl=/usr/bin/curl\nwget=/usr/bin/wget\napt-get=/usr/bin/apt-get\napk=npm=/usr/local/bin/npm\nnpx=/usr/local/bin/npx\nnode=/usr/local/bin/node\n/usr/bin/python3: No module named ensurepip\ndrwxr-xr-x 9 node node 4096 May 29 03:38 /paperclip\ndrwxr-xr-x 3 root root 4096 May 29 01:43 /paperclip/.local\ndrwxr-xr-x 1 root root 4096 May 28 09:59 /usr/local/bin\n",
+          "stopReason": "completed",
+          "timeoutFired": false
+        },
+        "run_id": "eb12a1e2-69fe-4de5-bf53-ca440221d3ff",
+        "status": "succeeded",
+        "stderrExcerpt": "",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/8db1e5a9-0eb5-4d09-8c54-249e9fee2bb1\" for this run.\nuv=pip=pip3=pipx=python3=/usr/bin/python3\ncurl=/usr/bin/curl\nwget=/usr/bin/wget\napt-get=/usr/bin/apt-get\napk=npm=/usr/local/bin/npm\nnpx=/usr/local/bin/npx\nnode=/usr/local/bin/node\n/usr/bin/python3: No module named ensurepip\ndrwxr-xr-x 9 node node 4096 May 29 03:38 /paperclip\ndrwxr-xr-x 3 root root 4096 May 29 01:43 /paperclip/.local\ndrwxr-xr-x 1 root root 4096 May 28 09:59 /usr/local/bin\n"
+      },
+      "step": "read_only_package_manager_diagnostic"
+    },
+    {
+      "outcome": "failed: Debian externally-managed Python blocked get-pip user install",
+      "run": {
+        "errorCode": "adapter_failed",
+        "exitCode": 1,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/a5640d3a-76c4-45b4-8253-81922681807f/cc6a8832-4d19-43d5-b40e-7287efd84b0e.ndjson",
+        "logSha256": "9a4af45ec1b946efe5b6f7b357dd1a9d09dc0fc6622596e249177bb43c9b4ba9",
+        "resultJson": {
+          "stderr_tail": "d or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\nerror: externally-managed-environment\n\n\u00d7 This environment is externally managed\n\u2570\u2500> To install Python packages system-wide, try apt install\n    python3-xyz, where xyz is the package you are trying to\n    install.\n    \n    If you wish to install a non-Debian-packaged Python package,\n    create a virtual environment using python3 -m venv path/to/venv.\n    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make\n    sure you have python3-full installed.\n    \n    If you wish to install a non-Debian packaged Python application,\n    it may be easiest to use pipx install xyz, which will manage a\n    virtual environment for you. Make sure you have pipx installed.\n    \n    See /usr/share/doc/python3.13/README.venv for more information.\n\nnote: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.\nhint: See PEP 668 for the detailed specification.\n",
+          "stdout_tail": "",
+          "stopReason": "adapter_failed",
+          "timeoutFired": false
+        },
+        "run_id": "cc6a8832-4d19-43d5-b40e-7287efd84b0e",
+        "status": "failed",
+        "stderrExcerpt": "WARNING: The directory '/paperclip/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\nerror: externally-managed-environment\n\n\u00d7 This environment is externally managed\n\u2570\u2500> To install Python packages system-wide, try apt install\n    python3-xyz, where xyz is the package you are trying to\n    install.\n    \n    If you wish to install a non-Debian-packaged Python package,\n    create a virtual environment using python3 -m venv path/to/venv.\n    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make\n    sure you have python3-full installed.\n    \n    If you wish to install a non-Debian packaged Python application,\n    it may be easiest to use pipx install xyz, which will manage a\n    virtual environment for you. Make sure you have pipx installed.\n    \n    See /usr/share/doc/python3.13/README.venv for more information.\n\nnote: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.\nhint: See PEP 668 for the detailed specification.\n",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/a5640d3a-76c4-45b4-8253-81922681807f\" for this run.\n"
+      },
+      "step": "attempt_userbase_install_without_pep668_override"
+    },
+    {
+      "outcome": "failed: python3-venv/ensurepip unavailable",
+      "run": {
+        "errorCode": "adapter_failed",
+        "exitCode": 1,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/27b2e2ef-4247-4f24-a763-05c390a1141f/d1106b2a-e1c6-459e-b11e-27dc652ba979.ndjson",
+        "logSha256": "f2d94550a9c85def7242682619f9986c48657d273ad4749772f42093bf4951f4",
+        "resultJson": {
+          "stderr_tail": "",
+          "stdout_tail": "The virtual environment was not created successfully because ensurepip is not\navailable.  On Debian/Ubuntu systems, you need to install the python3-venv\npackage using the following command.\n\n    apt install python3.13-venv\n\nYou may need to use sudo with that command.  After installing the python3-venv\npackage, recreate your virtual environment.\n\nFailing command: /paperclip/hermes-venv/bin/python3\n\n",
+          "stopReason": "adapter_failed",
+          "timeoutFired": false
+        },
+        "run_id": "d1106b2a-e1c6-459e-b11e-27dc652ba979",
+        "status": "failed",
+        "stderrExcerpt": "",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/27b2e2ef-4247-4f24-a763-05c390a1141f\" for this run.\nThe virtual environment was not created successfully because ensurepip is not\navailable.  On Debian/Ubuntu systems, you need to install the python3-venv\npackage using the following command.\n\n    apt install python3.13-venv\n\nYou may need to use sudo with that command.  After installing the python3-venv\npackage, recreate your virtual environment.\n\nFailing command: /paperclip/hermes-venv/bin/python3\n\n"
+      },
+      "step": "attempt_venv_install"
+    },
+    {
+      "outcome": "succeeded: hermes-agent installed under /paperclip/hermes-runtime using PYTHONUSERBASE and PEP668 override for userbase only",
+      "run": {
+        "errorCode": null,
+        "exitCode": 0,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/e4bf3eda-fefe-4336-be8f-bd6690bb3aa9/8053b40a-aa36-4d81-8990-84d6018e7bbb.ndjson",
+        "logSha256": "2c19b9ad7e3e99a0137449c7e149c2494a27f21ddeb81c79cf521c57fd15100f",
+        "resultJson": {
+          "stderr_tail": "ry to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script normalizer is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script markdown-it is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script httpx is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script openai is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The scripts hermes, hermes-acp and hermes-agent are installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n",
+          "stdout_tail": "il, mdurl, MarkupSafe, jiter, idna, h11, distro, charset_normalizer, certifi, annotated-types, typing-inspection, ruamel.yaml, requests, python-dateutil, pydantic-core, prompt_toolkit, markdown-it-py, jinja2, httpcore, fire, cffi, anyio, rich, pydantic, httpx, cryptography, croniter, openai, hermes-agent\n\nSuccessfully installed MarkupSafe-3.0.3 PyJWT-2.12.1 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.5.20 cffi-2.0.0 charset_normalizer-3.4.7 croniter-6.0.0 cryptography-48.0.0 distro-1.9.0 fire-0.7.1 h11-0.16.0 hermes-agent-0.15.2 httpcore-1.0.9 httpx-0.28.1 idna-3.17 jinja2-3.1.6 jiter-0.15.0 markdown-it-py-4.2.0 mdurl-0.1.2 openai-2.24.0 prompt_toolkit-3.0.52 psutil-7.2.2 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 pygments-2.20.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.2 pytz-2026.2 pyyaml-6.0.3 requests-2.33.0 rich-14.3.3 ruamel.yaml-0.18.17 ruamel.yaml.clib-0.2.15 six-1.17.0 sniffio-1.3.1 socksio-1.0.0 tenacity-9.1.4 termcolor-3.3.0 tqdm-4.67.3 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.7.0 wcwidth-0.7.0\nHermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date\n",
+          "stopReason": "completed",
+          "timeoutFired": false
+        },
+        "run_id": "8053b40a-aa36-4d81-8990-84d6018e7bbb",
+        "status": "succeeded",
+        "stderrExcerpt": "  WARNING: The script tqdm is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script dotenv is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script pygmentize is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script idna is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script distro is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script normalizer is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script markdown-it is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script httpx is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The script openai is installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n  WARNING: The scripts hermes, hermes-acp and hermes-agent are installed in '/paperclip/hermes-runtime/bin' which is not on PATH.\n  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.\n",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/e4bf3eda-fefe-4336-be8f-bd6690bb3aa9\" for this run.\nCollecting pip\n  Downloading pip-26.1.1-py3-none-any.whl.metadata (4.6 kB)\nDownloading pip-26.1.1-py3-none-any.whl (1.8 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.8/1.8 MB 134.4 MB/s  0:00:00\nInstalling collected packages: pip\nSuccessfully installed pip-26.1.1\nCollecting hermes-agent\n  Downloading hermes_agent-0.15.2-py3-none-any.whl.metadata (20 kB)\nCollecting openai==2.24.0 (from hermes-agent)\n  Downloading openai-2.24.0-py3-none-any.whl.metadata (29 kB)\nCollecting python-dotenv==1.2.2 (from hermes-agent)\n  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)\nCollecting fire==0.7.1 (from hermes-agent)\n  Downloading fire-0.7.1-py3-none-any.whl.metadata (5.8 kB)\nCollecting httpx==0.28.1 (from httpx[socks]==0.28.1->hermes-agent)\n  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)\nCollecting rich==14.3.3 (from hermes-agent)\n  Downloading rich-14.3.3-py3-none-any.whl.metadata (18 kB)\nCollecting tenacity==9.1.4 (from hermes-agent)\n  Downloading tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)\nCollecting pyyaml==6.0.3 (from hermes-agent)\n  Downloading pyyaml-6.0.***REDACTED***.whl.metadata (2.4 kB)\nCollecting ruamel.yaml==0.18.17 (from hermes-agent)\n  Downloading ruamel_yaml-0.18.17-py3-none-any.whl.metadata (27 kB)\nCollecting requests==2.33.0 (from hermes-agent)\n  Downloading requests-2.33.0-py3-none-any.whl.metadata (5.1 kB)\nCollecting jinja2==3.1.6 (from hermes-agent)\n  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)\nCollecting pydantic==2.13.4 (from hermes-agent)\n  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)\nCollecting prompt_toolkit==3.0.52 (from hermes-agent)\n  Downloading prompt_toolkit-3.0.52-py3-none-any.whl.metadata (6.4 kB)\nCollecting croniter==6.0.0 (from hermes-agent)\n  Downloading croniter-6.0.0-py2.py3-none-any.whl.metadata (32 kB)\nCollecting PyJWT=***REDACTED*** (from PyJWT[crypto]==2.12.1->hermes-agent)\n  Downloading pyjwt-2.12.1-py3-none-any.whl.metadata (4.1 kB)\nCollecting psutil==7.2.2 (from hermes-agent)\n  Downloading psutil-7.2.***REDACTED***.whl.metadata (22 kB)\nCollecting python-dateutil (from croniter==6.0.0->hermes-agent)\n  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)\nCollecting pytz>2021.1 (from croniter==6.0.0->hermes-agent)\n  Downloading pytz-2026.2-py2.py3-none-any.whl.metadata (22 kB)\nCollecting termcolor (from fire==0.7.1->hermes-agent)\n  Downloading termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)\nCollecting anyio (from httpx==0.28.1->httpx[socks]==0.28.1->hermes-agent)\n  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)\nCollecting certifi (from httpx==0.28.1->httpx[socks]==0.28.1->hermes-agent)\n  Downloading certifi-2026.5.20-py3-none-any.whl.metadata (2.5 kB)\nCollecting httpcore==1.* (from httpx==0.28.1->httpx[socks]==0.28.1->hermes-agent)\n  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)\nCollecting idna (from httpx==0.28.1->httpx[socks]==0.28.1->hermes-agent)\n  Downloading idna-3.17-py3-none-any.whl.metadata (6.4 kB)\nCollecting socksio==1.* (from httpx[socks]==0.28.1->hermes-agent)\n  Downloading socksio-1.0.0-py3-none-any.whl.metadata (6.1 kB)\nCollecting MarkupSafe>=2.0 (from jinja2==3.1.6->hermes-agent)\n  Downloading markupsafe-3.0.***REDACTED***.whl.metadata (2.7 kB)\nCollecting distro<2,>=1.7.0 (from openai==2.24.0->hermes-agent)\n  Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)\nCollecting jiter<1,>=0.10.0 (from openai==2.24.0->hermes-agent)\n  Downloading jiter-0.15.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)\nCollecting sniffio (from openai==2.24.0->hermes-agent)\n  Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)\nCollecting tqdm>4 (from openai==2.24.0->hermes-agent)\n  Downloading tqdm-4.67.3-py3-none-any.whl.metadata (57 kB)\nCollecting typing-extensions<5,>=4.11 (from openai==2.24.0->hermes-agent)\n  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)\nCollecting annotated-types>=0.6.0 (from pydantic==2.13.4->hermes-agent)\n  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)\nCollecting pydantic-core==2.46.4 (from pydantic==2.13.4->hermes-agent)\n  Downloading pydantic_core-2.46.4-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)\nCollecting typing-inspection>=0.4.2 (from pydantic==2.13.4->hermes-agent)\n  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)\nCollecting wcwidth (from prompt_toolkit==3.0.52->hermes-agent)\n  Downloading wcwidth-0.7.0-py3-none-any.whl.metadata (36 kB)\nCollecting cryptography>=3.4.0 (from PyJWT[crypto]==2.12.1->hermes-agent)\n  Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)\nCollecting charset_normalizer<4,>=2 (from requests==2.33.0->hermes-agent)\n  Downloading charset_normalizer-3.4.***REDACTED***.whl.metadata (40 kB)\nCollecting urllib3<3,>=1.26 (from requests==2.33.0->hermes-agent)\n  Downloading urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)\nCollecting markdown-it-py>=2.2.0 (from rich==14.3.3->hermes-agent)\n  Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)\nCollecting pygments<3.0.0,>=2.13.0 (from rich==14.3.3->hermes-agent)\n  Downloading pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)\nCollecting ruamel.yaml.clib>=0.2.15 (from ruamel.yaml==0.18.17->hermes-agent)\n  Downloading ruamel_yaml_clib-0.2.***REDACTED***.whl.metadata (3.5 kB)\nCollecting h11>=0.16 (from httpcore==1.*->httpx==0.28.1->httpx[socks]==0.28.1->hermes-agent)\n  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)\nCollecting cffi>=2.0.0 (from cryptography>=3.4.0->PyJWT[crypto]==2.12.1->hermes-agent)\n  Downloading cffi-2.0.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)\nCollecting pycparser (from cffi>=2.0.0->cryptography>=3.4.0->PyJWT[crypto]==2.12.1->hermes-agent)\n  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)\nCollecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich==14.3.3->hermes-agent)\n  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)\nCollecting six>=1.5 (from python-dateutil->croniter==6.0.0->hermes-agent)\n  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)\nDownloading hermes_agent-0.15.2-py3-none-any.whl (11.3 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 11.3/11.3 MB 161.0 MB/s  0:00:00\nDownloading croniter-6.0.0-py2.py3-none-any.whl (25 kB)\nDownloading fire-0.7.1-py3-none-any.whl (115 kB)\nDownloading httpx-0.28.1-py3-none-any.whl (73 kB)\nDownloading jinja2-3.1.6-py3-none-any.whl (134 kB)\nDownloading openai-2.24.0-py3-none-any.whl (1.1 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.1/1.1 MB 160.3 MB/s  0:00:00\nDownloading pydantic-2.13.4-py3-none-any.whl (472 kB)\nDownloading prompt_toolkit-3.0.52-py3-none-any.whl (391 kB)\nDownloading psutil-7.2.***REDACTED***.whl (155 kB)\nDownloading pydantic_core-2.46.4-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 2.1/2.1 MB 193.4 MB/s  0:00:00\nDownloading pyjwt-2.12.1-py3-none-any.whl (29 kB)\nDownloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)\nDownloading pyyaml-6.0.***REDACTED***.whl (801 kB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 801.6/801.6 kB 135.2 MB/s  0:00:00\nDownloading requests-2.33.0-py3-none-any.whl (65 kB)\nDownloading rich-14.3.3-py3-none-any.whl (310 kB)\nDownloading ruamel_yaml-0.18.17-py3-none-any.whl (121 kB)\nDownloading tenacity-9.1.4-py3-none-any.whl (28 kB)\nDownloading anyio-4.13.0-py3-none-any.whl (114 kB)\nDownloading charset_normalizer-3.4.***REDACTED***.whl (215 kB)\nDownloading distro-1.9.0-py3-none-any.whl (20 kB)\nDownloading httpcore-1.0.9-py3-none-any.whl (78 kB)\nDownloading idna-3.17-py3-none-any.whl (65 kB)\nDownloading jiter-0.15.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (344 kB)\nDownloading pygments-2.20.0-py3-none-any.whl (1.2 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.2/1.2 MB 162.6 MB/s  0:00:00\nDownloading socksio-1.0.0-py3-none-any.whl (12 kB)\nDownloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)\nDownloading urllib3-2.7.0-py3-none-any.whl (131 kB)\nDownloading annotated_types-0.7.0-py3-none-any.whl (13 kB)\nDownloading certifi-2026.5.20-py3-none-any.whl (134 kB)\nDownloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 4.7/4.7 MB 165.2 MB/s  0:00:00\nDownloading cffi-2.0.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (219 kB)\nDownloading h11-0.16.0-py3-none-any.whl (37 kB)\nDownloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)\nDownloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)\nDownloading markupsafe-3.0.***REDACTED***.whl (22 kB)\nDownloading pytz-2026.2-py2.py3-none-any.whl (510 kB)\nDownloading ruamel_yaml_clib-0.2.***REDACTED***.whl (782 kB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 782.1/782.1 kB 71.7 MB/s  0:00:00\nDownloading tqdm-4.67.3-py3-none-any.whl (78 kB)\nDownloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)\nDownloading pycparser-3.0-py3-none-any.whl (48 kB)\nDownloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)\nDownloading six-1.17.0-py2.py3-none-any.whl (11 kB)\nDownloading sniffio-1.3.1-py3-none-any.whl (10 kB)\nDownloading termcolor-3.3.0-py3-none-any.whl (7.7 kB)\nDownloading wcwidth-0.7.0-py3-none-any.whl (110 kB)\nInstalling collected packages: pytz, wcwidth, urllib3, typing-extensions, tqdm, termcolor, tenacity, socksio, sniffio, six, ruamel.yaml.clib, pyyaml, python-dotenv, PyJWT, pygments, pycparser, psutil, mdurl, MarkupSafe, jiter, idna, h11, distro, charset_normalizer, certifi, annotated-types, typing-inspection, ruamel.yaml, requests, python-dateutil, pydantic-core, prompt_toolkit, markdown-it-py, jinja2, httpcore, fire, cffi, anyio, rich, pydantic, httpx, cryptography, croniter, openai, hermes-agent\n\nSuccessfully installed MarkupSafe-3.0.3 PyJWT-2.12.1 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.5.20 cffi-2.0.0 charset_normalizer-3.4.7 croniter-6.0.0 cryptography-48.0.0 distro-1.9.0 fire-0.7.1 h11-0.16.0 hermes-agent-0.15.2 httpcore-1.0.9 httpx-0.28.1 idna-3.17 jinja2-3.1.6 jiter-0.15.0 markdown-it-py-4.2.0 mdurl-0.1.2 openai-2.24.0 prompt_toolkit-3.0.52 psutil-7.2.2 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 pygments-2.20.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.2 pytz-2026.2 pyyaml-6.0.3 requests-2.33.0 rich-14.3.3 ruamel.yaml-0.18.17 ruamel.yaml.clib-0.2.15 six-1.17.0 sniffio-1.3.1 socksio-1.0.0 tenacity-9.1.4 termcolor-3.3.0 tqdm-4.67.3 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.7.0 wcwidth-0.7.0\nHermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date\n"
+      },
+      "step": "isolated_python_userbase_install"
+    },
+    {
+      "outcome": "succeeded: /paperclip/hermes-runtime/bin/hermes-paperclip exports PYTHONUSERBASE then invokes hermes",
+      "run": {
+        "errorCode": null,
+        "exitCode": 0,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/7de039fa-4bcb-4b1f-bd8b-aabed90430fb/3cb8f0b6-335e-4ab6-83ea-6eec06ffed84.ndjson",
+        "logSha256": "f87f6b320e53e2677b716cdb6d01f83354a07deeda14d40de2ddfc98fb415583",
+        "resultJson": {
+          "stderr_tail": "",
+          "stdout_tail": "Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date\n",
+          "stopReason": "completed",
+          "timeoutFired": false
+        },
+        "run_id": "3cb8f0b6-335e-4ab6-83ea-6eec06ffed84",
+        "status": "succeeded",
+        "stderrExcerpt": "",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/7de039fa-4bcb-4b1f-bd8b-aabed90430fb\" for this run.\nHermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date\n"
+      },
+      "step": "wrapper_install"
+    },
+    {
+      "outcome": "succeeded: Paperclip host exposes /usr/local/bin/codex, codex-cli 0.134.0, and /paperclip/.codex",
+      "run": {
+        "errorCode": null,
+        "exitCode": 0,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/465dc620-09e6-4c5c-9645-2a4b548a9fac/707d28f5-5390-4727-ba5a-4e2ddaf9a203.ndjson",
+        "logSha256": "d4382106fe8b95ae17759f28d9bcecd0e05267f63f2bb61b50983a2a5d81987a",
+        "resultJson": {
+          "stderr_tail": "",
+          "stdout_tail": "/usr/local/bin/codex\ncodex-cli 0.134.0\ncodex_home_present\n/paperclip/.codex\n",
+          "stopReason": "completed",
+          "timeoutFired": false
+        },
+        "run_id": "707d28f5-5390-4727-ba5a-4e2ddaf9a203",
+        "status": "succeeded",
+        "stderrExcerpt": "",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/465dc620-09e6-4c5c-9645-2a4b548a9fac\" for this run.\n/usr/local/bin/codex\ncodex-cli 0.134.0\ncodex_home_present\n/paperclip/.codex\n"
+      },
+      "step": "codex_host_diagnostic"
+    }
+  ],
+  "schema_version": "s08-hermes-cli-environment-remediation/v1",
+  "selected_path": "hermes_local_with_codex_cli_backend",
+  "supported_boundary_used": {
+    "docs": [
+      "/llms/agent-configuration/process.txt",
+      "/llms/agent-configuration/hermes_local.txt"
+    ],
+    "http_surfaces": [
+      "POST /api/companies/{companyId}/agents",
+      "POST /api/agents/{agentId}/heartbeat/invoke",
+      "GET /api/heartbeat-runs/{runId}",
+      "POST /api/companies/{companyId}/adapters/hermes_local/test-environment"
+    ],
+    "primary": "Paperclip process adapter for bounded non-secret environment administration commands"
+  },
+  "t03_repeat_summary": {
+    "companies": {
+      "BOS": {
+        "codex_local_models": {
+          "duration_ms": 1113,
+          "json": [
+            {
+              "id": "gpt-5.4",
+              "label": "gpt-5.4"
+            },
+            {
+              "id": "gpt-5.3-codex",
+              "label": "gpt-5.3-codex"
+            },
+            {
+              "id": "gpt-5.3-codex-spark",
+              "label": "gpt-5.3-codex-spark"
+            },
+            {
+              "id": "gpt-5",
+              "label": "gpt-5"
+            },
+            {
+              "id": "o3",
+              "label": "o3"
+            },
+            {
+              "id": "o4-mini",
+              "label": "o4-mini"
+            },
+            {
+              "id": "gpt-5-mini",
+              "label": "gpt-5-mini"
+            },
+            {
+              "id": "gpt-5-nano",
+              "label": "gpt-5-nano"
+            },
+            {
+              "id": "o3-mini",
+              "label": "o3-mini"
+            },
+            {
+              "id": "codex-mini-latest",
+              "label": "Codex Mini"
+            }
+          ],
+          "ok": true,
+          "status": 200,
+          "text": null,
+          "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/codex_local/models"
+        },
+        "company_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "hermes_local_test_environment": {
+          "duration_ms": 1573,
+          "json": {
+            "adapterType": "hermes_local",
+            "checks": [
+              {
+                "code": "hermes_version",
+                "level": "info",
+                "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+              },
+              {
+                "code": "hermes_model_configured",
+                "level": "info",
+                "message": "Model: gpt-5.3-codex"
+              },
+              {
+                "code": "hermes_no_api_keys",
+                "hint": "Set ANTHROPIC_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ZAI_API_KEY in the agent's env secrets. Hermes may also have keys configured in ~/.hermes/.env",
+                "level": "warn",
+                "message": "No LLM API keys found in environment"
+              }
+            ],
+            "status": "warn",
+            "testedAt": "2026-05-29T15:24:14.148Z"
+          },
+          "ok": true,
+          "status": 200,
+          "text": null,
+          "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+        }
+      },
+      "BOSA": {
+        "codex_local_models": {
+          "duration_ms": 1111,
+          "json": [
+            {
+              "id": "gpt-5.4",
+              "label": "gpt-5.4"
+            },
+            {
+              "id": "gpt-5.3-codex",
+              "label": "gpt-5.3-codex"
+            },
+            {
+              "id": "gpt-5.3-codex-spark",
+              "label": "gpt-5.3-codex-spark"
+            },
+            {
+              "id": "gpt-5",
+              "label": "gpt-5"
+            },
+            {
+              "id": "o3",
+              "label": "o3"
+            },
+            {
+              "id": "o4-mini",
+              "label": "o4-mini"
+            },
+            {
+              "id": "gpt-5-mini",
+              "label": "gpt-5-mini"
+            },
+            {
+              "id": "gpt-5-nano",
+              "label": "gpt-5-nano"
+            },
+            {
+              "id": "o3-mini",
+              "label": "o3-mini"
+            },
+            {
+              "id": "codex-mini-latest",
+              "label": "Codex Mini"
+            }
+          ],
+          "ok": true,
+          "status": 200,
+          "text": null,
+          "url": "/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/codex_local/models"
+        },
+        "company_id": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+        "hermes_local_test_environment": {
+          "duration_ms": 1604,
+          "json": {
+            "adapterType": "hermes_local",
+            "checks": [
+              {
+                "code": "hermes_version",
+                "level": "info",
+                "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+              },
+              {
+                "code": "hermes_model_configured",
+                "level": "info",
+                "message": "Model: gpt-5.3-codex"
+              },
+              {
+                "code": "hermes_no_api_keys",
+                "hint": "Set ANTHROPIC_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ZAI_API_KEY in the agent's env secrets. Hermes may also have keys configured in ~/.hermes/.env",
+                "level": "warn",
+                "message": "No LLM API keys found in environment"
+              }
+            ],
+            "status": "warn",
+            "testedAt": "2026-05-29T15:24:16.868Z"
+          },
+          "ok": true,
+          "status": 200,
+          "text": null,
+          "url": "/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/hermes_local/test-environment"
+        }
+      }
+    },
+    "interpretation": "Hermes CLI not-found blocker is cleared. testEnvironment now resolves Hermes and model but returns status=warn because the generic Hermes checker reports no LLM API keys. For the selected provider=openai-codex path, Codex CLI/session availability was separately verified on the Paperclip host.",
+    "request_body": {
+      "adapterConfig": {
+        "graceSec": 5,
+        "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+        "model": "gpt-5.3-codex",
+        "provider": "openai-codex",
+        "timeoutSec": 60
+      }
+    }
+  }
+}

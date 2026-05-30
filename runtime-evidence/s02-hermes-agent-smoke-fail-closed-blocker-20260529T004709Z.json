@@ -1,0 +1,655 @@
+{
+  "adapter": {
+    "adapterType": "hermes_local",
+    "registry_readback": {
+      "capabilities": {
+        "requiresMaterializedRuntimeSkills": false,
+        "supportsInstructionsBundle": false,
+        "supportsLocalAgentJwt": true,
+        "supportsModelProfiles": false,
+        "supportsSkills": true
+      },
+      "disabled": false,
+      "label": "hermes_local",
+      "loaded": true,
+      "modelsCount": 0,
+      "overridePaused": false,
+      "source": "builtin",
+      "type": "hermes_local"
+    },
+    "testEnvironment": {
+      "response": {
+        "duration_ms": 1541,
+        "json": {
+          "adapterType": "hermes_local",
+          "checks": [
+            {
+              "code": "hermes_version",
+              "level": "info",
+              "message": "Hermes Agent version: Hermes Agent v0.15.0 (2026.5.28)\nProject: /usr/local/lib/python3.13/dist-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+            },
+            {
+              "code": "hermes_configured_default_model",
+              "hint": "Set a model explicitly in Paperclip only if you want to override your local Hermes configuration.",
+              "level": "info",
+              "message": "No model specified \u2014 Hermes will use its configured default model"
+            },
+            {
+              "code": "hermes_api_keys_found",
+              "level": "info",
+              "message": "API keys found: OpenAI"
+            }
+          ],
+          "status": "pass",
+          "testedAt": "2026-05-29T00:46:57.499Z"
+        },
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "truncated": false,
+        "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/hermes_local/test-environment"
+      },
+      "status": "pass"
+    }
+  },
+  "agent": {
+    "agentId": "e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b",
+    "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+    "config": {
+      "adapterType": "hermes_local",
+      "enabled": true,
+      "graceSec": 5,
+      "heartbeatEnabled": false,
+      "name": "BOS Light S02 Hermes Smoke 20260529T004654Z",
+      "systemPrompt": "You are a BOS Light smoke agent for one bounded Paperclip sandbox validation run. Return only JSON with resultJson.bos. Do not create approvals, do not modify source, do not use terminal tools.",
+      "timeoutSec": 60,
+      "wakeOnDemand": true
+    },
+    "readback": {
+      "access": {
+        "canAssignTasks": true,
+        "grants": [
+          {
+            "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+            "createdAt": "2026-05-29T00:46:58.573Z",
+            "grantedByUserId": "5gGcE9wrWiAmp7nwgAQc7aGe3vqgYY08",
+            "id": "43c2383d-32aa-4210-b437-7401420d3630",
+            "permissionKey": "tasks:assign",
+            "principalId": "e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b",
+            "principalType": "agent",
+            "scope": null,
+            "updatedAt": "2026-05-29T00:46:58.573Z"
+          }
+        ],
+        "membership": {
+          "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+          "createdAt": "2026-05-29T00:46:58.571Z",
+          "id": "5c7b5709-5e55-4759-993e-5af50a4d34bc",
+          "membershipRole": "member",
+          "principalId": "e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b",
+          "principalType": "agent",
+          "status": "active",
+          "updatedAt": "2026-05-29T00:46:58.571Z"
+        },
+        "taskAssignSource": "explicit_grant"
+      },
+      "adapterConfig": {},
+      "adapterType": "hermes_local",
+      "budgetMonthlyCents": 0,
+      "capabilities": null,
+      "chainOfCommand": [],
+      "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+      "createdAt": "2026-05-29T00:46:58.567Z",
+      "defaultEnvironmentId": null,
+      "icon": null,
+      "id": "e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b",
+      "lastHeartbeatAt": null,
+      "metadata": null,
+      "name": "BOS Light S02 Hermes Smoke 20260529T004654Z",
+      "pauseReason": null,
+      "pausedAt": null,
+      "permissions": {
+        "canCreateAgents": false
+      },
+      "reportsTo": null,
+      "role": "general",
+      "runtimeConfig": {
+        "heartbeat": {
+          "enabled": false,
+          "maxConcurrentRuns": 20
+        }
+      },
+      "spentMonthlyCents": 0,
+      "status": "idle",
+      "title": null,
+      "updatedAt": "2026-05-29T00:46:58.567Z",
+      "urlKey": "bos-light-s02-hermes-smoke-20260529t004654z"
+    }
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_reason": "missing_result_json_bos,wake_count_not_exactly_one",
+  "diagnostics": {
+    "approvalsAfter": {
+      "duration_ms": 1064,
+      "json": [],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/approvals?limit=20"
+    },
+    "approvalsBefore": {
+      "duration_ms": 1065,
+      "json": [],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/approvals?limit=20"
+    },
+    "createAgent": {
+      "duration_ms": 1073,
+      "json": {
+        "adapterConfig": {},
+        "adapterType": "hermes_local",
+        "budgetMonthlyCents": 0,
+        "capabilities": null,
+        "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+        "createdAt": "2026-05-29T00:46:58.567Z",
+        "defaultEnvironmentId": null,
+        "icon": null,
+        "id": "e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b",
+        "lastHeartbeatAt": null,
+        "metadata": null,
+        "name": "BOS Light S02 Hermes Smoke 20260529T004654Z",
+        "pauseReason": null,
+        "pausedAt": null,
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "reportsTo": null,
+        "role": "general",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "spentMonthlyCents": 0,
+        "status": "idle",
+        "title": null,
+        "updatedAt": "2026-05-29T00:46:58.567Z",
+        "urlKey": "bos-light-s02-hermes-smoke-20260529t004654z"
+      },
+      "ok": true,
+      "status": 201,
+      "text": null,
+      "truncated": false,
+      "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/agents"
+    },
+    "environment": {
+      "adapter": {
+        "adapterType": "hermes_local",
+        "registry_readback": {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "hermes_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "hermes_local"
+        },
+        "testEnvironment": {
+          "response": {
+            "duration_ms": 1541,
+            "json": {
+              "adapterType": "hermes_local",
+              "checks": [
+                {
+                  "code": "hermes_version",
+                  "level": "info",
+                  "message": "Hermes Agent version: Hermes Agent v0.15.0 (2026.5.28)\nProject: /usr/local/lib/python3.13/dist-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+                },
+                {
+                  "code": "hermes_configured_default_model",
+                  "hint": "Set a model explicitly in Paperclip only if you want to override your local Hermes configuration.",
+                  "level": "info",
+                  "message": "No model specified \u2014 Hermes will use its configured default model"
+                },
+                {
+                  "code": "hermes_api_keys_found",
+                  "level": "info",
+                  "message": "API keys found: OpenAI"
+                }
+              ],
+              "status": "pass",
+              "testedAt": "2026-05-29T00:46:57.499Z"
+            },
+            "ok": true,
+            "status": 200,
+            "text": null,
+            "truncated": false,
+            "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/hermes_local/test-environment"
+          },
+          "status": "pass"
+        }
+      },
+      "artifact_type": "smoke-evidence",
+      "diagnostics": {
+        "adapters": {
+          "duration_ms": 1066,
+          "json": [
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": false,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": false,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "acpx_local",
+              "loaded": true,
+              "modelsCount": 16,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "acpx_local"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": false,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": true,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "claude_local",
+              "loaded": true,
+              "modelsCount": 6,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "claude_local"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": false,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": true,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "codex_local",
+              "loaded": true,
+              "modelsCount": 10,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "codex_local"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": true,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": true,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "cursor",
+              "loaded": true,
+              "modelsCount": 39,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "cursor"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": false,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": false,
+                "supportsModelProfiles": false,
+                "supportsSkills": false
+              },
+              "disabled": false,
+              "label": "cursor_cloud",
+              "loaded": true,
+              "modelsCount": 0,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "cursor_cloud"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": true,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": true,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "gemini_local",
+              "loaded": true,
+              "modelsCount": 6,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "gemini_local"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": true,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": false,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "grok_local",
+              "loaded": true,
+              "modelsCount": 1,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "grok_local"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": false,
+                "supportsInstructionsBundle": false,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": false,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "hermes_local",
+              "loaded": true,
+              "modelsCount": 0,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "hermes_local"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": false,
+                "supportsInstructionsBundle": false,
+                "supportsLocalAgentJwt": false,
+                "supportsModelProfiles": false,
+                "supportsSkills": false
+              },
+              "disabled": false,
+              "label": "http",
+              "loaded": true,
+              "modelsCount": 0,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "http"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": false,
+                "supportsInstructionsBundle": false,
+                "supportsLocalAgentJwt": false,
+                "supportsModelProfiles": false,
+                "supportsSkills": false
+              },
+              "disabled": false,
+              "label": "openclaw_gateway",
+              "loaded": true,
+              "modelsCount": 0,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "openclaw_gateway"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": true,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": true,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "opencode_local",
+              "loaded": true,
+              "modelsCount": 5,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "opencode_local"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": true,
+                "supportsInstructionsBundle": true,
+                "supportsLocalAgentJwt": true,
+                "supportsModelProfiles": false,
+                "supportsSkills": true
+              },
+              "disabled": false,
+              "label": "pi_local",
+              "loaded": true,
+              "modelsCount": 0,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "pi_local"
+            },
+            {
+              "capabilities": {
+                "requiresMaterializedRuntimeSkills": false,
+                "supportsInstructionsBundle": false,
+                "supportsLocalAgentJwt": false,
+                "supportsModelProfiles": false,
+                "supportsSkills": false
+              },
+              "disabled": false,
+              "label": "process",
+              "loaded": true,
+              "modelsCount": 0,
+              "overridePaused": false,
+              "source": "builtin",
+              "type": "process"
+            }
+          ],
+          "ok": true,
+          "status": 200,
+          "text": null,
+          "truncated": false,
+          "url": "http://127.0.0.1:3131/api/adapters"
+        },
+        "health": {
+          "duration_ms": 744,
+          "json": {
+            "authReady": true,
+            "bootstrapInviteActive": false,
+            "bootstrapStatus": "ready",
+            "deploymentExposure": "private",
+            "deploymentMode": "authenticated",
+            "features": {
+              "companyDeletionEnabled": false
+            },
+            "status": "ok",
+            "version": "0.3.1"
+          },
+          "ok": true,
+          "status": 200,
+          "text": null,
+          "truncated": false,
+          "url": "http://127.0.0.1:3131/api/health"
+        },
+        "version": {}
+      },
+      "generated_at": "2026-05-29T00:46:54.297066Z",
+      "inputs": {
+        "adapter_env_keys": [
+          "OPENAI_BASE_URL",
+          "XIAOMI_BASE_URL"
+        ],
+        "adapter_secret_ref_keys": "<redacted>",
+        "agentId": null,
+        "auth_header_name": "Cookie",
+        "auth_token_env": "<redacted>",
+        "base_url": "http://127.0.0.1:3131",
+        "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+        "issueId": "BOS-2",
+        "runId": null,
+        "trusted_origin": "http://127.0.0.1:3131"
+      },
+      "no_core_modification": {
+        "core_source_patched": false,
+        "direct_db_mutation": false,
+        "files_modified": [],
+        "method": "Supported Paperclip HTTP API/browser-authenticated endpoints only; no source patch, subprocess, or direct DB write."
+      },
+      "paperclip": {
+        "build": "unknown",
+        "version": "0.3.1"
+      },
+      "phase": "environment",
+      "schema_version": "s02-hermes-smoke/v1"
+    },
+    "invoke": {
+      "duration_ms": 1079,
+      "json": {
+        "agentId": "e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b",
+        "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+        "contextSnapshot": {
+          "actorId": "5gGcE9wrWiAmp7nwgAQc7aGe3vqgYY08",
+          "triggeredBy": "board",
+          "wakeReason": "bos-light-s02-hermes-smoke",
+          "wakeSource": "on_demand",
+          "wakeTriggerDetail": "manual"
+        },
+        "continuationAttempt": 0,
+        "createdAt": "2026-05-29T00:47:03.907Z",
+        "error": null,
+        "errorCode": null,
+        "exitCode": null,
+        "externalRunId": null,
+        "finishedAt": null,
+        "id": "cd995e07-15f1-4068-a44b-979d15ff7008",
+        "invocationSource": "on_demand",
+        "issueCommentRetryQueuedAt": null,
+        "issueCommentSatisfiedByCommentId": null,
+        "issueCommentStatus": "not_applicable",
+        "lastOutputAt": null,
+        "lastOutputBytes": null,
+        "lastOutputSeq": 0,
+        "lastOutputStream": null,
+        "lastUsefulActionAt": null,
+        "livenessReason": null,
+        "livenessState": null,
+        "logBytes": null,
+        "logCompressed": false,
+        "logRef": null,
+        "logSha256": null,
+        "logStore": null,
+        "nextAction": null,
+        "processGroupId": null,
+        "processLossRetryCount": 0,
+        "processPid": null,
+        "processStartedAt": null,
+        "resultJson": null,
+        "retryOfRunId": null,
+        "scheduledRetryAt": null,
+        "scheduledRetryAttempt": 0,
+        "scheduledRetryReason": null,
+        "sessionIdAfter": null,
+        "sessionIdBefore": null,
+        "signal": null,
+        "startedAt": null,
+        "status": "queued",
+        "stderrExcerpt": null,
+        "stdoutExcerpt": null,
+        "triggerDetail": "manual",
+        "updatedAt": "2026-05-29T00:47:03.907Z",
+        "usageJson": null,
+        "wakeupRequestId": "09c4a492-a0b1-4cf7-881e-f1bf84aadd90"
+      },
+      "ok": true,
+      "status": 202,
+      "text": null,
+      "truncated": false,
+      "url": "http://127.0.0.1:3131/api/agents/e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b/heartbeat/invoke"
+    },
+    "runListAfter": {
+      "duration_ms": 1063,
+      "error": "http_error",
+      "json": {
+        "error": "API route not found"
+      },
+      "ok": false,
+      "status": 404,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/agents/e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b/runs?limit=20"
+    },
+    "runListBefore": {
+      "duration_ms": 1062,
+      "error": "http_error",
+      "json": {
+        "error": "API route not found"
+      },
+      "ok": false,
+      "status": 404,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/agents/e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b/runs?limit=20"
+    },
+    "runReadback": {
+      "duration_ms": 1063,
+      "error": "http_error",
+      "json": {
+        "error": "API route not found"
+      },
+      "ok": false,
+      "status": 404,
+      "text": null,
+      "url": "http://127.0.0.1:3131/api/agents/e62ce5b9-0dc3-4a0e-8644-3f331ef70f7b/runs/cd995e07-15f1-4068-a44b-979d15ff7008"
+    }
+  },
+  "generated_at": "2026-05-29T00:46:54.297025Z",
+  "inputs": {
+    "adapter_env_keys": [
+      "OPENAI_BASE_URL",
+      "XIAOMI_BASE_URL"
+    ],
+    "adapter_secret_ref_keys": "<redacted>",
+    "agentId": null,
+    "auth_header_name": "Cookie",
+    "auth_token_env": "<redacted>",
+    "base_url": "http://127.0.0.1:3131",
+    "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+    "issueId": "BOS-2",
+    "runId": null,
+    "trusted_origin": "http://127.0.0.1:3131"
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP API/browser-authenticated endpoints only; no source patch, subprocess, or direct DB write."
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "0.3.1"
+  },
+  "phase": "agent-smoke",
+  "run": {
+    "approvalCounts": {
+      "after": 0,
+      "before": 0,
+      "created": 0
+    },
+    "resultJson": {},
+    "runId": "cd995e07-15f1-4068-a44b-979d15ff7008",
+    "wakeCounts": {
+      "after": null,
+      "before": null,
+      "delta": null
+    }
+  },
+  "schema_version": "s02-hermes-smoke/v1"
+}

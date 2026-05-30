@@ -115,7 +115,7 @@ Do not treat this as a BOS Light failure and do not treat it as a budget failure
 
 ## Do not
 
-- Do not expose Paperclip publicly unless the human explicitly asks for it.
+- Do not expose the Paperclip container port directly. The S04 validation environment now has an authenticated HTTPS nginx endpoint (`https://paperclip.oysana.com`); keep that endpoint authenticated and route only to the loopback-bound container.
 - Do not delete/prune Docker containers, images, networks, or volumes on the VPS.
 - Do not stop existing non-Paperclip services.
 - Do not claim BOS Light plugin support until plugin load/registration is actually proven in this live runtime.

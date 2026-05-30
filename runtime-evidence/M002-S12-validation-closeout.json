@@ -1,0 +1,24 @@
+{
+  "artifact_type": "validator-audit",
+  "classification": "approved_rescope",
+  "diagnostics": {
+    "error_count": 0,
+    "errors": []
+  },
+  "generated_at": "2026-05-30T09:04:13Z",
+  "inputs": {
+    "evidence_path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json"
+  },
+  "milestone": "M002",
+  "passed": true,
+  "posture": {
+    "approved_rescope_requires_explicit_approval": true,
+    "blocker_evidence_promoted": false,
+    "paperclip_core_or_direct_database_mutation_allowed": false,
+    "plaintext_credential_values_allowed": false,
+    "runtime_proof_requires_both_surfaces": true,
+    "shell_string_execution_allowed": false
+  },
+  "schema_version": "s12-runtime-proof-or-rescope-validation/v1",
+  "slice": "S12"
+}

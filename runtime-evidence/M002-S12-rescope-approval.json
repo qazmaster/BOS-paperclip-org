@@ -1,0 +1,61 @@
+{
+  "approval_source": {
+    "type": "milestone_context_assessment",
+    "reference": ".gsd/milestones/M002/M002-CONTEXT.md Requirement Posture; .gsd/milestones/M002/M002-ASSESSMENT.md Verdict and Requirement Assessment; runtime-evidence/M002-S10-requirement-scope-resolution.json scope_change.rationale",
+    "approved_at": "2026-05-30T06:09:51Z",
+    "rationale": "Existing M002 closeout context and assessment explicitly preserve R009/R010/R011, keep Hermes and GSD-Pi runtime execution proof-gated and unpromoted, and accept conservative fail-closed closeout only when blocker evidence is not promoted."
+  },
+  "requirement_ids": [
+    "R009",
+    "R010",
+    "R011"
+  ],
+  "success_criteria": {
+    "deferred": [
+      "Live Hermes resultJson.bos runtime proof is deferred until supported Paperclip operator auth and adapter testEnvironment access are available.",
+      "Live gsdpi_local BosAdapterResult runtime proof is deferred until a reachable supported Paperclip runtime exposes registry, health, version, and testEnvironment routes with operator auth."
+    ],
+    "narrowed": [
+      "S12 closeout accepts only the explicit no-promotion blocker posture for unavailable runtime surfaces; fail-closed evidence remains diagnostic and is not promoted to runtime proof.",
+      "R009/R010/R011 remain intact: capability promotion still requires future passing supported-boundary proof, Hermes proof still requires exactly one bounded run/readback and resultJson.bos, and supported boundaries remain mandatory."
+    ]
+  },
+  "blocker_citations": [
+    {
+      "surface": "hermes",
+      "code": "adapter_registry_auth_denied",
+      "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json"
+    },
+    {
+      "surface": "hermes",
+      "code": "missing_auth",
+      "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json"
+    },
+    {
+      "surface": "hermes",
+      "code": "test_environment_auth_denied",
+      "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json"
+    },
+    {
+      "surface": "gsdpi",
+      "code": "adapter_registry_unavailable",
+      "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json"
+    },
+    {
+      "surface": "gsdpi",
+      "code": "health_unavailable",
+      "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json"
+    },
+    {
+      "surface": "gsdpi",
+      "code": "missing_auth",
+      "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json"
+    },
+    {
+      "surface": "gsdpi",
+      "code": "test_environment_not_passing",
+      "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json"
+    }
+  ],
+  "no_capability_promotions": true
+}

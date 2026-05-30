@@ -1,0 +1,66 @@
+{
+  "artifact_type": "validator-audit",
+  "checked_paths": [
+    {
+      "exists": true,
+      "non_empty": true,
+      "path": ".gsd/milestones/M002/M002-CONTEXT.md",
+      "type": "text"
+    },
+    {
+      "exists": true,
+      "non_empty": true,
+      "path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+      "type": "text"
+    },
+    {
+      "exists": true,
+      "non_empty": true,
+      "path": ".gsd/milestones/M002/slices/S09/S09-ASSESSMENT.md",
+      "type": "text"
+    },
+    {
+      "exists": true,
+      "non_empty": true,
+      "path": ".gsd/milestones/M002/slices/S10/S10-ASSESSMENT.md",
+      "type": "text"
+    },
+    {
+      "exists": true,
+      "non_empty": true,
+      "path": "runtime-evidence/M002-S10-requirement-scope-resolution.json",
+      "type": "json"
+    },
+    {
+      "exists": true,
+      "non_empty": true,
+      "path": "runtime-evidence/M002-S10-runtime-execution-closeout.json",
+      "type": "json"
+    },
+    {
+      "exists": true,
+      "non_empty": true,
+      "path": "plugin-bos-light/capabilities.paperclip-runtime.json",
+      "type": "json"
+    }
+  ],
+  "diagnostics": {
+    "error_count": 0,
+    "errors": [],
+    "truncated": false
+  },
+  "generated_at": "2026-05-30T09:04:12Z",
+  "milestone": "M002",
+  "passed": true,
+  "posture": {
+    "fail_closed_blocker_evidence_is_not_runtime_proof": true,
+    "runtime_promotions_require_passing_s10_proof": true,
+    "s01_historical_or_superseded_for_closeout_required": true,
+    "s09_s10_current_closeout_sources_required": true,
+    "secret_values_allowed_in_diagnostics": false,
+    "shell_network_or_database_access_used": false
+  },
+  "schema_version": "m002-validation-artifact-repair/v1",
+  "slice": "S11",
+  "task": "T02"
+}

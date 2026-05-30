@@ -7,14 +7,21 @@
     "fallback-only",
     "unvalidated"
   ],
-  "guardrail": "Do not treat draft manifest, worker optional chaining, or in-memory adapter behavior as confirmed Paperclip runtime support. A capability may be marked confirmed only after the named proof command or runtime evidence field is populated from a real Paperclip runtime.",
+  "guardrail": "Do not treat draft manifest, worker optional chaining, cache overlays, in-memory adapter behavior, S10/S12 fail-closed runtime blockers, or an approved rescope as confirmed Paperclip runtime support. A capability may be marked confirmed only after named live runtime evidence includes version/build plus surface-specific readback; S04 currently confirms only native issue, document, and comment artifact surfaces. Hermes and GSD-Pi execution remain unpromoted under the S12 approved_rescope disposition unless a future S12 disposition is runtime_proof with both Hermes resultJson.bos and gsdpi_local BosAdapterResult proof.",
   "capabilities": [
     {
       "key": "company_template.import_export",
       "status": "unvalidated",
       "paperclip_surface_name": "Company template import/export runtime schema",
-      "requirement_ids": ["C4", "A1"],
-      "downstream_consumers": ["company-template/bos-company-template.json", "scripts/import-company-template.sh", "company-template/a1-validation-evidence.md"],
+      "requirement_ids": [
+        "C4",
+        "A1"
+      ],
+      "downstream_consumers": [
+        "company-template/bos-company-template.json",
+        "scripts/import-company-template.sh",
+        "company-template/a1-validation-evidence.md"
+      ],
       "evidence_source": "Local repository validation only; live Paperclip import/export path has not been exercised.",
       "proof_command": "python3 scripts/validate_company_template.py (local structure only); replace with live Paperclip import/export command evidence before confirming.",
       "runtime_evidence_field": "paperclip.company_template.import_export.schema_version",
@@ -27,8 +34,14 @@
       "key": "agents.syntax",
       "status": "unvalidated",
       "paperclip_surface_name": "AGENTS.md profile syntax compatibility",
-      "requirement_ids": ["C5", "A1"],
-      "downstream_consumers": ["agents/Div*_*/AGENTS.md", "company-template/bos-company-template.json"],
+      "requirement_ids": [
+        "C5",
+        "A1"
+      ],
+      "downstream_consumers": [
+        "agents/Div*_*/AGENTS.md",
+        "company-template/bos-company-template.json"
+      ],
       "evidence_source": "Local files exist and reference BOS Light divisions; current Paperclip agent profile parser has not validated the syntax.",
       "proof_command": "python3 scripts/validate_company_template.py (presence/reference check only); replace with Paperclip AGENTS.md syntax validator before confirming.",
       "runtime_evidence_field": "paperclip.agents.syntax.validator_version",
@@ -41,88 +54,167 @@
       "key": "plugin.runtime.version_build",
       "status": "unvalidated",
       "paperclip_surface_name": "Plugin runtime version and build metadata",
-      "requirement_ids": ["C6"],
-      "downstream_consumers": ["plugin-bos-light/src/worker.ts", "future runtime probe", "health report"],
-      "evidence_source": "No runtime probe has captured Paperclip version/build in this repository.",
-      "proof_command": "Future S02 runtime probe must record version/build from the real Paperclip host before this can be confirmed.",
-      "runtime_evidence_field": "paperclip.runtime.version_build",
-      "fallback_path": "Fail closed in health reports by showing runtime version/build as unknown and keeping SDK-dependent capabilities unvalidated.",
-      "blocker_text": "Cannot set minimum supported runtime or breaking-change posture without live version/build evidence.",
-      "adapter_assumptions": ["worker comment: confirm min version and breaking changes after C6"],
-      "notes": "This is the root guardrail for all C7 surface claims."
+      "requirement_ids": [
+        "C6"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/worker.ts",
+        "future runtime probe",
+        "health report"
+      ],
+      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json recorded runtime.version=unknown and runtime.build=unknown because live Paperclip base URL/API key inputs were absent; S01/S02/S03/S04 version diagnostics do not prove BOS Light plugin runtime compatibility.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates the fail-closed S05 probe; confirmation still requires a future S05-style live plugin/UI probe with runtime version/build and readback proof.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: runtime.version, runtime.build",
+      "fallback_path": "Fail closed by showing BOS Light plugin runtime version/build as unknown and keeping SDK-dependent plugin surfaces unvalidated or fallback-only.",
+      "blocker_text": "Cannot set minimum supported BOS Light plugin runtime or breaking-change posture until S05-style live evidence captures version/build together with plugin registration/readback proof.",
+      "adapter_assumptions": [
+        "worker comment: confirm min version and breaking changes after C6"
+      ],
+      "notes": "S05 intentionally does not promote plugin runtime version/build from S04 native artifact proof; S04 confirms only native issue/document/comment artifact APIs."
     },
     {
       "key": "plugin.runtime.registration",
-      "status": "unvalidated",
+      "status": "fallback-only",
       "paperclip_surface_name": "Plugin entrypoint and definePlugin/import-path runtime",
-      "requirement_ids": ["C6", "C7"],
-      "downstream_consumers": ["plugin-bos-light/src/worker.ts", "manifest.paperclip-plugin.json"],
-      "evidence_source": "worker.ts explicitly says the definePlugin import path and SDK wiring are draft pseudo wiring.",
-      "proof_command": "Future plugin load smoke test against current Paperclip runtime.",
-      "runtime_evidence_field": "paperclip.plugin.entrypoint.loaded",
-      "fallback_path": "Keep pure BOS Light logic callable directly while plugin entrypoint support is unknown.",
-      "blocker_text": "Do not ship runtime plugin registration until current Paperclip SDK entrypoint is confirmed.",
-      "adapter_assumptions": ["confirm definePlugin import path"],
-      "notes": "The manifest is a draft contract, not proof that the host can load this worker."
+      "requirement_ids": [
+        "C6",
+        "C7"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/worker.ts",
+        "manifest.paperclip-plugin.json"
+      ],
+      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested plugin key bos-light but observed no live plugin registration keys and no readback proof because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only plugin_registration evidence; confirmation requires live route readback proof for bos-light plugin load.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.plugin_registration.observed_registered_keys, surfaces.plugin_registration.readback_proof",
+      "fallback_path": "Keep pure BOS Light logic callable directly while plugin entrypoint support is fallback-only and host plugin load remains unproved.",
+      "blocker_text": "Do not ship BOS Light as a loaded Paperclip plugin until S05-style evidence records runtime version/build and plugin registration readback for bos-light.",
+      "adapter_assumptions": [
+        "confirm definePlugin import path"
+      ],
+      "notes": "The local registration probe and optional chaining are diagnostic-only; S05 supplies the current canonical no-promotion ledger."
     },
     {
       "key": "registration.tools",
-      "status": "unvalidated",
+      "status": "fallback-only",
       "paperclip_surface_name": "ctx.tools.register tool registration API",
-      "requirement_ids": ["C7", "A2", "A3", "A6", "A7", "A8", "A9", "A10"],
-      "downstream_consumers": ["piko:bpi-score", "piko:blueprint-gen", "piko:bpi-blueprint-artifact", "piko:eval-gate", "piko:eval-gate-evidence", "piko:circuit-breaker-observe", "piko:decide", "plugin-bos-light/src/worker.ts"],
-      "evidence_source": "Draft manifest requests tools.register and worker.ts calls ctx.tools?.register with optional chaining for piko:* tools, including S05 Eval Gate evidence and Circuit Breaker observation tools; no host response evidence exists.",
-      "proof_command": "Future runtime registration probe invoking registered piko:* tools through Paperclip and recording registered_tool_keys plus invocation results.",
-      "runtime_evidence_field": "paperclip.registration.tools.registered_tool_keys",
-      "fallback_path": "Run pure TypeScript functions directly in local tests or expose Eval Gate and Circuit Breaker evidence through manual issue comments/markdown until host tool registration is proven.",
-      "blocker_text": "Do not present piko:* tools as host-available until registration and invocation are observed.",
-      "manifest_capabilities": ["tools.register"],
-      "manifest_tools": ["piko:bpi-score", "piko:blueprint-gen", "piko:bpi-blueprint-artifact", "piko:eval-gate", "piko:eval-gate-evidence", "piko:circuit-breaker-observe", "piko:decide"],
-      "adapter_assumptions": ["ctx.tools?.register"],
-      "notes": "Optional chaining prevents local crashes but can silently skip runtime registration. S05 tools return bounded evidence envelopes but still do not prove host registration, native events, native issues, native comments, or activity logging."
+      "requirement_ids": [
+        "C7",
+        "A2",
+        "A3",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "downstream_consumers": [
+        "piko:bpi-score",
+        "piko:blueprint-gen",
+        "piko:bpi-blueprint-artifact",
+        "piko:eval-gate",
+        "piko:eval-gate-evidence",
+        "piko:circuit-breaker-observe",
+        "piko:decide",
+        "plugin-bos-light/src/worker.ts",
+        "S04 artifact flow GSD-Pi quality branch"
+      ],
+      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested piko:* tools but observed registered_tool_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only tools evidence; confirmation requires registered piko:* tool readback plus at least one successful piko invocation result.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.tools.observed_registered_keys, surfaces.tools.readback_proof, surfaces.tools.piko_invocation_results",
+      "fallback_path": "Run pure TypeScript functions directly in local tests or mirror Eval Gate and Circuit Breaker evidence through confirmed native document/comment artifact paths until host piko:* tool registration and invocation are proven.",
+      "blocker_text": "Do not present piko:* tools or GSD-Pi/Div4 quality automation as host-available until S05-style registration and invocation readbacks pass.",
+      "manifest_capabilities": [
+        "tools.register"
+      ],
+      "manifest_tools": [
+        "piko:bpi-score",
+        "piko:blueprint-gen",
+        "piko:bpi-blueprint-artifact",
+        "piko:eval-gate",
+        "piko:eval-gate-evidence",
+        "piko:circuit-breaker-observe",
+        "piko:decide"
+      ],
+      "adapter_assumptions": [
+        "ctx.tools?.register"
+      ],
+      "notes": "S05 keeps native action/tool side-effect counters at zero; local tool registration intent is not Paperclip host proof."
     },
     {
       "key": "registration.data",
-      "status": "unvalidated",
+      "status": "fallback-only",
       "paperclip_surface_name": "ctx.data.register data provider API",
-      "requirement_ids": ["C7", "A4"],
-      "downstream_consumers": ["betting-table data provider", "dashboard betting table widget", "plugin-bos-light/src/worker.ts"],
-      "evidence_source": "Draft manifest requests data.register and worker.ts calls ctx.data?.register; no Paperclip host registration evidence exists.",
-      "proof_command": "Future runtime data-provider probe that reads betting-table through Paperclip UI/data APIs.",
-      "runtime_evidence_field": "paperclip.registration.data.registered_provider_keys",
-      "fallback_path": "Render betting candidates from managed Paperclip issue/project artifacts or generated markdown if data providers are absent.",
-      "blocker_text": "Do not rely on dashboard data provider hydration until Paperclip confirms data.register.",
-      "manifest_capabilities": ["data.register"],
-      "adapter_assumptions": ["ctx.data?.register"],
-      "notes": "The current worker returns an empty data provider placeholder."
+      "requirement_ids": [
+        "C7",
+        "A4"
+      ],
+      "downstream_consumers": [
+        "betting-table data provider",
+        "dashboard betting table widget",
+        "plugin-bos-light/src/worker.ts"
+      ],
+      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested betting-table data provider but observed registered_provider_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only data-provider evidence; confirmation requires live betting-table data-provider registration and readback.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.data_providers.observed_registered_keys, surfaces.data_providers.readback_proof",
+      "fallback_path": "Render Betting Table candidates from confirmed native issue/document/comment artifacts or generated markdown while data provider hydration remains fallback-only.",
+      "blocker_text": "Do not rely on dashboard data-provider hydration until S05-style evidence confirms data.register for betting-table.",
+      "manifest_capabilities": [
+        "data.register"
+      ],
+      "adapter_assumptions": [
+        "ctx.data?.register"
+      ],
+      "notes": "The current worker placeholder and local harness diagnostics are subordinate to the S05 fallback-only evidence row."
     },
     {
       "key": "registration.actions",
-      "status": "unvalidated",
+      "status": "fallback-only",
       "paperclip_surface_name": "ctx.actions.register action API",
-      "requirement_ids": ["C7", "A5"],
-      "downstream_consumers": ["approve-batch action", "Betting Table Approve Batch", "plugin-bos-light/src/worker.ts"],
-      "evidence_source": "Draft manifest requests actions.register and worker.ts calls ctx.actions?.register; no host action invocation evidence exists.",
-      "proof_command": "Future runtime action probe invoking approve-batch from Paperclip UI.",
-      "runtime_evidence_field": "paperclip.registration.actions.registered_action_keys",
-      "fallback_path": "Use a managed approval issue/comment workflow when host actions are unavailable.",
-      "blocker_text": "Do not expose Approve Batch as a working native action until action registration and invocation are proven.",
-      "manifest_capabilities": ["actions.register"],
-      "adapter_assumptions": ["ctx.actions?.register"],
-      "notes": "Action registration is not equivalent to native approval creation; approvals.native must also pass."
+      "requirement_ids": [
+        "C7",
+        "A5"
+      ],
+      "downstream_consumers": [
+        "approve-batch action",
+        "Betting Table Approve Batch",
+        "plugin-bos-light/src/worker.ts"
+      ],
+      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested approve-batch action but observed registered_action_keys=[] and readback_proof=null; native action invocations attempted=0 and approval/native approval counters remained zero.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only action evidence and zero approval side effects; confirmation requires live approve-batch registration/readback plus a separately safe invocation plan.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.actions.observed_registered_keys, surfaces.actions.readback_proof, side_effect_counters.action_invocations_attempted",
+      "fallback_path": "Use managed native issue/comment/document review workflows when host actions are unavailable; never mark rows approval-requested from fallback diagnostics alone.",
+      "blocker_text": "Do not expose Approve Batch as a working native action until S05-style action registration/readback and separate native approval proof pass.",
+      "manifest_capabilities": [
+        "actions.register"
+      ],
+      "adapter_assumptions": [
+        "ctx.actions?.register"
+      ],
+      "notes": "Action registration is separate from approvals.native; S05 deliberately created zero approvals and attempted zero native action invocations."
     },
     {
       "key": "config.api",
       "status": "fallback-only",
       "paperclip_surface_name": "Plugin config read/write API",
-      "requirement_ids": ["C7", "A11a"],
-      "downstream_consumers": ["BOS config", "company-template import defaults", "persistence restore strategy"],
+      "requirement_ids": [
+        "C7",
+        "A11a"
+      ],
+      "downstream_consumers": [
+        "BOS config",
+        "company-template import defaults",
+        "persistence restore strategy"
+      ],
       "evidence_source": "Draft manifest requests config.read/config.write, but no ctx.config call or runtime evidence exists yet.",
       "proof_command": "Future config read/write round-trip against Paperclip runtime.",
       "runtime_evidence_field": "paperclip.config.round_trip_ok",
       "fallback_path": "Restore BOS config from config JSON and company-template artifacts; do not store durable config only in plugin state.",
       "blocker_text": "Native plugin config cannot be treated as durable until read/write round-trip is proven.",
-      "manifest_capabilities": ["config.read", "config.write"],
+      "manifest_capabilities": [
+        "config.read",
+        "config.write"
+      ],
       "adapter_assumptions": [],
       "notes": "Docs/05 says config JSON and company template import files are the fallback."
     },
@@ -130,44 +222,91 @@
       "key": "state.issue_scoped",
       "status": "unvalidated",
       "paperclip_surface_name": "Issue-scoped plugin state read/write API",
-      "requirement_ids": ["C3", "C7", "A2", "A6", "A7", "A8", "A9", "A11b", "A11d", "A11e"],
-      "downstream_consumers": ["BPI score overlay", "gate results", "circuit breaker state", "decision metadata", "plugin-bos-light/src/persistence.ts"],
+      "requirement_ids": [
+        "C3",
+        "C7",
+        "A2",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A11b",
+        "A11d",
+        "A11e"
+      ],
+      "downstream_consumers": [
+        "BPI score overlay",
+        "gate results",
+        "circuit breaker state",
+        "decision metadata",
+        "plugin-bos-light/src/persistence.ts"
+      ],
       "evidence_source": "Persistence layer is in-memory only and docs require issue-scoped state spike before design freeze.",
       "proof_command": "Future issue-scoped ctx.state set/get round-trip with restart/readback evidence.",
       "runtime_evidence_field": "paperclip.state.issue_scoped.round_trip_ok",
       "fallback_path": "Mirror important results into issue documents/comments and reconstruct from native artifacts after state loss.",
       "blocker_text": "Do not make issue-scoped plugin state the only durable record until round-trip and restore evidence exists.",
-      "manifest_capabilities": ["state.read", "state.write"],
-      "adapter_assumptions": ["InMemoryBOSPersistence"],
+      "manifest_capabilities": [
+        "state.read",
+        "state.write"
+      ],
+      "adapter_assumptions": [
+        "InMemoryBOSPersistence"
+      ],
       "notes": "Issue-scoped state is desired for fast UI overlays but must be recoverable from native artifacts."
     },
     {
       "key": "state.company_scoped",
       "status": "fallback-only",
       "paperclip_surface_name": "Company-scoped plugin state read/write API",
-      "requirement_ids": ["C3", "C7", "A4", "A11a", "A11c"],
-      "downstream_consumers": ["Betting Table current cycle", "BOS config", "company-level circuit/config cache"],
+      "requirement_ids": [
+        "C3",
+        "C7",
+        "A4",
+        "A11a",
+        "A11c"
+      ],
+      "downstream_consumers": [
+        "Betting Table current cycle",
+        "BOS config",
+        "company-level circuit/config cache"
+      ],
       "evidence_source": "docs/07_RISKS_AND_SPIKES.md records company-scoped ctx.state readback as a known risk.",
       "proof_command": "Future company-scoped ctx.state set/get/restart spike with readback evidence.",
       "runtime_evidence_field": "paperclip.state.company_scoped.round_trip_ok",
       "fallback_path": "Use config JSON, managed native issues/projects, and reconstructable artifacts instead of company-scoped state for durable truth.",
       "blocker_text": "Do not depend exclusively on company-scoped plugin state for Betting Table, circuit state, or config.",
-      "manifest_capabilities": ["state.read", "state.write"],
-      "adapter_assumptions": ["InMemoryBOSPersistence"],
+      "manifest_capabilities": [
+        "state.read",
+        "state.write"
+      ],
+      "adapter_assumptions": [
+        "InMemoryBOSPersistence"
+      ],
       "notes": "This surface intentionally remains fallback-only until C3/C7 retire the known runtime risk."
     },
     {
       "key": "entities.api",
       "status": "fallback-only",
       "paperclip_surface_name": "Plugin entity read/write API",
-      "requirement_ids": ["C7", "A4", "A11c"],
-      "downstream_consumers": ["Betting Table cycle entities", "decision/circuit lookup indexes"],
+      "requirement_ids": [
+        "C7",
+        "A4",
+        "A11c"
+      ],
+      "downstream_consumers": [
+        "Betting Table cycle entities",
+        "decision/circuit lookup indexes"
+      ],
       "evidence_source": "Draft manifest requests entities.read/entities.write, but no adapter implementation or runtime proof exists.",
       "proof_command": "Future entity create/read/update probe against Paperclip runtime.",
       "runtime_evidence_field": "paperclip.entities.round_trip_ok",
       "fallback_path": "Represent recoverable cycle state in managed native issue/project artifacts until entity APIs are confirmed.",
       "blocker_text": "Do not design Betting Table durability around plugin entities until read/write proof exists.",
-      "manifest_capabilities": ["entities.read", "entities.write"],
+      "manifest_capabilities": [
+        "entities.read",
+        "entities.write"
+      ],
       "adapter_assumptions": [],
       "notes": "Entities may become the right abstraction later, but current code does not prove them."
     },
@@ -175,29 +314,55 @@
       "key": "activity.logging",
       "status": "unvalidated",
       "paperclip_surface_name": "Activity logging write API",
-      "requirement_ids": ["C7", "A8", "A9", "A10"],
-      "downstream_consumers": ["Circuit Breaker fallback scan", "health report diagnostics", "PaperclipAdapter.logActivity"],
+      "requirement_ids": [
+        "C7",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "downstream_consumers": [
+        "Circuit Breaker fallback scan",
+        "health report diagnostics",
+        "PaperclipAdapter.logActivity"
+      ],
       "evidence_source": "Draft manifest requests activity.write and adapter exposes logActivity, but in-memory adapter no-ops it.",
       "proof_command": "Future activity write/read visibility probe against Paperclip activity log.",
       "runtime_evidence_field": "paperclip.activity.write_visible",
       "fallback_path": "Attach issue comments or managed escalation issue updates when activity logging is unavailable.",
       "blocker_text": "Circuit Breaker fallback cannot depend on activity logs until write and scan behavior are proven.",
-      "manifest_capabilities": ["activity.write"],
-      "adapter_assumptions": ["logActivity"],
+      "manifest_capabilities": [
+        "activity.write"
+      ],
+      "adapter_assumptions": [
+        "logActivity"
+      ],
       "notes": "Activity logging is both an observability surface and a fallback signal source."
     },
     {
       "key": "events.issue_lifecycle",
       "status": "unvalidated",
       "paperclip_surface_name": "Issue lifecycle event subscription API",
-      "requirement_ids": ["C7", "A2", "A6", "A7", "A8", "A9"],
-      "downstream_consumers": ["BPI on issue.created", "gate transitions", "circuit breaker transitions"],
+      "requirement_ids": [
+        "C7",
+        "A2",
+        "A6",
+        "A7",
+        "A8",
+        "A9"
+      ],
+      "downstream_consumers": [
+        "BPI on issue.created",
+        "gate transitions",
+        "circuit breaker transitions"
+      ],
       "evidence_source": "Draft manifest requests events.subscribe, but no worker subscription is implemented or observed.",
       "proof_command": "Future event subscription probe that creates/updates an issue and records delivered event payloads.",
       "runtime_evidence_field": "paperclip.events.issue_lifecycle.delivered_event_types",
       "fallback_path": "Use explicit tool/action invocation and bounded polling where lifecycle events are missing.",
       "blocker_text": "Do not assume event-driven issue transitions until event delivery evidence exists.",
-      "manifest_capabilities": ["events.subscribe"],
+      "manifest_capabilities": [
+        "events.subscribe"
+      ],
       "adapter_assumptions": [],
       "notes": "Issue events and terminal run events are split because they can have different delivery behavior."
     },
@@ -205,108 +370,271 @@
       "key": "events.terminal_runs",
       "status": "fallback-only",
       "paperclip_surface_name": "Terminal/agent run event subscription API",
-      "requirement_ids": ["C2", "C7", "A8", "A9", "A10"],
-      "downstream_consumers": ["Circuit Breaker run-failure detection", "polling fallback"],
+      "requirement_ids": [
+        "C2",
+        "C7",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "downstream_consumers": [
+        "Circuit Breaker run-failure detection",
+        "polling fallback"
+      ],
       "evidence_source": "docs/07_RISKS_AND_SPIKES.md records run events as declared-but-maybe-not-emitted in some runtime versions.",
       "proof_command": "Future event emission spike that triggers run finished/failed/cancelled and records plugin bus delivery.",
       "runtime_evidence_field": "paperclip.events.terminal_runs.delivered_event_types",
       "fallback_path": "Poll active runs only with jitter/backoff and fall back to activity-log scanning.",
       "blocker_text": "Circuit Breaker must not rely only on run events until C2/C7 prove emission in the target runtime.",
-      "manifest_capabilities": ["events.subscribe"],
+      "manifest_capabilities": [
+        "events.subscribe"
+      ],
       "adapter_assumptions": [],
       "notes": "Known fallback posture: poll_scope=ACTIVE_RUNS_ONLY, interval_ms=30000, jitter_ms=5000, backoff_after_attempts=10."
     },
     {
       "key": "issues.native",
-      "status": "unvalidated",
+      "status": "confirmed",
       "paperclip_surface_name": "Native issue read/write/create API",
-      "requirement_ids": ["C7", "A9", "A11c"],
-      "downstream_consumers": ["escalation issue creation", "managed Betting Table issue/project", "PaperclipAdapter.createEscalationIssue"],
-      "evidence_source": "Draft manifest requests issues.read/issues.write and adapter exposes createEscalationIssue, but implementation is in-memory only.",
-      "proof_command": "Future native issue create/read/update probe against Paperclip runtime.",
-      "runtime_evidence_field": "paperclip.issues.create_read_update_ok",
-      "fallback_path": "If native issue APIs are absent, write escalation details to comments/documents and require manual issue creation.",
-      "blocker_text": "Do not claim automated escalation issue creation until native issues API proof exists.",
-      "manifest_capabilities": ["issues.read", "issues.write"],
-      "adapter_assumptions": ["createEscalationIssue"],
-      "notes": "Native issue access is required for Paperclip-visible circuit breaker escalation."
+      "requirement_ids": [
+        "C7",
+        "A9",
+        "A11c"
+      ],
+      "downstream_consumers": [
+        "escalation issue creation",
+        "managed Betting Table issue/project",
+        "PaperclipAdapter.createEscalationIssue"
+      ],
+      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue create/readback, issue ref e7ede16c-6535-41ef-bd44-3f9d24980caf, readback status 200, and sha256 391e92efd9d78c673e1abd821e01b22fe29eed9056a25d69b7f5249007c102ce.",
+      "proof_command": "python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final (verifies runtime version/build, readbacks.issue.ok, side_effect_counts.issues_created=1, no core/DB/secret violations, and zero Hermes/GSD-Pi/approval side effects).",
+      "runtime_evidence_field": "runtime-evidence/M002-S04-live-artifact-flow.json: runtime.version, runtime.build, readbacks.issue.ok, readbacks.issue.ref, readbacks.issue.sha256, side_effect_counts.issues_created",
+      "fallback_path": "If native issue create/readback is unavailable in another runtime, attach escalation or artifact details to an existing issue document/comment and require manual issue creation.",
+      "blocker_text": "",
+      "manifest_capabilities": [
+        "issues.read",
+        "issues.write"
+      ],
+      "adapter_assumptions": [
+        "createEscalationIssue"
+      ],
+      "notes": "Confirmed scope is bounded native issue create/readback for the S04 sandbox artifact flow only. It does not confirm plugin registration, issue lifecycle events, UI tabs, activity logs, approvals, Hermes execution, or GSD-Pi execution."
     },
     {
       "key": "documents.native",
-      "status": "unvalidated",
+      "status": "confirmed",
       "paperclip_surface_name": "Native issue document API",
-      "requirement_ids": ["C7", "A3", "A6", "A11b", "A11d"],
-      "downstream_consumers": ["Blueprint generation", "gate result persistence", "BPI/gate restore", "PaperclipAdapter.createIssueDocument"],
-      "evidence_source": "Adapter exposes createIssueDocument but current implementation stores documents in memory only; manifest has no explicit documents capability.",
-      "proof_command": "Future issue document create/read probe against Paperclip runtime.",
-      "runtime_evidence_field": "paperclip.documents.create_read_ok",
-      "fallback_path": "Use issue description or comments for markdown artifacts if native documents are unavailable.",
-      "blocker_text": "Blueprint and gate documents must not be described as native Paperclip documents until create/read proof exists.",
+      "requirement_ids": [
+        "C7",
+        "A3",
+        "A6",
+        "A11b",
+        "A11d"
+      ],
+      "downstream_consumers": [
+        "Blueprint generation",
+        "gate result persistence",
+        "BPI/gate restore",
+        "PaperclipAdapter.createIssueDocument"
+      ],
+      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue document create/readback, document ref 7595fd85-80e5-41a4-96c7-01cb3c2de588, readback status 200, and sha256 a9a25242499c29048662f4ca340c81e3088d6016f17cc53bc6da2d23e3d04663 containing BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker text.",
+      "proof_command": "python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final (verifies runtime version/build, readbacks.document.ok, side_effect_counts.documents_created=1, artifact family snippets, no core/DB/secret violations, and zero Hermes/GSD-Pi/approval side effects).",
+      "runtime_evidence_field": "runtime-evidence/M002-S04-live-artifact-flow.json: runtime.version, runtime.build, readbacks.document.ok, readbacks.document.ref, readbacks.document.sha256, side_effect_counts.documents_created, artifact_families.*.surfaces",
+      "fallback_path": "If native documents fail, mirror the artifact into a native comment when available; otherwise preserve the deterministic markdown-only artifact for operator copy/paste.",
+      "blocker_text": "",
       "manifest_capabilities": [],
-      "adapter_assumptions": ["createIssueDocument"],
-      "notes": "Documents are an adapter-assumed surface rather than a manifest-requested one today."
+      "adapter_assumptions": [
+        "createIssueDocument"
+      ],
+      "notes": "Confirmed scope is bounded native issue document create/readback for S04 visible artifacts. It does not confirm plugin document UI, plugin state durability, import/export schema, approvals, Hermes, or GSD-Pi."
     },
     {
       "key": "comments.native",
-      "status": "unvalidated",
+      "status": "confirmed",
       "paperclip_surface_name": "Native issue comment API",
-      "requirement_ids": ["C7", "A6", "A7", "A11d", "A11e"],
-      "downstream_consumers": ["gate guidance", "decision records", "restore from issue history", "PaperclipAdapter.addIssueComment"],
-      "evidence_source": "Adapter exposes addIssueComment but current implementation stores comments in memory only; manifest has no explicit comments capability.",
-      "proof_command": "Future issue comment create/read probe against Paperclip runtime.",
-      "runtime_evidence_field": "paperclip.comments.create_read_ok",
-      "fallback_path": "Use issue documents or issue descriptions where native comments are unavailable.",
-      "blocker_text": "Do not rely on issue history restore from comments until native comment behavior is proven.",
+      "requirement_ids": [
+        "C7",
+        "A6",
+        "A7",
+        "A11d",
+        "A11e"
+      ],
+      "downstream_consumers": [
+        "gate guidance",
+        "decision records",
+        "restore from issue history",
+        "PaperclipAdapter.addIssueComment"
+      ],
+      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue comment create/readback, comment ref 8233ea7b-ab03-4e9b-8684-6e3ceabde00f, readback status 200, and sha256 7bd1d276aaf8bf85255c4ed25598dc0a58b2f0314de45743c12db451d8c6fc0e containing BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker text.",
+      "proof_command": "python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final (verifies runtime version/build, readbacks.comments[0].ok, side_effect_counts.comments_created=1, artifact family snippets, no core/DB/secret violations, and zero Hermes/GSD-Pi/approval side effects).",
+      "runtime_evidence_field": "runtime-evidence/M002-S04-live-artifact-flow.json: runtime.version, runtime.build, readbacks.comments[0].ok, readbacks.comments[0].ref, readbacks.comments[0].sha256, side_effect_counts.comments_created, artifact_families.*.surfaces",
+      "fallback_path": "If native comments fail, use native documents or markdown-only operator instructions; comment fallbacks for approval requests remain diagnostics and never become native approvals.",
+      "blocker_text": "",
       "manifest_capabilities": [],
-      "adapter_assumptions": ["addIssueComment"],
-      "notes": "Comments are the preferred human-visible fallback for several persistence paths if supported."
+      "adapter_assumptions": [
+        "addIssueComment"
+      ],
+      "notes": "Confirmed scope is bounded native issue comment create/readback for S04 visible artifacts. It does not confirm activity logs, event delivery, plugin tool registration, native approvals, Hermes, or GSD-Pi."
     },
     {
       "key": "approvals.native",
       "status": "unvalidated",
       "paperclip_surface_name": "Native approval/request creation API",
-      "requirement_ids": ["C7", "A5"],
-      "downstream_consumers": ["approve-batch action", "Betting Table batch approval", "PaperclipAdapter.createApprovalRequest"],
+      "requirement_ids": [
+        "C7",
+        "A5"
+      ],
+      "downstream_consumers": [
+        "approve-batch action",
+        "Betting Table batch approval",
+        "PaperclipAdapter.createApprovalRequest"
+      ],
       "evidence_source": "worker.ts calls ctx.approvals?.create and adapter exposes createApprovalRequest, but no Paperclip runtime approval was created.",
       "proof_command": "Future approve-batch runtime probe that creates and reads a native Paperclip approval/request.",
       "runtime_evidence_field": "paperclip.approvals.create_read_ok",
       "fallback_path": "Create a manual approval issue/comment requesting review; never substitute a plugin-side decision for native approval.",
       "blocker_text": "A5 cannot pass until Paperclip-native approval/request creation is proven.",
       "manifest_capabilities": [],
-      "adapter_assumptions": ["ctx.approvals?.create", "createApprovalRequest"],
+      "adapter_assumptions": [
+        "ctx.approvals?.create",
+        "createApprovalRequest"
+      ],
       "notes": "The fallback can request human approval but must not pretend to be a native approval object."
     },
     {
       "key": "ui.dashboard_widgets",
-      "status": "unvalidated",
+      "status": "fallback-only",
       "paperclip_surface_name": "Dashboard widget UI slot",
-      "requirement_ids": ["C7", "A4"],
-      "downstream_consumers": ["betting-table dashboard widget", "Pitch Deck rendering"],
-      "evidence_source": "Draft manifest declares dashboard_widgets=['betting-table']; no runtime UI slot rendering evidence exists.",
-      "proof_command": "Future UI smoke test that loads the Paperclip dashboard and verifies betting-table slot render.",
-      "runtime_evidence_field": "paperclip.ui.dashboard_widgets.rendered_ids",
-      "fallback_path": "Publish Betting Table as a managed native issue/project or markdown artifact when dashboard widgets are unavailable.",
-      "blocker_text": "Do not promise dashboard Pitch Deck rendering until Paperclip renders the declared widget.",
+      "requirement_ids": [
+        "C7",
+        "A4"
+      ],
+      "downstream_consumers": [
+        "betting-table dashboard widget",
+        "Pitch Deck rendering"
+      ],
+      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested dashboard widget betting-table but observed no render id and no readback proof because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only dashboard widget evidence; confirmation requires rendered betting-table id and live UI route readback.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.dashboard_widgets.render_ids, surfaces.dashboard_widgets.readback_proof",
+      "fallback_path": "Publish Betting Table as confirmed native issue/document/comment artifacts or markdown when dashboard widgets are unavailable.",
+      "blocker_text": "Do not promise dashboard Betting Table rendering until S05-style evidence records a rendered betting-table widget id.",
       "manifest_capabilities": [],
-      "manifest_ui": {"dashboard_widgets": ["betting-table"], "issue_detail_tabs": []},
+      "manifest_ui": {
+        "dashboard_widgets": [
+          "betting-table"
+        ],
+        "issue_detail_tabs": []
+      },
       "adapter_assumptions": [],
-      "notes": "UI slot support depends on both manifest schema acceptance and runtime rendering."
+      "notes": "Manifest UI declarations remain request intent only; S05 records no rendered dashboard widget."
     },
     {
       "key": "ui.issue_detail_tabs",
-      "status": "unvalidated",
+      "status": "fallback-only",
       "paperclip_surface_name": "Issue detail tab UI slots",
-      "requirement_ids": ["C7", "A2", "A6", "A8", "A9"],
-      "downstream_consumers": ["bos-status tab", "circuit-state tab", "gate-results tab"],
-      "evidence_source": "Draft manifest declares issue_detail_tabs but no Paperclip issue view has rendered them.",
-      "proof_command": "Future UI smoke test that opens a Paperclip issue and verifies bos-status, circuit-state, and gate-results tabs.",
-      "runtime_evidence_field": "paperclip.ui.issue_detail_tabs.rendered_ids",
-      "fallback_path": "Surface status, circuit, and gate results through issue labels/comments/documents when tabs are unavailable.",
-      "blocker_text": "Do not present issue overlay tabs as available until runtime UI rendering evidence exists.",
+      "requirement_ids": [
+        "C7",
+        "A2",
+        "A6",
+        "A8",
+        "A9"
+      ],
+      "downstream_consumers": [
+        "bos-status tab",
+        "circuit-state tab",
+        "gate-results tab"
+      ],
+      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested issue detail tabs bos-status, circuit-state, and gate-results but observed no render ids and no readback proof because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only issue-detail-tab evidence; confirmation requires rendered ids for every requested tab and live issue UI readback.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.issue_detail_tabs.render_ids, surfaces.issue_detail_tabs.readback_proof",
+      "fallback_path": "Surface BOS status, circuit state, and gate results through confirmed native issue labels/comments/documents or markdown while issue tabs are unavailable.",
+      "blocker_text": "Do not present issue overlay tabs as available until S05-style evidence records rendered bos-status, circuit-state, and gate-results tab ids.",
       "manifest_capabilities": [],
-      "manifest_ui": {"dashboard_widgets": [], "issue_detail_tabs": ["bos-status", "circuit-state", "gate-results"]},
+      "manifest_ui": {
+        "dashboard_widgets": [],
+        "issue_detail_tabs": [
+          "bos-status",
+          "circuit-state",
+          "gate-results"
+        ]
+      },
       "adapter_assumptions": [],
-      "notes": "The tab IDs are mapped from the draft manifest to catch drift."
+      "notes": "S05 gives a canonical fallback-only ledger for all requested tabs and prevents S04 native artifact proof from being reused as UI proof."
     }
-  ]
+  ],
+  "runtime_execution_posture": {
+    "schema_version": "s12-runtime-execution-posture/v1",
+    "hermes": {
+      "status": "fallback-only",
+      "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+      "artifact_type": "fail-closed-blocker",
+      "passing": false,
+      "selected_path": "hermes_local_with_codex_cli_backend",
+      "blocker_reason": "adapter_registry_auth_denied,missing_auth,test_environment_auth_denied",
+      "bounded_runtime_invocations": 0,
+      "wake_count_delta": null,
+      "capability_promoted": false,
+      "required_before_promotion": [
+        "supported adapter registry/readback for hermes_local",
+        "passing hermes_local testEnvironment",
+        "exactly one bounded Paperclip-owned run/readback",
+        "wakeCountDelta=1",
+        "passing resultJson.bos",
+        "future S12 runtime_proof disposition replacing approved_rescope",
+        "no Paperclip core patch, private import, plaintext credential logging, or direct database mutation"
+      ],
+      "s12_disposition": "approved_rescope",
+      "approved_rescope_evidence_path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+      "approved_rescope_blocker_codes": [
+        "adapter_registry_auth_denied",
+        "missing_auth",
+        "test_environment_auth_denied"
+      ]
+    },
+    "gsdpi": {
+      "status": "fallback-only",
+      "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+      "artifact_type": "fail-closed-blocker",
+      "passing": false,
+      "blocker_reason": "adapter_registry_unavailable,health_unavailable,missing_auth,test_environment_not_passing",
+      "local_package_readiness": "pass",
+      "bounded_runtime_invocations": 0,
+      "capability_promoted": false,
+      "required_before_promotion": [
+        "supported Paperclip registry/readback for gsdpi_local",
+        "passing gsdpi_local testEnvironment",
+        "bounded execute status succeeded",
+        "BosAdapterResult payload",
+        "future S12 runtime_proof disposition replacing approved_rescope",
+        "no source writes, Paperclip core patch, private import, plaintext credential logging, or direct database mutation"
+      ],
+      "s12_disposition": "approved_rescope",
+      "approved_rescope_evidence_path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+      "approved_rescope_blocker_codes": [
+        "adapter_registry_unavailable",
+        "health_unavailable",
+        "missing_auth",
+        "test_environment_not_passing"
+      ]
+    },
+    "requirements": {
+      "R009": "Preserved by S12: approved_rescope keeps Hermes and GSD-Pi unpromoted and requires future runtime_proof before any capability promotion.",
+      "R010": "Preserved by S12: future Hermes proof still requires exactly one bounded supported-boundary run/readback, wakeCountDelta=1, and resultJson.bos; current blocker evidence is not promoted.",
+      "R011": "Preserved by S12: approved_rescope cites only supported-boundary blockers and records no core patch, private import, direct database mutation, shell-string execution, unsupported path, or plaintext credential logging."
+    },
+    "source_of_truth": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+    "disposition": {
+      "outcome": "approved_rescope",
+      "evidence_path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+      "approval_source": ".gsd/milestones/M002/M002-CONTEXT.md Requirement Posture; .gsd/milestones/M002/M002-ASSESSMENT.md Verdict and Requirement Assessment; runtime-evidence/M002-S10-requirement-scope-resolution.json scope_change.rationale",
+      "requirement_ids": [
+        "R009",
+        "R010",
+        "R011"
+      ],
+      "no_capability_promotions": true,
+      "blocker_evidence_promoted": false,
+      "validation_command": "python3 scripts/validate_s12_runtime_proof_or_rescope.py --phase final --write-audit runtime-evidence/M002-S12-validation-closeout.json"
+    }
+  }
 }

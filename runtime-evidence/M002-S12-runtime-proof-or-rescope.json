@@ -1,0 +1,124 @@
+{
+  "approved_rescope": {
+    "approval_source": {
+      "approved_at": "2026-05-30T06:09:51Z",
+      "rationale": "Existing M002 closeout context and assessment explicitly preserve R009/R010/R011, keep Hermes and GSD-Pi runtime execution proof-gated and unpromoted, and accept conservative fail-closed closeout only when blocker evidence is not promoted.",
+      "reference": ".gsd/milestones/M002/M002-CONTEXT.md Requirement Posture; .gsd/milestones/M002/M002-ASSESSMENT.md Verdict and Requirement Assessment; runtime-evidence/M002-S10-requirement-scope-resolution.json scope_change.rationale",
+      "type": "milestone_context_assessment"
+    },
+    "blocker_citations": [
+      {
+        "code": "adapter_registry_auth_denied",
+        "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+        "surface": "hermes"
+      },
+      {
+        "code": "missing_auth",
+        "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+        "surface": "hermes"
+      },
+      {
+        "code": "test_environment_auth_denied",
+        "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+        "surface": "hermes"
+      },
+      {
+        "code": "adapter_registry_unavailable",
+        "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+        "surface": "gsdpi"
+      },
+      {
+        "code": "health_unavailable",
+        "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+        "surface": "gsdpi"
+      },
+      {
+        "code": "missing_auth",
+        "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+        "surface": "gsdpi"
+      },
+      {
+        "code": "test_environment_not_passing",
+        "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+        "surface": "gsdpi"
+      }
+    ],
+    "no_capability_promotions": true,
+    "requirement_ids": [
+      "R009",
+      "R010",
+      "R011"
+    ],
+    "success_criteria": {
+      "deferred": [
+        "Live Hermes resultJson.bos runtime proof is deferred until supported Paperclip operator auth and adapter testEnvironment access are available.",
+        "Live gsdpi_local BosAdapterResult runtime proof is deferred until a reachable supported Paperclip runtime exposes registry, health, version, and testEnvironment routes with operator auth."
+      ],
+      "narrowed": [
+        "S12 closeout accepts only the explicit no-promotion blocker posture for unavailable runtime surfaces; fail-closed evidence remains diagnostic and is not promoted to runtime proof.",
+        "R009/R010/R011 remain intact: capability promotion still requires future passing supported-boundary proof, Hermes proof still requires exactly one bounded run/readback and resultJson.bos, and supported boundaries remain mandatory."
+      ]
+    }
+  },
+  "artifact_type": "runtime-proof-or-approved-rescope",
+  "diagnostics": {
+    "error_count": 0,
+    "errors": [],
+    "redacted": true
+  },
+  "generated_at": "2026-05-30T06:45:37Z",
+  "inputs": {
+    "capability_matrix_path": "plugin-bos-light/capabilities.paperclip-runtime.json",
+    "gsdpi_evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+    "health_path": "docs/08_RUNTIME_CAPABILITY_HEALTH.md",
+    "hermes_evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+    "report_path": "PAPERCLIP_LIVE_VALIDATION_REPORT.md",
+    "s11_validation_artifact_path": "runtime-evidence/M002-S11-validation-artifact-repair.json"
+  },
+  "milestone": "M002",
+  "no_promotion": {
+    "blocker_evidence_promoted": false,
+    "requirements_broadened": false,
+    "success_criteria_broadened": false,
+    "unsupported_promotions": []
+  },
+  "outcome": "approved_rescope",
+  "proof": {
+    "gsdpi": {
+      "blocker_codes": [
+        "adapter_registry_unavailable",
+        "health_unavailable",
+        "missing_auth",
+        "test_environment_not_passing"
+      ],
+      "classification": "blocker",
+      "error_count": 0,
+      "evidence_path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+      "passing": false,
+      "validation_errors": []
+    },
+    "hermes": {
+      "blocker_codes": [
+        "adapter_registry_auth_denied",
+        "missing_auth",
+        "test_environment_auth_denied"
+      ],
+      "classification": "blocker",
+      "error_count": 0,
+      "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+      "passing": false,
+      "validation_errors": []
+    }
+  },
+  "safety": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "paperclip_core_patched": false,
+    "plaintext_secrets_requested_or_logged": false,
+    "private_internal_imports": [],
+    "shell_string_execution": false,
+    "unsupported_paths_used": []
+  },
+  "schema_version": "s12-runtime-proof-or-rescope/v1",
+  "slice": "S12"
+}

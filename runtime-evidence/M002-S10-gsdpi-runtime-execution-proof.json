@@ -1,0 +1,157 @@
+{
+  "adapter": {
+    "adapterConfig": {
+      "args": [],
+      "command": "gsd",
+      "timeoutMs": 60000
+    },
+    "adapterType": "gsdpi_local",
+    "registry_readback": null,
+    "testEnvironment": {
+      "http_status": null,
+      "response": {
+        "duration_ms": 0,
+        "error": "ConnectionRefusedError",
+        "message": "<urlopen error [Errno 111] Connection refused>",
+        "ok": false,
+        "status": null,
+        "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/test-environment"
+      },
+      "status": "fail"
+    }
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "adapter_registry_unavailable",
+    "health_unavailable",
+    "missing_auth",
+    "test_environment_not_passing"
+  ],
+  "blocker_reason": "adapter_registry_unavailable,health_unavailable,missing_auth,test_environment_not_passing",
+  "capability_promotions": [],
+  "diagnostics": {
+    "adapters": {
+      "duration_ms": 0,
+      "error": "ConnectionRefusedError",
+      "message": "<urlopen error [Errno 111] Connection refused>",
+      "ok": false,
+      "status": null,
+      "url": "http://127.0.0.1:3131/api/adapters"
+    },
+    "health": {
+      "duration_ms": 30,
+      "error": "ConnectionRefusedError",
+      "message": "<urlopen error [Errno 111] Connection refused>",
+      "ok": false,
+      "status": null,
+      "url": "http://127.0.0.1:3131/api/health"
+    },
+    "runSkipped": {
+      "bounded_runtime_invocations": 0,
+      "codes": [
+        "adapter_registry_unavailable",
+        "missing_auth",
+        "test_environment_not_passing"
+      ],
+      "reason": "preflight_not_supported_or_not_authenticated"
+    },
+    "testEnvironment": {
+      "duration_ms": 0,
+      "error": "ConnectionRefusedError",
+      "message": "<urlopen error [Errno 111] Connection refused>",
+      "ok": false,
+      "status": null,
+      "url": "http://127.0.0.1:3131/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/gsdpi_local/test-environment"
+    },
+    "version": {
+      "duration_ms": 0,
+      "error": "ConnectionRefusedError",
+      "message": "<urlopen error [Errno 111] Connection refused>",
+      "ok": false,
+      "status": null,
+      "url": "http://127.0.0.1:3131/api/version"
+    }
+  },
+  "generated_at": "2026-05-30T04:26:45.414154Z",
+  "inputs": {
+    "base_url_present": true,
+    "base_url_source": "env_or_prior_s03_artifact",
+    "company_id_present": true,
+    "operator_auth": {
+      "available_env": [
+        {
+          "env_name": "PAPERCLIP_API_KEY",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_AUTH_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_COOKIE",
+          "header": "Cookie",
+          "present": false
+        }
+      ],
+      "selected_env_name": null
+    },
+    "origin_present": false,
+    "previous_evidence": {
+      "registration": "runtime-evidence/M002-S03-gsdpi-registration.json",
+      "registration_artifact_type": "fail-closed-blocker",
+      "registration_blocker_reason": "gsdpi_local_not_registered_via_supported_runtime_boundary",
+      "smoke": "runtime-evidence/M002-S03-gsdpi-smoke.json",
+      "smoke_artifact_type": "fail-closed-blocker",
+      "smoke_blocker_reason": "gsdpi_local_execution_not_attempted_registration_blocked"
+    }
+  },
+  "local_package": {
+    "build_status": "pass",
+    "contract": "local package build/test only; not live Paperclip runtime proof",
+    "package": "@bos/adapter-gsdpi-local",
+    "path": "adapters/gsdpi-local",
+    "test": {
+      "command": [
+        "npm",
+        "--prefix",
+        "adapters/gsdpi-local",
+        "test"
+      ],
+      "duration_ms": 844,
+      "exit_code": 0,
+      "stderr_excerpt": "",
+      "stdout_excerpt": "\n> @bos/adapter-gsdpi-local@0.1.0 test\n> rm -rf dist && tsc && node --test dist/tests/*.test.js\n\n\u2714 testEnvironment passes when the configured command returns a version (1.277809ms)\n\u2714 testEnvironment fails closed when the command is unavailable (0.233508ms)\n\u2714 execute parses BosAdapterResult JSON from stdout (4.63846ms)\n\u2714 execute returns blocked result when stdout does not contain parseable result JSON (0.523457ms)\n\u2714 execute reports timeout as a blocked result (0.206699ms)\n\u2714 diagnostics expose secret key names but not secret values (1.106788ms)\n\u2139 tests 6\n\u2139 suites 0\n\u2139 pass 6\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 77.407638\n",
+      "timed_out": false
+    },
+    "test_status": "pass",
+    "version": "0.1.0"
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Local package checked through safe subprocess command arrays; live proof uses supported Paperclip HTTP/admin/agent/adapter routes only. No Paperclip source patch, private import, direct database mutation, or plaintext secret logging.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "unknown"
+  },
+  "passing": false,
+  "phase": "gsdpi",
+  "safety": {
+    "max_runtime_invocations": 1,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "s10-runtime-execution/v1"
+}

@@ -1,0 +1,146 @@
+{
+  "createdAt": "2026-05-29T13:13:10Z",
+  "expected_count": 7,
+  "live_agent_records_observed": 2,
+  "mapping": [
+    {
+      "division_id": "Div1.Executive",
+      "evidence": [
+        "ambiguous_starter_ceo_agent_not_division_template"
+      ],
+      "expected_agent_profile": "agents/Div1_Executive/AGENTS.md",
+      "expected_title": "CEO / Mission Owner",
+      "matched_live_agents": [
+        {
+          "adapterType": "claude_local",
+          "id": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "name": "BOS CEO",
+          "role": "ceo",
+          "status": "error",
+          "title": null
+        }
+      ],
+      "profile_heading": "Div1.Executive - CEO / Mission Owner",
+      "recommended_create_name": "Div1.Executive - CEO / Mission Owner",
+      "recommended_role": "executive",
+      "reports_to_division": null,
+      "status": "ambiguous"
+    },
+    {
+      "division_id": "Div2.MasterPlanner",
+      "evidence": [
+        "no matching live agent in read-only list"
+      ],
+      "expected_agent_profile": "agents/Div2_MasterPlanner/AGENTS.md",
+      "expected_title": "Product Planning / Shaping",
+      "matched_live_agents": [],
+      "profile_heading": "Div2.MasterPlanner - Product Planning / Shaping",
+      "recommended_create_name": "Div2.MasterPlanner - Product Planning / Shaping",
+      "recommended_role": "masterplanner",
+      "reports_to_division": "Div1.Executive",
+      "status": "absent"
+    },
+    {
+      "division_id": "Div3.Production",
+      "evidence": [
+        "no matching live agent in read-only list"
+      ],
+      "expected_agent_profile": "agents/Div3_Production/AGENTS.md",
+      "expected_title": "Delivery / Build",
+      "matched_live_agents": [],
+      "profile_heading": "Div3.Production - Delivery / Build",
+      "recommended_create_name": "Div3.Production - Delivery / Build",
+      "recommended_role": "production",
+      "reports_to_division": "Div1.Executive",
+      "status": "absent"
+    },
+    {
+      "division_id": "Div4.Operations",
+      "evidence": [
+        "no matching live agent in read-only list"
+      ],
+      "expected_agent_profile": "agents/Div4_Operations/AGENTS.md",
+      "expected_title": "Process / Reliability",
+      "matched_live_agents": [],
+      "profile_heading": "Div4.Operations - Process / Reliability",
+      "recommended_create_name": "Div4.Operations - Process / Reliability",
+      "recommended_role": "operations",
+      "reports_to_division": "Div1.Executive",
+      "status": "absent"
+    },
+    {
+      "division_id": "Div5.Qualifications",
+      "evidence": [
+        "no matching live agent in read-only list"
+      ],
+      "expected_agent_profile": "agents/Div5_Qualifications/AGENTS.md",
+      "expected_title": "QA / Security / Knowledge",
+      "matched_live_agents": [],
+      "profile_heading": "Div5.Qualifications - QA / Security / Knowledge",
+      "recommended_create_name": "Div5.Qualifications - QA / Security / Knowledge",
+      "recommended_role": "qualifications",
+      "reports_to_division": "Div1.Executive",
+      "status": "absent"
+    },
+    {
+      "division_id": "Div6.Resources",
+      "evidence": [
+        "no matching live agent in read-only list"
+      ],
+      "expected_agent_profile": "agents/Div6_Resources/AGENTS.md",
+      "expected_title": "Budget / Capacity",
+      "matched_live_agents": [],
+      "profile_heading": "Div6.Resources - Budget / Capacity / Finance",
+      "recommended_create_name": "Div6.Resources - Budget / Capacity",
+      "recommended_role": "resources",
+      "reports_to_division": "Div1.Executive",
+      "status": "absent"
+    },
+    {
+      "division_id": "Div7.Strategy",
+      "evidence": [
+        "no matching live agent in read-only list"
+      ],
+      "expected_agent_profile": "agents/Div7_Strategy/AGENTS.md",
+      "expected_title": "Decision Protocol / Adaptation",
+      "matched_live_agents": [],
+      "profile_heading": "Div7.Strategy - Decision Protocol / Adaptation",
+      "recommended_create_name": "Div7.Strategy - Decision Protocol / Adaptation",
+      "recommended_role": "strategy",
+      "reports_to_division": "Div1.Executive",
+      "status": "absent"
+    }
+  ],
+  "mutation_attempted": false,
+  "next_required_action": "Prepare approval packet before POST /api/companies/{companyId}/agents or company import endpoints.",
+  "phase": "template-to-live-agent-map",
+  "schemaVersion": "m002-s07-agent-template-map/v1",
+  "summary": {
+    "absent": 6,
+    "all_seven_visible": false,
+    "ambiguous": 1,
+    "conclusion": "Seven BOS Light division agents are not currently visible through read-only Paperclip agent list evidence. One starter BOS CEO agent may correspond conceptually to Div1 but is not strict template import proof.",
+    "present": 0
+  },
+  "target_company": {
+    "attachmentMaxBytes": 10485760,
+    "brandColor": null,
+    "budgetMonthlyCents": 0,
+    "createdAt": "2026-05-28T10:49:00.466Z",
+    "description": null,
+    "feedbackDataSharingConsentAt": null,
+    "feedbackDataSharingConsentByUserId": null,
+    "feedbackDataSharingEnabled": false,
+    "feedbackDataSharingTermsVersion": null,
+    "id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "issueCounter": 2,
+    "issuePrefix": "BOS",
+    "logoAssetId": null,
+    "logoUrl": null,
+    "name": "BOS Light Sandbox",
+    "requireBoardApprovalForNewAgents": false,
+    "spentMonthlyCents": 0,
+    "status": "active",
+    "updatedAt": "2026-05-28T10:49:00.466Z"
+  }
+}

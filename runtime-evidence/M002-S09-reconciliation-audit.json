@@ -1,0 +1,169 @@
+{
+  "artifact_type": "validation-audit",
+  "capability_posture": {
+    "caveat_markers": {
+      "explicit_non_confirmation": true,
+      "mentions_gsd_pi": true,
+      "mentions_hermes": true
+    },
+    "confirmed_rows_with_promotion_wording": [],
+    "exists": true,
+    "loaded": true,
+    "non_empty": true,
+    "path": "plugin-bos-light/capabilities.paperclip-runtime.json",
+    "sha256": "ac2f6a486e47527feafc63301bbb49c0737027fbbaed17cc9de7ce886dbf4583",
+    "size_bytes": 31552,
+    "status_counts": {
+      "confirmed": 3,
+      "fallback-only": 10,
+      "unvalidated": 7
+    },
+    "target_execution_rows_marked_confirmed": []
+  },
+  "docs": {
+    "checked_files": [
+      {
+        "exists": true,
+        "markers": {
+          "adapter_failed": true,
+          "no_promotion": true,
+          "result_json_bos_no_pass": true,
+          "s02_context_allowed": true,
+          "s08": true,
+          "selected_path_or_codex": true,
+          "wake_count_or_no_duplicate": true
+        },
+        "non_empty": true,
+        "path": "PAPERCLIP_LIVE_VALIDATION_REPORT.md",
+        "sha256": "70f297b2be1cf6c95c0f4c43bd03651666d01d0f346e5f580ca759e18ed61949",
+        "size_bytes": 36285
+      },
+      {
+        "exists": true,
+        "markers": {
+          "adapter_failed": true,
+          "no_promotion": true,
+          "result_json_bos_no_pass": true,
+          "s02_context_allowed": true,
+          "s08": true,
+          "selected_path_or_codex": true,
+          "wake_count_or_no_duplicate": true
+        },
+        "non_empty": true,
+        "path": "docs/08_RUNTIME_CAPABILITY_HEALTH.md",
+        "sha256": "9109199b4c142111220b7a6be7e9a7e1281b0c7238582f4726aa9c7e03ab135a",
+        "size_bytes": 24868
+      }
+    ]
+  },
+  "generated_at": "2026-05-30T03:31:01.046092+00:00",
+  "milestone": "M002",
+  "redaction": {
+    "secret_like_findings": [],
+    "secret_values_recorded": false
+  },
+  "redaction_notice": "Audit contains marker statuses, paths, counts, and hashes only; it intentionally omits artifact excerpts and secret values.",
+  "result": {
+    "error_count": 0,
+    "errors": [],
+    "ok": true
+  },
+  "root": "/home/qazanik/.gsd/projects/5520c80b9dfc/worktrees/M002",
+  "s08_artifacts": {
+    "checked_files": [
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": ".gsd/milestones/M002/slices/S08/S08-SUMMARY.md",
+        "sha256": "f43ab779741c9d36aaa590add93cf05294db15141ea632d63cf2c1a31dc90e5b",
+        "size_bytes": 5917
+      },
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": ".gsd/milestones/M002/slices/S08/S08-ASSESSMENT.md",
+        "sha256": "dcd39e84b3d6b1afe27ff239b504b7cccd07351768f8410e7e6253520df4a849",
+        "size_bytes": 6483
+      },
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": ".gsd/milestones/M002/slices/S08/S08-UAT.md",
+        "sha256": "ad897a2c7259e34cc7a76075abd7cf3e8ccc8e6ac2a9e434e19c5fc60766eefe",
+        "size_bytes": 3713
+      }
+    ],
+    "markers": {
+      "adapter_failed": true,
+      "no_capability_promotion": true,
+      "ready_warning": true,
+      "result_json_bos_no_pass": true,
+      "selected_path": true,
+      "wake_count_or_no_duplicate": true
+    }
+  },
+  "s08_runtime_evidence": {
+    "checked_files": [
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": "runtime-evidence/M002-S09-s08-artifact-reconstruction.json",
+        "sha256": "781e3e875855916753c7458ea77050628953d5901ef75e154b0d9a89fb32ca13",
+        "size_bytes": 5875
+      },
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": "runtime-evidence/M002-S08-provider-adapter-feasibility.json",
+        "sha256": "f67f159dde440b627404e95d8e9ed7857fe3f0f3862e72eedd54069b6b7ea26f",
+        "size_bytes": 17379
+      },
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": "runtime-evidence/M002-S08-execution-path-decision-packet.json",
+        "sha256": "f72c1c008c34ef5095ffa8067e850556d403d243ff764dcf80d3b41328d8f578",
+        "size_bytes": 13967
+      },
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": "runtime-evidence/M002-S08-adapter-registration-evidence.json",
+        "sha256": "916db8a03cd620e6eefc979c43d2c2c7ba7eff6adda9d5bfedf859668af7ebe7",
+        "size_bytes": 14745
+      },
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": "runtime-evidence/M002-S08-hermes-cli-environment-remediation.json",
+        "sha256": "a9bc3c6c5ff9e412b4b04b01da7634bbbd5e9a0c476f65b9db137c9ae8c4be00",
+        "size_bytes": 37209
+      },
+      {
+        "exists": true,
+        "non_empty": true,
+        "path": "runtime-evidence/M002-S08-runtime-execution-smoke.json",
+        "sha256": "6721f622e214e1ae829add6119ca890888230d0a4c13361dfaccf8eb8f298f47",
+        "size_bytes": 42125
+      }
+    ],
+    "markers": {
+      "adapter_failed": true,
+      "no_capability_promotion": true,
+      "ready_warning": true,
+      "result_json_bos_no_pass": true,
+      "selected_path": true,
+      "wake_count_or_no_duplicate": true
+    },
+    "structured_checks": {
+      "adapter_error_code": "adapter_failed",
+      "passing_resultJson_bos_present": false,
+      "readiness_status": "ready_with_warning",
+      "selected_path": "hermes_local_with_codex_cli_backend",
+      "wakeCountDelta": 1
+    }
+  },
+  "schema_version": "s09-reconciliation-audit/v1",
+  "slice": "S09",
+  "validator": "scripts/validate_s09_reconciliation.py"
+}

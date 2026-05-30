@@ -1,0 +1,472 @@
+{
+  "adapter_configuration": {
+    "adapterConfig": {
+      "graceSec": 5,
+      "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+      "model": "gpt-5.3-codex",
+      "provider": "openai-codex",
+      "timeoutSec": 60
+    },
+    "adapterType": "hermes_local",
+    "documented_provider": "openai-codex"
+  },
+  "approval": {
+    "approval_text": "User selected option 1: unblock Hermes CLI in Paperclip environment through supported env/admin path, then repeat T03.",
+    "fresh_human_approval_received": true,
+    "scope": "Hermes CLI environment remediation and readiness repeat only; no runtime smoke/provider task execution."
+  },
+  "artifact_type": "readiness-repeat-after-remediation",
+  "conclusion": {
+    "can_proceed_to_t04_runtime_smoke_candidate": true,
+    "fresh_approval_required_before_t04": true,
+    "why": "Both /BOS and /BOSA hermes_local testEnvironment probes resolve the remediated Hermes CLI and configured model using the wrapper command. Codex CLI/session availability exists in the same Paperclip host. The previous hard blocker hermes_cli_not_found is removed; the remaining warning must be retired by bounded T04 provider execution/readback rather than by claiming readiness as full pass."
+  },
+  "generated_at": "2026-05-29T15:24:18.128762Z",
+  "operation_flags": {
+    "adapter_configuration_mutation_attempted": false,
+    "agent_created_or_updated": false,
+    "direct_database_mutation": false,
+    "environment_admin_process_agents_created": true,
+    "paperclip_core_patched": false,
+    "plaintext_secrets_requested_or_logged": false,
+    "private_internals_used": false,
+    "provider_execution_attempted": false,
+    "runtime_smoke_attempted": false
+  },
+  "paperclip": {
+    "base_url": "https://paperclip.oysana.com",
+    "environment_capabilities": {
+      "duration_ms": 1110,
+      "json": {
+        "adapters": [
+          {
+            "adapterType": "process",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "unsupported",
+              "ssh": "unsupported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "http",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "unsupported",
+              "ssh": "unsupported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "acpx_local",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "supported",
+              "ssh": "supported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "claude_local",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "supported",
+              "ssh": "supported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "codex_local",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "supported",
+              "ssh": "supported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "cursor_cloud",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "unsupported",
+              "ssh": "unsupported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "gemini_local",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "supported",
+              "ssh": "supported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "opencode_local",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "supported",
+              "ssh": "supported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "pi_local",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "supported",
+              "ssh": "supported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "cursor",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "supported",
+              "ssh": "supported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          },
+          {
+            "adapterType": "openclaw_gateway",
+            "drivers": {
+              "local": "supported",
+              "plugin": "unsupported",
+              "sandbox": "unsupported",
+              "ssh": "unsupported"
+            },
+            "sandboxProviders": {
+              "fake": "unsupported"
+            }
+          }
+        ],
+        "drivers": {
+          "local": "supported",
+          "plugin": "unsupported",
+          "sandbox": "supported",
+          "ssh": "supported"
+        },
+        "sandboxProviders": {
+          "fake": {
+            "displayName": "Fake",
+            "source": "builtin",
+            "status": "unsupported",
+            "supportsReusableLeases": true,
+            "supportsRunExecution": false,
+            "supportsSavedProbe": true,
+            "supportsUnsavedProbe": true
+          }
+        }
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/environments/capabilities"
+    },
+    "environments": {
+      "duration_ms": 1088,
+      "json": [
+        {
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "config": {},
+          "createdAt": "2026-05-28T10:49:00.467Z",
+          "description": "Default execution environment for Paperclip runs on this machine.",
+          "driver": "local",
+          "id": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+          "metadata": {
+            "defaultForCompany": true,
+            "managedByPaperclip": true
+          },
+          "name": "Local",
+          "status": "active",
+          "updatedAt": "2026-05-28T10:49:00.467Z"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/environments"
+    },
+    "health": {
+      "duration_ms": 1133,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "url": "/api/health"
+    },
+    "registry_readback": {
+      "codex_local": {
+        "capabilities": {
+          "requiresMaterializedRuntimeSkills": false,
+          "supportsInstructionsBundle": true,
+          "supportsLocalAgentJwt": true,
+          "supportsModelProfiles": true,
+          "supportsSkills": true
+        },
+        "disabled": false,
+        "label": "codex_local",
+        "loaded": true,
+        "modelsCount": 10,
+        "overridePaused": false,
+        "source": "builtin",
+        "type": "codex_local"
+      },
+      "hermes_local": {
+        "capabilities": {
+          "requiresMaterializedRuntimeSkills": false,
+          "supportsInstructionsBundle": false,
+          "supportsLocalAgentJwt": true,
+          "supportsModelProfiles": false,
+          "supportsSkills": true
+        },
+        "disabled": false,
+        "label": "hermes_local",
+        "loaded": true,
+        "modelsCount": 0,
+        "overridePaused": false,
+        "source": "builtin",
+        "type": "hermes_local"
+      },
+      "process": {
+        "capabilities": {
+          "requiresMaterializedRuntimeSkills": false,
+          "supportsInstructionsBundle": false,
+          "supportsLocalAgentJwt": false,
+          "supportsModelProfiles": false,
+          "supportsSkills": false
+        },
+        "disabled": false,
+        "label": "process",
+        "loaded": true,
+        "modelsCount": 0,
+        "overridePaused": false,
+        "source": "builtin",
+        "type": "process"
+      }
+    }
+  },
+  "readiness_assessment": {
+    "codex_host_available": true,
+    "hermes_cli_not_found_cleared": true,
+    "model_configured": true,
+    "remaining_warning_codes": [
+      "hermes_no_api_keys"
+    ],
+    "status": "ready_with_warning",
+    "version_check_passed": true,
+    "warning_interpretation": "Generic Hermes API-key check remains warn; selected path uses openai-codex/Codex CLI backend and host Codex availability was separately verified. This artifact only authorizes asking for T04; it does not execute runtime smoke."
+  },
+  "remediation_artifact": "runtime-evidence/M002-S08-hermes-cli-environment-remediation.json",
+  "schema_version": "s08-adapter-registration-evidence/v2",
+  "selected_path": "hermes_local_with_codex_cli_backend",
+  "test_environment_results": {
+    "BOS": {
+      "codex_local_models": {
+        "duration_ms": 1113,
+        "json": [
+          {
+            "id": "gpt-5.4",
+            "label": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "label": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.3-codex-spark",
+            "label": "gpt-5.3-codex-spark"
+          },
+          {
+            "id": "gpt-5",
+            "label": "gpt-5"
+          },
+          {
+            "id": "o3",
+            "label": "o3"
+          },
+          {
+            "id": "o4-mini",
+            "label": "o4-mini"
+          },
+          {
+            "id": "gpt-5-mini",
+            "label": "gpt-5-mini"
+          },
+          {
+            "id": "gpt-5-nano",
+            "label": "gpt-5-nano"
+          },
+          {
+            "id": "o3-mini",
+            "label": "o3-mini"
+          },
+          {
+            "id": "codex-mini-latest",
+            "label": "Codex Mini"
+          }
+        ],
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/codex_local/models"
+      },
+      "company_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+      "hermes_local_test_environment": {
+        "duration_ms": 1573,
+        "json": {
+          "adapterType": "hermes_local",
+          "checks": [
+            {
+              "code": "hermes_version",
+              "level": "info",
+              "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+            },
+            {
+              "code": "hermes_model_configured",
+              "level": "info",
+              "message": "Model: gpt-5.3-codex"
+            },
+            {
+              "code": "hermes_no_api_keys",
+              "hint": "Set ANTHROPIC_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ZAI_API_KEY in the agent's env secrets. Hermes may also have keys configured in ~/.hermes/.env",
+              "level": "warn",
+              "message": "No LLM API keys found in environment"
+            }
+          ],
+          "status": "warn",
+          "testedAt": "2026-05-29T15:24:14.148Z"
+        },
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "url": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+      }
+    },
+    "BOSA": {
+      "codex_local_models": {
+        "duration_ms": 1111,
+        "json": [
+          {
+            "id": "gpt-5.4",
+            "label": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "label": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.3-codex-spark",
+            "label": "gpt-5.3-codex-spark"
+          },
+          {
+            "id": "gpt-5",
+            "label": "gpt-5"
+          },
+          {
+            "id": "o3",
+            "label": "o3"
+          },
+          {
+            "id": "o4-mini",
+            "label": "o4-mini"
+          },
+          {
+            "id": "gpt-5-mini",
+            "label": "gpt-5-mini"
+          },
+          {
+            "id": "gpt-5-nano",
+            "label": "gpt-5-nano"
+          },
+          {
+            "id": "o3-mini",
+            "label": "o3-mini"
+          },
+          {
+            "id": "codex-mini-latest",
+            "label": "Codex Mini"
+          }
+        ],
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "url": "/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/codex_local/models"
+      },
+      "company_id": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+      "hermes_local_test_environment": {
+        "duration_ms": 1604,
+        "json": {
+          "adapterType": "hermes_local",
+          "checks": [
+            {
+              "code": "hermes_version",
+              "level": "info",
+              "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+            },
+            {
+              "code": "hermes_model_configured",
+              "level": "info",
+              "message": "Model: gpt-5.3-codex"
+            },
+            {
+              "code": "hermes_no_api_keys",
+              "hint": "Set ANTHROPIC_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ZAI_API_KEY in the agent's env secrets. Hermes may also have keys configured in ~/.hermes/.env",
+              "level": "warn",
+              "message": "No LLM API keys found in environment"
+            }
+          ],
+          "status": "warn",
+          "testedAt": "2026-05-29T15:24:16.868Z"
+        },
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "url": "/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/adapters/hermes_local/test-environment"
+      }
+    }
+  }
+}

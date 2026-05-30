@@ -1,0 +1,301 @@
+{
+  "adapter": {
+    "adapterType": "hermes_local",
+    "registry_readback": {
+      "capabilities": {
+        "requiresMaterializedRuntimeSkills": false,
+        "supportsInstructionsBundle": false,
+        "supportsLocalAgentJwt": true,
+        "supportsModelProfiles": false,
+        "supportsSkills": true
+      },
+      "disabled": false,
+      "label": "hermes_local",
+      "loaded": true,
+      "modelsCount": 0,
+      "overridePaused": false,
+      "source": "builtin",
+      "type": "hermes_local"
+    },
+    "testEnvironment": {
+      "response": {
+        "duration_ms": 1056,
+        "error": "http_error",
+        "json": {
+          "error": "User does not have access to this company"
+        },
+        "ok": false,
+        "status": 403,
+        "text": null,
+        "url": "http://127.0.0.1:3131/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+      },
+      "status": "fail"
+    }
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_reason": "User does not have access to this company",
+  "diagnostics": {
+    "adapters": {
+      "duration_ms": 1057,
+      "json": [
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "acpx_local",
+          "loaded": true,
+          "modelsCount": 16,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "acpx_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "claude_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "claude_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "codex_local",
+          "loaded": true,
+          "modelsCount": 10,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "codex_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "cursor",
+          "loaded": true,
+          "modelsCount": 39,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "cursor_cloud",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor_cloud"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "gemini_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "gemini_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "grok_local",
+          "loaded": true,
+          "modelsCount": 1,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "grok_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "hermes_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "hermes_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "http",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "http"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "openclaw_gateway",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "openclaw_gateway"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "opencode_local",
+          "loaded": true,
+          "modelsCount": 5,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "opencode_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "pi_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "pi_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "process",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "process"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "http://127.0.0.1:3131/api/adapters"
+    },
+    "health": {
+      "duration_ms": 739,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "http://127.0.0.1:3131/api/health"
+    },
+    "version": {}
+  },
+  "generated_at": "2026-05-28T23:36:00.356303Z",
+  "inputs": {
+    "agentId": null,
+    "auth_header_name": "Cookie",
+    "auth_token_env": "<redacted>",
+    "base_url": "http://127.0.0.1:3131",
+    "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "issueId": "BOS-2",
+    "runId": null,
+    "trusted_origin": "http://127.0.0.1:3131"
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP API/browser-authenticated endpoints only; no source patch, subprocess, or direct DB write."
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "0.3.1"
+  },
+  "phase": "environment",
+  "schema_version": "s02-hermes-smoke/v1"
+}

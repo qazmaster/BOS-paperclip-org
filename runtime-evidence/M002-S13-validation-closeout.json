@@ -1,0 +1,40 @@
+{
+  "artifact_type": "validator-audit",
+  "classification": "final_ready",
+  "diagnostics": {
+    "error_count": 0,
+    "errors": []
+  },
+  "failure_visibility": {
+    "allowed_problem_kinds": [
+      "contract_drift",
+      "documentation_mismatch",
+      "operational_posture",
+      "uat_readability"
+    ],
+    "diagnostics_include_artifact_path": true,
+    "diagnostics_include_problem_kind": true,
+    "diagnostics_include_requirement_id": true,
+    "diagnostics_include_validation_class": true
+  },
+  "generated_at": "2026-05-30T09:04:13Z",
+  "inputs": {
+    "ledger_path": "runtime-evidence/M002-S13-requirement-coverage.json"
+  },
+  "milestone": "M002",
+  "passed": true,
+  "phase": "final",
+  "posture": {
+    "plaintext_credentials_allowed": false,
+    "required_requirements": [
+      "R012",
+      "R013",
+      "R014",
+      "R015"
+    ],
+    "runtime_capability_promotions_allowed": false,
+    "s12_approved_rescope_preserved": true
+  },
+  "schema_version": "s13-requirement-coverage-validation/v1",
+  "slice": "S13"
+}

@@ -1,0 +1,611 @@
+{
+  "auth": {
+    "api_key_env_present": true,
+    "value_persisted": false
+  },
+  "base_url_redacted": "https://paperclip.oysana.com",
+  "base_url_source": "PAPERCLIP_LIVE_VALIDATION_REPORT.md default",
+  "createdAt": "2026-05-29T13:12:21Z",
+  "expected_bos_agents": [
+    {
+      "division_dir": "Div1_Executive",
+      "heading": "Div1.Executive - CEO / Mission Owner",
+      "path": "agents/Div1_Executive/AGENTS.md"
+    },
+    {
+      "division_dir": "Div2_MasterPlanner",
+      "heading": "Div2.MasterPlanner - Product Planning / Shaping",
+      "path": "agents/Div2_MasterPlanner/AGENTS.md"
+    },
+    {
+      "division_dir": "Div3_Production",
+      "heading": "Div3.Production - Delivery / Build",
+      "path": "agents/Div3_Production/AGENTS.md"
+    },
+    {
+      "division_dir": "Div4_Operations",
+      "heading": "Div4.Operations - Process / Reliability",
+      "path": "agents/Div4_Operations/AGENTS.md"
+    },
+    {
+      "division_dir": "Div5_Qualifications",
+      "heading": "Div5.Qualifications - QA / Security / Knowledge",
+      "path": "agents/Div5_Qualifications/AGENTS.md"
+    },
+    {
+      "division_dir": "Div6_Resources",
+      "heading": "Div6.Resources - Budget / Capacity / Finance",
+      "path": "agents/Div6_Resources/AGENTS.md"
+    },
+    {
+      "division_dir": "Div7_Strategy",
+      "heading": "Div7.Strategy - Decision Protocol / Adaptation",
+      "path": "agents/Div7_Strategy/AGENTS.md"
+    }
+  ],
+  "known_company_ids": [
+    "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+    "391841b8-b878-4fa1-acb2-f0b30520924f",
+    "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "4b29a556-c7d6-4fc7-b10b-2465c64fac5d",
+    "7595fd85-80e5-41a4-96c7-01cb3c2de588",
+    "8233ea7b-ab03-4e9b-8684-6e3ceabde00f",
+    "e7ede16c-6535-41ef-bd44-3f9d24980caf"
+  ],
+  "live_agents_observed": [
+    {
+      "adapterType": "hermes_local",
+      "id": "4b29a556-c7d6-4fc7-b10b-2465c64fac5d",
+      "name": "BOS Light S02 Hermes Smoke 20260529T010027Z",
+      "role": "general",
+      "status": "error",
+      "title": null
+    },
+    {
+      "adapterType": "claude_local",
+      "id": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+      "name": "BOS CEO",
+      "role": "ceo",
+      "status": "error",
+      "title": null
+    }
+  ],
+  "mutation_attempted": false,
+  "phase": "read-only-discovery",
+  "read_only_http_attempts": [
+    {
+      "duration_ms": 1328,
+      "json_shape": {
+        "keys": [
+          "authReady",
+          "bootstrapInviteActive",
+          "bootstrapStatus",
+          "deploymentExposure",
+          "deploymentMode",
+          "features",
+          "status",
+          "version"
+        ],
+        "type": "object"
+      },
+      "method": "GET",
+      "ok": true,
+      "path": "/api/health",
+      "sample": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/health"
+    },
+    {
+      "duration_ms": 1102,
+      "json_shape": {
+        "first": {
+          "keys": [
+            "capabilities",
+            "disabled",
+            "label",
+            "loaded",
+            "modelsCount",
+            "overridePaused",
+            "source",
+            "type"
+          ],
+          "type": "object"
+        },
+        "length": 13,
+        "type": "array"
+      },
+      "method": "GET",
+      "ok": true,
+      "path": "/api/adapters",
+      "sample": [
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "acpx_local",
+          "loaded": true,
+          "modelsCount": 16,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "acpx_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "claude_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "claude_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "codex_local",
+          "loaded": true,
+          "modelsCount": 10,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "codex_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "cursor",
+          "loaded": true,
+          "modelsCount": 39,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "cursor_cloud",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor_cloud"
+        }
+      ],
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/adapters"
+    },
+    {
+      "duration_ms": 1095,
+      "json_shape": {
+        "first": {
+          "keys": [
+            "attachmentMaxBytes",
+            "brandColor",
+            "budgetMonthlyCents",
+            "createdAt",
+            "description",
+            "feedbackDataSharingConsentAt",
+            "feedbackDataSharingConsentByUserId",
+            "feedbackDataSharingEnabled",
+            "feedbackDataSharingTermsVersion",
+            "id",
+            "issueCounter",
+            "issuePrefix",
+            "logoAssetId",
+            "logoUrl",
+            "name",
+            "requireBoardApprovalForNewAgents",
+            "spentMonthlyCents",
+            "status",
+            "updatedAt"
+          ],
+          "type": "object"
+        },
+        "length": 2,
+        "type": "array"
+      },
+      "method": "GET",
+      "ok": true,
+      "path": "/api/companies",
+      "sample": [
+        {
+          "attachmentMaxBytes": 10485760,
+          "brandColor": null,
+          "budgetMonthlyCents": 0,
+          "createdAt": "2026-05-28T23:40:02.202Z",
+          "description": "Disposable sandbox company for M002 S02 Hermes runtime environment validation.",
+          "feedbackDataSharingConsentAt": null,
+          "feedbackDataSharingConsentByUserId": null,
+          "feedbackDataSharingEnabled": false,
+          "feedbackDataSharingTermsVersion": null,
+          "id": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+          "issueCounter": 3,
+          "issuePrefix": "BOSA",
+          "logoAssetId": null,
+          "logoUrl": null,
+          "name": "BOS Light S02 Hermes Runtime Gate",
+          "requireBoardApprovalForNewAgents": false,
+          "spentMonthlyCents": 0,
+          "status": "active",
+          "updatedAt": "2026-05-28T23:40:02.202Z"
+        },
+        {
+          "attachmentMaxBytes": 10485760,
+          "brandColor": null,
+          "budgetMonthlyCents": 0,
+          "createdAt": "2026-05-28T10:49:00.466Z",
+          "description": null,
+          "feedbackDataSharingConsentAt": null,
+          "feedbackDataSharingConsentByUserId": null,
+          "feedbackDataSharingEnabled": false,
+          "feedbackDataSharingTermsVersion": null,
+          "id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "issueCounter": 2,
+          "issuePrefix": "BOS",
+          "logoAssetId": null,
+          "logoUrl": null,
+          "name": "BOS Light Sandbox",
+          "requireBoardApprovalForNewAgents": false,
+          "spentMonthlyCents": 0,
+          "status": "active",
+          "updatedAt": "2026-05-28T10:49:00.466Z"
+        }
+      ],
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies"
+    },
+    {
+      "duration_ms": 1110,
+      "json_shape": {
+        "first": {
+          "keys": [
+            "adapterConfig",
+            "adapterType",
+            "budgetMonthlyCents",
+            "capabilities",
+            "companyId",
+            "createdAt",
+            "defaultEnvironmentId",
+            "icon",
+            "id",
+            "lastHeartbeatAt",
+            "metadata",
+            "name",
+            "pauseReason",
+            "pausedAt",
+            "permissions",
+            "reportsTo",
+            "role",
+            "runtimeConfig",
+            "spentMonthlyCents",
+            "status"
+          ],
+          "type": "object"
+        },
+        "length": 1,
+        "type": "array"
+      },
+      "method": "GET",
+      "ok": true,
+      "path": "/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/agents",
+      "sample": [
+        {
+          "adapterConfig": {
+            "env": {
+              "OPENAI_API_KEY": "<redacted>",
+              "OPENAI_BASE_URL": {
+                "type": "plain",
+                "value": "<redacted>"
+              },
+              "XIAOMI_API_KEY": "<redacted>",
+              "XIAOMI_BASE_URL": {
+                "type": "plain",
+                "value": "<redacted>"
+              }
+            }
+          },
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "1a194762-74b6-4c84-ae3c-d2d8f6f31578",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "4b29a556-c7d6-4fc7-b10b-2465c64fac5d",
+          "lastHeartbeatAt": "2026-05-29T01:00:39.602Z",
+          "metadata": null,
+          "name": "BOS Light S02 Hermes Smoke 20260529T010027Z",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": null,
+          "role": "general",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "error",
+          "title": null
+        }
+      ],
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/1a194762-74b6-4c84-ae3c-d2d8f6f31578/agents"
+    },
+    {
+      "duration_ms": 1072,
+      "json_shape": {
+        "keys": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "method": "GET",
+      "ok": false,
+      "path": "/api/companies/391841b8-b878-4fa1-acb2-f0b30520924f/agents",
+      "sample": {
+        "error": "User does not have access to this company"
+      },
+      "status": 403,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/391841b8-b878-4fa1-acb2-f0b30520924f/agents"
+    },
+    {
+      "duration_ms": 1093,
+      "json_shape": {
+        "first": {
+          "keys": [
+            "adapterConfig",
+            "adapterType",
+            "budgetMonthlyCents",
+            "capabilities",
+            "companyId",
+            "createdAt",
+            "defaultEnvironmentId",
+            "icon",
+            "id",
+            "lastHeartbeatAt",
+            "metadata",
+            "name",
+            "pauseReason",
+            "pausedAt",
+            "permissions",
+            "reportsTo",
+            "role",
+            "runtimeConfig",
+            "spentMonthlyCents",
+            "status"
+          ],
+          "type": "object"
+        },
+        "length": 1,
+        "type": "array"
+      },
+      "method": "GET",
+      "ok": true,
+      "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents",
+      "sample": [
+        {
+          "adapterConfig": {
+            "dangerouslySkipPermissions": true,
+            "graceSec": 15,
+            "instructionsBundleMode": "managed",
+            "instructionsEntryFile": "AGENTS.md",
+            "instructionsFilePath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions/AGENTS.md",
+            "instructionsRootPath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions",
+            "maxTurnsPerRun": 1000,
+            "timeoutSec": 0
+          },
+          "adapterType": "claude_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "lastHeartbeatAt": "2026-05-28T10:50:28.457Z",
+          "metadata": null,
+          "name": "BOS CEO",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": true
+          },
+          "reportsTo": null,
+          "role": "ceo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "cooldownSec": 10,
+              "enabled": false,
+              "intervalSec": 300,
+              "maxConcurrentRuns": 20,
+              "wakeOnDemand": true
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "error",
+          "title": null
+        }
+      ],
+      "status": 200,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+    },
+    {
+      "duration_ms": 1102,
+      "json_shape": {
+        "keys": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "method": "GET",
+      "ok": false,
+      "path": "/api/companies/4b29a556-c7d6-4fc7-b10b-2465c64fac5d/agents",
+      "sample": {
+        "error": "User does not have access to this company"
+      },
+      "status": 403,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/4b29a556-c7d6-4fc7-b10b-2465c64fac5d/agents"
+    },
+    {
+      "duration_ms": 1082,
+      "json_shape": {
+        "keys": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "method": "GET",
+      "ok": false,
+      "path": "/api/companies/7595fd85-80e5-41a4-96c7-01cb3c2de588/agents",
+      "sample": {
+        "error": "User does not have access to this company"
+      },
+      "status": 403,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/7595fd85-80e5-41a4-96c7-01cb3c2de588/agents"
+    },
+    {
+      "duration_ms": 1083,
+      "json_shape": {
+        "keys": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "method": "GET",
+      "ok": false,
+      "path": "/api/companies/8233ea7b-ab03-4e9b-8684-6e3ceabde00f/agents",
+      "sample": {
+        "error": "User does not have access to this company"
+      },
+      "status": 403,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/8233ea7b-ab03-4e9b-8684-6e3ceabde00f/agents"
+    },
+    {
+      "duration_ms": 1104,
+      "json_shape": {
+        "keys": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "method": "GET",
+      "ok": false,
+      "path": "/api/companies/e7ede16c-6535-41ef-bd44-3f9d24980caf/agents",
+      "sample": {
+        "error": "User does not have access to this company"
+      },
+      "status": 403,
+      "text_present": false,
+      "url": "https://paperclip.oysana.com/api/companies/e7ede16c-6535-41ef-bd44-3f9d24980caf/agents"
+    }
+  ],
+  "schemaVersion": "m002-s07-agent-discovery-readonly/v1",
+  "summary": {
+    "expected_bos_agent_count": 7,
+    "live_agent_records_observed": 2,
+    "notes": [
+      "Supported paths are discovered from repo evidence/docs; no persistent mutation was attempted.",
+      "Agent create/import requires explicit human approval before POST."
+    ],
+    "read_only_attempt_count": 10,
+    "successful_read_only_attempt_count": 5,
+    "supported_create_or_import_path_found": true,
+    "supported_create_or_import_path_requires_mutation_approval": true
+  },
+  "supported_endpoint_inventory": [
+    {
+      "method": "POST",
+      "mutation_class": "preview_non_persistent_expected_but_requires_confirmation",
+      "path": "/api/companies/import/preview",
+      "source": "PAPERCLIP_LIVE_VALIDATION_REPORT.md Extension Boundary Inventory",
+      "surface": "company import preview"
+    },
+    {
+      "method": "POST",
+      "mutation_class": "persistent_mutation_requires_human_yes",
+      "path": "/api/companies/import",
+      "source": "PAPERCLIP_LIVE_VALIDATION_REPORT.md Extension Boundary Inventory",
+      "surface": "company import"
+    },
+    {
+      "method": "POST",
+      "mutation_class": "persistent_mutation_requires_human_yes",
+      "path": "/api/companies/{companyId}/agents",
+      "source": "PAPERCLIP_LIVE_VALIDATION_REPORT.md Adapter Launch Checklist and scripts/run_s02_hermes_smoke.py",
+      "surface": "agent create"
+    },
+    {
+      "method": "GET",
+      "mutation_class": "read_only",
+      "path": "/api/companies/{companyId}/agents",
+      "source": "PAPERCLIP_LIVE_VALIDATION_REPORT.md Adapter Launch Checklist",
+      "surface": "company agents list"
+    },
+    {
+      "method": "GET",
+      "mutation_class": "read_only",
+      "path": "/api/companies/{companyId}/agents/{agentId} or /api/agents/{agentId}",
+      "source": "scripts/run_s02_hermes_smoke.py",
+      "surface": "agent readback"
+    },
+    {
+      "method": "GET",
+      "mutation_class": "read_only",
+      "path": "/api/adapters",
+      "source": "PAPERCLIP_LIVE_VALIDATION_REPORT.md Adapter Launch Checklist",
+      "surface": "adapter registry"
+    }
+  ],
+  "write_methods_attempted": []
+}

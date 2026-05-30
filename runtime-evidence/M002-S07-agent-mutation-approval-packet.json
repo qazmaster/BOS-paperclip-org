@@ -1,0 +1,155 @@
+{
+  "approval_prompt": "Reply exactly with an explicit yes such as: Yes, you may mutate the Paperclip sandbox for M002 S07 by creating the seven BOS Light agents in company 43c74adb-b194-44d1-8f8e-ba142544bb9d using supported Paperclip APIs only, with no production mutation, no core patch, no direct DB mutation, no plaintext secrets, and no heartbeat execution.",
+  "approval_received": false,
+  "approval_required": true,
+  "createdAt": "2026-05-29T13:14:01Z",
+  "discovery_summary": {
+    "absent": 6,
+    "adapters_observed": [
+      "acpx_local",
+      "claude_local",
+      "codex_local",
+      "cursor",
+      "cursor_cloud"
+    ],
+    "all_seven_visible_before_mutation": false,
+    "ambiguous": 1,
+    "expected_bos_agent_count": 7,
+    "health_ok": true,
+    "strict_present": 0
+  },
+  "expected_side_effects": [
+    "Seven new sandbox agent rows may be created in the target Paperclip company if no exact duplicates exist.",
+    "No heartbeat invocation, no provider execution, no issues, no comments, no documents, no approvals, and no production mutation are part of S07.",
+    "Agents are created with heartbeat disabled and wakeOnDemand disabled for visibility proof only."
+  ],
+  "mutation_attempted": false,
+  "phase": "approval-packet",
+  "prohibited_actions": [
+    "No Paperclip core patch",
+    "No direct database mutation",
+    "No private module import or monkey patch",
+    "No plaintext provider secrets",
+    "No heartbeat or adapter execution in S07",
+    "No production company mutation"
+  ],
+  "proof_to_capture": [
+    "runtime version/build from GET /api/health",
+    "target company id/name/issuePrefix",
+    "create response status and ids for each agent with secret fields redacted",
+    "final agents list readback showing all seven names and ids",
+    "adapter types, roles, reportsTo where supported, heartbeat disabled, wakeOnDemand disabled",
+    "mutation approval text or id in evidence without secrets"
+  ],
+  "provider_execution_attempted": false,
+  "recommended_operation": {
+    "agent_count": 7,
+    "agents": [
+      {
+        "adapterType": "codex_local",
+        "agent_profile": "agents/Div1_Executive/AGENTS.md",
+        "division_id": "Div1.Executive",
+        "enabled": true,
+        "heartbeatEnabled": false,
+        "name": "Div1.Executive - CEO / Mission Owner",
+        "reports_to_division": null,
+        "role": "executive",
+        "systemPrompt_source": "agents/Div1_Executive/AGENTS.md",
+        "tool_restrictions": "visibility-only creation; no smoke execution in S07; no approval tools invoked",
+        "wakeOnDemand": false
+      },
+      {
+        "adapterType": "codex_local",
+        "agent_profile": "agents/Div2_MasterPlanner/AGENTS.md",
+        "division_id": "Div2.MasterPlanner",
+        "enabled": true,
+        "heartbeatEnabled": false,
+        "name": "Div2.MasterPlanner - Product Planning / Shaping",
+        "reports_to_division": "Div1.Executive",
+        "role": "masterplanner",
+        "systemPrompt_source": "agents/Div2_MasterPlanner/AGENTS.md",
+        "tool_restrictions": "visibility-only creation; no smoke execution in S07; no approval tools invoked",
+        "wakeOnDemand": false
+      },
+      {
+        "adapterType": "codex_local",
+        "agent_profile": "agents/Div3_Production/AGENTS.md",
+        "division_id": "Div3.Production",
+        "enabled": true,
+        "heartbeatEnabled": false,
+        "name": "Div3.Production - Delivery / Build",
+        "reports_to_division": "Div1.Executive",
+        "role": "production",
+        "systemPrompt_source": "agents/Div3_Production/AGENTS.md",
+        "tool_restrictions": "visibility-only creation; no smoke execution in S07; no approval tools invoked",
+        "wakeOnDemand": false
+      },
+      {
+        "adapterType": "codex_local",
+        "agent_profile": "agents/Div4_Operations/AGENTS.md",
+        "division_id": "Div4.Operations",
+        "enabled": true,
+        "heartbeatEnabled": false,
+        "name": "Div4.Operations - Process / Reliability",
+        "reports_to_division": "Div1.Executive",
+        "role": "operations",
+        "systemPrompt_source": "agents/Div4_Operations/AGENTS.md",
+        "tool_restrictions": "visibility-only creation; no smoke execution in S07; no approval tools invoked",
+        "wakeOnDemand": false
+      },
+      {
+        "adapterType": "codex_local",
+        "agent_profile": "agents/Div5_Qualifications/AGENTS.md",
+        "division_id": "Div5.Qualifications",
+        "enabled": true,
+        "heartbeatEnabled": false,
+        "name": "Div5.Qualifications - QA / Security / Knowledge",
+        "reports_to_division": "Div1.Executive",
+        "role": "qualifications",
+        "systemPrompt_source": "agents/Div5_Qualifications/AGENTS.md",
+        "tool_restrictions": "visibility-only creation; no smoke execution in S07; no approval tools invoked",
+        "wakeOnDemand": false
+      },
+      {
+        "adapterType": "codex_local",
+        "agent_profile": "agents/Div6_Resources/AGENTS.md",
+        "division_id": "Div6.Resources",
+        "enabled": true,
+        "heartbeatEnabled": false,
+        "name": "Div6.Resources - Budget / Capacity",
+        "reports_to_division": "Div1.Executive",
+        "role": "resources",
+        "systemPrompt_source": "agents/Div6_Resources/AGENTS.md",
+        "tool_restrictions": "visibility-only creation; no smoke execution in S07; no approval tools invoked",
+        "wakeOnDemand": false
+      },
+      {
+        "adapterType": "codex_local",
+        "agent_profile": "agents/Div7_Strategy/AGENTS.md",
+        "division_id": "Div7.Strategy",
+        "enabled": true,
+        "heartbeatEnabled": false,
+        "name": "Div7.Strategy - Decision Protocol / Adaptation",
+        "reports_to_division": "Div1.Executive",
+        "role": "strategy",
+        "systemPrompt_source": "agents/Div7_Strategy/AGENTS.md",
+        "tool_restrictions": "visibility-only creation; no smoke execution in S07; no approval tools invoked",
+        "wakeOnDemand": false
+      }
+    ],
+    "endpoint": "POST /api/companies/{companyId}/agents",
+    "preflight": "GET /api/companies/{companyId}/agents and skip exact duplicate names before create",
+    "readback": "GET /api/companies/{companyId}/agents after create; optionally UI/browser verify Agents page if accessible",
+    "reason": "Repository template schema is 0.1-draft and live company import schema remains unvalidated; direct supported agent create endpoint is documented and narrower than full company import.",
+    "type": "create_agents_individually"
+  },
+  "rollback_cleanup_posture": "No automatic delete is planned. If cleanup is requested later, require separate explicit approval and supported delete/archive endpoint discovery.",
+  "schemaVersion": "m002-s07-agent-mutation-approval-packet/v1",
+  "target": {
+    "base_url_redacted": "https://paperclip.oysana.com",
+    "company_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "company_name": "BOS Light Sandbox",
+    "environment": "Paperclip sandbox only",
+    "issue_prefix": "BOS"
+  }
+}

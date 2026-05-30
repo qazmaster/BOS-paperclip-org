@@ -1,0 +1,229 @@
+{
+  "artifact_type": "regression-closure-evidence",
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "scripts/validate_s04_live_artifact_flow.py",
+        "--evidence",
+        "runtime-evidence/M002-S04-live-artifact-flow.json",
+        "--phase",
+        "final"
+      ],
+      "completed_at": "2026-05-30T09:04:12Z",
+      "description": "Validate bounded S04 native issue/document/comment artifact proof.",
+      "duration_ms": 55,
+      "exit_code": 0,
+      "id": "s04-live-artifact-validator",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:12Z",
+      "stderr_digest": "",
+      "stdout_digest": "S04 live artifact-flow evidence OK: final live artifact proof contract is satisfied.\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "scripts/validate_s05_plugin_ui_surface_probe.py",
+        "--evidence",
+        "runtime-evidence/M002-S05-plugin-ui-surface-probe.json",
+        "--phase",
+        "final"
+      ],
+      "completed_at": "2026-05-30T09:04:12Z",
+      "description": "Validate S05 plugin/UI probe posture and fallback-only ledger.",
+      "duration_ms": 52,
+      "exit_code": 0,
+      "id": "s05-plugin-ui-surface-validator",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:12Z",
+      "stderr_digest": "",
+      "stdout_digest": "S05 plugin/UI surface probe evidence validation passed: runtime-evidence/M002-S05-plugin-ui-surface-probe.json\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "scripts/validate_runtime_capabilities.py"
+      ],
+      "completed_at": "2026-05-30T09:04:12Z",
+      "description": "Validate runtime capability matrix and docs alignment.",
+      "duration_ms": 49,
+      "exit_code": 0,
+      "id": "runtime-capabilities-validator",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:12Z",
+      "stderr_digest": "",
+      "stdout_digest": "Paperclip runtime capabilities OK: manifest surfaces, adapter assumptions, and guardrail fields are mapped.\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "scripts/validate_s10_runtime_execution.py",
+        "--phase",
+        "final",
+        "--write-audit",
+        "runtime-evidence/M002-S10-runtime-execution-closeout.json"
+      ],
+      "completed_at": "2026-05-30T09:04:12Z",
+      "description": "Validate S10 Hermes/GSD-Pi runtime execution posture and write final closeout audit.",
+      "duration_ms": 79,
+      "exit_code": 0,
+      "id": "s10-runtime-execution-final-validator",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:12Z",
+      "stderr_digest": "",
+      "stdout_digest": "S10 runtime execution final docs/matrix OK: execution capability posture is proof-gated.\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "scripts/validate_m002_validation_artifacts.py",
+        "--root",
+        ".",
+        "--write-audit",
+        "runtime-evidence/M002-S11-validation-artifact-repair.json"
+      ],
+      "completed_at": "2026-05-30T09:04:12Z",
+      "description": "Validate S11 canonical validation artifact repair posture and write repair audit.",
+      "duration_ms": 68,
+      "exit_code": 0,
+      "id": "s11-validation-artifact-repair-validator",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:12Z",
+      "stderr_digest": "",
+      "stdout_digest": "M002 validation artifacts OK: S09/S10 closeout posture is complete, proof-gated, and redacted.\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "scripts/validate_s12_runtime_proof_or_rescope.py",
+        "--phase",
+        "final",
+        "--write-audit",
+        "runtime-evidence/M002-S12-validation-closeout.json"
+      ],
+      "completed_at": "2026-05-30T09:04:13Z",
+      "description": "Validate S12 runtime proof or approved-rescope disposition and write final closeout audit.",
+      "duration_ms": 94,
+      "exit_code": 0,
+      "id": "s12-runtime-proof-or-rescope-validator",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:12Z",
+      "stderr_digest": "",
+      "stdout_digest": "S12 disposition validation passed: approved_rescope\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "scripts/validate_s13_requirement_coverage.py",
+        "--phase",
+        "final",
+        "--ledger",
+        "runtime-evidence/M002-S13-requirement-coverage.json",
+        "--write-audit",
+        "runtime-evidence/M002-S13-validation-closeout.json"
+      ],
+      "completed_at": "2026-05-30T09:04:13Z",
+      "description": "Validate S13 active R012-R015 coverage reconciliation and write final closeout audit.",
+      "duration_ms": 60,
+      "exit_code": 0,
+      "id": "s13-requirement-coverage-final-validator",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:13Z",
+      "stderr_digest": "",
+      "stdout_digest": "S13 requirement coverage validation passed: final_ready\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "scripts/validate_m002_closeout.py",
+        "--phase",
+        "final"
+      ],
+      "completed_at": "2026-05-30T09:04:13Z",
+      "description": "Validate M002 closeout docs, evidence, secret hygiene, and no-core boundaries.",
+      "duration_ms": 109,
+      "exit_code": 0,
+      "id": "m002-closeout-validator",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:13Z",
+      "stderr_digest": "",
+      "stdout_digest": "M002 closeout OK: evidence, conservative matrix posture, docs, secrets, and no-core boundary guard passed.\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "scripts/test_validate_s04_live_artifact_flow.py",
+        "scripts/test_validate_s05_plugin_ui_surface_probe.py",
+        "scripts/test_validate_runtime_capabilities.py",
+        "scripts/test_validate_s10_runtime_execution.py",
+        "scripts/test_validate_m002_validation_artifacts.py",
+        "scripts/test_validate_s12_runtime_proof_or_rescope.py",
+        "scripts/test_validate_s13_requirement_coverage.py",
+        "scripts/test_validate_m002_closeout.py",
+        "scripts/test_run_m002_regression_closure.py"
+      ],
+      "completed_at": "2026-05-30T09:04:13Z",
+      "description": "Run regression unit tests for validators and the closure runner.",
+      "duration_ms": 738,
+      "exit_code": 0,
+      "id": "python-regression-unittests",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:13Z",
+      "stderr_digest": "......................................................................................................................\n----------------------------------------------------------------------\nRan 118 tests in 0.582s\n\nOK\n",
+      "stdout_digest": "S05 plugin/UI surface probe evidence validation passed: /tmp/tmpc84sy5bx/evidence.json\nS10 runtime execution blocker artifact OK: fail-closed diagnostics are valid, but this is not passing runtime proof.\nS10 runtime execution final docs/matrix OK: execution capability posture is proof-gated.\nM002 validation artifacts OK: S09/S10 closeout posture is complete, proof-gated, and redacted.\nWrote S12 disposition approved_rescope: /tmp/tmpuvxlqoa1/runtime-evidence/M002-S12-runtime-proof-or-rescope.json\nWrote S12 disposition runtime_proof: /tmp/tmp6ielxl3n/runtime-evidence/M002-S12-runtime-proof-or-rescope.json\nS12 disposition validation passed: approved_rescope\nS13 requirement coverage validation passed: coverage_ledger\n",
+      "timed_out": false,
+      "verdict": "pass"
+    },
+    {
+      "command": [
+        "npm",
+        "--prefix",
+        "plugin-bos-light",
+        "run",
+        "typecheck"
+      ],
+      "completed_at": "2026-05-30T09:04:15Z",
+      "description": "Run plugin-bos-light TypeScript typecheck.",
+      "duration_ms": 1840,
+      "exit_code": 0,
+      "id": "plugin-bos-light-typecheck",
+      "redaction_labels": [],
+      "started_at": "2026-05-30T09:04:13Z",
+      "stderr_digest": "",
+      "stdout_digest": "\n> @bos/plugin-bos-light@0.1.0 typecheck\n> tsc --noEmit\n\n",
+      "timed_out": false,
+      "verdict": "pass"
+    }
+  ],
+  "completed_at": "2026-05-30T09:04:15Z",
+  "invariants": {
+    "artifact_parent_preexisted": true,
+    "secret_values_redacted": true,
+    "shell_expansion_disabled": true
+  },
+  "milestone": "M002",
+  "mode": "aggregate",
+  "overall_verdict": "pass",
+  "runner": "scripts/run_m002_regression_closure.py",
+  "schema_version": "1.0",
+  "slice": "S06",
+  "started_at": "2026-05-30T09:04:12Z"
+}
