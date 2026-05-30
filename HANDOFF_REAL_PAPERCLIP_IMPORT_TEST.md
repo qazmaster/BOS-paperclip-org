@@ -1,5 +1,7 @@
 # Handoff: Real Paperclip Import and Runtime Validation
 
+> **Canonical doctrine update:** Run live Paperclip validation through the active v1.4.1 doctrine package. Read `docs/BOS_Light_v1_4_1_CANONICAL_ORG.md`, the other `docs/BOS_Light_v1_4_1_*.md` files, and `skills/SKILL_*.md` before applying this historical M001/M002 runtime guide. Preserve the proof boundaries below, but use v1.4.1 for division ownership, tool permissions, trust boundaries, external-IO routing and A12-A20 acceptance.
+
 Audience: the next AI agent who will import and test the completed BOS Light M001 work against a real Paperclip runtime.
 
 Last known pushed commit: `1697db7 Merge milestone M001-bo1jcm BOS Light Baseline` on `main` / `origin/main`.
