@@ -16,13 +16,13 @@ probe = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(probe)
 
 DIVISIONS = (
-    ("Div1.Executive", "Div1_Executive", None),
-    ("Div2.MasterPlanner", "Div2_MasterPlanner", "Div1.Executive"),
-    ("Div3.Production", "Div3_Production", "Div1.Executive"),
-    ("Div4.Operations", "Div4_Operations", "Div1.Executive"),
-    ("Div5.Qualifications", "Div5_Qualifications", "Div1.Executive"),
-    ("Div6.Resources", "Div6_Resources", "Div1.Executive"),
-    ("Div7.Strategy", "Div7_Strategy", "Div1.Executive"),
+    ("Div7.MissionControl", "Div7_MissionControl", None),
+    ("Div1.HCO", "Div1_HCO", "Div7.MissionControl"),
+    ("Div2.MasterPlanner", "Div2_MasterPlanner", "Div1.HCO"),
+    ("Div3.Treasury", "Div3_Treasury", "Div1.HCO"),
+    ("Div4.Production", "Div4_Production", "Div1.HCO"),
+    ("Div5.QualificationsLibraryLearning", "Div5_QualificationsLibraryLearning", "Div1.HCO"),
+    ("Div6.External", "Div6_External", "Div1.HCO"),
 )
 
 
@@ -50,12 +50,13 @@ def write_valid_repo(root: Path) -> None:
         "mission": "Fixture mission",
         "divisions": divisions,
         "routing_rules": {
-            "vague_goal": "Div1.Executive -> Div2.MasterPlanner",
-            "implementation": "Div3.Production",
-            "process_incident": "Div4.Operations",
-            "qa_security_review": "Div5.Qualifications",
-            "budget_capacity": "Div6.Resources",
-            "complex_decision": "Div7.Strategy",
+            "high_level_mission": "Div7.MissionControl -> Div1.HCO",
+            "backlog_shaping": "Div1.HCO -> Div2.MasterPlanner",
+            "implementation": "Div1.HCO -> Div4.Production",
+            "qa_security_review": "Div1.HCO -> Div5.QualificationsLibraryLearning",
+            "budget_capacity": "Div1.HCO -> Div3.Treasury",
+            "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External",
+            "complex_decision": "Div1.HCO -> Div7.MissionControl",
         },
         "rituals": ["daily_pulse", "weekly_review", "batch_approval_ritual"],
     }

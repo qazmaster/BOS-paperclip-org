@@ -10,12 +10,15 @@ Inputs:
 - issues in progress;
 - blocked issues;
 - gate failures;
-- circuit breaker alerts.
+- circuit breaker alerts;
+- external evidence quarantine signals;
+- staffing or overload signals.
 
 Output:
 
 - short issue/activity summary;
-- escalations only when needed.
+- escalations only when needed;
+- explicit routing when Div5 or Div6 evidence changes the picture.
 
 ## Weekly Review
 
@@ -25,7 +28,8 @@ Output:
 
 - improvement actions;
 - possible Div7 decisions;
-- updated BPI/betting thresholds if needed.
+- updated BPI/betting thresholds if needed;
+- staffing or access proposals routed through Div1 and Div3.
 
 ## Batch Approval Ritual
 
@@ -35,6 +39,7 @@ Flow:
 
 1. Div2 scores and blueprints candidates.
 2. Betting Table ranks candidates by BPI.
-3. Div6 checks cycle capacity.
+3. Div3 checks cycle capacity and access feasibility.
 4. Human/master reviews Pitch Deck.
-5. Approve Batch creates Paperclip-native approvals/requests.
+5. Div1 routes the batch decision.
+6. Approve Batch creates Paperclip-native approvals/requests when the runtime proves the surface.

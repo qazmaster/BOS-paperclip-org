@@ -40,7 +40,7 @@ export function decide(input: DecisionInput): DecisionMetadata {
     decision_type: decisionType,
     emitted_events: [],
     recommended_action: action,
-    decided_by: "Div7.Executive",
+    decided_by: "Div7.MissionControl",
     decided_at: input.now ?? new Date().toISOString()
   };
 }

@@ -48,7 +48,7 @@ function blueprint(overrides: Partial<BlueprintInput> = {}): BlueprintInput {
     issue_id: "issue_1",
     title: "Seeded opportunity",
     problem_statement: "Customer cannot complete onboarding.",
-    producer_division: "Div3.Production",
+    producer_division: "Div4.Production",
     bpi: bpi(),
     acceptance_criteria: ["User can finish onboarding"],
     resources: ["Paperclip seeded issue"],

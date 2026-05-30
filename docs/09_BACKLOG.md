@@ -1,5 +1,7 @@
 # 09 - Initial Backlog
 
+This backlog implements the v1.4.1 remap and its traceability set: R012–R016 plus D012–D014. Anything touching runtime support must remain proof-gated until live Paperclip evidence exists.
+
 ## Epic 1 - Company Template
 
 - [ ] Create 7 division agent profiles.

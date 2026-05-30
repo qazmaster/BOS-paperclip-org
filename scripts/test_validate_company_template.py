@@ -17,13 +17,13 @@ validator = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(validator)
 
 DIVISIONS = [
-    ("Div1.Executive", "CEO / Mission Owner", None, "Div1_Executive", "Coherent company direction"),
-    ("Div2.MasterPlanner", "Product Planning / Shaping", "Div1.Executive", "Div2_MasterPlanner", "Well-shaped work"),
-    ("Div3.Production", "Delivery / Build", "Div1.Executive", "Div3_Production", "Completed accepted artifacts"),
-    ("Div4.Operations", "Process / Reliability", "Div1.Executive", "Div4_Operations", "Stable execution flow"),
-    ("Div5.Qualifications", "QA / Security / Knowledge", "Div1.Executive", "Div5_Qualifications", "Verified work"),
-    ("Div6.Resources", "Budget / Capacity", "Div1.Executive", "Div6_Resources", "Budget-fit work"),
-    ("Div7.Strategy", "Decision Protocol / Adaptation", "Div1.Executive", "Div7_Strategy", "High-quality decisions under uncertainty"),
+    ("Div7.MissionControl", "Mission Control / Strategy", None, "Div7_MissionControl", "Accepted missions framed into strategic intent"),
+    ("Div1.HCO", "Head Communication Office", "Div7.MissionControl", "Div1_HCO", "Correct routing, dispatch and escalation"),
+    ("Div2.MasterPlanner", "Shaping / Product Planning", "Div1.HCO", "Div2_MasterPlanner", "Well-shaped work"),
+    ("Div3.Treasury", "Treasury / Budget / Access", "Div1.HCO", "Div3_Treasury", "Budget-fit and access-feasible work"),
+    ("Div4.Production", "Production / Build / Delivery", "Div1.HCO", "Div4_Production", "Completed accepted artifacts"),
+    ("Div5.QualificationsLibraryLearning", "Qualifications / Library / Learning", "Div1.HCO", "Div5_QualificationsLibraryLearning", "Verified, sanitized work"),
+    ("Div6.External", "External / DMZ", "Div1.HCO", "Div6_External", "External evidence collected and quarantined"),
 ]
 
 
@@ -43,13 +43,13 @@ def valid_template() -> dict:
             for division_id, title, reports_to, folder, vfp in DIVISIONS
         ],
         "routing_rules": {
-            "vague_goal": "Div1.Executive -> Div2.MasterPlanner",
-            "backlog_shaping": "Div2.MasterPlanner",
-            "implementation": "Div3.Production",
-            "process_incident": "Div4.Operations",
-            "qa_security_review": "Div5.Qualifications",
-            "budget_capacity": "Div6.Resources",
-            "complex_decision": "Div7.Strategy",
+            "high_level_mission": "Div7.MissionControl -> Div1.HCO",
+            "backlog_shaping": "Div1.HCO -> Div2.MasterPlanner",
+            "budget_capacity": "Div1.HCO -> Div3.Treasury",
+            "implementation": "Div1.HCO -> Div4.Production",
+            "qa_security_review": "Div1.HCO -> Div5.QualificationsLibraryLearning",
+            "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External",
+            "complex_decision": "Div1.HCO -> Div7.MissionControl",
         },
         "rituals": ["daily_pulse", "weekly_review", "batch_approval_ritual"],
     }
@@ -90,17 +90,17 @@ class CompanyTemplateValidatorTests(unittest.TestCase):
 
     def test_missing_required_division_field_reports_division_and_field(self):
         def mutate(_root: Path, template: dict) -> None:
-            del template["divisions"][2]["vfp"]
+            del template["divisions"][4]["vfp"]
 
         errors = self.validate_fixture(mutate)
         joined = "\n".join(errors)
         self.assertIn("company-template/bos-company-template.json", joined)
-        self.assertIn("Div3.Production", joined)
+        self.assertIn("Div4.Production", joined)
         self.assertIn("missing field 'vfp'", joined)
 
     def test_missing_agent_profile_reports_referenced_path(self):
         def mutate(_root: Path, template: dict) -> None:
-            template["divisions"][1]["agent_profile"] = "agents/Div2_MasterPlanner/MISSING.md"
+            template["divisions"][2]["agent_profile"] = "agents/Div2_MasterPlanner/MISSING.md"
 
         errors = self.validate_fixture(mutate)
         joined = "\n".join(errors)
@@ -109,7 +109,7 @@ class CompanyTemplateValidatorTests(unittest.TestCase):
 
     def test_malformed_route_reports_route_context_and_bad_target(self):
         def mutate(_root: Path, template: dict) -> None:
-            template["routing_rules"]["implementation"] = "Div3.Production -> Div9.Unknown"
+            template["routing_rules"]["implementation"] = "Div1.HCO -> Div9.Unknown"
 
         errors = self.validate_fixture(mutate)
         joined = "\n".join(errors)
@@ -121,13 +121,13 @@ class CompanyTemplateValidatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             write_fixture(root)
-            (root / "company-template" / "org-chart.mmd").write_text("Div1.Executive\n", encoding="utf-8")
+            (root / "company-template" / "org-chart.mmd").write_text("Div7.MissionControl\n", encoding="utf-8")
             errors = validator.validate(root)
 
         joined = "\n".join(errors)
         self.assertIn("company-template/org-chart.mmd", joined)
         self.assertIn("compatibility issue", joined)
-        self.assertIn("Div2.MasterPlanner", joined)
+        self.assertIn("Div1.HCO", joined)
 
     def test_exactly_seven_divisions_boundary(self):
         def mutate(_root: Path, template: dict) -> None:
@@ -136,7 +136,7 @@ class CompanyTemplateValidatorTests(unittest.TestCase):
         errors = self.validate_fixture(mutate)
         joined = "\n".join(errors)
         self.assertIn("expected exactly 7 divisions, found 6", joined)
-        self.assertIn("missing BOS Light division ids", joined)
+        self.assertIn("missing BOS Light v1.4.1 division ids", joined)
 
 
 if __name__ == "__main__":

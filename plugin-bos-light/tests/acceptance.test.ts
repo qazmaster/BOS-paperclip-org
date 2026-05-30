@@ -34,7 +34,7 @@ describe("BOS Light acceptance vertical slice", () => {
       issue_id: "issue_1",
       title: "Build BOS Light demo",
       problem_statement: "Need a visible vertical slice.",
-      producer_division: "Div3.Production",
+      producer_division: "Div4.Production",
       bpi,
       acceptance_criteria: ["Demo script passes"],
       resources: ["Paperclip local instance"]
@@ -63,7 +63,7 @@ describe("BOS Light acceptance vertical slice", () => {
         issue_id: "issue_seeded",
         title: "Seed BOS Light candidate",
         problem_statement: "Need the seeded issue to produce an inspectable Product Blueprint.",
-        producer_division: "Div3.Production",
+        producer_division: "Div4.Production",
         acceptance_criteria: ["Fixture issue receives a five-section Product Blueprint"],
         resources: ["In-memory Paperclip adapter", "In-memory cache overlay"]
       },
@@ -849,7 +849,7 @@ describe("worker Betting Table data and approve-batch wiring", () => {
         issue_id: "issue_worker_seeded",
         title: "Seed worker Betting Table",
         problem_statement: "Worker provider should hydrate the persisted cycle by current config.",
-        producer_division: "Div3.Production",
+        producer_division: "Div4.Production",
         acceptance_criteria: ["Seeded Blueprint artifact ref appears in provider rows"],
         resources: ["In-memory Paperclip adapter", "In-memory cache overlay"]
       },
@@ -1023,7 +1023,7 @@ describe("seeded issue Blueprint flow negative surfaces", () => {
         issue_id: "issue_failure",
         title: "Keep visible diagnostics",
         problem_statement: "Adapter failures should not hide BPI or Blueprint markdown.",
-        producer_division: "Div3.Production",
+        producer_division: "Div4.Production",
         acceptance_criteria: ["BPI is returned"],
         resources: ["Fallback markdown"]
       },
@@ -1080,7 +1080,7 @@ describe("seeded issue Blueprint flow negative surfaces", () => {
         issue_id: "issue_zero",
         title: "Blocked candidate",
         problem_statement: "A failed hard gate should still produce a diagnostic Blueprint artifact.",
-        producer_division: "Div3.Production",
+        producer_division: "Div4.Production",
         acceptance_criteria: ["Hard gate failure is visible"],
         resources: ["Policy precheck"]
       },

@@ -2,10 +2,10 @@
 
 | Input | Primary division | Secondary division | Notes |
 |---|---|---|---|
-| Vague idea or goal | Div1.Executive | Div2.MasterPlanner | CEO decides whether to shape |
-| Backlog issue | Div2.MasterPlanner | Div6.Resources | BPI + blueprint |
-| Approved cycle work | Div3.Production | Div4.Operations | Deliver according to blueprint |
-| QA review | Div5.Qualifications | Div3.Production | Gate pass/fail |
-| Repeated failures | Div4.Operations | Div7.Strategy | Circuit Breaker opens after 3 failures |
-| Budget anomaly | Div6.Resources | Div1.Executive | Use Paperclip-native budget governance |
-| Complex/chaotic decision | Div7.Strategy | Div1.Executive | Cynefin + OODA recommendation |
+| High-level mission | Div7.MissionControl | Div1.HCO | Mission intake and strategic framing |
+| Backlog issue | Div1.HCO | Div2.MasterPlanner | BPI + blueprint |
+| Budget anomaly | Div1.HCO | Div3.Treasury | Budget/access feasibility |
+| Approved cycle work | Div1.HCO | Div4.Production | Deliver according to blueprint |
+| QA review | Div1.HCO | Div5.QualificationsLibraryLearning | Gate pass/fail and quarantine |
+| External research / API / customer / vendor request | Div1.HCO | Div5.QualificationsLibraryLearning | Div6.External collects, Div5 sanitizes |
+| Complex/chaotic decision | Div1.HCO | Div7.MissionControl | Cynefin + OODA recommendation |

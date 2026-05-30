@@ -68,22 +68,15 @@ Ground-truth surfaces:
 ## Data flow
 
 ```text
-User vague issue
-  -> Div2.MasterPlanner triages
-  -> piko:bpi-score computes BPI
-  -> issue receives bpi_score + producer_division
-  -> if score passes cutline: piko:blueprint-gen creates 5-section issue document
-  -> Betting Table collects candidates
-  -> human/master clicks Approve Batch
-  -> plugin creates Paperclip-native approval/request
-  -> issue moves into work via Paperclip workflow
-  -> agent completes work
-  -> Eval Gates run
-  -> if pass: ACCEPTED/RELEASED overlay
-  -> if fail: CORRECTION_REQUIRED overlay + guidance
-  -> if repeated run failures: Circuit Breaker OPEN + escalation issue
+Human mission/goal
+  -> Div7.MissionControl frames intent
+  -> Div1.HCO routes and dispatches under policy
+  -> deterministic/Paperclip-native routing under Div1 policy
+  -> Div2 / Div3 / Div4 / Div5 / Div6 according to route
+  -> Div1 receives status/correction/escalation signals
+  -> Div7 only for strategic/policy-level escalation
 ```
 
 ## Runtime boundary
 
-Plugin code may compute, annotate and request. It should not silently decide approvals, mutate core governance invariants, bypass budget hard-stops, bypass auth or own a hidden source of truth.
+Plugin code may compute, annotate and request, but it should not silently decide approvals, mutate core governance invariants, bypass budget hard-stops, bypass auth, own a hidden source of truth, or receive raw external IO. This boundary is the implementation shape behind R013, R014, and R015.

@@ -2,14 +2,15 @@
 
 ## Umbrella risk: Paperclip plugin runtime caveat
 
-The Paperclip plugin spec is rich, but the current runtime may not implement every part exactly as described. Treat plugin API details as assumptions until validated against the current Paperclip commit/version. S02 captures the current conservative posture in `docs/08_RUNTIME_CAPABILITY_HEALTH.md`: there is no live Paperclip runtime evidence yet, so requested manifest capabilities are not confirmed runtime capabilities.
+The Paperclip plugin spec is rich, but the current runtime may not implement every part exactly as described. Treat plugin API details as assumptions until validated against the current Paperclip commit/version. S02 captures the current conservative posture in `docs/08_RUNTIME_CAPABILITY_HEALTH.md`: there is no live Paperclip runtime evidence yet, so requested manifest capabilities are not confirmed runtime capabilities. This is also why R016 and D014 keep runtime posture conservative until live proof exists.
 
 Mitigation:
 
 - template-first: Phase 1 works without plugin runtime;
 - thin adapter: isolate SDK calls in `paperclipAdapter.ts` and `persistence.ts`;
 - use native artifacts for durable truth;
-- keep plugin-specific state reconstructable.
+- keep plugin-specific state reconstructable;
+- treat R012–R015 and D012–D013 as active traceability anchors so the v1.4.1 remap does not drift back into legacy ownership or security rules;
 
 ## Known risk: run events may be declared but not emitted
 

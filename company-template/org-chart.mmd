@@ -1,31 +1,31 @@
 ```mermaid
 flowchart TD
-  D1[Div1.Executive
-CEO / Mission Owner]
+  D7[Div7.MissionControl
+Mission Control / Strategy]
+  D1[Div1.HCO
+Head Communication Office]
   D2[Div2.MasterPlanner
-Product Planning]
-  D3[Div3.Production
-Delivery]
-  D4[Div4.Operations
-Reliability]
-  D5[Div5.Qualifications
-QA / Security]
-  D6[Div6.Resources
-Budget / Capacity]
-  D7[Div7.Strategy
-Decision Protocol]
+Shaping / Product Planning]
+  D3[Div3.Treasury
+Treasury / Budget / Access]
+  D4[Div4.Production
+Production / Build / Delivery]
+  D5[Div5.QualificationsLibraryLearning
+Qualifications / Library / Learning]
+  D6[Div6.External
+External / DMZ]
 
+  D7 --> D1
   D1 --> D2
   D1 --> D3
   D1 --> D4
   D1 --> D5
   D1 --> D6
-  D1 --> D7
 
-  D2 -->|blueprint| D3
-  D3 -->|ready for review| D5
-  D5 -->|correction required| D3
-  D4 -->|circuit escalation| D1
-  D6 -->|budget signal| D2
-  D7 -->|strategic recommendation| D1
+  D2 -->|blueprint| D1
+  D3 -->|budget/access| D1
+  D4 -->|delivery| D5
+  D5 -->|sanitized evidence| D1
+  D6 -->|raw evidence| D5
+  D1 -->|operational escalation| D7
 ```

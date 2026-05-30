@@ -63,3 +63,5 @@ BOS Light uses Paperclip's existing execution plane. The first deliverable is a 
 ## Golden rule
 
 Paperclip gives the rails. BOS gives the operating doctrine.
+
+The active repo-local contract set is captured by R012–R016, and the organization/runtime posture decisions are D012–D014. Those records are the source of truth for the v1.4.1 remap, the Div6-only external boundary, Div5 evidence quarantine, Div1 routing ownership, and conservative runtime claims.

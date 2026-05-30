@@ -15,13 +15,13 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
 EXPECTED_DIVISION_IDS = (
-    "Div1.Executive",
+    "Div7.MissionControl",
+    "Div1.HCO",
     "Div2.MasterPlanner",
-    "Div3.Production",
-    "Div4.Operations",
-    "Div5.Qualifications",
-    "Div6.Resources",
-    "Div7.Strategy",
+    "Div3.Treasury",
+    "Div4.Production",
+    "Div5.QualificationsLibraryLearning",
+    "Div6.External",
 )
 
 TEMPLATE_PATH = Path("company-template/bos-company-template.json")
@@ -122,9 +122,9 @@ def _validate_divisions(template: Mapping[str, Any], root: Path, errors: Validat
     missing_ids = sorted(expected_ids - actual_ids)
     extra_ids = sorted(actual_ids - expected_ids)
     if missing_ids:
-        errors.add(TEMPLATE_PATH, "divisions", f"compatibility issue: missing BOS Light division ids: {', '.join(missing_ids)}")
+        errors.add(TEMPLATE_PATH, "divisions", f"compatibility issue: missing BOS Light v1.4.1 division ids: {', '.join(missing_ids)}")
     if extra_ids:
-        errors.add(TEMPLATE_PATH, "divisions", f"compatibility issue: unknown BOS Light division ids: {', '.join(extra_ids)}")
+        errors.add(TEMPLATE_PATH, "divisions", f"compatibility issue: unknown BOS Light v1.4.1 division ids: {', '.join(extra_ids)}")
 
     _validate_reports_to(raw_divisions, actual_ids, errors)
     return actual_ids

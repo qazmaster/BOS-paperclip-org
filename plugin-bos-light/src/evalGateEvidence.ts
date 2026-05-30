@@ -111,7 +111,7 @@ function incompleteGateResult(input: EvalGateEvidenceInput, evaluatedAt: string,
     warning_count: 0,
     not_run_count: EVAL_GATE_IDS.length,
     evaluated_at: evaluatedAt,
-    evaluated_by: "Div5.Qualifications"
+    evaluated_by: "Div5.QualificationsLibraryLearning"
   };
 }
 

@@ -63,6 +63,6 @@ export function runEvalGates(input: EvalGateInput): EvalGateResult {
     warning_count: warningCount,
     not_run_count: notRunCount,
     evaluated_at: input.now ?? new Date().toISOString(),
-    evaluated_by: "Div5.Qualifications"
+    evaluated_by: "Div5.QualificationsLibraryLearning"
   };
 }

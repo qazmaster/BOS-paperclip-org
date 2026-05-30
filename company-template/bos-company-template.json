@@ -1,67 +1,67 @@
 {
-  "schema_version": "0.1-draft",
+  "schema_version": "0.1-v1.4.1",
   "name": "BOS Light Company Template for Paperclip",
-  "note": "Draft template. Validate against current Paperclip companies.sh/import schema before use.",
-  "mission": "Execute user goals through a 7-division organizational intelligence layer while Paperclip remains the system of record.",
+  "note": "v1.4.1 doctrine package. Validate against current Paperclip companies.sh/import schema before use.",
+  "mission": "Execute human missions through a Paperclip-native seven-division organizational intelligence layer.",
   "divisions": [
     {
-      "id": "Div1.Executive",
-      "title": "CEO / Mission Owner",
+      "id": "Div7.MissionControl",
+      "title": "Mission Control / Strategy",
       "reports_to": null,
-      "agent_profile": "agents/Div1_Executive/AGENTS.md",
-      "vfp": "Coherent company direction"
+      "agent_profile": "agents/Div7_MissionControl/AGENTS.md",
+      "vfp": "Accepted missions framed into strategic intent"
+    },
+    {
+      "id": "Div1.HCO",
+      "title": "Head Communication Office",
+      "reports_to": "Div7.MissionControl",
+      "agent_profile": "agents/Div1_HCO/AGENTS.md",
+      "vfp": "Correct routing, dispatch and escalation"
     },
     {
       "id": "Div2.MasterPlanner",
-      "title": "Product Planning / Shaping",
-      "reports_to": "Div1.Executive",
+      "title": "Shaping / Product Planning",
+      "reports_to": "Div1.HCO",
       "agent_profile": "agents/Div2_MasterPlanner/AGENTS.md",
       "vfp": "Well-shaped work"
     },
     {
-      "id": "Div3.Production",
-      "title": "Delivery / Build",
-      "reports_to": "Div1.Executive",
-      "agent_profile": "agents/Div3_Production/AGENTS.md",
+      "id": "Div3.Treasury",
+      "title": "Treasury / Budget / Access",
+      "reports_to": "Div1.HCO",
+      "agent_profile": "agents/Div3_Treasury/AGENTS.md",
+      "vfp": "Budget-fit and access-feasible work"
+    },
+    {
+      "id": "Div4.Production",
+      "title": "Production / Build / Delivery",
+      "reports_to": "Div1.HCO",
+      "agent_profile": "agents/Div4_Production/AGENTS.md",
       "vfp": "Completed accepted artifacts"
     },
     {
-      "id": "Div4.Operations",
-      "title": "Process / Reliability",
-      "reports_to": "Div1.Executive",
-      "agent_profile": "agents/Div4_Operations/AGENTS.md",
-      "vfp": "Stable execution flow"
+      "id": "Div5.QualificationsLibraryLearning",
+      "title": "Qualifications / Library / Learning",
+      "reports_to": "Div1.HCO",
+      "agent_profile": "agents/Div5_QualificationsLibraryLearning/AGENTS.md",
+      "vfp": "Verified, sanitized work"
     },
     {
-      "id": "Div5.Qualifications",
-      "title": "QA / Security / Knowledge",
-      "reports_to": "Div1.Executive",
-      "agent_profile": "agents/Div5_Qualifications/AGENTS.md",
-      "vfp": "Verified work"
-    },
-    {
-      "id": "Div6.Resources",
-      "title": "Budget / Capacity",
-      "reports_to": "Div1.Executive",
-      "agent_profile": "agents/Div6_Resources/AGENTS.md",
-      "vfp": "Budget-fit work"
-    },
-    {
-      "id": "Div7.Strategy",
-      "title": "Decision Protocol / Adaptation",
-      "reports_to": "Div1.Executive",
-      "agent_profile": "agents/Div7_Strategy/AGENTS.md",
-      "vfp": "High-quality decisions under uncertainty"
+      "id": "Div6.External",
+      "title": "External / DMZ",
+      "reports_to": "Div1.HCO",
+      "agent_profile": "agents/Div6_External/AGENTS.md",
+      "vfp": "External evidence collected and quarantined"
     }
   ],
   "routing_rules": {
-    "vague_goal": "Div1.Executive -> Div2.MasterPlanner",
-    "backlog_shaping": "Div2.MasterPlanner",
-    "implementation": "Div3.Production",
-    "process_incident": "Div4.Operations",
-    "qa_security_review": "Div5.Qualifications",
-    "budget_capacity": "Div6.Resources",
-    "complex_decision": "Div7.Strategy"
+    "high_level_mission": "Div7.MissionControl -> Div1.HCO",
+    "backlog_shaping": "Div1.HCO -> Div2.MasterPlanner",
+    "budget_capacity": "Div1.HCO -> Div3.Treasury",
+    "implementation": "Div1.HCO -> Div4.Production",
+    "qa_security_review": "Div1.HCO -> Div5.QualificationsLibraryLearning",
+    "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External",
+    "complex_decision": "Div1.HCO -> Div7.MissionControl"
   },
   "rituals": [
     "daily_pulse",

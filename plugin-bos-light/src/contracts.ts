@@ -1,11 +1,11 @@
 export type Division =
-  | "Div1.Executive"
+  | "Div7.MissionControl"
+  | "Div1.HCO"
   | "Div2.MasterPlanner"
-  | "Div3.Production"
-  | "Div4.Operations"
-  | "Div5.Qualifications"
-  | "Div6.Resources"
-  | "Div7.Strategy";
+  | "Div3.Treasury"
+  | "Div4.Production"
+  | "Div5.QualificationsLibraryLearning"
+  | "Div6.External";
 
 export interface BPIScore {
   schema_version: "1.0";
@@ -110,7 +110,7 @@ export interface EvalGateResult {
   warning_count: number;
   not_run_count: number;
   evaluated_at: string;
-  evaluated_by: "Div5.Qualifications";
+  evaluated_by: "Div5.QualificationsLibraryLearning";
 }
 
 export interface CircuitBreakerRecord {
@@ -136,7 +136,7 @@ export interface DecisionMetadata {
   decision_type: "POLICY_UPDATE" | "BATCH_APPROVAL" | "RUSH_AUTHORIZATION" | "EXPERIMENT" | "SELF_HEALING";
   emitted_events: string[];
   recommended_action: string;
-  decided_by: "Div7.Executive";
+  decided_by: "Div7.MissionControl";
   decided_at: string;
 }
 

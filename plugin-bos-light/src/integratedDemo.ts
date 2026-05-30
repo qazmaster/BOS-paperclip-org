@@ -308,7 +308,7 @@ export function normalizeA1ToA10FixtureSeeds(seedIssues: A1ToA10FixtureSeedIssue
         problem_statement: isNonEmptyString(seed.problem_statement)
           ? seed.problem_statement.trim()
           : `Fixture candidate for integrated BOS Light demo: ${title || issueId}.`,
-        producer_division: seed.producer_division ?? "Div3.Production",
+        producer_division: seed.producer_division ?? "Div4.Production",
         acceptance_criteria: acceptanceCriteria,
         resources,
         ...(seed.qa_policy ? { qa_policy: normalizedStringList(seed.qa_policy, [], row, "qa_policy", errors) } : {})
