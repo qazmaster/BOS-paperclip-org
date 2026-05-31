@@ -1,0 +1,219 @@
+{
+  "artifact_type": "fail-closed-unsupported",
+  "capability_matrix_excerpt": {
+    "plugin.runtime.registration": {
+      "fallback_path": "Keep pure BOS Light logic callable directly while plugin entrypoint support is fallback-only and host plugin load remains unproved.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.plugin_registration.observed_registered_keys, surfaces.plugin_registration.readback_proof",
+      "status": "fallback-only",
+      "surface": "Plugin entrypoint and definePlugin/import-path runtime"
+    },
+    "registration.actions": {
+      "fallback_path": "Use managed native issue/comment/document review workflows when host actions are unavailable; never mark rows approval-requested from fallback diagnostics alone.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.actions.observed_registered_keys, surfaces.actions.readback_proof, side_effect_counters.action_invocations_attempted",
+      "status": "fallback-only",
+      "surface": "ctx.actions.register action API"
+    },
+    "registration.data": {
+      "fallback_path": "Render Betting Table candidates from confirmed native issue/document/comment artifacts or generated markdown while data provider hydration remains fallback-only.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.data_providers.observed_registered_keys, surfaces.data_providers.readback_proof",
+      "status": "fallback-only",
+      "surface": "ctx.data.register data provider API"
+    },
+    "registration.tools": {
+      "fallback_path": "Run pure TypeScript functions directly in local tests or mirror Eval Gate and Circuit Breaker evidence through confirmed native document/comment artifact paths until host piko:* tool registration and invocation are proven.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.tools.observed_registered_keys, surfaces.tools.readback_proof, surfaces.tools.piko_invocation_results",
+      "status": "fallback-only",
+      "surface": "ctx.tools.register tool registration API"
+    },
+    "ui.dashboard_widgets": {
+      "fallback_path": "Publish Betting Table as confirmed native issue/document/comment artifacts or markdown when dashboard widgets are unavailable.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.dashboard_widgets.render_ids, surfaces.dashboard_widgets.readback_proof",
+      "status": "fallback-only",
+      "surface": "Dashboard widget UI slot"
+    },
+    "ui.issue_detail_tabs": {
+      "fallback_path": "Surface BOS status, circuit state, and gate results through confirmed native issue labels/comments/documents or markdown while issue tabs are unavailable.",
+      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.issue_detail_tabs.render_ids, surfaces.issue_detail_tabs.readback_proof",
+      "status": "fallback-only",
+      "surface": "Issue detail tab UI slots"
+    }
+  },
+  "fallback_diagnostics": [
+    {
+      "code": "missing_live_probe_env",
+      "message": "S05 did not run live HTTP probes because required sandbox env was absent.",
+      "missing_env": [
+        "PAPERCLIP_BASE_URL",
+        "PAPERCLIP_API_KEY"
+      ]
+    },
+    {
+      "code": "no_confirmed_s05_surfaces",
+      "message": "No plugin/UI surface was promoted; evidence remains fallback-only or unsupported until S05 runtime readbacks pass."
+    }
+  ],
+  "generated_at": "2026-05-31T18:49:33Z",
+  "inputs": {
+    "auth_header_name": "Authorization",
+    "auth_token_env": "PAPERCLIP_API_KEY",
+    "base_url": "",
+    "companyId": "",
+    "issueId": "",
+    "live_probe_enabled": false,
+    "manifest_path": "plugin-bos-light/manifest.paperclip-plugin.json",
+    "runtime_matrix_path": "plugin-bos-light/capabilities.paperclip-runtime.json",
+    "timeout_seconds": 10.0
+  },
+  "phase": "live",
+  "phase_timestamps": {
+    "evidence_written": "2026-05-31T18:49:33Z",
+    "inputs_loaded": "2026-05-31T18:49:33Z",
+    "start": "2026-05-31T18:49:33Z"
+  },
+  "redaction": {
+    "redaction_errors": [],
+    "secret_env_vars": [
+      "PAPERCLIP_API_KEY"
+    ],
+    "secrets_redacted": true
+  },
+  "requested_manifest": {
+    "actions": [
+      "approve-batch"
+    ],
+    "capabilities": [
+      "config.read",
+      "config.write",
+      "events.subscribe",
+      "state.read",
+      "state.write",
+      "entities.read",
+      "entities.write",
+      "issues.read",
+      "issues.write",
+      "activity.write",
+      "data.register",
+      "actions.register",
+      "tools.register"
+    ],
+    "data_providers": [
+      "betting-table"
+    ],
+    "plugin_key": "bos-light",
+    "tools": [
+      "piko:bpi-score",
+      "piko:blueprint-gen",
+      "piko:bpi-blueprint-artifact",
+      "piko:eval-gate",
+      "piko:eval-gate-evidence",
+      "piko:circuit-breaker-observe",
+      "piko:decide"
+    ],
+    "ui": {
+      "dashboard_widgets": [
+        "betting-table"
+      ],
+      "issue_detail_tabs": [
+        "bos-status",
+        "circuit-state",
+        "gate-results"
+      ]
+    }
+  },
+  "route_attempts": [],
+  "runner": {
+    "max_response_bytes": 98304,
+    "max_route_attempts": 24,
+    "script": "scripts/run_s05_plugin_ui_surface_probe.py",
+    "standard_library_only": true
+  },
+  "runtime": {
+    "build": "unknown",
+    "observed_from_route_ids": [],
+    "version": "unknown"
+  },
+  "schema_version": "s05-plugin-ui-surface-probe/v1",
+  "side_effect_counters": {
+    "action_invocations_attempted": 0,
+    "approval_requests_created": 0,
+    "comments_created": 0,
+    "documents_created": 0,
+    "issue_mutations_attempted": 0,
+    "native_approvals_created": 0,
+    "piko_invocations_attempted": 0,
+    "route_requests_attempted": 0
+  },
+  "surfaces": {
+    "actions": {
+      "fallback_reason": "live Paperclip base URL/API key not supplied",
+      "observed_registered_keys": [],
+      "readback_proof": null,
+      "requested_keys": [
+        "approve-batch"
+      ],
+      "status": "fallback-only",
+      "validation_errors": []
+    },
+    "dashboard_widgets": {
+      "fallback_reason": "live Paperclip base URL/API key not supplied",
+      "observed_registered_keys": [],
+      "readback_proof": null,
+      "render_ids": {},
+      "requested_keys": [
+        "betting-table"
+      ],
+      "status": "fallback-only",
+      "validation_errors": []
+    },
+    "data_providers": {
+      "fallback_reason": "live Paperclip base URL/API key not supplied",
+      "observed_registered_keys": [],
+      "readback_proof": null,
+      "requested_keys": [
+        "betting-table"
+      ],
+      "status": "fallback-only",
+      "validation_errors": []
+    },
+    "issue_detail_tabs": {
+      "fallback_reason": "live Paperclip base URL/API key not supplied",
+      "observed_registered_keys": [],
+      "readback_proof": null,
+      "render_ids": {},
+      "requested_keys": [
+        "bos-status",
+        "circuit-state",
+        "gate-results"
+      ],
+      "status": "fallback-only",
+      "validation_errors": []
+    },
+    "plugin_registration": {
+      "fallback_reason": "live Paperclip base URL/API key not supplied",
+      "observed_registered_keys": [],
+      "readback_proof": null,
+      "requested_keys": [
+        "bos-light"
+      ],
+      "status": "fallback-only",
+      "validation_errors": []
+    },
+    "tools": {
+      "fallback_reason": "live Paperclip base URL/API key not supplied",
+      "observed_registered_keys": [],
+      "readback_proof": null,
+      "requested_keys": [
+        "piko:bpi-score",
+        "piko:blueprint-gen",
+        "piko:bpi-blueprint-artifact",
+        "piko:eval-gate",
+        "piko:eval-gate-evidence",
+        "piko:circuit-breaker-observe",
+        "piko:decide"
+      ],
+      "status": "fallback-only",
+      "validation_errors": []
+    }
+  },
+  "validation_errors": []
+}
