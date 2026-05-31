@@ -1,0 +1,182 @@
+{
+  "schema_version": "m005-s01-evidence-summary/v1",
+  "generated_at": "2026-05-31T19:00:00Z",
+  "slice": "M005-S01",
+  "slice_title": "Plugin Registration + Hermes Xiaomi Runtime Proof",
+  "probes": [
+    {
+      "probe_name": "plugin-ui-surface-probe",
+      "evidence_path": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json",
+      "artifact_type": "fail-closed-unsupported",
+      "schema_version": "s05-plugin-ui-surface-probe/v1",
+      "validator": "scripts/validate_s05_plugin_ui_surface_probe.py",
+      "validation_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final",
+      "validation_result": "pass",
+      "phase": "final",
+      "runtime_version": "unknown",
+      "runtime_build": "unknown",
+      "live_probe_enabled": false,
+      "blocker_codes": [
+        "missing_live_probe_env"
+      ],
+      "blocker_reason": "missing_base_url_api_key_env",
+      "surfaces_assessed": {
+        "plugin_registration": "fallback-only",
+        "tools": "fallback-only",
+        "data_providers": "fallback-only",
+        "actions": "fallback-only",
+        "dashboard_widgets": "fallback-only",
+        "issue_detail_tabs": "fallback-only"
+      },
+      "side_effect_counters": {
+        "action_invocations_attempted": 0,
+        "approval_requests_created": 0,
+        "comments_created": 0,
+        "documents_created": 0,
+        "issue_mutations_attempted": 0,
+        "native_approvals_created": 0,
+        "piko_invocations_attempted": 0,
+        "route_requests_attempted": 0
+      },
+      "capability_promotions": [],
+      "notes": "S05-style plugin/UI surface probe executed without live Paperclip credentials. All surfaces recorded as fallback-only with zero side effects. Validator passed: fail-closed-unsupported artifact is schema-valid and contains no capability promotions per MEM058."
+    },
+    {
+      "probe_name": "hermes-xiaomi-runtime-probe",
+      "evidence_path": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json",
+      "artifact_type": "fail-closed-blocker",
+      "schema_version": "m005-s01-hermes-xiaomi/v1",
+      "validator": "scripts/validate_m005_s01_hermes_xiaomi_probe.py",
+      "validation_command": "python3 scripts/validate_m005_s01_hermes_xiaomi_probe.py --evidence runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json --allow-blocker",
+      "validation_result": "pass",
+      "phase": "hermes",
+      "selected_path": "hermes_local_with_xiaomi_backend",
+      "adapter_type": "hermes_local",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "blocker_codes": [
+        "adapter_registry_auth_denied",
+        "missing_auth",
+        "missing_xiaomi_api_key",
+        "missing_xiaomi_base_url",
+        "test_environment_auth_denied"
+      ],
+      "blocker_reason": "adapter_registry_auth_denied,missing_auth,missing_xiaomi_api_key,missing_xiaomi_base_url,test_environment_auth_denied",
+      "bounded_runtime_invocations": 0,
+      "wake_count_delta": null,
+      "result_json_bos_present": false,
+      "capability_promotions": [],
+      "no_core_modification": {
+        "core_source_patched": false,
+        "direct_db_mutation": false,
+        "paperclip_core_patched": false,
+        "private_internal_imports": false,
+        "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation."
+      },
+      "notes": "Bounded Hermes Xiaomi probe attempted hermes_local adapter with xiaomi provider and mimo-v2.5-pro model. Preflight blocked at adapter registry and testEnvironment with auth-related codes. Zero runtime invocations, no resultJson.bos. Validator passed: fail-closed-blocker artifact is schema-valid with precise blocker codes, no capability promotions, and no core modification per MEM058."
+    }
+  ],
+  "capability_matrix_updates": {
+    "hermes.execution.xiaomi": {
+      "previous_status": "fallback-only",
+      "current_status": "fallback-only",
+      "status_changed": false,
+      "evidence_source": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json",
+      "blocker_codes": [
+        "adapter_registry_auth_denied",
+        "missing_auth",
+        "missing_xiaomi_api_key",
+        "missing_xiaomi_base_url",
+        "test_environment_auth_denied"
+      ],
+      "promotion_blocked_reason": "fail-closed-blocker artifact does not satisfy passing proof requirements: adapter registry auth denied, missing auth credentials, test environment auth denied, no bounded runtime invocations, no resultJson.bos, no wakeCountDelta=1."
+    },
+    "plugin.runtime.registration": {
+      "previous_status": "fallback-only",
+      "current_status": "fallback-only",
+      "status_changed": false,
+      "evidence_source": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json",
+      "promotion_blocked_reason": "fail-closed-unsupported artifact: live Paperclip base URL/API key not supplied, no plugin registration readback."
+    },
+    "registration.tools": {
+      "previous_status": "fallback-only",
+      "current_status": "fallback-only",
+      "status_changed": false,
+      "evidence_source": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json",
+      "promotion_blocked_reason": "fail-closed-unsupported artifact: live Paperclip base URL/API key not supplied, no tool registration readback."
+    },
+    "registration.data": {
+      "previous_status": "fallback-only",
+      "current_status": "fallback-only",
+      "status_changed": false,
+      "evidence_source": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json",
+      "promotion_blocked_reason": "fail-closed-unsupported artifact: live Paperclip base URL/API key not supplied, no data provider registration readback."
+    },
+    "registration.actions": {
+      "previous_status": "fallback-only",
+      "current_status": "fallback-only",
+      "status_changed": false,
+      "evidence_source": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json",
+      "promotion_blocked_reason": "fail-closed-unsupported artifact: live Paperclip base URL/API key not supplied, no action registration readback."
+    },
+    "ui.dashboard_widgets": {
+      "previous_status": "fallback-only",
+      "current_status": "fallback-only",
+      "status_changed": false,
+      "evidence_source": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json",
+      "promotion_blocked_reason": "fail-closed-unsupported artifact: live Paperclip base URL/API key not supplied, no dashboard widget render ids."
+    },
+    "ui.issue_detail_tabs": {
+      "previous_status": "fallback-only",
+      "current_status": "fallback-only",
+      "status_changed": false,
+      "evidence_source": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json",
+      "promotion_blocked_reason": "fail-closed-unsupported artifact: live Paperclip base URL/API key not supplied, no issue detail tab render ids."
+    }
+  },
+  "confirmed_surfaces": [],
+  "fallback_only_surfaces": [
+    "hermes.execution.xiaomi",
+    "plugin.runtime.registration",
+    "registration.tools",
+    "registration.data",
+    "registration.actions",
+    "ui.dashboard_widgets",
+    "ui.issue_detail_tabs"
+  ],
+  "unvalidated_surfaces": [
+    "company_template.import_export",
+    "agents.syntax",
+    "plugin.runtime.version_build",
+    "config.api",
+    "state.issue_scoped",
+    "activity.logging",
+    "events.issue_lifecycle",
+    "approvals.native"
+  ],
+  "posture": {
+    "capability_promotions_require_passing_proof": true,
+    "fail_closed_blocker_artifacts_accepted": true,
+    "fail_closed_unsupported_artifacts_accepted": true,
+    "unsupported_boundaries_rejected": true,
+    "plaintext_credential_values_allowed": false,
+    "paperclip_core_or_direct_database_mutation_allowed": false,
+    "s12_disposition": "approved_rescope",
+    "s12_source": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+    "m005_s01_source": "runtime-evidence/M005-S01-evidence-summary.json",
+    "no_promotion_from_blocker_evidence": true,
+    "mem058_compliant": true
+  },
+  "guardrails": {
+    "native_approval_mutated": false,
+    "no_secret_diagnostics": true,
+    "hermes_execution_attempted": true,
+    "hermes_execution_blocked_at_preflight": true,
+    "gsd_pi_execution_attempted": false,
+    "plugin_actions_invoked": 0,
+    "activity_logs_written": 0,
+    "issues_created": 0,
+    "documents_created": 0,
+    "comments_created": 0
+  }
+}
