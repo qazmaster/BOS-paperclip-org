@@ -48,11 +48,51 @@ def valid_template() -> dict:
             "budget_capacity": "Div1.HCO -> Div3.Treasury",
             "implementation": "Div1.HCO -> Div4.Production",
             "qa_security_review": "Div1.HCO -> Div5.QualificationsLibraryLearning",
-            "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External",
+            "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning",
+            "paid_credentialed_external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div3.Treasury -> Div6.External -> Div5.QualificationsLibraryLearning",
             "complex_decision": "Div1.HCO -> Div7.MissionControl",
         },
         "rituals": ["daily_pulse", "weekly_review", "batch_approval_ritual"],
     }
+
+
+def profile_content(division_id: str) -> str:
+    extra = {
+        "Div1.HCO": "- External requests -> Div5 local check -> Div3 grant if paid/credentialed -> Div6 collection -> Div5 quarantine/sanitization.\n- Div1 does not do external IO.\n",
+        "Div3.Treasury": "- Grants external API/service access only to Div6.External.\n- Div3 does not perform external IO.\n",
+        "Div5.QualificationsLibraryLearning": "- Quarantine raw external evidence.\n- Receives raw Div6 evidence only for quarantine/review.\n",
+        "Div6.External": "- Return raw evidence only to Div5 for quarantine.\n- Must not bypass Div5 validation.\n",
+    }.get(division_id, "")
+    return f"# {division_id}\n\n## Identity\n{extra}"
+
+
+def task_routing_fixture() -> str:
+    return "\n".join(
+        [
+            "Div7.MissionControl",
+            "Div1.HCO",
+            "Div2.MasterPlanner",
+            "Div3.Treasury",
+            "Div4.Production",
+            "Div5.QualificationsLibraryLearning",
+            "Div6.External",
+            "Div5 checks local knowledge first",
+            "Div3.Treasury grants scoped access",
+            "Div6.External is the only division allowed to touch web",
+            "Div6.External returns raw ExternalEvidencePacket / RawExternalEvidenceBundle output only to Div5.QualificationsLibraryLearning quarantine",
+            "internal divisions may consume only Div5-produced SanitizedKnowledgePacket",
+        ]
+    )
+
+
+def agents_readme_fixture() -> str:
+    return "\n".join(
+        [
+            *(division_id for division_id, *_ in DIVISIONS),
+            "External world -> Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning quarantine",
+            "insert Div3.Treasury before Div6 when paid services, credentials, secrets, or access grants are required",
+        ]
+    )
 
 
 def write_fixture(root: Path, template: dict | None = None) -> None:
@@ -62,10 +102,10 @@ def write_fixture(root: Path, template: dict | None = None) -> None:
     for division_id, _title, _reports_to, folder, _vfp in DIVISIONS:
         profile_dir = root / "agents" / folder
         profile_dir.mkdir(parents=True)
-        (profile_dir / "AGENTS.md").write_text(f"# {division_id}\n\n## Identity\n", encoding="utf-8")
-    (root / "agents" / "README.md").write_text("\n".join(division_id for division_id, *_ in DIVISIONS), encoding="utf-8")
+        (profile_dir / "AGENTS.md").write_text(profile_content(division_id), encoding="utf-8")
+    (root / "agents" / "README.md").write_text(agents_readme_fixture(), encoding="utf-8")
     (root / "company-template" / "org-chart.mmd").write_text("\n".join(division_id for division_id, *_ in DIVISIONS), encoding="utf-8")
-    (root / "company-template" / "task-routing.md").write_text("\n".join(division_id for division_id, *_ in DIVISIONS), encoding="utf-8")
+    (root / "company-template" / "task-routing.md").write_text(task_routing_fixture(), encoding="utf-8")
     (root / "company-template" / "rituals.md").write_text(
         "# Daily Pulse\n# Weekly Review\n# Batch Approval Ritual\n",
         encoding="utf-8",
@@ -163,6 +203,51 @@ class CompanyTemplateValidatorTests(unittest.TestCase):
         self.assertIn("routing_rules.implementation", joined)
         self.assertIn("expected v1.4.1 route 'Div1.HCO -> Div4.Production'", joined)
         self.assertIn("found 'Div1.HCO -> Div3.Treasury -> Div4.Production'", joined)
+
+    def test_external_io_route_requires_div5_quarantine_return(self):
+        def mutate(_root: Path, template: dict) -> None:
+            template["routing_rules"]["external_io_request"] = "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External"
+
+        errors = self.validate_fixture(mutate)
+        joined = "\n".join(errors)
+        self.assertIn("routing_rules.external_io_request", joined)
+        self.assertIn("expected v1.4.1 route 'Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning'", joined)
+        self.assertIn("found 'Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External'", joined)
+
+    def test_paid_or_credentialed_external_io_route_requires_div3_grant(self):
+        def mutate(_root: Path, template: dict) -> None:
+            template["routing_rules"]["paid_credentialed_external_io_request"] = "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning"
+
+        errors = self.validate_fixture(mutate)
+        joined = "\n".join(errors)
+        self.assertIn("routing_rules.paid_credentialed_external_io_request", joined)
+        self.assertIn("Div3.Treasury -> Div6.External", joined)
+
+    def test_external_io_security_doc_gap_reports_exact_missing_snippet(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_fixture(root)
+            routing_path = root / "company-template" / "task-routing.md"
+            routing_path.write_text(routing_path.read_text(encoding="utf-8").replace("Div6.External is the only division allowed to touch web", "Div6 handles requests"), encoding="utf-8")
+            errors = validator.validate(root)
+
+        joined = "\n".join(errors)
+        self.assertIn("company-template/task-routing.md", joined)
+        self.assertIn("Div6-only external IO", joined)
+        self.assertIn("external IO security invariant missing", joined)
+
+    def test_div6_profile_must_not_bypass_div5_quarantine(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_fixture(root)
+            profile_path = root / "agents" / "Div6_External" / "AGENTS.md"
+            profile_path.write_text(profile_path.read_text(encoding="utf-8").replace("Return raw evidence only to Div5 for quarantine", "Return raw evidence to requester"), encoding="utf-8")
+            errors = validator.validate(root)
+
+        joined = "\n".join(errors)
+        self.assertIn("agents/Div6_External/AGENTS.md", joined)
+        self.assertIn("Div6 raw evidence destination", joined)
+        self.assertIn("Return raw evidence only to Div5 for quarantine", joined)
 
     def test_exactly_seven_divisions_boundary(self):
         def mutate(_root: Path, template: dict) -> None:

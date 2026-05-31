@@ -33,7 +33,7 @@ Local fixture evidence that still does not promote host support:
 
 - `python3 scripts/validate_company_template.py` proves only the repository-local company template contract.
 - `plugin-bos-light` tests exercise BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker logic through pure functions and adapter seams.
-- `python3 scripts/run_a1_a10_demo.py` composes A1-A10 as fixture evidence and must keep `native_support_confirmed=false` unless separate live proof exists.
+- `python3 scripts/run_a1_a10_demo.py` composes A1-A10 as fixture evidence and must keep `native_support_confirmed=false` unless separate live proof exists; `docs/10_A1_A10_DEMO.md` describes that baseline, and its fixture output keeps `runtime_capability_posture` and `gap_ledger` visible for cross-checking unpromoted runtime surfaces.
 - `python3 scripts/validate_runtime_capabilities.py` checks that the matrix, source boundary wording, and this report do not overclaim.
 - `python3 scripts/run_m002_regression_closure.py` is the S06 aggregate closure runner; it writes `runtime-evidence/M002-S06-regression-closure.json` with per-command exit codes, durations, redacted stdout/stderr digests, and an overall fail-closed verdict.
 

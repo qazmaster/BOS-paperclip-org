@@ -26,6 +26,28 @@ DIVISIONS = (
 )
 
 
+def profile_content(division_id: str) -> str:
+    extra = {
+        "Div1.HCO": "- External requests -> Div5 local check -> Div3 grant if paid/credentialed -> Div6 collection -> Div5 quarantine/sanitization.\n- Div1 does not do external IO.\n",
+        "Div3.Treasury": "- Grants external API/service access only to Div6.External.\n- Div3 does not perform external IO.\n",
+        "Div5.QualificationsLibraryLearning": "- Quarantine raw external evidence.\n- Receives raw Div6 evidence only for quarantine/review.\n",
+        "Div6.External": "- Return raw evidence only to Div5 for quarantine.\n- Must not bypass Div5 validation.\n",
+    }.get(division_id, "")
+    return f"# {division_id}\nProfile for {division_id}.\n{extra}"
+
+
+def task_routing_fixture(all_divisions: str) -> str:
+    return all_divisions + "\n" + "\n".join(
+        [
+            "Div5 checks local knowledge first",
+            "Div3.Treasury grants scoped access",
+            "Div6.External is the only division allowed to touch web",
+            "Div6.External returns raw ExternalEvidencePacket / RawExternalEvidenceBundle output only to Div5.QualificationsLibraryLearning quarantine",
+            "internal divisions may consume only Div5-produced SanitizedKnowledgePacket",
+        ]
+    )
+
+
 def write_valid_repo(root: Path) -> None:
     (root / "company-template").mkdir(parents=True)
     (root / "agents").mkdir()
@@ -33,7 +55,7 @@ def write_valid_repo(root: Path) -> None:
     for division_id, folder, reports_to in DIVISIONS:
         profile = f"agents/{folder}/AGENTS.md"
         (root / "agents" / folder).mkdir()
-        (root / profile).write_text(f"# {division_id}\nProfile for {division_id}.\n", encoding="utf-8")
+        (root / profile).write_text(profile_content(division_id), encoding="utf-8")
         divisions.append(
             {
                 "id": division_id,
@@ -55,7 +77,8 @@ def write_valid_repo(root: Path) -> None:
             "implementation": "Div1.HCO -> Div4.Production",
             "qa_security_review": "Div1.HCO -> Div5.QualificationsLibraryLearning",
             "budget_capacity": "Div1.HCO -> Div3.Treasury",
-            "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External",
+            "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning",
+            "paid_credentialed_external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div3.Treasury -> Div6.External -> Div5.QualificationsLibraryLearning",
             "complex_decision": "Div1.HCO -> Div7.MissionControl",
         },
         "rituals": ["daily_pulse", "weekly_review", "batch_approval_ritual"],
@@ -63,11 +86,16 @@ def write_valid_repo(root: Path) -> None:
     (root / "company-template" / "bos-company-template.json").write_text(json.dumps(template, indent=2), encoding="utf-8")
     all_divisions = "\n".join(division_id for division_id, _, _ in DIVISIONS)
     (root / "company-template" / "org-chart.mmd").write_text(all_divisions, encoding="utf-8")
-    (root / "company-template" / "task-routing.md").write_text(all_divisions, encoding="utf-8")
+    (root / "company-template" / "task-routing.md").write_text(task_routing_fixture(all_divisions), encoding="utf-8")
     (root / "company-template" / "rituals.md").write_text(
         "Daily Pulse\nWeekly Review\nBatch Approval Ritual\n", encoding="utf-8"
     )
-    (root / "agents" / "README.md").write_text(all_divisions, encoding="utf-8")
+    (root / "agents" / "README.md").write_text(
+        all_divisions
+        + "\nExternal world -> Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning quarantine"
+        + "\ninsert Div3.Treasury before Div6 when paid services, credentials, secrets, or access grants are required\n",
+        encoding="utf-8",
+    )
 
     (root / "plugin-bos-light").mkdir()
     matrix = {
@@ -149,7 +177,7 @@ class PaperclipRuntimeProbeTests(unittest.TestCase):
         self.assertEqual("local-contract-invalid", report["local_contract"]["company_template"]["status"])
         joined = "\n".join(report["local_contract"]["company_template"]["errors"])
         self.assertIn("routing_rules.external_io_request", joined)
-        self.assertIn("expected v1.4.1 route 'Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External'", joined)
+        self.assertIn("expected v1.4.1 route 'Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning'", joined)
         self.assertIn("found 'Div1.HCO -> Div6.External'", joined)
 
     def test_missing_paperclip_path_is_unvalidated_health_not_failure(self):

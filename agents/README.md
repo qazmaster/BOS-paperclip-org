@@ -47,5 +47,5 @@ Div7.MissionControl / Mission Control / Strategy
 - Budget/access -> Div3.Treasury.
 - Implementation -> Div4.Production.
 - QA/security/library review -> Div5.QualificationsLibraryLearning.
-- External world -> Div6.External, only via Div1.HCO and Div5.QualificationsLibraryLearning quarantine.
+- External world -> Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning quarantine; insert Div3.Treasury before Div6 when paid services, credentials, secrets, or access grants are required.
 - Ambiguous/complex/chaotic decisions -> Div7.MissionControl.

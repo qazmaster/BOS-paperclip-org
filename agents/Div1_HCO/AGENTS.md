@@ -35,7 +35,7 @@ Correct routing, clear communication, visible escalation and workload control.
 - High-level mission -> Div7.MissionControl first.
 - Routine low-risk work -> deterministic/Paperclip-native routing under Div1 policy.
 - Knowledge requests -> Div5 first.
-- External requests -> Div5 -> Div3 if needed -> Div6.
+- External requests -> Div5 local check -> Div3 grant if paid/credentialed -> Div6 collection -> Div5 quarantine/sanitization.
 - Budget/access/resource questions -> Div3.
 - Implementation -> Div4.
 - Independent qualification -> Div5.

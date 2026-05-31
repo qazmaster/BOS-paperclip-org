@@ -39,8 +39,38 @@ EXPECTED_ROUTING_RULES = {
     "budget_capacity": "Div1.HCO -> Div3.Treasury",
     "implementation": "Div1.HCO -> Div4.Production",
     "qa_security_review": "Div1.HCO -> Div5.QualificationsLibraryLearning",
-    "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External",
+    "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning",
+    "paid_credentialed_external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div3.Treasury -> Div6.External -> Div5.QualificationsLibraryLearning",
     "complex_decision": "Div1.HCO -> Div7.MissionControl",
+}
+EXTERNAL_IO_SECURITY_SNIPPETS = {
+    Path("company-template/task-routing.md"): {
+        "Div5 local check before external IO": "Div5 checks local knowledge first",
+        "Div3 conditional paid/credentialed grant": "Div3.Treasury grants scoped access",
+        "Div6-only external IO": "Div6.External is the only division allowed to touch web",
+        "Div5 quarantine return": "Div6.External returns raw ExternalEvidencePacket / RawExternalEvidenceBundle output only to Div5.QualificationsLibraryLearning quarantine",
+        "sanitized internal consumption": "internal divisions may consume only Div5-produced SanitizedKnowledgePacket",
+    },
+    Path("agents/Div1_HCO/AGENTS.md"): {
+        "Div1 external route governance": "External requests -> Div5 local check -> Div3 grant if paid/credentialed -> Div6 collection -> Div5 quarantine/sanitization",
+        "Div1 no external IO": "Div1 does not do external IO",
+    },
+    Path("agents/Div3_Treasury/AGENTS.md"): {
+        "Div3 grants only to Div6": "Grants external API/service access only to Div6.External",
+        "Div3 no external IO": "Div3 does not perform external IO",
+    },
+    Path("agents/Div5_QualificationsLibraryLearning/AGENTS.md"): {
+        "Div5 quarantine": "Quarantine raw external evidence",
+        "Div5 receives raw Div6 evidence": "Receives raw Div6 evidence only for quarantine/review",
+    },
+    Path("agents/Div6_External/AGENTS.md"): {
+        "Div6 raw evidence destination": "Return raw evidence only to Div5 for quarantine",
+        "Div6 must not bypass Div5": "Must not bypass Div5 validation",
+    },
+    Path("agents/README.md"): {
+        "agents README external route": "External world -> Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning quarantine",
+        "agents README Div3 conditional": "insert Div3.Treasury before Div6 when paid services, credentials, secrets, or access grants are required",
+    },
 }
 LEGACY_DIVISION_IDS = {
     "Div1.Executive",
@@ -352,6 +382,30 @@ def _validate_support_assets(
         for division_id in sorted(division_ids):
             if division_id not in agents_readme:
                 errors.add("agents/README.md", division_id, "compatibility issue: agents README does not include division")
+
+    _validate_external_io_security_snippets(root, errors)
+
+
+def _validate_external_io_security_snippets(root: Path, errors: ValidationErrorCollector) -> None:
+    """Reject active docs/profiles that weaken the v1.4.1 external-IO quarantine route."""
+
+    for relative_path, snippets in EXTERNAL_IO_SECURITY_SNIPPETS.items():
+        asset_file = root / relative_path
+        if not asset_file.exists():
+            # The normal support/profile validation reports missing files; avoid duplicate noise here.
+            continue
+        try:
+            asset_text = asset_file.read_text(encoding="utf-8")
+        except OSError:
+            # The normal support/profile validation reports unreadable files; avoid duplicate noise here.
+            continue
+        for context, required_snippet in snippets.items():
+            if required_snippet not in asset_text:
+                errors.add(
+                    relative_path,
+                    context,
+                    f"external IO security invariant missing: expected text {required_snippet!r}",
+                )
 
 
 def validate(root: Path) -> list[str]:
