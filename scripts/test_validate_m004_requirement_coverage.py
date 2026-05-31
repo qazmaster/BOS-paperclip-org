@@ -348,6 +348,35 @@ class ValidateM004RequirementCoverageTests(unittest.TestCase):
             self.assertTrue(audit["failure_visibility"]["diagnostics_include_requirement_id"])
             self.assertFalse(audit["load_profile"]["network_access"])
             self.assertFalse(audit["load_profile"]["subprocesses"])
+            self.assertEqual(list(validator.REQUIRED_REQUIREMENT_IDS), audit["posture"]["required_requirements"])
+            self.assertFalse(audit["posture"]["runtime_capability_promotions_allowed"])
+
+    def test_final_audit_records_failed_sanitized_diagnostics(self) -> None:
+        with FixtureRoot() as root:
+            payload = valid_ledger()
+            secret_value = "Authorization: Bearer abcdefghijklmnopqrstuvwxyz"
+            payload["diagnostics"] = {"raw": secret_value}
+            ledger_path = write_ledger(root, payload)
+            audit_path = Path("runtime-evidence/final-audit.json")
+            exit_code = validator.main([
+                "--root",
+                str(root),
+                "--ledger",
+                str(ledger_path),
+                "--phase",
+                "final",
+                "--write-audit",
+                str(audit_path),
+            ])
+            self.assertEqual(1, exit_code)
+            audit_text = (root / audit_path).read_text(encoding="utf-8")
+            self.assertNotIn("abcdefghijklmnopqrstuvwxyz", audit_text)
+            audit = json.loads(audit_text)
+            self.assertFalse(audit["passed"])
+            self.assertEqual("invalid", audit["classification"])
+            self.assertGreater(audit["diagnostics"]["error_count"], 0)
+            self.assertTrue(any("secret-like string value is not redacted" in error for error in audit["diagnostics"]["errors"]))
+            self.assertEqual("final", audit["phase"])
 
 
 if __name__ == "__main__":
