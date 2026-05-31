@@ -10,7 +10,7 @@ function issue(overrides: Partial<SeededIssueFields> = {}): SeededIssueFields {
     issue_id: "issue_1",
     title: "Paperclip-visible BOS artifact flow",
     problem_statement: "Operator needs bounded BOS Light artifacts on one issue.",
-    producer_division: "Div3.Production",
+    producer_division: "Div4.Production",
     acceptance_criteria: ["BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker evidence are visible"],
     resources: ["Sandbox Paperclip issue"],
     qa_policy: ["Do not execute Hermes or GSD-Pi adapters while blockers are active"],

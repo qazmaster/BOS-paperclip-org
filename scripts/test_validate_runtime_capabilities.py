@@ -149,7 +149,29 @@ def valid_matrix() -> dict:
         if key in MANIFEST_UI_BY_KEY:
             entry["manifest_ui"] = copy.deepcopy(MANIFEST_UI_BY_KEY[key])
         capabilities.append(entry)
-    return {"schema_version": "0.1-test", "plugin_key": "bos-light", "capabilities": capabilities}
+    return {
+        "schema_version": "0.1-test",
+        "plugin_key": "bos-light",
+        "guardrail": f"Do not treat {validator.M003_S04_DECISION_READBACK_EVIDENCE_PATH} fail-closed decision readback blocker evidence as runtime support; it promotes no capability status.",
+        "no_promotion_evidence": [
+            {
+                "slice": "M003-S04",
+                "evidence_path": str(validator.M003_S04_DECISION_READBACK_EVIDENCE_PATH),
+                "artifact_type": "fail-closed-blocker",
+                "selected_surface": "markdown-only",
+                "readback_status": "blocked_preflight",
+                "blocker_reason": "missing_base_url_company_id_auth_token_env",
+                "status_effect": "no capability status promotion",
+                "guardrails": [
+                    "native_approval_mutated=false",
+                    "no_secret_diagnostics=true",
+                    "hermes_execution_attempted=false",
+                    "gsd_pi_execution_attempted=false",
+                ],
+            }
+        ],
+        "capabilities": capabilities,
+    }
 
 
 def s04_live_artifact_evidence() -> dict:
@@ -277,6 +299,36 @@ def write_s05_evidence(root: Path, evidence: dict | None = None) -> None:
     path.write_text(json.dumps(copy.deepcopy(evidence if evidence is not None else s05_plugin_ui_surface_evidence()), indent=2), encoding="utf-8")
 
 
+def m003_s04_decision_readback_blocker() -> dict:
+    return {
+        "schema_version": "m003-s04-live-decision-artifact-readback/v1",
+        "artifact_type": "fail-closed-blocker",
+        "phase": "live",
+        "generated_at": "2026-05-31T00:00:00Z",
+        "inputs": {"base_url": "not-provided", "companyId": "not-provided", "issueId": "not-provided", "auth_token_env": "PAPERCLIP_API_KEY", "auth_header_name": "Authorization"},
+        "runtime": {"version": None, "build": None},
+        "selected_surface": "markdown-only",
+        "artifact_ref": "markdown-only://issues/missing/decisions/decision_m003_s04_live_readback",
+        "readback_status": "blocked_preflight",
+        "blocker_reason": "missing_base_url_company_id_auth_token_env",
+        "content_hash": "a" * 64,
+        "bounded_snippet": "# BOS Decision Record",
+        "artifact_refs": {"document": None, "comments": [], "markdown_fallback": "markdown-only://issues/missing/decisions/decision_m003_s04_live_readback", "native_approval": None},
+        "readbacks": {"documents": [], "comments": []},
+        "fallback": {"reason": "missing_base_url_company_id_auth_token_env", "deterministic_ref": "markdown-only://issues/missing/decisions/decision_m003_s04_live_readback", "live_proof": False},
+        "diagnostics": [{"phase": "auth.preflight", "status_code": None, "bounded_response_text": None, "malformed_json_reason": None, "timeout_ms": None, "fallback_used": True, "message": "stopped before mutation"}],
+        "side_effect_counts": {"issues_created": 0, "documents_created": 0, "comments_created": 0, "approval_requests_created": 0, "activity_logs_written": 0, "hermes_runs_started": 0, "gsd_pi_runs_started": 0, "plugin_actions_invoked": 0},
+        "capability_claims": {"native_approval": False, "activity_log": False, "hermes": False, "gsd_pi": False, "plugin_actions": False, "unsupported_capability_promoted": False},
+        "invariants": {"decided_by": "Div7.MissionControl", "diagnostics_sanitized": True, "native_approval_mutated": False, "no_secret_diagnostics": True, "hermes_execution_attempted": False, "gsd_pi_execution_attempted": False},
+    }
+
+
+def write_m003_s04_evidence(root: Path, evidence: dict | None = None) -> None:
+    path = root / validator.M003_S04_DECISION_READBACK_EVIDENCE_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(copy.deepcopy(evidence if evidence is not None else m003_s04_decision_readback_blocker()), indent=2), encoding="utf-8")
+
+
 def mark_s04_native_confirmed(matrix: dict) -> None:
     for entry in matrix["capabilities"]:
         key = entry.get("key")
@@ -304,6 +356,7 @@ def write_fixture(root: Path, matrix: dict | str | None = None, manifest: dict |
     (root / "plugin-bos-light" / "src" / "persistence.ts").write_text(PERSISTENCE_TS, encoding="utf-8")
     runtime_source = runtime_capabilities_ts(matrix_value if isinstance(matrix_value, dict) else valid_matrix())
     (root / "plugin-bos-light" / "src" / "runtimeCapabilities.ts").write_text(runtime_source, encoding="utf-8")
+    write_m003_s04_evidence(root)
 
 
 class RuntimeCapabilityValidatorTests(unittest.TestCase):
@@ -543,6 +596,48 @@ class RuntimeCapabilityValidatorTests(unittest.TestCase):
             write_s05_evidence(root)
             errors = validator.validate(root)
         self.assertEqual([], errors)
+
+    def test_m003_s04_no_promotion_ledger_is_required(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            del matrix["no_promotion_evidence"]
+            write_fixture(root, matrix)
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("no_promotion_evidence", joined)
+        self.assertIn("M003 S04 blocker", joined)
+
+    def test_m003_s04_blocker_cannot_confirm_approvals_or_actions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            matrix = valid_matrix()
+            for entry in matrix["capabilities"]:
+                if entry.get("key") == "approvals.native":
+                    entry["status"] = "confirmed"
+                    entry["evidence_source"] = f"Live Paperclip runtime version 0.3.1 and build health.version:0.3.1 in {validator.M003_S04_DECISION_READBACK_EVIDENCE_PATH}."
+                    entry["proof_command"] = f"python3 scripts/validate_m003_s04_live_decision_artifact_readback.py --evidence {validator.M003_S04_DECISION_READBACK_EVIDENCE_PATH} --phase final verifies version and build."
+                    entry["runtime_evidence_field"] = f"{validator.M003_S04_DECISION_READBACK_EVIDENCE_PATH}: runtime.version, runtime.build, readbacks"
+            write_fixture(root, matrix)
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("M003 S04 decision readback evidence may confirm only native document/comment", joined)
+        self.assertIn("fail-closed M003 S04 blocker evidence cannot confirm capability status", joined)
+
+    def test_m003_s04_rejects_unsupported_side_effects_and_claims(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_fixture(root)
+            evidence = m003_s04_decision_readback_blocker()
+            evidence["side_effect_counts"]["plugin_actions_invoked"] = 1
+            evidence["capability_claims"]["hermes"] = True
+            evidence["invariants"]["native_approval_mutated"] = True
+            write_m003_s04_evidence(root, evidence)
+            errors = validator.validate(root)
+        joined = "\n".join(errors)
+        self.assertIn("side_effect_counts.plugin_actions_invoked", joined)
+        self.assertIn("capability_claims.hermes", joined)
+        self.assertIn("invariants.native_approval_mutated", joined)
 
 
 if __name__ == "__main__":

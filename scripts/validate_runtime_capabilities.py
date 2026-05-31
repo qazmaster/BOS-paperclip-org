@@ -25,6 +25,7 @@ RUNTIME_CAPABILITIES_PATH = Path("plugin-bos-light/src/runtimeCapabilities.ts")
 HEALTH_REPORT_PATH = Path("docs/08_RUNTIME_CAPABILITY_HEALTH.md")
 S04_LIVE_ARTIFACT_EVIDENCE_PATH = Path("runtime-evidence/M002-S04-live-artifact-flow.json")
 S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH = Path("runtime-evidence/M002-S05-plugin-ui-surface-probe.json")
+M003_S04_DECISION_READBACK_EVIDENCE_PATH = Path("runtime-evidence/M003-S04-live-decision-artifact-readback.json")
 
 STATUS_ENUM = {"confirmed", "unsupported", "fallback-only", "unvalidated"}
 KEY_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
@@ -85,6 +86,23 @@ S04_ZERO_SIDE_EFFECT_COUNTS = (
     "activity_logs_written",
 )
 
+M003_S04_ALLOWED_PROMOTION_KEYS = {"documents.native", "comments.native"}
+M003_S04_UNSUPPORTED_ZERO_COUNTS = (
+    "approval_requests_created",
+    "activity_logs_written",
+    "hermes_runs_started",
+    "gsd_pi_runs_started",
+    "plugin_actions_invoked",
+)
+M003_S04_FORBIDDEN_CLAIMS = (
+    "native_approval",
+    "activity_log",
+    "hermes",
+    "gsd_pi",
+    "plugin_actions",
+    "unsupported_capability_promoted",
+)
+
 S05_PLUGIN_UI_CONFIRMED_KEYS = {
     "plugin.runtime.registration": "plugin_registration",
     "registration.tools": "tools",
@@ -132,6 +150,10 @@ REQUIRED_HEALTH_REPORT_HEADINGS = (
 REQUIRED_HEALTH_REPORT_PHRASES = (
     "no live Paperclip runtime evidence",
     "plugin-bos-light/capabilities.paperclip-runtime.json",
+    "runtime-evidence/M003-S04-live-decision-artifact-readback.json",
+    "fail-closed-blocker",
+    "blocked_preflight",
+    "no capability status promotion",
     "unvalidated",
     "fallback-only",
     "Paperclip-native approvals",
@@ -499,6 +521,156 @@ def _validate_s05_plugin_ui_surface_evidence(
         if surface_name == "tools" and not _s05_has_successful_piko_invocation(row):
             errors.add(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH, "surfaces.tools.piko_invocation_results", "confirmed registration.tools requires a successful piko invocation result")
 
+def _matrix_mentions_m003_s04(matrix: Mapping[str, Any], entries_by_key: Mapping[str, Mapping[str, Any]]) -> bool:
+    text_parts = [str(matrix.get("guardrail") or "")]
+    no_promotion = matrix.get("no_promotion_evidence")
+    if isinstance(no_promotion, list):
+        text_parts.append(json.dumps(no_promotion, sort_keys=True))
+    for entry in entries_by_key.values():
+        text_parts.extend(
+            str(value)
+            for value in (entry.get("evidence_source"), entry.get("proof_command"), entry.get("runtime_evidence_field"), entry.get("fallback_path"), entry.get("blocker_text"), entry.get("notes"))
+            if isinstance(value, str)
+        )
+    return str(M003_S04_DECISION_READBACK_EVIDENCE_PATH) in "\n".join(text_parts)
+
+
+def _validate_m003_s04_no_promotion_metadata(matrix: Any, errors: ValidationErrorCollector) -> None:
+    if not isinstance(matrix, Mapping):
+        return
+    guardrail = str(matrix.get("guardrail") or "")
+    for phrase in (
+        str(M003_S04_DECISION_READBACK_EVIDENCE_PATH),
+        "fail-closed decision readback blocker evidence",
+        "promotes no capability status",
+    ):
+        if phrase not in guardrail:
+            errors.add(MATRIX_PATH, "guardrail.M003-S04", f"missing M003 S04 no-promotion guardrail phrase {phrase!r}")
+
+    rows = matrix.get("no_promotion_evidence")
+    if not isinstance(rows, list):
+        errors.add(MATRIX_PATH, "no_promotion_evidence", "missing no-promotion evidence ledger for M003 S04 blocker")
+        return
+    m003_rows = [row for row in rows if isinstance(row, Mapping) and row.get("slice") == "M003-S04"]
+    if len(m003_rows) != 1:
+        errors.add(MATRIX_PATH, "no_promotion_evidence.M003-S04", "must contain exactly one M003-S04 no-promotion evidence row")
+        return
+    row = m003_rows[0]
+    expected = {
+        "evidence_path": str(M003_S04_DECISION_READBACK_EVIDENCE_PATH),
+        "artifact_type": "fail-closed-blocker",
+        "selected_surface": "markdown-only",
+        "readback_status": "blocked_preflight",
+        "status_effect": "no capability status promotion",
+    }
+    for field, value in expected.items():
+        if row.get(field) != value:
+            errors.add(MATRIX_PATH, f"no_promotion_evidence.M003-S04.{field}", f"must be {value!r}")
+    guardrails = row.get("guardrails")
+    guardrail_text = "\n".join(item for item in guardrails if isinstance(item, str)) if isinstance(guardrails, list) else ""
+    for phrase in (
+        "native_approval_mutated=false",
+        "no_secret_diagnostics=true",
+        "hermes_execution_attempted=false",
+        "gsd_pi_execution_attempted=false",
+    ):
+        if phrase not in guardrail_text:
+            errors.add(MATRIX_PATH, "no_promotion_evidence.M003-S04.guardrails", f"missing guardrail {phrase!r}")
+
+
+def _validate_m003_s04_decision_readback_evidence(
+    root: Path,
+    matrix: Any,
+    entries_by_key: Mapping[str, Mapping[str, Any]],
+    errors: ValidationErrorCollector,
+) -> None:
+    if not isinstance(matrix, Mapping):
+        return
+    _validate_m003_s04_no_promotion_metadata(matrix, errors)
+    mentions_m003 = _matrix_mentions_m003_s04(matrix, entries_by_key)
+
+    evidence = _load_json(root, M003_S04_DECISION_READBACK_EVIDENCE_PATH, errors)
+    if not isinstance(evidence, Mapping):
+        return
+
+    artifact_type = evidence.get("artifact_type")
+    selected_surface = evidence.get("selected_surface")
+    side_effect_counts = evidence.get("side_effect_counts")
+    invariants = evidence.get("invariants")
+    claims = evidence.get("capability_claims")
+    runtime = evidence.get("runtime")
+    fallback = evidence.get("fallback")
+    artifact_refs = evidence.get("artifact_refs")
+
+    if evidence.get("schema_version") != "m003-s04-live-decision-artifact-readback/v1":
+        errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "schema_version", "unexpected M003 S04 decision readback schema")
+    if artifact_type not in {"live-evidence", "fail-closed-blocker"}:
+        errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "artifact_type", "must be live-evidence or fail-closed-blocker")
+    if evidence.get("phase") != "live":
+        errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "phase", "must be live")
+
+    if not isinstance(side_effect_counts, Mapping):
+        errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "side_effect_counts", "missing side-effect counts")
+    else:
+        for field in M003_S04_UNSUPPORTED_ZERO_COUNTS:
+            if side_effect_counts.get(field) != 0:
+                errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, f"side_effect_counts.{field}", "M003 S04 decision readback must not record unsupported side effects")
+    if not isinstance(claims, Mapping):
+        errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "capability_claims", "missing capability claims")
+    else:
+        for field in M003_S04_FORBIDDEN_CLAIMS:
+            if claims.get(field) is not False:
+                errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, f"capability_claims.{field}", "M003 S04 evidence must not promote unsupported capabilities")
+    if not isinstance(invariants, Mapping):
+        errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "invariants", "missing invariants")
+    else:
+        expected_invariants = {
+            "native_approval_mutated": False,
+            "no_secret_diagnostics": True,
+            "hermes_execution_attempted": False,
+            "gsd_pi_execution_attempted": False,
+        }
+        for field, value in expected_invariants.items():
+            if invariants.get(field) is not value:
+                errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, f"invariants.{field}", f"must be {value!r}")
+    if isinstance(artifact_refs, Mapping) and artifact_refs.get("native_approval") not in (None, ""):
+        errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "artifact_refs.native_approval", "decision readback evidence must not include native approval refs")
+
+    for key, entry in entries_by_key.items():
+        evidence_text = " ".join(
+            str(value)
+            for value in (entry.get("evidence_source"), entry.get("proof_command"), entry.get("runtime_evidence_field"), entry.get("notes"))
+            if isinstance(value, str)
+        )
+        if str(M003_S04_DECISION_READBACK_EVIDENCE_PATH) in evidence_text and entry.get("status") == "confirmed" and key not in M003_S04_ALLOWED_PROMOTION_KEYS:
+            errors.add(
+                MATRIX_PATH,
+                f"capability.{key}",
+                "M003 S04 decision readback evidence may confirm only native document/comment decision artifact readback surfaces",
+            )
+
+    if artifact_type == "fail-closed-blocker":
+        if selected_surface != "markdown-only":
+            errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "selected_surface", "fail-closed blocker must select markdown-only")
+        if evidence.get("readback_status") != "blocked_preflight":
+            errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "readback_status", "current blocker evidence must be blocked_preflight")
+        if not isinstance(fallback, Mapping) or fallback.get("live_proof") is not False:
+            errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "fallback.live_proof", "markdown fallback must not be live proof")
+        if isinstance(runtime, Mapping) and (_non_empty_runtime_string(runtime.get("version")) or _non_empty_runtime_string(runtime.get("build"))):
+            errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "runtime", "current fail-closed blocker must not be used as runtime version/build proof")
+        if mentions_m003:
+            for key, entry in entries_by_key.items():
+                if entry.get("status") == "confirmed":
+                    evidence_text = " ".join(
+                        str(value)
+                        for value in (entry.get("evidence_source"), entry.get("proof_command"), entry.get("runtime_evidence_field"), entry.get("notes"))
+                        if isinstance(value, str)
+                    )
+                    if str(M003_S04_DECISION_READBACK_EVIDENCE_PATH) in evidence_text:
+                        errors.add(MATRIX_PATH, f"capability.{key}", "fail-closed M003 S04 blocker evidence cannot confirm capability status")
+    elif artifact_type == "live-evidence":
+        if selected_surface not in {"documents.native", "comments.native"}:
+            errors.add(M003_S04_DECISION_READBACK_EVIDENCE_PATH, "selected_surface", "live M003 S04 evidence must select native document or comment readback")
 
 def _validate_entry_shape(entry: Any, index: int, errors: ValidationErrorCollector) -> str | None:
     context = _entry_context(entry, index)
@@ -725,6 +897,7 @@ def validate(
     entries_by_key = _collect_entries(matrix, errors)
     _validate_s04_live_artifact_evidence(root, entries_by_key, errors)
     _validate_s05_plugin_ui_surface_evidence(root, entries_by_key, errors)
+    _validate_m003_s04_decision_readback_evidence(root, matrix, entries_by_key, errors)
     if manifest is not None:
         _validate_manifest_coverage(manifest, entries_by_key, errors)
         _validate_manifest_note(manifest, errors)

@@ -1,0 +1,77 @@
+{
+  "artifact_ref": "markdown-only://issues/missing/decisions/decision_m003_s04_live_readback",
+  "artifact_refs": {
+    "comments": [],
+    "document": null,
+    "markdown_fallback": "markdown-only://issues/missing/decisions/decision_m003_s04_live_readback",
+    "native_approval": null
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_reason": "missing_base_url_company_id_auth_token_env",
+  "bounded_snippet": "# BOS Decision Record: M003-S04 Live Readback\n\n- Schema version: 1.0\n\n- Accepted: true\n\n- Issue: missing\n\n- Decision ID: decision_m003_s04_live_readback\n\n- Decided by: Div7.MissionControl\n\n- Decided at: 2026-05-31T05:49:36Z\n\n- Decision type: EXPERIMENT\n\n- Recommended action: Treat only successful native document/comment readback as live proof.\n\n- Diagnostics sanitized: true\n\n- Native approval mutated: false\n\n## OODA\n\n- Observe: S02/S03 can emit decision artifact envelopes.\n\n- Orient: Markdown-on",
+  "capability_claims": {
+    "activity_log": false,
+    "gsd_pi": false,
+    "hermes": false,
+    "native_approval": false,
+    "plugin_actions": false,
+    "unsupported_capability_promoted": false
+  },
+  "content_hash": "9e07ddfa0794681a8c251d081b09d6cc6b5a4ec7a361338af89fe880cdd5c323",
+  "diagnostics": [
+    {
+      "bounded_response_text": null,
+      "fallback_used": true,
+      "malformed_json_reason": null,
+      "message": "stopped before mutation due to base_url, company_id, auth_token_env",
+      "phase": "auth.preflight",
+      "status_code": null,
+      "timeout_ms": null
+    }
+  ],
+  "fallback": {
+    "artifact_id": "markdown-only:missing:decisions:decision_m003_s04_live_readback",
+    "deterministic_ref": "markdown-only://issues/missing/decisions/decision_m003_s04_live_readback",
+    "live_proof": false,
+    "reason": "missing_base_url_company_id_auth_token_env"
+  },
+  "generated_at": "2026-05-31T05:49:36Z",
+  "inputs": {
+    "auth_header_name": "Authorization",
+    "auth_token_env": "PAPERCLIP_API_KEY",
+    "base_url": "not-provided",
+    "companyId": "not-provided",
+    "issueId": "not-provided",
+    "trusted_origin": "not-provided"
+  },
+  "invariants": {
+    "decided_by": "Div7.MissionControl",
+    "diagnostics_sanitized": true,
+    "gsd_pi_execution_attempted": false,
+    "hermes_execution_attempted": false,
+    "native_approval_mutated": false,
+    "no_secret_diagnostics": true
+  },
+  "phase": "live",
+  "readback_status": "blocked_preflight",
+  "readbacks": {
+    "comments": [],
+    "documents": []
+  },
+  "runtime": {
+    "build": null,
+    "version": null
+  },
+  "schema_version": "m003-s04-live-decision-artifact-readback/v1",
+  "selected_surface": "markdown-only",
+  "side_effect_counts": {
+    "activity_logs_written": 0,
+    "approval_requests_created": 0,
+    "comments_created": 0,
+    "documents_created": 0,
+    "gsd_pi_runs_started": 0,
+    "hermes_runs_started": 0,
+    "issues_created": 0,
+    "plugin_actions_invoked": 0
+  }
+}

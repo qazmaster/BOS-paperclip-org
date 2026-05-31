@@ -7,7 +7,7 @@
     "fallback-only",
     "unvalidated"
   ],
-  "guardrail": "Do not treat draft manifest, worker optional chaining, cache overlays, in-memory adapter behavior, S10/S12 fail-closed runtime blockers, or an approved rescope as confirmed Paperclip runtime support. A capability may be marked confirmed only after named live runtime evidence includes version/build plus surface-specific readback; S04 currently confirms only native issue, document, and comment artifact surfaces. Hermes and GSD-Pi execution remain unpromoted under the S12 approved_rescope disposition unless a future S12 disposition is runtime_proof with both Hermes resultJson.bos and gsdpi_local BosAdapterResult proof.",
+  "guardrail": "Do not treat draft manifest, worker optional chaining, cache overlays, in-memory adapter behavior, S10/S12 fail-closed runtime blockers, M003 S04 fail-closed decision readback blocker evidence at runtime-evidence/M003-S04-live-decision-artifact-readback.json, or an approved rescope as confirmed Paperclip runtime support. A capability may be marked confirmed only after named live runtime evidence includes version/build plus surface-specific readback; M002 S04 currently confirms only native issue, document, and comment artifact surfaces. M003 S04 currently records markdown-only decision artifact readback blocker evidence and promotes no capability status. Hermes and GSD-Pi execution remain unpromoted under the S12 approved_rescope disposition unless a future S12 disposition is runtime_proof with both Hermes resultJson.bos and gsdpi_local BosAdapterResult proof.",
   "capabilities": [
     {
       "key": "company_template.import_export",
@@ -62,7 +62,7 @@
         "future runtime probe",
         "health report"
       ],
-      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json recorded runtime.version=unknown and runtime.build=unknown because live Paperclip base URL/API key inputs were absent; S01/S02/S03/S04 version diagnostics do not prove BOS Light plugin runtime compatibility.",
+      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json recorded runtime.version=unknown and runtime.build=unknown because live Paperclip base URL/API key inputs were absent; S01/S02/S03/M002 S04 version diagnostics and M003 S04 null runtime diagnostics do not prove BOS Light plugin runtime compatibility.",
       "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates the fail-closed S05 probe; confirmation still requires a future S05-style live plugin/UI probe with runtime version/build and readback proof.",
       "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: runtime.version, runtime.build",
       "fallback_path": "Fail closed by showing BOS Light plugin runtime version/build as unknown and keeping SDK-dependent plugin surfaces unvalidated or fallback-only.",
@@ -70,7 +70,7 @@
       "adapter_assumptions": [
         "worker comment: confirm min version and breaking changes after C6"
       ],
-      "notes": "S05 intentionally does not promote plugin runtime version/build from S04 native artifact proof; S04 confirms only native issue/document/comment artifact APIs."
+      "notes": "S05 intentionally does not promote plugin runtime version/build from M002 S04 native artifact proof or M003 S04 decision readback blocker evidence; M002 S04 confirms only native issue/document/comment artifact APIs."
     },
     {
       "key": "plugin.runtime.registration",
@@ -139,7 +139,7 @@
       "adapter_assumptions": [
         "ctx.tools?.register"
       ],
-      "notes": "S05 keeps native action/tool side-effect counters at zero; local tool registration intent is not Paperclip host proof."
+      "notes": "S05 keeps native action/tool side-effect counters at zero; local tool registration intent and M003 S04 decision readback blocker evidence are not Paperclip host proof."
     },
     {
       "key": "registration.data",
@@ -191,7 +191,7 @@
       "adapter_assumptions": [
         "ctx.actions?.register"
       ],
-      "notes": "Action registration is separate from approvals.native; S05 deliberately created zero approvals and attempted zero native action invocations."
+      "notes": "Action registration is separate from approvals.native; S05 and M003 S04 deliberately created zero approvals and attempted zero native/plugin action invocations."
     },
     {
       "key": "config.api",
@@ -325,7 +325,7 @@
         "health report diagnostics",
         "PaperclipAdapter.logActivity"
       ],
-      "evidence_source": "Draft manifest requests activity.write and adapter exposes logActivity, but in-memory adapter no-ops it.",
+      "evidence_source": "Draft manifest requests activity.write and adapter exposes logActivity, but in-memory adapter no-ops it; M003 S04 decision readback recorded activity_logs_written=0 as no-promotion blocker evidence.",
       "proof_command": "Future activity write/read visibility probe against Paperclip activity log.",
       "runtime_evidence_field": "paperclip.activity.write_visible",
       "fallback_path": "Attach issue comments or managed escalation issue updates when activity logging is unavailable.",
@@ -446,7 +446,7 @@
       "adapter_assumptions": [
         "createIssueDocument"
       ],
-      "notes": "Confirmed scope is bounded native issue document create/readback for S04 visible artifacts. It does not confirm plugin document UI, plugin state durability, import/export schema, approvals, Hermes, or GSD-Pi."
+      "notes": "Confirmed scope is bounded native issue document create/readback for M002 S04 visible artifacts. M003 S04 currently adds only markdown-only decision readback blocker evidence. Neither confirms plugin document UI, plugin state durability, import/export schema, approvals, Hermes, or GSD-Pi."
     },
     {
       "key": "comments.native",
@@ -474,7 +474,7 @@
       "adapter_assumptions": [
         "addIssueComment"
       ],
-      "notes": "Confirmed scope is bounded native issue comment create/readback for S04 visible artifacts. It does not confirm activity logs, event delivery, plugin tool registration, native approvals, Hermes, or GSD-Pi."
+      "notes": "Confirmed scope is bounded native issue comment create/readback for M002 S04 visible artifacts. M003 S04 currently adds only markdown-only decision readback blocker evidence. Neither confirms activity logs, event delivery, plugin tool registration, native approvals, Hermes, or GSD-Pi."
     },
     {
       "key": "approvals.native",
@@ -489,7 +489,7 @@
         "Betting Table batch approval",
         "PaperclipAdapter.createApprovalRequest"
       ],
-      "evidence_source": "worker.ts calls ctx.approvals?.create and adapter exposes createApprovalRequest, but no Paperclip runtime approval was created.",
+      "evidence_source": "worker.ts calls ctx.approvals?.create and adapter exposes createApprovalRequest, but no Paperclip runtime approval was created; M003 S04 decision readback recorded native_approval_mutated=false and approval_requests_created=0.",
       "proof_command": "Future approve-batch runtime probe that creates and reads a native Paperclip approval/request.",
       "runtime_evidence_field": "paperclip.approvals.create_read_ok",
       "fallback_path": "Create a manual approval issue/comment requesting review; never substitute a plugin-side decision for native approval.",
@@ -526,7 +526,7 @@
         "issue_detail_tabs": []
       },
       "adapter_assumptions": [],
-      "notes": "Manifest UI declarations remain request intent only; S05 records no rendered dashboard widget."
+      "notes": "Manifest UI declarations remain request intent only; S05 records no rendered dashboard widget, and M003 S04 markdown-only decision readback blocker evidence is not UI proof."
     },
     {
       "key": "ui.issue_detail_tabs",
@@ -559,7 +559,7 @@
         ]
       },
       "adapter_assumptions": [],
-      "notes": "S05 gives a canonical fallback-only ledger for all requested tabs and prevents S04 native artifact proof from being reused as UI proof."
+      "notes": "S05 gives a canonical fallback-only ledger for all requested tabs and prevents M002 S04 native artifact proof or M003 S04 decision readback blocker evidence from being reused as UI proof."
     }
   ],
   "runtime_execution_posture": {
@@ -636,5 +636,26 @@
       "blocker_evidence_promoted": false,
       "validation_command": "python3 scripts/validate_s12_runtime_proof_or_rescope.py --phase final --write-audit runtime-evidence/M002-S12-validation-closeout.json"
     }
-  }
+  },
+  "no_promotion_evidence": [
+    {
+      "slice": "M003-S04",
+      "evidence_path": "runtime-evidence/M003-S04-live-decision-artifact-readback.json",
+      "artifact_type": "fail-closed-blocker",
+      "selected_surface": "markdown-only",
+      "readback_status": "blocked_preflight",
+      "blocker_reason": "missing_base_url_company_id_auth_token_env",
+      "status_effect": "no capability status promotion",
+      "validated_by": "python3 scripts/validate_m003_s04_live_decision_artifact_readback.py --evidence runtime-evidence/M003-S04-live-decision-artifact-readback.json --phase final",
+      "guardrails": [
+        "native_approval_mutated=false",
+        "no_secret_diagnostics=true",
+        "hermes_execution_attempted=false",
+        "gsd_pi_execution_attempted=false",
+        "plugin_actions_invoked=0",
+        "activity_logs_written=0"
+      ],
+      "notes": "Decision artifact markdown fallback is deterministic handoff evidence only; it does not prove plugin UI, actions, tools, data providers, config/state/entities APIs, native approvals, Hermes, activity logs, events, or GSD-Pi runtime support."
+    }
+  ]
 }

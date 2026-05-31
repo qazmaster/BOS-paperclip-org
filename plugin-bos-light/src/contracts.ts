@@ -127,18 +127,233 @@ export interface CircuitBreakerRecord {
   updated_at: string;
 }
 
+export type CynefinDomain = "CLEAR" | "COMPLICATED" | "COMPLEX" | "CHAOTIC" | "DISORDER";
+
+export type DecisionRiskTier = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+export type DecisionRecordDetailLevel = "compact" | "expanded";
+
+export type DecisionType = "POLICY_UPDATE" | "BATCH_APPROVAL" | "RUSH_AUTHORIZATION" | "EXPERIMENT" | "SELF_HEALING";
+
+export interface DecisionDomainEvidence {
+  domain: CynefinDomain;
+  matched_signals: string[];
+  score: number;
+  reasons: string[];
+}
+
+export interface DecisionDiagnostics {
+  domain_evidence: DecisionDomainEvidence[];
+  selected_domain_reasons: string[];
+  risk_reasons: string[];
+  validation_errors: string[];
+  uncertainty_reasons: string[];
+  sanitized: true;
+}
+
+export interface DecisionOODASections {
+  observe: string[];
+  orient: string[];
+  decide: string[];
+  act: string[];
+}
+
 export interface DecisionMetadata {
   schema_version: "1.0";
+  accepted: true;
   decision_id: string;
   issue_id: string;
-  cynefin_domain: "CLEAR" | "COMPLICATED" | "COMPLEX" | "CHAOTIC" | "DISORDER";
+  cynefin_domain: CynefinDomain;
   confidence: number;
-  decision_type: "POLICY_UPDATE" | "BATCH_APPROVAL" | "RUSH_AUTHORIZATION" | "EXPERIMENT" | "SELF_HEALING";
+  risk_tier: DecisionRiskTier;
+  record_detail: DecisionRecordDetailLevel;
+  decision_type: DecisionType;
   emitted_events: string[];
   recommended_action: string;
   decided_by: "Div7.MissionControl";
   decided_at: string;
+  diagnostics: DecisionDiagnostics;
+  ooda?: DecisionOODASections;
+  record_markdown: string;
 }
+
+export interface DecisionValidationFailure {
+  schema_version: "1.0";
+  accepted: false;
+  error: "invalid_decision_input";
+  issue_id: string | null;
+  decided_by: "Div7.MissionControl";
+  decided_at: string;
+  diagnostics: Pick<DecisionDiagnostics, "validation_errors" | "sanitized">;
+}
+
+export type DecisionResult = DecisionMetadata | DecisionValidationFailure;
+
+export type DecisionArtifactSurface = "documents.native" | "comments.native" | "markdown-only";
+
+export type DecisionArtifactCapabilityPosture = "confirmed" | "unsupported" | "fallback-only" | "unvalidated" | "enabled" | "failed";
+
+export interface DecisionArtifactCapabilities {
+  /**
+   * `confirmed` means runtime proof exists; `enabled` means the caller is deliberately
+   * exercising the adapter seam without claiming Paperclip support is proven.
+   */
+  documents_native?: DecisionArtifactCapabilityPosture;
+  /** Comments are the preferred Paperclip-visible fallback unless explicitly unsupported/failed. */
+  comments_native?: DecisionArtifactCapabilityPosture;
+}
+
+export type DecisionArtifactPersistenceAvailability = "missing" | "provided";
+export type DecisionArtifactCacheSaveStatus = "saved" | "failed" | "not_attempted";
+
+export interface DecisionArtifactCacheOverlayDiagnostics {
+  durability: "cache-overlay-only";
+  persistence: DecisionArtifactPersistenceAvailability;
+  save: DecisionArtifactCacheSaveStatus;
+  error: string | null;
+  timestamp: string;
+}
+
+export interface DecisionArtifactFallbackDiagnostics {
+  reason: string | null;
+  validation_error?: string;
+  document_error?: string;
+  comment_error?: string;
+}
+
+export interface DecisionArtifactInvariants {
+  decided_by: "Div7.MissionControl";
+  diagnostics_sanitized: true;
+  native_approval_mutated: false;
+}
+
+export interface DecisionArtifactEnvelope {
+  schema_version: "1.0";
+  phase: "S02.decision_artifact";
+  issue_id: string | null;
+  decision_id: string | null;
+  selected_surface: DecisionArtifactSurface;
+  artifact_id: string;
+  artifact_ref: string;
+  decided_at: string;
+  mirrored_at: string;
+  markdown: string;
+  cache_overlay: DecisionArtifactCacheOverlayDiagnostics;
+  fallback: DecisionArtifactFallbackDiagnostics;
+  decision: DecisionResult;
+  invariants: DecisionArtifactInvariants;
+}
+
+export type DecisionArtifactReadbackStatus =
+  | "matched"
+  | "mismatch"
+  | "fail-closed"
+  | "denied"
+  | "malformed"
+  | "missing-content"
+  | "timeout"
+  | "unsafe-ref"
+  | "unsupported-ref";
+
+export interface DecisionArtifactReadbackDiagnostic {
+  phase: "documents.read" | "comments.read" | "artifact-ref.parse";
+  status_code: number | null;
+  bounded_response_text: string | null;
+  malformed_json_reason: string | null;
+  timeout_ms: number | null;
+  fallback_used: boolean;
+  message: string;
+}
+
+export interface DecisionArtifactReadbackResult {
+  schema_version: "live-decision-artifact-readback/v1";
+  selected_surface: DecisionArtifactSurface;
+  artifact_ref: string;
+  artifact_id: string;
+  issue_id: string | null;
+  status: DecisionArtifactReadbackStatus;
+  live_proof: boolean;
+  sha256: string | null;
+  expected_sha256: string | null;
+  snippet: string | null;
+  diagnostics: DecisionArtifactReadbackDiagnostic[];
+  invariants: DecisionArtifactInvariants;
+}
+
+export interface MajorFlowBatchApprovalDecisionInput {
+  kind: "batch_approval";
+  cycle_id: string;
+  selected_issue_ids: string[];
+  reason: string;
+  bpi_ref?: string | null;
+  approval_request_ref?: string | null;
+  confidence?: number;
+}
+
+export interface MajorFlowEvalGateFailureDecisionInput {
+  kind: "eval_gate_failure";
+  result: EvalGateResult;
+  guidance?: string | null;
+  confidence?: number;
+}
+
+export interface MajorFlowCircuitBreakerOpenDecisionInput {
+  kind: "circuit_breaker_open";
+  issue_id: string;
+  run_id?: string | null;
+  record: CircuitBreakerRecord;
+  transition_reason?: string | null;
+  failure_reason?: string | null;
+  evidence_artifact_ref?: string | null;
+  escalation_ref?: string | null;
+  operational_owner?: "Div1.HCO";
+  confidence?: number;
+}
+
+export interface MajorFlowPolicyExceptionDecisionInput {
+  kind: "policy_exception";
+  issue_id: string;
+  policy_owner: string;
+  exception: string;
+  policy_ref?: string | null;
+  constraint_context?: string | null;
+  reversible_next_step: string;
+  diagnostics?: string | null;
+  confidence?: number;
+}
+
+export interface MajorFlowBudgetExceptionDecisionInput {
+  kind: "budget_exception";
+  issue_id: string;
+  budget_owner?: string | null;
+  budget_constraint: string;
+  requested_exception: string;
+  budget_ref?: string | null;
+  reversible_next_step: string;
+  diagnostics?: string | null;
+  confidence?: number;
+}
+
+export interface MajorFlowStrategicChoiceDecisionInput {
+  kind: "strategic_choice";
+  issue_id: string;
+  strategic_question: string;
+  choice: string;
+  hypothesis: string;
+  safe_to_fail_probe: string;
+  rollback: string;
+  owner?: string | null;
+  diagnostics?: string | null;
+  confidence?: number;
+}
+
+export type MajorFlowDecisionInput =
+  | MajorFlowBatchApprovalDecisionInput
+  | MajorFlowEvalGateFailureDecisionInput
+  | MajorFlowCircuitBreakerOpenDecisionInput
+  | MajorFlowPolicyExceptionDecisionInput
+  | MajorFlowBudgetExceptionDecisionInput
+  | MajorFlowStrategicChoiceDecisionInput;
 
 export interface BOSConfig {
   schema_version: "1.0";

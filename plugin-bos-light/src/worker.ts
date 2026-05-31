@@ -13,6 +13,7 @@ import { evalGateEvidence } from "./evalGateEvidence";
 import { createCircuitBreakerRecord, recordFailure, attachEscalationIssue } from "./circuitBreaker";
 import { circuitBreakerFlow } from "./circuitBreakerFlow";
 import { decide } from "./decision";
+import type { DecisionResult } from "./contracts";
 import { runSeededIssueBlueprintFlow } from "./issueBlueprintFlow";
 import { PAPERCLIP_RUNTIME_BOUNDARY_RULES } from "./runtimeCapabilities";
 
@@ -133,6 +134,10 @@ function persistenceFrom(params: Record<string, any>, ctx: any): any {
   return params.persistence ?? ctx.persistence ?? null;
 }
 
+export function runPikoDecide(params?: unknown): DecisionResult {
+  return decide(params);
+}
+
 export async function registerBosLightPlugin(ctx: any): Promise<void> {
   ctx.logger?.info?.("Registering BOS Light plugin draft");
 
@@ -193,7 +198,7 @@ export async function registerBosLightPlugin(ctx: any): Promise<void> {
   });
 
   // Tool: piko:decide
-  await registerOptionalTool(ctx, "piko:decide", async (params: any) => decide(params));
+  await registerOptionalTool(ctx, "piko:decide", async (params: any) => runPikoDecide(params));
 
   // Data provider: Betting Table. Host data-provider hydration remains unvalidated;
   // this reads only the cache-overlay seam and returns diagnostics rather than
