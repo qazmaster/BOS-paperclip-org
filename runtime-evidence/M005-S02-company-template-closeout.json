@@ -1,0 +1,22 @@
+{
+  "artifact_type": "validator-audit",
+  "classification": "blocker",
+  "diagnostics": {
+    "error_count": 0,
+    "errors": []
+  },
+  "generated_at": "2026-05-31T19:31:31Z",
+  "inputs": {
+    "evidence_path": "runtime-evidence/M005-S02-company-template-probe.json"
+  },
+  "passed": true,
+  "phase": "company_template_import",
+  "posture": {
+    "capability_promotions_require_passing_proof": true,
+    "fail_closed_blocker_artifacts_accepted": true,
+    "paperclip_core_or_direct_database_mutation_allowed": false,
+    "plaintext_credential_values_allowed": false,
+    "unsupported_boundaries_rejected": true
+  },
+  "schema_version": "m005-s02-company-template-closeout/v1"
+}
