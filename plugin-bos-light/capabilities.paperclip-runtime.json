@@ -206,11 +206,11 @@
         "company-template import defaults",
         "persistence restore strategy"
       ],
-      "evidence_source": "Draft manifest requests config.read/config.write, but no ctx.config call or runtime evidence exists yet.",
-      "proof_command": "Future config read/write round-trip against Paperclip runtime.",
-      "runtime_evidence_field": "paperclip.config.round_trip_ok",
+      "evidence_source": "M005 S03 resource intake probe runtime-evidence/M005-S03-resource-intake-probe.json: fail-closed-blocker artifact, missing_paperclip_api_key and missing_paperclip_base_url prevent all Paperclip API calls including config read/write. Zero capability promotions; no config round-trip attempted.",
+      "proof_command": "python3 scripts/validate_m005_s03_resource_intake_probe.py --evidence runtime-evidence/M005-S03-resource-intake-probe.json --allow-blocker (validates fail-closed-blocker artifact schema, no_core_modification, safety policies, and precise blocker codes).",
+      "runtime_evidence_field": "runtime-evidence/M005-S03-resource-intake-probe.json: inputs.auth.selected_env_name, inputs.base_url_present, missing_resources, blocker_codes",
       "fallback_path": "Restore BOS config from config JSON and company-template artifacts; do not store durable config only in plugin state.",
-      "blocker_text": "Native plugin config cannot be treated as durable until read/write round-trip is proven.",
+      "blocker_text": "M005 S03 blocked: missing_paperclip_api_key and missing_paperclip_base_url prevent authenticated Paperclip access. Config read/write round-trip cannot be attempted until live credentials are available.",
       "manifest_capabilities": [
         "config.read",
         "config.write"
