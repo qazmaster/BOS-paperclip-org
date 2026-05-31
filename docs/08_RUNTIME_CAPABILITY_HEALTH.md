@@ -1,6 +1,6 @@
 # 08 - Runtime Capability Health
 
-This report is the reader-facing runtime diagnostic surface for BOS Light's Paperclip adapter posture. The capability matrix in `plugin-bos-light/capabilities.paperclip-runtime.json` remains the machine-readable source of truth; this document explains what M002 S04 promoted, what S05 classified as fallback-only, what S10 blocked for Hermes/GSD-Pi runtime execution, how S12 approved a conservative no-promotion rescope, what M003 S04 attempted for decision artifact readback, and what remains conservative for downstream slices.
+This report is the reader-facing runtime diagnostic surface for BOS Light's Paperclip adapter posture. The capability matrix in `plugin-bos-light/capabilities.paperclip-runtime.json` remains the machine-readable source of truth; this document explains what M002 S04 promoted, what S05 classified as fallback-only, what S10 blocked for Hermes/GSD-Pi runtime execution, how S12 approved a conservative no-promotion rescope, what M003 S04 attempted for decision artifact readback, how the v1.4.1 ownership and external-IO gates constrain runtime use, and what remains conservative for downstream slices.
 
 ## Company Prefix Map
 
@@ -40,7 +40,7 @@ Local fixture evidence that still does not promote host support:
 - M003 S04 decision artifact readback evidence is currently fail-closed blocker evidence, not live proof. `runtime-evidence/M003-S04-live-decision-artifact-readback.json` records `blocker_reason=missing_base_url_company_id_auth_token_env`, deterministic markdown fallback, sanitized diagnostics, and no unsupported side effects; it does not change any capability matrix status.
 - `python3 scripts/validate_company_template.py` proves only the repository-local company template contract.
 - `plugin-bos-light` tests exercise BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker logic through pure functions and adapter seams.
-- `python3 scripts/run_a1_a10_demo.py` composes A1-A10 as fixture evidence and must keep `native_support_confirmed=false` unless separate live proof exists.
+- `python3 scripts/run_a1_a10_demo.py` composes A1-A10 as fixture evidence and must keep `native_support_confirmed=false` unless separate live proof exists; `docs/10_A1_A10_DEMO.md` describes that baseline, and its fixture output keeps `runtime_capability_posture` and `gap_ledger` visible for cross-checking unpromoted runtime surfaces.
 - `python3 scripts/validate_runtime_capabilities.py` checks that the matrix, source boundary wording, and this report do not overclaim.
 - `python3 scripts/run_m002_regression_closure.py` is the S06 aggregate closure runner; it writes `runtime-evidence/M002-S06-regression-closure.json` with per-command exit codes, durations, redacted stdout/stderr digests, and an overall fail-closed verdict.
 
@@ -62,6 +62,18 @@ Compatibility posture for releases and handoffs:
 - ship `company-template/bos-company-template.json` as a semantic import-prep artifact, not a certified Paperclip export;
 - keep AGENTS.md profiles as markdown operating briefs that can be copied or converted if Paperclip syntax rejects them;
 - point operators from S01 proof artifacts to this report and `docs/13_LIVE_BOS_ARTIFACT_FLOW.md` before attempting import/export or runtime closure.
+
+## v1.4.1 Ownership and External-IO Boundary
+
+A12-A20 add security/routing doctrine, not new host support. The runtime boundary is:
+
+- Div1.HCO owns routing, staffing requests and circuit-breaker control records; raw issue text is untrusted input and must not directly instruct Div2, Div4, Div7 or runtime tools.
+- Div3.Treasury owns budget, paid/credentialed access and secret-grant decisions; grant records must be scoped, reviewable and free of plaintext secrets.
+- Div6.External is the only division that may contact external web, customer/vendor, external API/service, external document or external-agent surfaces.
+- Div6 returns raw external evidence only to Div5.QualificationsLibraryLearning; internal consumers receive sanitized packets, rejections or needs-human outcomes from Div5.
+- External IO requests, raw evidence bundles, sanitized knowledge packets, grants, staffing packets and HCO control packets are inert artifacts. Native issue/document/comment readback may carry them when available, but those artifact surfaces do not prove external API access, plugin actions, approvals, events, state durability, Hermes, GSD-Pi or UI support.
+
+Operationally, the external-IO gate remains fixture-first unless a future runtime evidence file proves the exact automation path. A valid runtime promotion must cite `plugin-bos-light/capabilities.paperclip-runtime.json`, include Paperclip version/build, and show surface-specific create/readback, registration, invocation or render proof without reusing S04 native artifact proof for unrelated surfaces.
 
 ## Per-Surface Matrix Summary
 
@@ -119,6 +131,7 @@ S04 created zero native approvals. M003 S04 decision artifact readback also reco
 
 ## Known Blockers
 
+- v1.4.1 external-IO automation is not a proven Paperclip runtime surface. The accepted boundary is owner-gated artifacts only: Div1.HCO routes, Div5 records local misses and quarantine decisions, Div3 records scoped grants when needed, Div6 performs external access, and Div5 emits sanitized packets before internal reuse. No raw external evidence may flow directly to Div2, Div4, Div7, plugin tools or runtime agents.
 - S12 Hermes/Codex runtime execution is approved-rescope NO-GO, not proof: `runtime-evidence/M002-S12-hermes-runtime-execution-proof.json` records supported-boundary auth/preflight denial (`adapter_registry_auth_denied`, `missing_auth`, `test_environment_auth_denied`), zero bounded runtime invocations, no measurable wake, no passing `resultJson.bos`, and no capability promotion.
 - S02 Hermes execution remains historical fail-closed evidence: `runtime-evidence/M002-S02-hermes-smoke.json` lacks passing `resultJson.bos` proof after the bounded run reached provider execution without a materialized authentication header. Do not claim the original OpenAI/Xiaomi encrypted `secret_ref` materialization bug is fixed.
 - S12 GSD-Pi execution is approved-rescope blocked, not proof: `runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json` records local adapter package readiness only; supported Paperclip health/registry/version/testEnvironment routes were unavailable, no registry readback or execute proof exists, and no BosAdapterResult exists.
@@ -130,6 +143,7 @@ S04 created zero native approvals. M003 S04 decision artifact readback also reco
 
 ## Downstream Guidance
 
+- **A12-A20 / v1.4.1**: Treat ownership/security artifacts as doctrine and fixture evidence first. Div1.HCO, Div3.Treasury, Div5.QualificationsLibraryLearning and Div6.External boundaries apply regardless of host capability; native issue/document/comment artifacts can mirror packets, but only the capability matrix can promote runtime surfaces after exact live proof.
 - **S03**: Treat Product Blueprint artifact refs as opaque. Documents/comments are now confirmed live artifact surfaces for S04-style readback, but cache-overlay state and plugin UI remain unvalidated. For M003 major-flow decision integration, treat `persistMajorFlowDecisionArtifact` outputs as fixture-level S01/S02 artifacts until separate live readback exists; use envelope fallback/cache/diagnostic fields as blocker evidence, and never substitute these records for Paperclip-native approval state.
 - **S04**: Use `docs/13_LIVE_BOS_ARTIFACT_FLOW.md` and `runtime-evidence/M002-S04-live-artifact-flow.json` as the proof ledger for visible native issue/document/comment artifacts. Use `runtime-evidence/M003-S04-live-decision-artifact-readback.json` only as fail-closed blocker evidence for the decision artifact readback attempt unless it is replaced by validated `live-evidence`. Keep approval, Hermes, GSD-Pi, plugin registration, and UI/data/action paths no-go or fallback-only.
 - **S05**: Use `docs/14_PLUGIN_UI_SURFACE_PROBES.md` and `runtime-evidence/M002-S05-plugin-ui-surface-probe.json` as the proof ledger. Eval Gate and Circuit Breaker evidence may be mirrored to confirmed native comments/documents, but plugin registration, piko tool registration/invocation, data providers, actions, UI slots, events, activity logs, and escalation issue automation remain fallback-only or unvalidated until separate S05-style proof exists.

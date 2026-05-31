@@ -46,12 +46,15 @@ describe("BOS Light acceptance vertical slice", () => {
       candidates: [{ issue_id: "issue_1", bpi_score: bpi.score, blueprint_id: "doc_1" }]
     });
 
-    const requested = markApprovalRequested(table[0], "approval_1", "Master.Human");
+    const requested = markApprovalRequested(table[0], "approval_1", "Div1.HCO");
 
     expect(bpi.score).toBeGreaterThan(0);
+    expect(bpi.scored_by).toBe("Div2.MasterPlanner");
     expect(blueprint).toContain("## 3. Acceptance Contract");
+    expect(blueprint).toContain("- Producer division: Div4.Production");
     expect(table).toHaveLength(1);
     expect(requested.status).toBe("APPROVAL_REQUESTED");
+    expect(requested.approved_by).toBe("Div1.HCO");
   });
 
   it("A2/A3 seeded issue flow mirrors a Blueprint and passes the artifact reference into the Betting Table", async () => {
@@ -126,7 +129,9 @@ describe("BOS Light acceptance vertical slice", () => {
       budgetWarning: false
     });
     expect(pass.overall).toBe("PASSED");
+    expect(pass.evaluated_by).toBe("Div5.QualificationsLibraryLearning");
     expect(fail.overall).toBe("FAILED_BLOCKING");
+    expect(fail.evaluated_by).toBe("Div5.QualificationsLibraryLearning");
   });
 });
 
@@ -329,7 +334,7 @@ describe("betting cycle approval request orchestration", () => {
       cycle_id: "cycle_approval_native",
       issue_ids: ["issue_a", "issue_b"],
       reason: "Approve top BPI candidates for the next cycle",
-      requested_by: "Master.Human",
+      requested_by: "Div1.HCO",
       adapter,
       persistence,
       now
@@ -357,7 +362,7 @@ describe("betting cycle approval request orchestration", () => {
     });
     expect(result.updated_rows.map((row) => row.status)).toEqual(["APPROVAL_REQUESTED", "APPROVAL_REQUESTED"]);
     expect(result.updated_rows.map((row) => row.native_approval_request_id)).toEqual(["approval_1", "approval_1"]);
-    expect(result.updated_rows.map((row) => row.approved_by)).toEqual(["Master.Human", "Master.Human"]);
+    expect(result.updated_rows.map((row) => row.approved_by)).toEqual(["Div1.HCO", "Div1.HCO"]);
     expect(persisted.items).toEqual(result.updated_rows);
     expect(adapter.approvals).toEqual([{ id: "approval_1", issue_ids: ["issue_a", "issue_b"], status: "PENDING" }]);
   });
@@ -468,7 +473,7 @@ describe("betting cycle approval request orchestration", () => {
       candidates: [{ issue_id: "issue_decided", bpi_score: 5, blueprint_id: "doc_decided" }]
     });
     await persistence.saveBettingTable("cycle_approval_decided", [
-      markApprovalRequested(decidedRows[0], "approval_existing", "Master.Human", now)
+      markApprovalRequested(decidedRows[0], "approval_existing", "Div1.HCO", now)
     ]);
 
     const empty = await requestBettingCycleApproval({
@@ -922,7 +927,7 @@ describe("worker Betting Table data and approve-batch wiring", () => {
       cycle_id: "cycle_worker_native",
       issue_ids: ["issue_worker_a", "issue_worker_b"],
       reason: "Approve worker batch",
-      requested_by: "Master.Human",
+      requested_by: "Div1.HCO",
       now
     });
     const persisted = await loadBettingCycle({ cycle_id: "cycle_worker_native", persistence, now });
@@ -939,6 +944,7 @@ describe("worker Betting Table data and approve-batch wiring", () => {
     expect(paperclipAdapter.approvals).toEqual([{ id: "approval_1", issue_ids: ["issue_worker_a", "issue_worker_b"], status: "PENDING" }]);
     expect(persisted.items.map((item) => item.status)).toEqual(["APPROVAL_REQUESTED", "APPROVAL_REQUESTED"]);
     expect(persisted.items.map((item) => item.native_approval_request_id)).toEqual(["approval_1", "approval_1"]);
+    expect(persisted.items.map((item) => item.approved_by)).toEqual(["Div1.HCO", "Div1.HCO"]);
   });
 
   it("approve-batch returns explicit fallback diagnostics when the adapter is unavailable without mutating rows", async () => {

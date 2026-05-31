@@ -1,0 +1,332 @@
+{
+  "schema_version": "m004-s08-requirement-scope-reconciliation/v1",
+  "artifact_type": "requirement-scope-reconciliation-ledger",
+  "generated_at": "2026-06-01T00:00:00Z",
+  "milestone": "M004-osbua3",
+  "slice": "S08",
+  "validation_round": 1,
+  "source_of_truth": "Seeded from M003 CONTEXT, M002 ASSESSMENT, M002 CONTEXT, M002 S12 runtime-proof-or-rescope, M002 S13 requirement-coverage, M004 VALIDATION remediation plan, and local source/betting-table/eval-gate/circuit-breaker/persistence files. Requirement dispositions are explicit: R003/R008 are active and M003-owned with traceability-only out-of-scope-for-M004 posture; R009/R010/R011 are validated with no-reopen-needed posture and citations from M002/M003 evidence.",
+  "inputs": {
+    "m002_context_path": ".gsd/milestones/M002/M002-CONTEXT.md",
+    "m002_assessment_path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+    "m003_context_path": ".gsd/milestones/M003/M003-CONTEXT.md",
+    "m004_validation_path": ".gsd/milestones/M004-osbua3/M004-osbua3-VALIDATION.md",
+    "s12_rescope_path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+    "s13_coverage_path": "runtime-evidence/M002-S13-requirement-coverage.json",
+    "s06_coverage_path": "runtime-evidence/M004-S06-requirement-coverage.json",
+    "runtime_health_path": "docs/08_RUNTIME_CAPABILITY_HEALTH.md",
+    "betting_table_path": "plugin-bos-light/src/bettingTable.ts",
+    "persistence_path": "plugin-bos-light/src/persistence.ts",
+    "eval_gate_evidence_path": "plugin-bos-light/src/evalGateEvidence.ts",
+    "circuit_breaker_flow_path": "plugin-bos-light/src/circuitBreakerFlow.ts",
+    "regression_closure_path": "runtime-evidence/M002-S06-regression-closure.json"
+  },
+  "reconciliation_scope": {
+    "required_requirement_ids": ["R003", "R008", "R009", "R010", "R011"],
+    "total_requirements": 5,
+    "posture_summary": "R003 and R008 are active requirements owned by M003; M004 records traceability-only coverage without altering their disposition. R009, R010, and R011 were validated by M002 and reaffirmed by M003; M004 records no-reopen-needed posture with citations to prior validation evidence."
+  },
+  "requirements": [
+    {
+      "requirement_id": "R003",
+      "status": "active",
+      "requirement_class": "constraint",
+      "canonical_requirement_text": "R003 active constraint: preserves Paperclip as the system of record and prevents BOS Light from owning governance state.",
+      "primary_owner_provenance": {
+        "origin": "m003_owned",
+        "existing_primary_owner_text": "M003-owned requirement. M003 CONTEXT maps R003 as preserving Paperclip as the system of record and preventing BOS Light from owning governance state.",
+        "owner_normalized_to_s08": false,
+        "owner_reconciliation": "S08 preserves R003 as M003-owned and records traceability-only coverage. S08 does not reassign R003 ownership or alter its active status."
+      },
+      "m004_disposition": "traceability_only_out_of_scope_for_m004",
+      "m004_coverage_summary": "M004 does not alter R003 disposition. R003 remains active and M003-owned. M004 records this traceability-only entry so milestone validation can distinguish out-of-scope active requirements from missing evidence. M004 S05 regression proof preserves the no-plugin-governance-state posture through source boundary wording, but R003 primary validation ownership remains M003.",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M003/M003-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "requirement_definition",
+          "note": "M003 CONTEXT defines R003 as preserving Paperclip as the system of record and preventing BOS Light from owning governance state."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-VALIDATION.md",
+          "validation_class": "Integration",
+          "problem_kind": "coverage_gap_acknowledgment",
+          "note": "M004 VALIDATION requirement coverage audit marks R003 as MISSING because no M004 slice summary explicitly covers it. S08 reconciles this gap by recording R003 as traceability-only out-of-scope for M004."
+        },
+        {
+          "path": "plugin-bos-light/src/bettingTable.ts",
+          "validation_class": "Contract",
+          "problem_kind": "source_boundary_preservation",
+          "note": "bettingTable.ts uses BOSPersistence and PaperclipAdapter seams with cache-overlay-only diagnostics, preserving Paperclip as system of record for betting-table state."
+        },
+        {
+          "path": "plugin-bos-light/src/persistence.ts",
+          "validation_class": "Contract",
+          "problem_kind": "source_boundary_preservation",
+          "note": "persistence.ts documents InMemoryBOSPersistence as cache/overlay behavior, not durable Paperclip state, preserving the no-plugin-governance-state constraint."
+        },
+        {
+          "path": "runtime-evidence/M002-S06-regression-closure.json",
+          "validation_class": "Operational",
+          "problem_kind": "regression_closure_proof",
+          "note": "S06 regression closure passes all validators including M002 closeout with overall_verdict=pass, confirming Paperclip-as-system-of-record posture preservation across the repository."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-VALIDATION.md",
+          "validation_class": "UAT",
+          "problem_kind": "coverage_gap_acknowledgment",
+          "note": "M004 VALIDATION requirement coverage audit marks R003 as MISSING; S08 reconciles this gap by recording R003 as traceability-only out-of-scope for M004, making the disposition reviewer-readable."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R008",
+      "status": "active",
+      "requirement_class": "constraint",
+      "canonical_requirement_text": "R008 active constraint: keeps approval/request ownership Paperclip-native and avoids plugin-side approval substitution.",
+      "primary_owner_provenance": {
+        "origin": "m003_owned",
+        "existing_primary_owner_text": "M003-owned requirement. M003 CONTEXT maps R008 as keeping approval/request ownership Paperclip-native and avoiding plugin-side approval substitution.",
+        "owner_normalized_to_s08": false,
+        "owner_reconciliation": "S08 preserves R008 as M003-owned and records traceability-only coverage. S08 does not reassign R008 ownership or alter its active status."
+      },
+      "m004_disposition": "traceability_only_out_of_scope_for_m004",
+      "m004_coverage_summary": "M004 does not alter R008 disposition. R008 remains active and M003-owned. M004 records this traceability-only entry so milestone validation can distinguish out-of-scope active requirements from missing evidence. M004 source code preserves the native-approval-first posture through adapter seams and fallback-only diagnostics, but R008 primary validation ownership remains M003.",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M003/M003-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "requirement_definition",
+          "note": "M003 CONTEXT defines R008 as keeping approval/request ownership Paperclip-native and avoiding plugin-side approval substitution."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-VALIDATION.md",
+          "validation_class": "Integration",
+          "problem_kind": "coverage_gap_acknowledgment",
+          "note": "M004 VALIDATION requirement coverage audit marks R008 as MISSING because no M004 slice summary explicitly covers it. S08 reconciles this gap by recording R008 as traceability-only out-of-scope for M004."
+        },
+        {
+          "path": "plugin-bos-light/src/bettingTable.ts",
+          "validation_class": "Contract",
+          "problem_kind": "approval_ownership_preservation",
+          "note": "bettingTable.ts implements approval-request envelopes with native-first surface selection and fallback diagnostics that never substitute plugin-side approval for Paperclip-native approval."
+        },
+        {
+          "path": "docs/08_RUNTIME_CAPABILITY_HEALTH.md",
+          "validation_class": "Integration",
+          "problem_kind": "approval_ownership_documentation",
+          "note": "Runtime health doc confirms approvals.native is unvalidated and comment/markdown fallbacks must never populate native approval ids/statuses."
+        },
+        {
+          "path": "runtime-evidence/M002-S06-regression-closure.json",
+          "validation_class": "Operational",
+          "problem_kind": "regression_closure_proof",
+          "note": "S06 regression closure passes all validators including S12 runtime-proof-or-rescope and M002 closeout with overall_verdict=pass, confirming native-approval-first posture preservation."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-VALIDATION.md",
+          "validation_class": "UAT",
+          "problem_kind": "coverage_gap_acknowledgment",
+          "note": "M004 VALIDATION requirement coverage audit marks R008 as MISSING; S08 reconciles this gap by recording R008 as traceability-only out-of-scope for M004, making the disposition reviewer-readable."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R009",
+      "status": "validated",
+      "requirement_class": "primary-user-loop",
+      "canonical_requirement_text": "R009 validated primary-user-loop: extends Eval Gate evidence posture by making gate-driven decisions visible when needed.",
+      "primary_owner_provenance": {
+        "origin": "m002_m003_validated",
+        "existing_primary_owner_text": "R009 was validated by M002 (proof-gated capability posture, fail-closed blocker evidence not treated as runtime proof) and reaffirmed by M003 (extends Eval Gate evidence posture by making gate-driven decisions visible when needed).",
+        "owner_normalized_to_s08": false,
+        "owner_reconciliation": "S08 preserves R009 as validated with no-reopen-needed posture. S08 does not reopen R009 or alter its validated status."
+      },
+      "m004_disposition": "validated_no_reopen_needed",
+      "m004_coverage_summary": "M004 does not reopen R009. M002 validated R009 through S12 approved-rescope with no_capability_promotions=true, and M003 reaffirmed R009 through decision-protocol integration. M004 S03 remapped eval-gate ownership to the v1.4.1 division contract and S05 passed plugin regression proof, but these are continuity actions, not revalidation. R009 remains validated with no reopen needed.",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+          "validation_class": "Integration",
+          "problem_kind": "validated_requirement_preservation",
+          "note": "M002 ASSESSMENT states R009 remains preserved: runtime capability promotion is proof-gated, and fail-closed blocker evidence is not treated as runtime proof."
+        },
+        {
+          "path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+          "validation_class": "Operational",
+          "problem_kind": "approved_rescope_disposition",
+          "note": "S12 outcome is approved_rescope for R009 with no_capability_promotions=true and blocker_evidence_promoted=false."
+        },
+        {
+          "path": ".gsd/milestones/M003/M003-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "requirement_reaffirmation",
+          "note": "M003 CONTEXT maps R009 as extending Eval Gate evidence posture by making gate-driven decisions visible when needed."
+        },
+        {
+          "path": "plugin-bos-light/src/evalGateEvidence.ts",
+          "validation_class": "Contract",
+          "problem_kind": "source_boundary_preservation",
+          "note": "evalGateEvidence.ts implements gate evidence envelopes with native-first surface selection, cache-overlay diagnostics, and fallback behavior preserving the R009 proof-gated posture."
+        },
+        {
+          "path": "runtime-evidence/M002-S06-regression-closure.json",
+          "validation_class": "Operational",
+          "problem_kind": "regression_closure_proof",
+          "note": "S06 regression closure passes all validators including S12 runtime-proof-or-rescope with overall_verdict=pass, confirming R009 preservation."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-VALIDATION.md",
+          "validation_class": "UAT",
+          "problem_kind": "coverage_gap_acknowledgment",
+          "note": "M004 VALIDATION requirement coverage audit marks R009 as PARTIAL; S08 reconciles this by recording R009 as validated/no-reopen-needed with M002/M003 citations, making the disposition reviewer-readable."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R010",
+      "status": "validated",
+      "requirement_class": "primary-user-loop",
+      "canonical_requirement_text": "R010 validated primary-user-loop: extends Circuit Breaker fallback behavior by adding visible decision records for self-healing or escalation triggers.",
+      "primary_owner_provenance": {
+        "origin": "m002_m003_validated",
+        "existing_primary_owner_text": "R010 was validated by M002 (future Hermes proof requires supported-boundary execution evidence with exactly one bounded run/readback, wakeCountDelta=1, and passing resultJson.bos) and reaffirmed by M003 (extends Circuit Breaker fallback behavior).",
+        "owner_normalized_to_s08": false,
+        "owner_reconciliation": "S08 preserves R010 as validated with no-reopen-needed posture. S08 does not reopen R010 or alter its validated status."
+      },
+      "m004_disposition": "validated_no_reopen_needed",
+      "m004_coverage_summary": "M004 does not reopen R010. M002 validated R010 through S12 approved-rescope with blocker citations for Hermes and GSD-Pi, and M003 reaffirmed R010 through circuit-breaker integration. M004 S01 imported circuit-breaker protocol, S04 documented Div1 circuit-breaker control, and S05 validated broad regression suite, but these are continuity actions, not revalidation. R010 remains validated with no reopen needed.",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+          "validation_class": "Integration",
+          "problem_kind": "validated_requirement_preservation",
+          "note": "M002 ASSESSMENT states R010 remains preserved: future Hermes proof requires supported-boundary execution evidence with exactly one bounded run/readback, wakeCountDelta=1, and passing resultJson.bos."
+        },
+        {
+          "path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+          "validation_class": "Operational",
+          "problem_kind": "approved_rescope_disposition",
+          "note": "S12 outcome is approved_rescope for R010 with blocker_citations for hermes and gsdpi surfaces, and no_capability_promotions=true."
+        },
+        {
+          "path": ".gsd/milestones/M003/M003-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "requirement_reaffirmation",
+          "note": "M003 CONTEXT maps R010 as extending Circuit Breaker fallback behavior by adding visible decision records for self-healing or escalation triggers."
+        },
+        {
+          "path": "plugin-bos-light/src/circuitBreakerFlow.ts",
+          "validation_class": "Contract",
+          "problem_kind": "source_boundary_preservation",
+          "note": "circuitBreakerFlow.ts implements circuit breaker evidence envelopes with native-first surface selection, cache-overlay diagnostics, activity-log fallback, and polling config preserving the R010 fail-closed posture."
+        },
+        {
+          "path": "docs/08_RUNTIME_CAPABILITY_HEALTH.md",
+          "validation_class": "Integration",
+          "problem_kind": "circuit_breaker_documentation",
+          "note": "Runtime health doc documents S12 Hermes/GSD-Pi fail-closed posture and ACTIVE_RUNS_ONLY polling fallback preserving R010."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-VALIDATION.md",
+          "validation_class": "UAT",
+          "problem_kind": "coverage_gap_acknowledgment",
+          "note": "M004 VALIDATION requirement coverage audit marks R010 as PARTIAL; S08 reconciles this by recording R010 as validated/no-reopen-needed with M002/M003 citations, making the disposition reviewer-readable."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R011",
+      "status": "validated",
+      "requirement_class": "constraint",
+      "canonical_requirement_text": "R011 validated constraint: defines balanced proof boundaries; supported boundaries remain mandatory with no Paperclip core patch, no private internal dependency, no direct database mutation, and no plaintext credential logging.",
+      "primary_owner_provenance": {
+        "origin": "m002_m003_validated",
+        "existing_primary_owner_text": "R011 was validated by M002 (supported boundaries remain mandatory, evidence records no Paperclip core patch, no private internal dependency, no direct database mutation, and no plaintext credential logging) and reaffirmed by M003.",
+        "owner_normalized_to_s08": false,
+        "owner_reconciliation": "S08 preserves R011 as validated with no-reopen-needed posture. S08 does not reopen R011 or alter its validated status."
+      },
+      "m004_disposition": "validated_no_reopen_needed",
+      "m004_coverage_summary": "M004 does not reopen R011. M002 validated R011 through S12 safety assertions (core_source_patched=false, direct_db_mutation=false, paperclip_core_patched=false, plaintext_secrets_requested_or_logged=false, no private imports or unsupported paths) and M003 reaffirmed R011 through conservative evidence posture. M004 preserves the same no-core/private/direct-DB/native-approval posture through plugin source boundaries and runtime capability documentation, but these are continuity actions, not revalidation. R011 remains validated with no reopen needed.",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "evidence_citations": [
+        {
+          "path": ".gsd/milestones/M002/M002-ASSESSMENT.md",
+          "validation_class": "Integration",
+          "problem_kind": "validated_requirement_preservation",
+          "note": "M002 ASSESSMENT states R011 remains preserved: supported boundaries remain mandatory and evidence records no Paperclip core patch, no private internal dependency, no direct database mutation, and no plaintext credential logging."
+        },
+        {
+          "path": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+          "validation_class": "Operational",
+          "problem_kind": "safety_assertions",
+          "note": "S12 safety block asserts core_source_patched=false, direct_db_mutation=false, paperclip_core_patched=false, plaintext_secrets_requested_or_logged=false, and no private imports or unsupported paths."
+        },
+        {
+          "path": ".gsd/milestones/M003/M003-CONTEXT.md",
+          "validation_class": "Contract",
+          "problem_kind": "requirement_reaffirmation",
+          "note": "M003 CONTEXT technical constraints require no secrets or raw auth material in decision artifacts, fallback diagnostics, logs, or evidence, reaffirming R011."
+        },
+        {
+          "path": "docs/08_RUNTIME_CAPABILITY_HEALTH.md",
+          "validation_class": "Integration",
+          "problem_kind": "boundary_documentation",
+          "note": "Runtime health doc documents adapter contract rules, persistence/state boundaries, and no-core/private coupling, preserving R011 boundaries."
+        },
+        {
+          "path": "runtime-evidence/M002-S06-regression-closure.json",
+          "validation_class": "Operational",
+          "problem_kind": "regression_closure_proof",
+          "note": "S06 regression closure passes all validators including M002 closeout (secrets, no-core boundaries) with overall_verdict=pass, confirming R011 preservation."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-VALIDATION.md",
+          "validation_class": "UAT",
+          "problem_kind": "coverage_gap_acknowledgment",
+          "note": "M004 VALIDATION requirement coverage audit marks R011 as PARTIAL; S08 reconciles this by recording R011 as validated/no-reopen-needed with M002/M003 citations, making the disposition reviewer-readable."
+        }
+      ]
+    }
+  ],
+  "posture_assertions": {
+    "r003_r008_active_m003_owned": true,
+    "r003_r008_traceability_only_out_of_scope_for_m004": true,
+    "r009_r010_r011_validated_no_reopen_needed": true,
+    "r009_r010_r011_cited_from_m002_m003": true,
+    "no_m004_requirement_ownership_reassigned": true,
+    "no_m004_validated_requirements_reopened": true,
+    "no_live_runtime_capability_promoted": true,
+    "no_capability_promotions": true,
+    "no_plaintext_credentials_logged": true,
+    "citations_point_to_existing_local_evidence": true
+  },
+  "safety": {
+    "traceability_only": true,
+    "r003_r008_preserved_as_active": true,
+    "r009_r010_r011_preserved_as_validated": true,
+    "no_requirement_ownership_reassigned": true,
+    "no_validated_requirements_reopened": true,
+    "requirements_broadened": false,
+    "success_criteria_broadened": false,
+    "runtime_proof_boundary_preserved": true,
+    "live_runtime_capability_promoted": false,
+    "no_capability_promotions": true,
+    "capability_promotions": [],
+    "blocker_evidence_promoted": false,
+    "network_access_required": false,
+    "local_json_only": true,
+    "secret_like_values_copied": false,
+    "plaintext_credentials_logged": false,
+    "notes": "S08 records requirement scope reconciliation only. It makes R003/R008 explicit as active/M003-owned/traceability-only-out-of-scope-for-M004 and R009/R010/R011 explicit as validated/no-reopen-needed/cited-from-M002/M003. It does not reopen validated requirements, reassign ownership, or promote any live Paperclip runtime capability."
+  }
+}

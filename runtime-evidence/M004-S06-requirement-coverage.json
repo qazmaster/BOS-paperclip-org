@@ -1,0 +1,294 @@
+{
+  "schema_version": "m004-s06-requirement-coverage/v1",
+  "artifact_type": "requirement-coverage-ledger",
+  "generated_at": "2026-05-31T11:05:00Z",
+  "milestone": "M004-osbua3",
+  "slice": "S06",
+  "validation_round": 1,
+  "source_of_truth": "Seeded from local M004 closeout artifacts: .gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md, .gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md, the S05 proof stdout logs, and the M002 S13 requirement-coverage ledger precedent. The local .gsd/REQUIREMENTS.md file was not present in this worktree, so owner provenance is preserved from the available in-repository context and any uncertainty is documented in owner_reconciliation notes rather than normalized to S06.",
+  "inputs": {
+    "m004_summary_path": ".gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md",
+    "s05_summary_path": ".gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md",
+    "s05_primary_proof_stdout_path": ".gsd/exec/f3fb5605-43ce-4a3f-badf-77029cc18522.stdout",
+    "s05_secondary_proof_stdout_path": ".gsd/exec/8a0b5a07-20e9-4cb2-9900-e826114dc6c6.stdout",
+    "s05_milestone_closeout_stdout_path": ".gsd/exec/46be68a7-db57-4a37-8c25-d1d2d86113fa.stdout",
+    "precedent_ledger_path": "runtime-evidence/M002-S13-requirement-coverage.json",
+    "requirements_record_path": ".gsd/REQUIREMENTS.md",
+    "requirements_record_availability": "not_present_in_this_worktree"
+  },
+  "requirements": [
+    {
+      "requirement_id": "R012",
+      "status": "validated",
+      "coverage_status": "covered",
+      "requirement_class": "constraint",
+      "canonical_requirement_text": "R012 constraint: the canonical v1.4.1 division map is the active company and organization contract; legacy v1.3 division names may appear only in historical or deprecated context.",
+      "primary_owner_provenance": {
+        "origin": "inherited",
+        "existing_primary_owner_text": "Primary owning slice: M004-osbua3, preserved from the M002 S13 ledger's canonical R012 context.",
+        "owner_normalized_to_s06": false,
+        "owner_reconciliation": "No local .gsd/REQUIREMENTS.md record was available. S06 records coverage evidence only and does not reassign R012 ownership."
+      },
+      "m004_disposition": "covered_in_m004",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "coverage_summary": "M004 covers R012 by importing the canonical v1.4.1 doctrine package, promoting it through root handoff entrypoints, remapping company-template and AGENTS profile contracts, and validating plugin/docs ownership strings through the S05 regression proof set.",
+      "evidence_citations": [
+        {
+          "path": "docs/BOS_Light_v1_4_1_CANONICAL_ORG.md",
+          "validation_class": "Contract",
+          "problem_kind": "division_map_contract",
+          "note": "Canonical v1.4.1 organization doctrine defines the active division map used by the migration."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md",
+          "validation_class": "Integration",
+          "problem_kind": "requirement_closeout_coverage",
+          "note": "S05 records R012 as validated by handoff docs, company-template tests, plugin tests/typecheck, runtime capability validation, and A1-A10 docs."
+        },
+        {
+          "path": ".gsd/exec/f3fb5605-43ce-4a3f-badf-77029cc18522.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "fresh_regression_proof",
+          "note": "S05 proof log shows the handoff validator, plugin Vitest suite, typecheck, runtime capability validator, and A1-A10 docs validator passed."
+        },
+        {
+          "path": ".gsd/exec/8a0b5a07-20e9-4cb2-9900-e826114dc6c6.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "secondary_regression_proof",
+          "note": "Second S05 proof log records the same local regression chain passing without adding runtime capability claims."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md",
+          "validation_class": "UAT",
+          "problem_kind": "reviewer_readable_closeout",
+          "note": "Milestone summary states R012 is covered by doctrine import, root handoff promotion, company-template/AGENTS remap, and plugin/doc owner remap."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R013",
+      "status": "validated",
+      "coverage_status": "covered",
+      "requirement_class": "compliance/security",
+      "canonical_requirement_text": "R013 compliance/security: only Div6.External may interact with the external world; internal divisions must not receive raw web, API, customer, or vendor tools.",
+      "primary_owner_provenance": {
+        "origin": "inherited",
+        "existing_primary_owner_text": "Primary owning slice: M004-osbua3, preserved from the M002 S13 ledger's canonical R013 context.",
+        "owner_normalized_to_s06": false,
+        "owner_reconciliation": "No local .gsd/REQUIREMENTS.md record was available. S06 records coverage evidence only and does not reassign R013 ownership."
+      },
+      "m004_disposition": "covered_in_m004",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "coverage_summary": "M004 covers R013 by encoding the Div6.External-only external-world boundary in doctrine, template routing, AGENTS profiles, acceptance/risk/backlog docs, and company-template validator failures for non-Div6 external IO or raw-evidence bypasses.",
+      "evidence_citations": [
+        {
+          "path": "docs/BOS_Light_v1_4_1_Tool_Permission_Matrix.md",
+          "validation_class": "Contract",
+          "problem_kind": "external_io_boundary_contract",
+          "note": "Tool permission doctrine establishes Div6.External as the only external-world gateway."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md",
+          "validation_class": "Integration",
+          "problem_kind": "requirement_closeout_coverage",
+          "note": "S05 records R013 as validated by company-template external route tests and the full repository-local suite."
+        },
+        {
+          "path": ".gsd/exec/f3fb5605-43ce-4a3f-badf-77029cc18522.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "fresh_regression_proof",
+          "note": "S05 proof log shows local validators and plugin tests passed with the Div6 boundary in place."
+        },
+        {
+          "path": ".gsd/exec/8a0b5a07-20e9-4cb2-9900-e826114dc6c6.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "secondary_regression_proof",
+          "note": "Second S05 proof log confirms the same no-network local proof chain passed."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md",
+          "validation_class": "UAT",
+          "problem_kind": "reviewer_readable_closeout",
+          "note": "Milestone summary states R013 is covered by Div6.External-only ownership in doctrine, template routing, AGENTS profiles, acceptance docs, and backlog/risk docs."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R014",
+      "status": "validated",
+      "coverage_status": "covered",
+      "requirement_class": "compliance/security",
+      "canonical_requirement_text": "R014 compliance/security: Div5.QualificationsLibraryLearning must quarantine, validate, and sanitize raw external evidence before any internal division can consume it.",
+      "primary_owner_provenance": {
+        "origin": "inherited",
+        "existing_primary_owner_text": "Primary owning slice: M004-osbua3, preserved from the M002 S13 ledger's canonical R014 context.",
+        "owner_normalized_to_s06": false,
+        "owner_reconciliation": "No local .gsd/REQUIREMENTS.md record was available. S06 records coverage evidence only and does not reassign R014 ownership."
+      },
+      "m004_disposition": "covered_in_m004",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "coverage_summary": "M004 covers R014 by importing Div5 quarantine and sanitization doctrine, remapping routing/profile contracts to Div5.QualificationsLibraryLearning, assigning eval evidence ownership to Div5, and validating quarantine-return behavior through company-template and plugin proof.",
+      "evidence_citations": [
+        {
+          "path": "docs/BOS_Light_v1_4_1_Data_Contracts.md",
+          "validation_class": "Contract",
+          "problem_kind": "quarantine_data_contract",
+          "note": "Data-contract doctrine defines the ExternalEvidencePacket to SanitizedKnowledgePacket boundary."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md",
+          "validation_class": "Integration",
+          "problem_kind": "requirement_closeout_coverage",
+          "note": "S05 records R014 as validated by Div6 quarantine bypass prevention and external IO quarantine return requirements."
+        },
+        {
+          "path": ".gsd/exec/f3fb5605-43ce-4a3f-badf-77029cc18522.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "fresh_regression_proof",
+          "note": "S05 proof log shows local validation and plugin tests passed with Div5 quarantine ownership encoded."
+        },
+        {
+          "path": ".gsd/exec/8a0b5a07-20e9-4cb2-9900-e826114dc6c6.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "secondary_regression_proof",
+          "note": "Second S05 proof log confirms the same local proof chain passed."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md",
+          "validation_class": "UAT",
+          "problem_kind": "reviewer_readable_closeout",
+          "note": "Milestone summary states R014 is covered by Div5 quarantine/sanitization contracts, external evidence return routing, eval evidence ownership, docs, and negative validator tests."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R015",
+      "status": "validated",
+      "coverage_status": "covered",
+      "requirement_class": "core-capability",
+      "canonical_requirement_text": "R015 core-capability: Div1.HCO owns routing, escalation, Circuit Breaker control, and staffing/workload coordination while routine routing remains automated under Div1 policy.",
+      "primary_owner_provenance": {
+        "origin": "m004_originated",
+        "existing_primary_owner_text": "M004-originated requirement with primary owning slice M004-osbua3.",
+        "owner_normalized_to_s06": false,
+        "owner_reconciliation": "S06 preserves R015 as M004-originated and records only coverage evidence; it does not make S06 the owner."
+      },
+      "m004_disposition": "covered_in_m004",
+      "runtime_proof_claimed": false,
+      "live_runtime_capability_promoted": false,
+      "coverage_summary": "M004 covers R015 by routing company-template, AGENTS, protocol, plugin fixture, and acceptance-doc ownership through Div1.HCO for routing/escalation/control and through Div3.Treasury when paid or access-gated grants are required.",
+      "evidence_citations": [
+        {
+          "path": "skills/SKILL_HCO_ROUTING_CONTROL.md",
+          "validation_class": "Contract",
+          "problem_kind": "hco_routing_control_contract",
+          "note": "HCO routing skill protocol documents Div1.HCO routing, escalation, and control ownership."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md",
+          "validation_class": "Integration",
+          "problem_kind": "requirement_closeout_coverage",
+          "note": "S05 records R015 as validated across route/profile contracts, plugin tests/typecheck, handoff validation, and runtime capability validation."
+        },
+        {
+          "path": ".gsd/exec/f3fb5605-43ce-4a3f-badf-77029cc18522.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "fresh_regression_proof",
+          "note": "S05 proof log shows local validation and plugin tests passed with Div1.HCO ownership encoded."
+        },
+        {
+          "path": ".gsd/exec/8a0b5a07-20e9-4cb2-9900-e826114dc6c6.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "secondary_regression_proof",
+          "note": "Second S05 proof log confirms the same local proof chain passed."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md",
+          "validation_class": "UAT",
+          "problem_kind": "reviewer_readable_closeout",
+          "note": "Milestone summary states R015 is covered by Div1.HCO routing/control ownership, Div3.Treasury grant routing, staffing/hats/circuit-breaker/treasury protocols, plugin fixture ownership, and acceptance docs."
+        }
+      ]
+    },
+    {
+      "requirement_id": "R016",
+      "status": "validated",
+      "coverage_status": "covered",
+      "requirement_class": "constraint",
+      "canonical_requirement_text": "R016 constraint: Paperclip runtime capability claims must remain conservative; unproven surfaces stay unvalidated or fallback-only unless live version/build and surface-specific proof exist.",
+      "primary_owner_provenance": {
+        "origin": "inherited",
+        "existing_primary_owner_text": "R016 primary S04 for conservative v1.4.1 runtime claims, preserved from local state-manifest coverage context.",
+        "owner_normalized_to_s06": false,
+        "owner_reconciliation": "No local .gsd/REQUIREMENTS.md record was available. S06 preserves the available primary-owner text and records only M004 coverage evidence, not new ownership."
+      },
+      "m004_disposition": "covered_in_m004",
+      "runtime_proof_claimed": true,
+      "runtime_proof_boundary": "Repository-local conservative runtime posture only. The proof is validator/probe evidence that unproven Paperclip surfaces remain unvalidated or fallback-only; it is not live capability promotion.",
+      "live_runtime_capability_promoted": false,
+      "coverage_summary": "M004 covers R016 by refreshing runtime-health and backlog documentation and by passing Paperclip runtime probe tests plus validate_runtime_capabilities.py, which keep unproven live surfaces unvalidated or fallback-only unless a future milestone supplies live version/build and surface-specific proof.",
+      "evidence_citations": [
+        {
+          "path": "docs/08_RUNTIME_CAPABILITY_HEALTH.md",
+          "validation_class": "Contract",
+          "problem_kind": "runtime_posture_contract",
+          "note": "Runtime health documentation is the reader-facing diagnostic surface for conservative Paperclip capability posture."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md",
+          "validation_class": "Integration",
+          "problem_kind": "requirement_closeout_coverage",
+          "note": "S05 records R016 as validated by Paperclip runtime probe tests and runtime capability validation without promoting unproven live surfaces."
+        },
+        {
+          "path": ".gsd/exec/f3fb5605-43ce-4a3f-badf-77029cc18522.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "fresh_regression_proof",
+          "note": "S05 proof log includes successful runtime capability validation and A1-A10 docs validation."
+        },
+        {
+          "path": ".gsd/exec/8a0b5a07-20e9-4cb2-9900-e826114dc6c6.stdout",
+          "validation_class": "Operational",
+          "problem_kind": "secondary_regression_proof",
+          "note": "Second S05 proof log confirms the same conservative runtime posture checks passed."
+        },
+        {
+          "path": ".gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md",
+          "validation_class": "UAT",
+          "problem_kind": "reviewer_readable_closeout",
+          "note": "Milestone summary states R016 is covered by runtime-health/backlog documentation and validate_runtime_capabilities.py without promoting unproven live surfaces."
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "traceability_only": true,
+    "requirements_validated": true,
+    "requirements_covered": true,
+    "required_requirement_ids": [
+      "R012",
+      "R013",
+      "R014",
+      "R015",
+      "R016"
+    ],
+    "ownership_normalized_to_s06": false,
+    "r015_m004_originated_preserved": true,
+    "inherited_owner_provenance_preserved": true,
+    "requirements_broadened": false,
+    "success_criteria_broadened": false,
+    "runtime_proof_boundary_preserved": true,
+    "live_runtime_capability_promoted": false,
+    "no_capability_promotions": true,
+    "capability_promotions": [],
+    "blocker_evidence_promoted": false,
+    "network_access_required": false,
+    "local_json_only": true,
+    "secret_like_values_copied": false,
+    "plaintext_credentials_logged": false,
+    "notes": "S06 records coverage metadata only. It keeps R012-R016 validated and covered according to S05/M004 closeout evidence, does not make S06 an owning slice, does not broaden requirement scope, and does not promote any live Paperclip runtime capability beyond the conservative S05 evidence."
+  }
+}

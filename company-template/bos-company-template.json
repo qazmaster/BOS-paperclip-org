@@ -60,7 +60,8 @@
     "budget_capacity": "Div1.HCO -> Div3.Treasury",
     "implementation": "Div1.HCO -> Div4.Production",
     "qa_security_review": "Div1.HCO -> Div5.QualificationsLibraryLearning",
-    "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External",
+    "external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div6.External -> Div5.QualificationsLibraryLearning",
+    "paid_credentialed_external_io_request": "Div1.HCO -> Div5.QualificationsLibraryLearning -> Div3.Treasury -> Div6.External -> Div5.QualificationsLibraryLearning",
     "complex_decision": "Div1.HCO -> Div7.MissionControl"
   },
   "rituals": [

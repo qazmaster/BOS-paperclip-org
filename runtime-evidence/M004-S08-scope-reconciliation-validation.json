@@ -1,0 +1,34 @@
+{
+  "artifact_type": "requirement-scope-reconciliation-validation",
+  "audit_path": "runtime-evidence/M004-S08-scope-reconciliation-validation.json",
+  "classification": "final_ready",
+  "diagnostics": {
+    "error_count": 0,
+    "errors": []
+  },
+  "generated_at": "2026-05-31T14:35:58.823818Z",
+  "ledger_path": "runtime-evidence/M004-S08-requirement-scope-reconciliation.json",
+  "milestone": "M004-osbua3",
+  "passed": true,
+  "posture_assertions_checked": [
+    "citations_point_to_existing_local_evidence",
+    "no_capability_promotions",
+    "no_live_runtime_capability_promoted",
+    "no_m004_requirement_ownership_reassigned",
+    "no_m004_validated_requirements_reopened",
+    "no_plaintext_credentials_logged",
+    "r003_r008_active_m003_owned",
+    "r003_r008_traceability_only_out_of_scope_for_m004",
+    "r009_r010_r011_cited_from_m002_m003",
+    "r009_r010_r011_validated_no_reopen_needed"
+  ],
+  "requirements_checked": [
+    "R003",
+    "R008",
+    "R009",
+    "R010",
+    "R011"
+  ],
+  "schema_version": "m004-s08-requirement-scope-reconciliation-validation/v1",
+  "slice": "S08"
+}

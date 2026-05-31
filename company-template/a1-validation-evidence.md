@@ -12,7 +12,7 @@ Run from the repository root:
 python3 scripts/validate_company_template.py
 ```
 
-Captured successful output during `M001-bo1jcm / S01 / T03`:
+Captured successful output during `M004-osbua3 / S02 / T03`:
 
 ```text
 Company template OK: 7 divisions, 7 agent profiles, org chart, routing, rituals, and agents README are compatible.
@@ -28,13 +28,13 @@ The local validator inspected the BOS Light company package without calling Pape
   - valid `reports_to` references
   - valid `agent_profile` paths
   - valid routing-rule target references
-- `agents/Div1_Executive/AGENTS.md`
+- `agents/Div7_MissionControl/AGENTS.md`
+- `agents/Div1_HCO/AGENTS.md`
 - `agents/Div2_MasterPlanner/AGENTS.md`
-- `agents/Div3_Production/AGENTS.md`
-- `agents/Div4_Operations/AGENTS.md`
-- `agents/Div5_Qualifications/AGENTS.md`
-- `agents/Div6_Resources/AGENTS.md`
-- `agents/Div7_Strategy/AGENTS.md`
+- `agents/Div3_Treasury/AGENTS.md`
+- `agents/Div4_Production/AGENTS.md`
+- `agents/Div5_QualificationsLibraryLearning/AGENTS.md`
+- `agents/Div6_External/AGENTS.md`
 - `agents/README.md`
 - `company-template/org-chart.mmd`
 - `company-template/task-routing.md`
@@ -48,8 +48,9 @@ This proves the draft BOS Light organization package is internally consistent an
 - every division points to an existing `AGENTS.md` profile;
 - each referenced profile mentions its own division id;
 - reporting relationships do not point to missing divisions or self-reference;
-- routing rules only reference known BOS Light division ids;
-- support documents for the org chart, task routing, rituals, and agents overview mention the expected division/ritual concepts.
+- routing rules only reference known BOS Light division ids and match the exact v1.4.1 route contract, including Div5 quarantine return and Div3 conditional paid/credentialed grants;
+- support documents for the org chart, task routing, rituals, and agents overview mention the expected division/ritual concepts;
+- active routing/profile docs preserve the security invariant that only Div6.External performs external IO, Div3.Treasury grants but does not execute paid/credentialed access, and raw Div6 evidence returns only to Div5.QualificationsLibraryLearning quarantine before internal reuse.
 
 This also preserves the S01 slice requirement that validation output identifies concrete file/field/route/compatibility failures locally and deterministically, without printing secrets or depending on external services.
 
@@ -64,7 +65,7 @@ S02 published `docs/08_RUNTIME_CAPABILITY_HEALTH.md` to make the live Paperclip 
 ## Failure Modes
 
 - Local filesystem dependency: missing or unreadable JSON, markdown support assets, or `AGENTS.md` profiles are expected to fail `scripts/validate_company_template.py` with the relative file path and context.
-- Local JSON/schema dependency: malformed JSON, missing required fields, malformed routing targets, unknown division ids, and cross-file compatibility gaps are expected to fail with file, field, route, or division context.
+- Local JSON/schema dependency: malformed JSON, missing required fields, malformed routing targets, unknown division ids, stale route semantics, missing Div3 conditional grant routing, missing Div5 quarantine return, non-Div6 external IO wording, and cross-file compatibility gaps are expected to fail with file, field, route, profile, or division context.
 - External API/network dependency: none for this A1 local proof; live Paperclip compatibility is explicitly deferred to S02 rather than inferred.
 
 ## Load Profile
@@ -78,5 +79,9 @@ Negative coverage for the validator lives in `scripts/test_validate_company_temp
 - `test_missing_required_division_field_reports_division_and_field` covers missing required division fields.
 - `test_missing_agent_profile_reports_referenced_path` covers missing referenced AGENTS profiles.
 - `test_malformed_route_reports_route_context_and_bad_target` covers malformed and unknown route targets.
+- `test_external_io_route_requires_div5_quarantine_return` covers stale external routes that bypass Div5 quarantine return.
+- `test_paid_or_credentialed_external_io_route_requires_div3_grant` covers paid/credentialed external routes that omit Div3.Treasury grants.
+- `test_external_io_security_doc_gap_reports_exact_missing_snippet` covers task-routing wording that weakens the Div6-only external IO boundary.
+- `test_div6_profile_must_not_bypass_div5_quarantine` covers Div6 profile wording that would send raw evidence around Div5 quarantine.
 - `test_org_chart_compatibility_gap_reports_missing_division` covers cross-file compatibility drift.
 - `test_exactly_seven_divisions_boundary` covers the seven-division boundary and missing canonical ids.

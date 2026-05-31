@@ -75,10 +75,16 @@ describe("runA1ToA10FixtureDemo", () => {
       "APPROVAL_REQUESTED",
       "APPROVAL_REQUESTED"
     ]);
-
+    expect(report.A5.approval.updated_rows.map((row) => row.approved_by)).toEqual([
+      "Div1.HCO",
+      "Div1.HCO",
+      "Div1.HCO"
+    ]);
     expect(report.A6).toMatchObject({ selected_surface: "comments.native", fallback: { reason: null } });
+    expect(report.A6.evidence.result.evaluated_by).toBe("Div5.QualificationsLibraryLearning");
     expect(report.A6.evidence.result.overall).toBe("PASSED");
     expect(report.A7).toMatchObject({ selected_surface: "comments.native", fallback: { reason: null } });
+    expect(report.A7.evidence.result.evaluated_by).toBe("Div5.QualificationsLibraryLearning");
     expect(report.A7.evidence.result.overall).toBe("FAILED_BLOCKING");
     expect(report.A7.evidence.guidance).toContain("Blocking Eval Gate failure");
 

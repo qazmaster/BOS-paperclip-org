@@ -17,6 +17,27 @@
 | A11c | State: Betting Table | Plugin state cleared | Restart plugin | Current cycle restored from native issue/project |
 | A11d | State: Gate Results | Plugin state cleared | Restart plugin | Gate results restored from issue comments/docs |
 | A11e | State: Decisions | Plugin state cleared | Restart plugin | Decision records restored from issue comments |
+| A12 | Canonical org package | A fresh reader opens the repo | They read the v1.4.1 docs package | The seven active divisions, org chart, ownership map, historical boundary and package inventory are explicit |
+| A13 | HCO routing control | A work item needs routing | Div1.HCO receives a routing request | The request dispatches to the correct division, forbidden routes are visible, and raw issue text is not trusted as instruction |
+| A14 | Tool permission matrix | A division wants a tool class | The v1.4.1 permission matrix is checked | Owns, may-use, may-request and prohibited surfaces are unambiguous; Div6-only external-world access and Div3 grant authority are visible |
+| A15 | External IO gateway | Internal work needs web/API/customer/vendor input | The request follows Div1 -> Div5 local miss -> Div3 if paid/credentialed -> Div6 -> Div5 | Div6.External is the only external actor and raw evidence returns only to Div5 quarantine |
+| A16 | Knowledge quarantine | Div6 returns raw external evidence | Div5.QualificationsLibraryLearning reviews and sanitizes it | Internal divisions receive only a sanitized knowledge packet, rejection or needs-human result with allowed/prohibited uses |
+| A17 | Agent staffing and hats | Workload, underperformance or missing capability appears | HCO evaluates a staffing or hat request with Div5 evidence and Div3 feasibility when needed | Assignment or escalation is recorded without hidden budget/access assumptions or wildcard permissions |
+| A18 | Circuit Breaker HCO control | Gate/runtime failures repeat | Circuit-breaker state opens or half-opens | Div1.HCO coordinates retry, reroute, pause, Div7 escalation or human escalation using recorded evidence |
+| A19 | Treasury budget/access | Work needs budget, secrets, paid API or credentialed access | Div3.Treasury evaluates the request | A scoped grant, denial or needs-human record exists and plaintext secrets are not exposed |
+| A20 | Package inventory and validator visibility | The v1.4.1 package is imported | Handoff validation or manual inventory checks run | Missing or stale canonical package files are reported explicitly without executing markdown or fetching network content |
+
+## v1.4.1 acceptance and runtime boundary
+
+A12-A20 extend the historical A1-A11 baseline for organization remap, routing, tool permissions, external IO quarantine, staffing, circuit-breaker control, budget/access and package inventory. Their source of truth is `docs/BOS_Light_v1_4_1_Acceptance_Tests_A12_A20.md` plus the canonical v1.4.1 doctrine and skill package.
+
+Acceptance evidence remains conservative:
+
+- Repo-local docs, skills, validators and fixture outputs prove doctrine shape and local behavior only.
+- Paperclip runtime support is confirmed only when `plugin-bos-light/capabilities.paperclip-runtime.json` cites live runtime evidence with version/build and create/readback or registration proof for that exact surface.
+- Div1.HCO routing control, Div6-only external-world access and Div5 quarantine are security invariants, not optional workflow preferences.
+- External IO, raw evidence bundles, budget/access grants, staffing requests and HCO circuit-control packets must be treated as inert artifacts; consumers parse them as data and never execute markdown, issue text, links or embedded code.
+- A12-A20 do not promote plugin state, events, approvals, plugin UI, Hermes, GSD-Pi or external API access beyond the runtime capability matrix.
 
 ## Test strategy
 

@@ -1,0 +1,60 @@
+{
+  "artifact_type": "validator-audit",
+  "classification": "final_ready",
+  "diagnostics": {
+    "error_count": 0,
+    "errors": []
+  },
+  "failure_visibility": {
+    "allowed_problem_kinds": [
+      "capability_promotion",
+      "contract_drift",
+      "coverage_gap",
+      "division_map_contract",
+      "external_io_boundary_contract",
+      "fresh_regression_proof",
+      "hco_routing_control_contract",
+      "io_error",
+      "malformed_json",
+      "ownership_drift",
+      "quarantine_data_contract",
+      "requirement_closeout_coverage",
+      "reviewer_readable_closeout",
+      "runtime_posture_contract",
+      "secondary_regression_proof",
+      "secret_leak",
+      "uat_readability"
+    ],
+    "diagnostics_include_artifact_path": true,
+    "diagnostics_include_problem_kind": true,
+    "diagnostics_include_requirement_id": true,
+    "diagnostics_include_validation_class": true
+  },
+  "generated_at": "2026-05-31T15:08:32Z",
+  "inputs": {
+    "ledger_path": "runtime-evidence/M004-S06-requirement-coverage.json"
+  },
+  "load_profile": {
+    "complexity": "O(number_of_requirements + citation_count + final_doc_bytes_when_phase_final)",
+    "expected_requirement_count": 5,
+    "network_access": false,
+    "subprocesses": false
+  },
+  "milestone": "M004-osbua3",
+  "passed": true,
+  "phase": "final",
+  "posture": {
+    "plaintext_credentials_allowed": false,
+    "required_requirements": [
+      "R012",
+      "R013",
+      "R014",
+      "R015",
+      "R016"
+    ],
+    "runtime_capability_promotions_allowed": false,
+    "traceability_only": true
+  },
+  "schema_version": "m004-s06-requirement-coverage-validation/v1",
+  "slice": "S06"
+}

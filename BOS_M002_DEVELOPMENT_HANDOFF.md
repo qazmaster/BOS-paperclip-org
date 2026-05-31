@@ -1,5 +1,7 @@
 # Handoff: M002 Runtime Adapter Validation and Paperclip Exposure
 
+> **Canonical doctrine update:** This M002 handoff is historical runtime-validation context. New agents must read the v1.4.1 package first: `docs/BOS_Light_v1_4_1_CANONICAL_ORG.md`, the other `docs/BOS_Light_v1_4_1_*.md` files, and `skills/SKILL_*.md`. Where this M002 note conflicts with v1.4.1 ownership, permission, trust-boundary or external-IO guidance, v1.4.1 is authoritative.
+
 Audience: the next AI agent or human continuing BOS Light after this session. This file is current as of the handoff; older M001-era guidance below has been superseded by the actual M002 progress.
 
 ## Current project state

@@ -1,0 +1,97 @@
+{
+  "schema_version": "m004-s07-restored-artifact-inventory/v1",
+  "artifact_type": "restored-artifact-inventory",
+  "milestone": "M004-osbua3",
+  "slice": "S07",
+  "task": "T01",
+  "purpose": "Repo-root-visible breadcrumb for restored M004 validation evidence artifacts. This inventory records artifact presence and evidence sources only; it does not change requirement ownership/status or promote live Paperclip capability.",
+  "restored_artifacts": [
+    {
+      "path": ".gsd/milestones/M004-osbua3/M004-osbua3-ROADMAP.md",
+      "restoration": "Boundary Map populated with S01-S07 producer/consumer evidence flow and no-promotion posture.",
+      "validation_class": "Contract"
+    },
+    {
+      "path": ".gsd/milestones/M004-osbua3/M004-osbua3-CONTEXT.md",
+      "restoration": "Milestone context restored with Purpose, Current Source of Truth, Slice Status Narrative, Requirement Posture, Closeout Planning Guidance, and Redaction and Boundary Notes.",
+      "validation_class": "UAT"
+    },
+    {
+      "path": ".gsd/milestones/M004-osbua3/M004-osbua3-ASSESSMENT.md",
+      "restoration": "Milestone assessment restored with Verdict, Current Closeout Sources, Runtime Surface Assessment, Requirement Assessment for R012-R016, No Promotion Rule, and Recovery Guidance.",
+      "validation_class": "UAT"
+    },
+    {
+      "path": ".gsd/milestones/M004-osbua3/slices/S07/S07-ASSESSMENT.md",
+      "restoration": "S07 assessment restored with artifact-restoration scope, evidence inputs, security posture, failure modes, load profile, negative tests, and final-validator expectations.",
+      "validation_class": "Integration"
+    }
+  ],
+  "evidence_sources": [
+    {
+      "path": ".gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md",
+      "role": "Milestone closeout narrative and requirement outcomes for S01-S05."
+    },
+    {
+      "path": ".gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md",
+      "role": "Fresh final local regression closeout and proof-log references."
+    },
+    {
+      "path": ".gsd/exec/f3fb5605-43ce-4a3f-badf-77029cc18522.stdout",
+      "role": "Primary S05 full local validation chain proof log."
+    },
+    {
+      "path": ".gsd/exec/8a0b5a07-20e9-4cb2-9900-e826114dc6c6.stdout",
+      "role": "Secondary S05 proof log cited by S06."
+    },
+    {
+      "path": ".gsd/exec/46be68a7-db57-4a37-8c25-d1d2d86113fa.stdout",
+      "role": "Milestone closeout proof log cited by M004 summary."
+    },
+    {
+      "path": "runtime-evidence/M004-S06-requirement-coverage.json",
+      "role": "Machine-checkable R012-R016 coverage ledger with preserved provenance and no live capability promotion."
+    },
+    {
+      "path": "runtime-evidence/M004-S06-coverage-validation.json",
+      "role": "Final-ready S06 validator audit with zero diagnostics and runtime promotions disallowed."
+    },
+    {
+      "path": ".gsd/milestones/M004-osbua3/slices/S06/S06-SUMMARY.md",
+      "role": "Reviewer-readable S06 coverage reconciliation summary."
+    },
+    {
+      "path": ".gsd/milestones/M004-osbua3/slices/S06/S06-UAT.md",
+      "role": "S06 reviewer traceability and local verification UAT."
+    }
+  ],
+  "required_requirements": [
+    "R012",
+    "R013",
+    "R014",
+    "R015",
+    "R016"
+  ],
+  "boundary_posture": {
+    "div6_external_only_external_io": true,
+    "div5_quarantine_sanitization_required": true,
+    "div1_hco_routing_control_required": true,
+    "div3_treasury_paid_or_credentialed_grants_required": true,
+    "traceability_only": true,
+    "requirements_reowned_by_s07": false,
+    "requirements_status_changed_by_s07": false,
+    "runtime_capability_promotions_allowed": false,
+    "live_paperclip_capability_promoted": false,
+    "network_access_required": false,
+    "plaintext_credentials_allowed": false
+  },
+  "diagnostic_expectations_for_future_validator": {
+    "include_artifact_path": true,
+    "include_problem_kind": true,
+    "include_validation_class": true,
+    "reject_empty_boundary_map": true,
+    "reject_missing_r012_r016_references": true,
+    "reject_secret_like_values": true,
+    "reject_live_runtime_promotion_language": true
+  }
+}
