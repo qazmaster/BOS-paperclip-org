@@ -113,16 +113,35 @@ def parse_manifest(root: Path) -> dict[str, ManifestEntry]:
 
 def iter_manifest_paths(root: Path) -> Iterable[str]:
     excluded_dirs = {"node_modules", "dist", "coverage", "__pycache__"}
+    root_resolved = root.resolve()
     for path in sorted(root.rglob("*")):
         rel_path = path.relative_to(root)
         rel = rel_path.as_posix()
         if path.is_dir():
+            continue
+        if path.is_symlink():
+            continue
+        try:
+            path.resolve().relative_to(root_resolved)
+        except ValueError:
             continue
         if any(part.startswith(".") or part in excluded_dirs for part in rel_path.parts):
             continue
         if rel == "MANIFEST.md":
             continue
         yield rel
+
+
+def _manifest_file(root: Path, rel: str) -> Path:
+    path = root / rel
+    if path.is_symlink():
+        raise ValueError(f"Manifest path escapes repository root or is a symlink: {rel}")
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(root.resolve())
+    except ValueError as exc:
+        raise ValueError(f"Manifest path escapes repository root: {rel}") from exc
+    return path
 
 
 def build_manifest(root: Path) -> str:
@@ -135,7 +154,7 @@ def build_manifest(root: Path) -> str:
         "|---|---:|---|",
     ]
     for rel in iter_manifest_paths(root):
-        path = root / rel
+        path = _manifest_file(root, rel)
         lines.append(f"| `{rel}` | {path.stat().st_size} | `{sha256_file(path)}` |")
     return "\n".join(lines) + "\n"
 
@@ -145,7 +164,9 @@ def validate(root: Path = ROOT) -> list[str]:
 
     for rel in REQUIRED_FILES:
         path = root / rel
-        if not path.exists():
+        if path.is_symlink():
+            errors.append(f"Required file must not be a symlink: {rel}")
+        elif not path.exists():
             errors.append(f"Missing required file: {rel}")
         elif path.is_file() and path.stat().st_size == 0:
             errors.append(f"Empty required file: {rel}")

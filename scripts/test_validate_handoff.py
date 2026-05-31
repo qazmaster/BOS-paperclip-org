@@ -73,6 +73,29 @@ class ValidateHandoffTests(unittest.TestCase):
         errors = validate_handoff.validate(self.tempdir)
         self.assertIn("Stale or incomplete content: README.md is missing term 'v1.4.1'", errors)
 
+    def test_build_manifest_skips_symlink_escape(self) -> None:
+        outside = self.tempdir.parent / "outside-secret-like-file.txt"
+        outside.write_text("outside file must not be hashed\n", encoding="utf-8")
+        try:
+            link = self.tempdir / "docs" / "outside-link.txt"
+            link.symlink_to(outside)
+            manifest = validate_handoff.build_manifest(self.tempdir)
+            self.assertNotIn("docs/outside-link.txt", manifest)
+        finally:
+            outside.unlink(missing_ok=True)
+
+    def test_required_file_symlink_is_reported(self) -> None:
+        outside = self.tempdir.parent / "outside-readme.md"
+        outside.write_text(SAMPLE_TERMS["README.md"], encoding="utf-8")
+        try:
+            target = self.tempdir / "README.md"
+            target.unlink()
+            target.symlink_to(outside)
+            errors = validate_handoff.validate(self.tempdir)
+            self.assertIn("Required file must not be a symlink: README.md", errors)
+        finally:
+            outside.unlink(missing_ok=True)
+
 
 if __name__ == "__main__":
     unittest.main()

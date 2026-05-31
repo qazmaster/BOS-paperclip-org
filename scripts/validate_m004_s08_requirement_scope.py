@@ -204,6 +204,20 @@ def _check_secret_safety(
             errors.add(context, f"secret-like value detected at {path or '<root>'}")
 
 
+def _resolve_citation_path(raw_path: str) -> Path:
+    """Resolve a citation path only if it stays within the repository root."""
+    path = Path(raw_path)
+    if path.is_absolute() or ".." in path.parts:
+        raise ValueError("citation path must be repository-relative and must not contain traversal")
+    root_resolved = ROOT.resolve()
+    resolved = (root_resolved / path).resolve()
+    try:
+        resolved.relative_to(root_resolved)
+    except ValueError as exc:
+        raise ValueError("citation path must stay inside repository root") from exc
+    return resolved
+
+
 def _validate_requirement_entry(
     req: Mapping[str, Any],
     errors: ErrorCollector,
@@ -287,10 +301,14 @@ def _validate_requirement_entry(
         if not isinstance(path, str) or not path:
             errors.add(ctx, f"evidence_citations[{cidx}].path must be a non-empty string")
         else:
-            # Check path exists on disk
-            full_path = ROOT / path
-            if not full_path.exists():
-                errors.add(ctx, f"evidence_citations[{cidx}].path does not exist on disk: {path}")
+            # Check repository-relative path exists on disk without escaping ROOT.
+            try:
+                full_path = _resolve_citation_path(path)
+            except ValueError as exc:
+                errors.add(ctx, f"evidence_citations[{cidx}].path is invalid: {exc}")
+            else:
+                if not full_path.exists():
+                    errors.add(ctx, f"evidence_citations[{cidx}].path does not exist on disk: {path}")
 
         # Validation class
         vclass = citation.get("validation_class")

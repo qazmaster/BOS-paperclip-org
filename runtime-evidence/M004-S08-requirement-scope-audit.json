@@ -1,12 +1,12 @@
 {
   "artifact_type": "requirement-scope-reconciliation-validation",
-  "audit_path": "/home/qazanik/.gsd/projects/5520c80b9dfc/worktrees/M004-osbua3/runtime-evidence/M004-S08-requirement-scope-audit.json",
+  "audit_path": "runtime-evidence/M004-S08-requirement-scope-audit.json",
   "classification": "final_ready",
   "diagnostics": {
     "error_count": 0,
     "errors": []
   },
-  "generated_at": "2026-05-31T13:53:58.745685Z",
+  "generated_at": "2026-05-31T14:50:56.545099Z",
   "ledger_path": "runtime-evidence/M004-S08-requirement-scope-reconciliation.json",
   "milestone": "M004-osbua3",
   "passed": true,

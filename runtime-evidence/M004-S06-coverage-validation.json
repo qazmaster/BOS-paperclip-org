@@ -30,7 +30,7 @@
     "diagnostics_include_requirement_id": true,
     "diagnostics_include_validation_class": true
   },
-  "generated_at": "2026-05-31T11:27:45Z",
+  "generated_at": "2026-05-31T14:50:55Z",
   "inputs": {
     "ledger_path": "runtime-evidence/M004-S06-requirement-coverage.json"
   },

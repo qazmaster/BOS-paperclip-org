@@ -346,6 +346,60 @@ class TestValidateM004S08RequirementScope(unittest.TestCase):
         path_msgs = [e for e in errors.errors if "does not exist on disk" in e]
         self.assertTrue(path_msgs, f"Expected missing-citation error, got: {errors.errors}")
 
+    def test_citation_absolute_path_rejected(self) -> None:
+        """A citation path must not point to an absolute path outside ROOT."""
+        self._set_root()
+        outside = self.tmpdir.parent / "outside-s08-citation.md"
+        outside.write_text("outside citation", encoding="utf-8")
+        try:
+            data = _build_happy_ledger(str(Path("stub")))
+            data["requirements"][0]["evidence_citations"][0]["path"] = str(outside)
+            ledger_path = _write_fixture_ledger(self.tmpdir, data)
+
+            errors = mod.ErrorCollector()
+            mod.validate_ledger(ledger_path, errors)
+            self.assertFalse(errors.ok)
+            self.assertTrue(any("repository-relative" in e for e in errors.errors), errors.errors)
+        finally:
+            outside.unlink(missing_ok=True)
+
+    def test_citation_traversal_path_rejected(self) -> None:
+        """A citation path must not contain traversal segments."""
+        self._set_root()
+        outside = self.tmpdir.parent / "outside-s08-traversal.md"
+        outside.write_text("outside citation", encoding="utf-8")
+        try:
+            data = _build_happy_ledger(str(Path("stub")))
+            data["requirements"][0]["evidence_citations"][0]["path"] = "../outside-s08-traversal.md"
+            ledger_path = _write_fixture_ledger(self.tmpdir, data)
+
+            errors = mod.ErrorCollector()
+            mod.validate_ledger(ledger_path, errors)
+            self.assertFalse(errors.ok)
+            self.assertTrue(any("must not contain traversal" in e for e in errors.errors), errors.errors)
+        finally:
+            outside.unlink(missing_ok=True)
+
+    def test_citation_symlink_escape_rejected(self) -> None:
+        """A citation symlink must not escape ROOT after resolution."""
+        self._set_root()
+        outside = self.tmpdir.parent / "outside-s08-symlink.md"
+        outside.write_text("outside citation", encoding="utf-8")
+        try:
+            link = self.tmpdir / "stub" / "outside-link.md"
+            link.parent.mkdir(parents=True, exist_ok=True)
+            link.symlink_to(outside)
+            data = _build_happy_ledger(str(Path("stub")))
+            data["requirements"][0]["evidence_citations"][0]["path"] = "stub/outside-link.md"
+            ledger_path = _write_fixture_ledger(self.tmpdir, data)
+
+            errors = mod.ErrorCollector()
+            mod.validate_ledger(ledger_path, errors)
+            self.assertFalse(errors.ok)
+            self.assertTrue(any("inside repository root" in e for e in errors.errors), errors.errors)
+        finally:
+            outside.unlink(missing_ok=True)
+
     # ------------------------------------------------------------------
     # Secret-like value in ledger
     # ------------------------------------------------------------------

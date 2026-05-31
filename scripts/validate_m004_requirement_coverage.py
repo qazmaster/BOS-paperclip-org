@@ -267,8 +267,17 @@ def _relative_path(value: Any, default: Path) -> Path:
     return Path(str(value))
 
 
-def _resolve(root: Path, path: Path) -> Path:
-    return path if path.is_absolute() else root / path
+def _resolve_repo_path(root: Path, path: Path) -> Path:
+    """Resolve a ledger-supplied path only if it stays inside root."""
+    if path.is_absolute() or ".." in path.parts:
+        raise ValueError("path must be repository-relative and must not contain traversal")
+    root_resolved = root.resolve()
+    resolved = (root_resolved / path).resolve()
+    try:
+        resolved.relative_to(root_resolved)
+    except ValueError as exc:
+        raise ValueError("path must stay inside repository root") from exc
+    return resolved
 
 
 def _validate_common_metadata(payload: Mapping[str, Any], errors: ErrorCollector) -> None:
@@ -606,7 +615,19 @@ def _validate_final_docs(payload: Mapping[str, Any], root: Path, errors: ErrorCo
         _relative_path(inputs.get("m004_summary_path"), Path(".gsd/milestones/M004-osbua3/M004-osbua3-SUMMARY.md")),
         _relative_path(inputs.get("s05_summary_path"), Path(".gsd/milestones/M004-osbua3/slices/S05/S05-SUMMARY.md")),
     ]
-    combined = "\n".join(_read_text(_resolve(root, path), str(path), errors, required=True) for path in required_paths).lower()
+    resolved_paths: list[Path] = []
+    for path in required_paths:
+        try:
+            resolved_paths.append(_resolve_repo_path(root, path))
+        except ValueError as exc:
+            errors.add(
+                str(path),
+                str(exc),
+                validation_class="UAT",
+                artifact_path=str(path),
+                problem_kind="io_error",
+            )
+    combined = "\n".join(_read_text(path, str(path), errors, required=True) for path in resolved_paths).lower()
     for rid in REQUIRED_REQUIREMENT_IDS:
         if rid.lower() not in combined:
             errors.add(

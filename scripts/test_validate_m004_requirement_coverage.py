@@ -328,6 +328,42 @@ class ValidateM004RequirementCoverageTests(unittest.TestCase):
             self.assertEqual("invalid", classification)
             self.assertTrue(any("missing JSON file" in error for error in errors), errors)
 
+    def test_final_docs_reject_absolute_path_escape(self) -> None:
+        with FixtureRoot() as root:
+            outside = root.parent / "outside-m004-summary.md"
+            outside.write_text("R012 R013 R014 R015 R016 are validated and covered outside root.\n", encoding="utf-8")
+            try:
+                payload = valid_ledger()
+                payload["inputs"]["m004_summary_path"] = str(outside)
+                errors, classification = validator.validate(write_ledger(root, payload), root=root, phase="final")
+                self.assertEqual("invalid", classification)
+                self.assertTrue(any("repository-relative" in error for error in errors), errors)
+            finally:
+                outside.unlink(missing_ok=True)
+
+    def test_final_docs_reject_traversal_path_escape(self) -> None:
+        with FixtureRoot() as root:
+            payload = valid_ledger()
+            payload["inputs"]["m004_summary_path"] = "../outside-m004-summary.md"
+            errors, classification = validator.validate(write_ledger(root, payload), root=root, phase="final")
+            self.assertEqual("invalid", classification)
+            self.assertTrue(any("must not contain traversal" in error for error in errors), errors)
+
+    def test_final_docs_reject_symlink_escape(self) -> None:
+        with FixtureRoot() as root:
+            outside = root.parent / "outside-linked-summary.md"
+            outside.write_text("R012 R013 R014 R015 R016 are validated and covered outside root.\n", encoding="utf-8")
+            try:
+                link = root / "docs" / "linked-summary.md"
+                link.symlink_to(outside)
+                payload = valid_ledger()
+                payload["inputs"]["m004_summary_path"] = "docs/linked-summary.md"
+                errors, classification = validator.validate(write_ledger(root, payload), root=root, phase="final")
+                self.assertEqual("invalid", classification)
+                self.assertTrue(any("inside repository root" in error for error in errors), errors)
+            finally:
+                outside.unlink(missing_ok=True)
+
     def test_write_audit_records_failure_visibility_and_load_profile(self) -> None:
         with FixtureRoot() as root:
             ledger_path = write_ledger(root, valid_ledger())
