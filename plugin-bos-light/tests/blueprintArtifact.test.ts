@@ -59,14 +59,18 @@ function blueprint(overrides: Partial<BlueprintInput> = {}): BlueprintInput {
 describe("Product Blueprint artifact flow", () => {
   it("writes a confirmed native document first and returns its stable reference", async () => {
     const adapter = new InMemoryPaperclipAdapter();
+    const input = blueprint();
 
     const artifact = await createProductBlueprintArtifact({
       adapter,
-      blueprint: blueprint(),
+      blueprint: input,
       capabilities: { documents_native: "confirmed", comments_native: "unvalidated" },
       now: NOW
     });
 
+    expect(input.bpi.scored_by).toBe("Div2.MasterPlanner");
+    expect(input.producer_division).toBe("Div4.Production");
+    expect(artifact.markdown).toContain("- Producer division: Div4.Production");
     expect(adapter.documents).toHaveLength(1);
     expect(adapter.comments).toHaveLength(0);
     expect(artifact.artifact_id).toBe("doc_1");

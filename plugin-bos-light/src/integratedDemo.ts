@@ -496,7 +496,7 @@ export async function runA1ToA10FixtureDemo(input: A1ToA10FixtureDemoInput = {})
     cycle_id: cycleId,
     issue_ids: approvalIssueIds,
     reason: input.approval_reason ?? "Approve top fixture BPI candidates for the integrated A1-A10 baseline demo.",
-    requested_by: input.requested_by ?? "Fixture.MasterPlanner",
+    requested_by: input.requested_by ?? "Div1.HCO",
     adapter,
     persistence,
     now: approvalAt
