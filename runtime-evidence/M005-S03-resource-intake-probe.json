@@ -1,0 +1,146 @@
+{
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "missing_aipay_git_access",
+    "missing_paperclip_api_key",
+    "missing_paperclip_auth",
+    "missing_paperclip_base_url",
+    "missing_xiaomi_api_key",
+    "missing_xiaomi_base_url"
+  ],
+  "blocker_reason": "missing_aipay_git_access,missing_paperclip_api_key,missing_paperclip_auth,missing_paperclip_base_url,missing_xiaomi_api_key,missing_xiaomi_base_url",
+  "capability_promotions": [],
+  "diagnostics": {
+    "config_discovery": "missing Paperclip base URL or company id; no HTTP attempt made"
+  },
+  "generated_at": "2026-05-31T19:44:53.631361Z",
+  "inputs": {
+    "auth": {
+      "available_env": [
+        {
+          "env_name": "PAPERCLIP_API_KEY",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_AUTH_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_COOKIE",
+          "header": "Cookie",
+          "present": false
+        }
+      ],
+      "selected_env_name": null
+    },
+    "base_url_present": false,
+    "base_url_source": "missing",
+    "company_id_present": false,
+    "company_token_budget_ref": "<redacted>",
+    "origin_present": false,
+    "template_path": "company-template/bos-company-template.json",
+    "template_schema_version": "0.1-v1.4.1"
+  },
+  "missing_resources": [
+    "paperclip_api_key",
+    "paperclip_base_url",
+    "aipay_git_access",
+    "xiaomi_api_key",
+    "xiaomi_base_url"
+  ],
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "passing": false,
+  "phase": "resource_intake",
+  "request_artifacts": [],
+  "resources": [
+    {
+      "category": "paperclip_api_key",
+      "checked_env_names": [
+        "PAPERCLIP_API_KEY",
+        "PAPERCLIP_TOKEN",
+        "PAPERCLIP_AUTH_TOKEN"
+      ],
+      "description": "Paperclip API key for authenticated HTTP calls",
+      "present": false,
+      "source": null
+    },
+    {
+      "category": "paperclip_base_url",
+      "checked_env_names": [
+        "PAPERCLIP_BASE_URL",
+        "PAPERCLIP_URL"
+      ],
+      "description": "Paperclip base URL",
+      "present": false,
+      "source": null
+    },
+    {
+      "category": "company_token_budget",
+      "description": "Company token budget from company template",
+      "present": true,
+      "source": "company-template/bos-company-template.json#bos_config.company_token_budget_ref",
+      "value": 100000
+    },
+    {
+      "category": "aipay_git_access",
+      "checked_env_names": [
+        "AIPAY_GIT_URL",
+        "GIT_SSH_KEY",
+        "GITHUB_TOKEN",
+        "GITLAB_TOKEN"
+      ],
+      "description": "Git access for aipay.kz repository",
+      "git_test_error": null,
+      "git_test_result": null,
+      "git_url_present": false,
+      "git_url_redacted": null,
+      "present": false,
+      "source": null
+    },
+    {
+      "category": "xiaomi_api_key",
+      "checked_env_names": [
+        "XIAOMI_API_KEY"
+      ],
+      "description": "Xiaomi API key for Hermes backend",
+      "present": false,
+      "source": null
+    },
+    {
+      "category": "xiaomi_base_url",
+      "checked_env_names": [
+        "XIAOMI_BASE_URL"
+      ],
+      "description": "Xiaomi base URL for Hermes backend",
+      "present": false,
+      "source": null
+    }
+  ],
+  "safety": {
+    "max_paperclip_mutations": 2,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "m005-s03-resource-intake/v1",
+  "side_effect_counters": {
+    "comments_created": 0,
+    "documents_created": 0,
+    "escalation_issues_created": 0,
+    "paperclip_api_calls": 0
+  }
+}
