@@ -1,6 +1,6 @@
 # 09 - Initial Backlog
 
-This backlog implements the v1.4.1 remap and its traceability set: R012–R016 plus D012–D014. Anything touching runtime support must remain proof-gated until live Paperclip evidence exists.
+This backlog implements the v1.4.1 remap and its traceability set: R012–R016 plus D012–D014. Anything touching runtime support must remain proof-gated until live Paperclip evidence exists. Ownership/security items below are doctrine and fixture-first until a future runtime evidence file proves the exact Paperclip surface.
 
 ## Epic 1 - Company Template
 
@@ -18,6 +18,7 @@ This backlog implements the v1.4.1 remap and its traceability set: R012–R016 p
 - [ ] C3 state spike.
 - [ ] C7 capability set confirmation.
 - [ ] Decide native artifacts for approvals, comments, issue docs.
+- [ ] Keep plugin/runtime spikes separate from v1.4.1 ownership evidence; Div1/Div3/Div5/Div6 packet routing can be mirrored to native artifacts only after the target surface has separate live proof.
 
 ## Epic 3 - BPI and Blueprint
 
@@ -72,7 +73,20 @@ This backlog implements the v1.4.1 remap and its traceability set: R012–R016 p
 - [ ] Implement OODA recommendation.
 - [ ] Store decision record in issue comments/documents.
 
-## Epic 8 - A1-A10 Integrated Demo and Live Runtime Closure
+## Epic 8 - v1.4.1 Ownership, Security and External IO
+
+- [ ] Add fixture coverage for Div1.HCO routing requests that records allowed division dispatch and forbidden direct routes.
+- [ ] Add fixture coverage for Div3.Treasury scoped grant, deny and needs-human outcomes without plaintext secret exposure.
+- [ ] Add fixture coverage for the external-IO gate: Div1 request -> Div5 local miss -> Div3 grant when paid/credentialed -> Div6 external access -> Div5 quarantine/sanitization.
+- [ ] Add fixture coverage proving raw external evidence never flows directly to Div2, Div4, Div7, plugin tools or runtime agents.
+- [ ] Add fixture coverage for Div5 sanitized knowledge packets with source attribution, prompt-injection, credential, policy, relevance, license/terms and active-content checks.
+- [ ] Add fixture coverage for staffing/hat requests that records Div1 assignment/escalation with Div5 evidence and Div3 feasibility when needed.
+- [ ] Add fixture coverage for Div1.HCO circuit-breaker control packets coordinating retry, reroute, pause, Div7 escalation or human escalation.
+- [ ] Mirror ownership/security packets to native issue/document/comment artifacts only when the runtime capability matrix already confirms the exact artifact surface; otherwise use inert repo-local markdown evidence.
+- [ ] Keep external API/service access, paid tools, credentialed paths, plugin actions, events, state, approvals, Hermes and GSD-Pi unpromoted until surface-specific live runtime proof exists.
+- [ ] Pass A12-A20.
+
+## Epic 9 - A1-A10 Integrated Demo and Live Runtime Closure
 
 - [x] Publish the fixture-first A1-A10 baseline runbook in `docs/10_A1_A10_DEMO.md`.
 - [x] Add the deterministic demo command `python3 scripts/run_a1_a10_demo.py` for local A1-A10 evidence reproduction.
