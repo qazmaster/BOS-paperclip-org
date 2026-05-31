@@ -22,13 +22,13 @@
         "scripts/import-company-template.sh",
         "company-template/a1-validation-evidence.md"
       ],
-      "evidence_source": "Local repository validation only; live Paperclip import/export path has not been exercised.",
-      "proof_command": "python3 scripts/validate_company_template.py (local structure only); replace with live Paperclip import/export command evidence before confirming.",
-      "runtime_evidence_field": "paperclip.company_template.import_export.schema_version",
+      "evidence_source": "M005 S02 probe runtime-evidence/M005-S02-company-template-probe.json: fail-closed-blocker artifact, preflight_blocked due to missing_auth, divisions_missing_after_fallback; zero capability promotions; local_validation_status=success; template_schema_version=0.1-v1.4.1; 7 divisions expected, 0 present.",
+      "proof_command": "python3 scripts/validate_m005_s02_company_template_probe.py --evidence runtime-evidence/M005-S02-company-template-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S02-company-template-probe.json: import_attempt.status, import_attempt.surface, agent_activation.divisions_present, readback.v141_agents_present",
       "fallback_path": "Keep semantic company-template assets and AGENTS.md files as human/import-prep artifacts until live import/export compatibility is proven.",
-      "blocker_text": "Cannot claim native company import/export support until a real Paperclip export/import run supplies schema/version evidence.",
+      "blocker_text": "M005 S02 blocked: missing_auth prevents all Paperclip API calls; divisions_missing_after_fallback means no direct-creation fallback succeeded. Cannot claim native company import/export support until live auth plus successful import or direct-creation readback confirms 7 v1.4.1 divisions.",
       "adapter_assumptions": [],
-      "notes": "C4 remains unvalidated by design even though A1 local package checks pass."
+      "notes": "C4 remains unvalidated by design. M005 S02 local validation passes (template structure intact) but live Paperclip import/export path remains unexercised."
     },
     {
       "key": "agents.syntax",
@@ -42,13 +42,13 @@
         "agents/Div*_*/AGENTS.md",
         "company-template/bos-company-template.json"
       ],
-      "evidence_source": "Local files exist and reference BOS Light divisions; current Paperclip agent profile parser has not validated the syntax.",
-      "proof_command": "python3 scripts/validate_company_template.py (presence/reference check only); replace with Paperclip AGENTS.md syntax validator before confirming.",
-      "runtime_evidence_field": "paperclip.agents.syntax.validator_version",
+      "evidence_source": "M005 S02 probe runtime-evidence/M005-S02-company-template-probe.json: fail-closed-blocker artifact, preflight_blocked, missing_auth; zero divisions present in readback; 7 AGENTS.md profiles exist locally but Paperclip agent parser has not validated them.",
+      "proof_command": "python3 scripts/validate_m005_s02_company_template_probe.py --evidence runtime-evidence/M005-S02-company-template-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S02-company-template-probe.json: agent_activation.divisions_present, agent_activation.profile_attached, readback.v141_agents_present",
       "fallback_path": "Treat AGENTS.md profiles as markdown operating briefs that can be manually copied or converted if Paperclip syntax rejects them.",
-      "blocker_text": "Do not mark template release syntax-compatible until Paperclip accepts the AGENTS.md files.",
+      "blocker_text": "M005 S02 blocked: missing_auth prevents agent creation and profile attachment validation. Cannot mark AGENTS.md syntax compatible until Paperclip parser accepts the profiles during a live import or direct-creation run.",
       "adapter_assumptions": [],
-      "notes": "C5 is separate from C4 because import success and AGENTS parser acceptance can fail independently."
+      "notes": "C5 is separate from C4 because import success and AGENTS parser acceptance can fail independently. Local validation confirms 7 profiles exist; live syntax validation remains blocked by auth."
     },
     {
       "key": "plugin.runtime.version_build",
@@ -62,9 +62,9 @@
         "future runtime probe",
         "health report"
       ],
-      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json recorded runtime.version=unknown and runtime.build=unknown because live Paperclip base URL/API key inputs were absent; S01/S02/S03/M002 S04 version diagnostics and M003 S04 null runtime diagnostics do not prove BOS Light plugin runtime compatibility.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates the fail-closed S05 probe; confirmation still requires a future S05-style live plugin/UI probe with runtime version/build and readback proof.",
-      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: runtime.version, runtime.build",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json recorded runtime.version=unknown and runtime.build=unknown because live Paperclip base URL/API key inputs were absent; S01/S02/S03/M002 S04 version diagnostics and M003 S04 null runtime diagnostics do not prove BOS Light plugin runtime compatibility.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates the fail-closed S05 probe; confirmation still requires a future S05-style live plugin/UI probe with runtime version/build and readback proof.",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: runtime.version, runtime.build",
       "fallback_path": "Fail closed by showing BOS Light plugin runtime version/build as unknown and keeping SDK-dependent plugin surfaces unvalidated or fallback-only.",
       "blocker_text": "Cannot set minimum supported BOS Light plugin runtime or breaking-change posture until S05-style live evidence captures version/build together with plugin registration/readback proof.",
       "adapter_assumptions": [
@@ -84,9 +84,9 @@
         "plugin-bos-light/src/worker.ts",
         "manifest.paperclip-plugin.json"
       ],
-      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested plugin key bos-light but observed no live plugin registration keys and no readback proof because live Paperclip base URL/API key inputs were absent.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only plugin_registration evidence; confirmation requires live route readback proof for bos-light plugin load.",
-      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.plugin_registration.observed_registered_keys, surfaces.plugin_registration.readback_proof",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested plugin key bos-light but observed no live plugin registration keys and no readback proof because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only plugin_registration evidence; confirmation requires live route readback proof for bos-light plugin load.",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.plugin_registration.observed_registered_keys, surfaces.plugin_registration.readback_proof",
       "fallback_path": "Keep pure BOS Light logic callable directly while plugin entrypoint support is fallback-only and host plugin load remains unproved.",
       "blocker_text": "Do not ship BOS Light as a loaded Paperclip plugin until S05-style evidence records runtime version/build and plugin registration readback for bos-light.",
       "adapter_assumptions": [
@@ -119,9 +119,9 @@
         "plugin-bos-light/src/worker.ts",
         "S04 artifact flow GSD-Pi quality branch"
       ],
-      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested piko:* tools but observed registered_tool_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only tools evidence; confirmation requires registered piko:* tool readback plus at least one successful piko invocation result.",
-      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.tools.observed_registered_keys, surfaces.tools.readback_proof, surfaces.tools.piko_invocation_results",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested piko:* tools but observed registered_tool_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only tools evidence; confirmation requires registered piko:* tool readback plus at least one successful piko invocation result.",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.tools.observed_registered_keys, surfaces.tools.readback_proof, surfaces.tools.piko_invocation_results",
       "fallback_path": "Run pure TypeScript functions directly in local tests or mirror Eval Gate and Circuit Breaker evidence through confirmed native document/comment artifact paths until host piko:* tool registration and invocation are proven.",
       "blocker_text": "Do not present piko:* tools or GSD-Pi/Div4 quality automation as host-available until S05-style registration and invocation readbacks pass.",
       "manifest_capabilities": [
@@ -154,9 +154,9 @@
         "dashboard betting table widget",
         "plugin-bos-light/src/worker.ts"
       ],
-      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested betting-table data provider but observed registered_provider_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only data-provider evidence; confirmation requires live betting-table data-provider registration and readback.",
-      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.data_providers.observed_registered_keys, surfaces.data_providers.readback_proof",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested betting-table data provider but observed registered_provider_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only data-provider evidence; confirmation requires live betting-table data-provider registration and readback.",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.data_providers.observed_registered_keys, surfaces.data_providers.readback_proof",
       "fallback_path": "Render Betting Table candidates from confirmed native issue/document/comment artifacts or generated markdown while data provider hydration remains fallback-only.",
       "blocker_text": "Do not rely on dashboard data-provider hydration until S05-style evidence confirms data.register for betting-table.",
       "manifest_capabilities": [
@@ -180,9 +180,9 @@
         "Betting Table Approve Batch",
         "plugin-bos-light/src/worker.ts"
       ],
-      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested approve-batch action but observed registered_action_keys=[] and readback_proof=null; native action invocations attempted=0 and approval/native approval counters remained zero.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only action evidence and zero approval side effects; confirmation requires live approve-batch registration/readback plus a separately safe invocation plan.",
-      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.actions.observed_registered_keys, surfaces.actions.readback_proof, side_effect_counters.action_invocations_attempted",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested approve-batch action but observed registered_action_keys=[] and readback_proof=null; native action invocations attempted=0 and approval/native approval counters remained zero.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only action evidence and zero approval side effects; confirmation requires live approve-batch registration/readback plus a separately safe invocation plan.",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.actions.observed_registered_keys, surfaces.actions.readback_proof, side_effect_counters.action_invocations_attempted",
       "fallback_path": "Use managed native issue/comment/document review workflows when host actions are unavailable; never mark rows approval-requested from fallback diagnostics alone.",
       "blocker_text": "Do not expose Approve Batch as a working native action until S05-style action registration/readback and separate native approval proof pass.",
       "manifest_capabilities": [
@@ -477,6 +477,31 @@
       "notes": "Confirmed scope is bounded native issue comment create/readback for M002 S04 visible artifacts. M003 S04 currently adds only markdown-only decision readback blocker evidence. Neither confirms activity logs, event delivery, plugin tool registration, native approvals, Hermes, or GSD-Pi."
     },
     {
+      "key": "hermes.execution.xiaomi",
+      "status": "fallback-only",
+      "paperclip_surface_name": "Hermes Xiaomi Mimo 2.5 Pro runtime execution",
+      "requirement_ids": [
+        "C2",
+        "R009",
+        "R010"
+      ],
+      "downstream_consumers": [
+        "Hermes agent runs",
+        "BOS Light runtime execution posture"
+      ],
+      "evidence_source": "M005 S01 Hermes Xiaomi probe runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json recorded adapterType hermes_local with provider xiaomi and model mimo-v2.5-pro, but preflight failed with blocker codes adapter_registry_auth_denied, missing_auth, missing_xiaomi_api_key, missing_xiaomi_base_url, test_environment_auth_denied; bounded_runtime_invocations=0; no resultJson.bos or wakeCountDelta produced.",
+      "proof_command": "python3 scripts/validate_m005_s01_hermes_xiaomi_probe.py --evidence runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json --allow-blocker (validates fail-closed-blocker artifact schema, no_core_modification, safety policies, and precise blocker codes).",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json: schema_version, adapter.adapterType, adapter.adapterConfig.provider, adapter.adapterConfig.model, blocker_codes, passing, diagnostics.runSkipped.bounded_runtime_invocations",
+      "fallback_path": "Continue using approved_rescope posture for Hermes execution; rely on confirmed native artifact surfaces (issue, document, comment) for BOS Light workflow automation until Hermes runtime proof is achieved.",
+      "blocker_text": "Cannot promote Hermes Xiaomi execution to confirmed until adapter registry auth succeeds, testEnvironment passes, at least one bounded runtime invocation produces resultJson.bos, and wakeCountDelta=1 with runtime version/build readback.",
+      "adapter_assumptions": [
+        "hermes_local adapterType",
+        "xiaomi provider",
+        "mimo-v2.5-pro model"
+      ],
+      "notes": "M005 S01 is a bounded fail-closed-blocker probe; it does not supersede M002-S12 approved_rescope. Future S12-style runtime_proof disposition still required before promotion."
+    },
+    {
       "key": "approvals.native",
       "status": "unvalidated",
       "paperclip_surface_name": "Native approval/request creation API",
@@ -513,9 +538,9 @@
         "betting-table dashboard widget",
         "Pitch Deck rendering"
       ],
-      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested dashboard widget betting-table but observed no render id and no readback proof because live Paperclip base URL/API key inputs were absent.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only dashboard widget evidence; confirmation requires rendered betting-table id and live UI route readback.",
-      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.dashboard_widgets.render_ids, surfaces.dashboard_widgets.readback_proof",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested dashboard widget betting-table but observed no render id and no readback proof because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only dashboard widget evidence; confirmation requires rendered betting-table id and live UI route readback.",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.dashboard_widgets.render_ids, surfaces.dashboard_widgets.readback_proof",
       "fallback_path": "Publish Betting Table as confirmed native issue/document/comment artifacts or markdown when dashboard widgets are unavailable.",
       "blocker_text": "Do not promise dashboard Betting Table rendering until S05-style evidence records a rendered betting-table widget id.",
       "manifest_capabilities": [],
@@ -544,9 +569,9 @@
         "circuit-state tab",
         "gate-results tab"
       ],
-      "evidence_source": "S05 canonical probe runtime-evidence/M002-S05-plugin-ui-surface-probe.json requested issue detail tabs bos-status, circuit-state, and gate-results but observed no render ids and no readback proof because live Paperclip base URL/API key inputs were absent.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M002-S05-plugin-ui-surface-probe.json --phase final validates fallback-only issue-detail-tab evidence; confirmation requires rendered ids for every requested tab and live issue UI readback.",
-      "runtime_evidence_field": "runtime-evidence/M002-S05-plugin-ui-surface-probe.json: surfaces.issue_detail_tabs.render_ids, surfaces.issue_detail_tabs.readback_proof",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested issue detail tabs bos-status, circuit-state, and gate-results but observed no render ids and no readback proof because live Paperclip base URL/API key inputs were absent.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only issue-detail-tab evidence; confirmation requires rendered ids for every requested tab and live issue UI readback.",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.issue_detail_tabs.render_ids, surfaces.issue_detail_tabs.readback_proof",
       "fallback_path": "Surface BOS status, circuit state, and gate results through confirmed native issue labels/comments/documents or markdown while issue tabs are unavailable.",
       "blocker_text": "Do not present issue overlay tabs as available until S05-style evidence records rendered bos-status, circuit-state, and gate-results tab ids.",
       "manifest_capabilities": [],
@@ -566,11 +591,11 @@
     "schema_version": "s12-runtime-execution-posture/v1",
     "hermes": {
       "status": "fallback-only",
-      "evidence_path": "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+      "evidence_path": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json",
       "artifact_type": "fail-closed-blocker",
       "passing": false,
-      "selected_path": "hermes_local_with_codex_cli_backend",
-      "blocker_reason": "adapter_registry_auth_denied,missing_auth,test_environment_auth_denied",
+      "selected_path": "hermes_local_with_xiaomi_backend",
+      "blocker_reason": "adapter_registry_auth_denied,missing_auth,missing_xiaomi_api_key,missing_xiaomi_base_url,test_environment_auth_denied",
       "bounded_runtime_invocations": 0,
       "wake_count_delta": null,
       "capability_promoted": false,
@@ -589,7 +614,16 @@
         "adapter_registry_auth_denied",
         "missing_auth",
         "test_environment_auth_denied"
-      ]
+      ],
+      "m005_s01_evidence_path": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json",
+      "m005_s01_blocker_codes": [
+        "adapter_registry_auth_denied",
+        "missing_auth",
+        "missing_xiaomi_api_key",
+        "missing_xiaomi_base_url",
+        "test_environment_auth_denied"
+      ],
+      "m005_s01_notes": "M005 S01 attempted hermes_local with xiaomi provider and mimo-v2.5-pro model; preflight blocked at adapter registry/testEnvironment with auth-related codes. No runtime version/build readback; no capability promotion per MEM058."
     },
     "gsdpi": {
       "status": "fallback-only",

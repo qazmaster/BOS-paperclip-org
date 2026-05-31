@@ -35,7 +35,8 @@ export const PAPERCLIP_RUNTIME_CAPABILITY_KEYS = [
   "comments.native",
   "approvals.native",
   "ui.dashboard_widgets",
-  "ui.issue_detail_tabs"
+  "ui.issue_detail_tabs",
+  "hermes.execution.xiaomi"
 ] as const;
 
 export type PaperclipRuntimeCapabilityKey = typeof PAPERCLIP_RUNTIME_CAPABILITY_KEYS[number];
