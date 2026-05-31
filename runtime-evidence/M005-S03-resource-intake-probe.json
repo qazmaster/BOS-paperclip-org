@@ -13,7 +13,7 @@
   "diagnostics": {
     "config_discovery": "missing Paperclip base URL or company id; no HTTP attempt made"
   },
-  "generated_at": "2026-05-31T19:44:53.631361Z",
+  "generated_at": "2026-05-31T19:46:20.353287Z",
   "inputs": {
     "auth": {
       "available_env": [
