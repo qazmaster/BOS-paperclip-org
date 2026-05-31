@@ -1,0 +1,78 @@
+{
+  "import_attempt": {
+    "surface": "local-file-system",
+    "status": "success",
+    "blocker_codes": [],
+    "side_effect_counters": {
+      "paperclip_api_calls": 0,
+      "network_requests": 0,
+      "file_writes": 0,
+      "git_commits": 0,
+      "env_mutations": 0
+    }
+  },
+  "agent_activation": {
+    "divisions_present": [
+      "Div7.MissionControl",
+      "Div1.HCO",
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External"
+    ],
+    "divisions_missing": [],
+    "agents_created": 7,
+    "profile_attached": 7,
+    "profile_paths": [
+      "agents/Div7_MissionControl/AGENTS.md",
+      "agents/Div1_HCO/AGENTS.md",
+      "agents/Div2_MasterPlanner/AGENTS.md",
+      "agents/Div3_Treasury/AGENTS.md",
+      "agents/Div4_Production/AGENTS.md",
+      "agents/Div5_QualificationsLibraryLearning/AGENTS.md",
+      "agents/Div6_External/AGENTS.md"
+    ]
+  },
+  "routing_validation": {
+    "rules_active": 8,
+    "rule_names": [
+      "high_level_mission",
+      "backlog_shaping",
+      "budget_capacity",
+      "implementation",
+      "qa_security_review",
+      "external_io_request",
+      "paid_credentialed_external_io_request",
+      "complex_decision"
+    ],
+    "test_route_result": "n/a-local-only"
+  },
+  "template_integrity": {
+    "schema_version": "1.4.1",
+    "required_fields_present": [
+      "schema_version",
+      "name",
+      "mission",
+      "divisions",
+      "routing_rules",
+      "rituals"
+    ],
+    "support_assets_present": [
+      "company-template/org-chart.mmd",
+      "company-template/task-routing.md",
+      "company-template/rituals.md",
+      "agents/README.md"
+    ],
+    "external_io_security_snippets_present": 12,
+    "legacy_division_ids_found": 0,
+    "duplicate_division_ids_found": 0
+  },
+  "runtime": {
+    "version": "BOS Light v1.4.1",
+    "build": "company-template-local",
+    "validator": "scripts/validate_company_template.py",
+    "timestamp": "2026-05-31T17:22:00Z",
+    "duration_ms": 0
+  }
+}
