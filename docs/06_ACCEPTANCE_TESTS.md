@@ -1,5 +1,7 @@
 # 06 - Acceptance Tests
 
+> **Active test baseline:** A1-A11 describe the original feature acceptance set. A12-A20 (defined in `docs/BOS_Light_v1_4_1_Acceptance_Tests_A12_A20.md`) extend this baseline for the v1.4.1 doctrine remap. Both sets are required for full BOS Light validation.
+
 | # | Component | Given | When | Then |
 |---|---|---|---|---|
 | A1 | Company Template | Fresh Paperclip company | Import BOS template | 7 agents created with AGENTS.md; org chart rendered |

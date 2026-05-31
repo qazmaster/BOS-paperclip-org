@@ -93,7 +93,7 @@ def valid_agent_smoke() -> dict:
                     "schemaVersion": "1.0",
                     "runId": "run-1",
                     "issueId": "BOS-2",
-                    "division": "Div1.Executive",
+                    "division": "Div1.HCO",
                     "role": "safe-smoke",
                     "status": "succeeded",
                     "summary": "Harmless smoke task completed.",

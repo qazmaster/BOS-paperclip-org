@@ -1,8 +1,10 @@
 # 03 - Implementation Plan v1.2
 
+> **Historical context:** This is the original v1.2 implementation baseline. The active operating model is the **BOS Light v1.4.1 package** (`docs/BOS_Light_v1_4_1_CANONICAL_ORG.md` and related files). Where v1.2 ownership, division names, or security boundaries conflict with v1.4.1, v1.4.1 is authoritative.
+
 ## Status
 
-This is the implementation baseline.
+This is the historical implementation baseline.
 
 - 3 weeks = demonstrable vertical slice.
 - 5-6 weeks = runnable MVP with tests, fallback persistence and usable UX.

@@ -1,7 +1,7 @@
 # BOS Chimera -> Paperclip Handoff Package
 
-Дата обновления: 2026-05-30
-Статус: **v1.4.1 canonical doctrine package imported**. Earlier M001/M002 and BOS Chimera materials remain historical context unless they are explicitly referenced by the v1.4.1 package.
+Дата обновления: 2026-05-31
+Статус: **v1.4.1 canonical doctrine package imported, M002 closed with approved rescope, M004 handoff active**. Earlier M001/M002 and BOS Chimera materials remain historical context unless they are explicitly referenced by the v1.4.1 package.
 
 This repository is a handoff package for a new AI agent or developer inheriting the BOS Light for Paperclip adaptation. It contains the original v1.2 implementation baseline, runtime-validation handoffs, and the new **BOS Light v1.4.1 doctrine package** that defines the active operating model.
 
@@ -42,13 +42,17 @@ Paperclip remains the **system of record** and **execution plane**: companies, a
 4. `docs/BOS_Light_v1_4_1_Acceptance_Tests_A12_A20.md` — active additional acceptance tests.
 5. `skills/SKILL_*.md` — active operational protocols.
 
+Current handoff (start here after v1.4.1 docs):
+
+- `BOS_M004_DEVELOPMENT_HANDOFF.md` — current state, blockers, testing guide, verification checklist
+
 Historical but still useful:
 
 - `docs/03_IMPLEMENTATION_PLAN_V1_2.md`
 - `docs/04_DATA_CONTRACTS.md`
 - `docs/05_PERSISTENCE_MATRIX.md`
 - `docs/06_ACCEPTANCE_TESTS.md`
-- `BOS_M002_DEVELOPMENT_HANDOFF.md`
+- `BOS_M002_DEVELOPMENT_HANDOFF.md` — M002 runtime validation context
 - `HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md`
 - `source-pdfs/`
 
@@ -72,6 +76,7 @@ BOS_Chimera_Paperclip_Handoff/
   00_START_HERE_FOR_NEW_AI_AGENT.md
   HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md
   BOS_M002_DEVELOPMENT_HANDOFF.md
+  BOS_M004_DEVELOPMENT_HANDOFF.md
   HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md
   MANIFEST.md
   docs/                         # v1.2 baseline + v1.4.1 canonical doctrine

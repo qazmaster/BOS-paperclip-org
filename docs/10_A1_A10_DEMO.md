@@ -93,8 +93,8 @@ Use these steps only when a real Paperclip runtime or checkout is available loca
 | `registration.tools` | `unvalidated` | Manifest and optional chaining request tools but do not prove host registration. | Registered `piko:*` tool keys and invocation results from Paperclip. |
 | `registration.data` / `ui.dashboard_widgets` | `unvalidated` | Betting Table fixture uses cache-overlay data, not live dashboard UI. | Data provider registration plus dashboard render/read evidence. |
 | `registration.actions` / `approvals.native` | `unvalidated` | Fixture approval seam is not Paperclip-owned request proof. | Approve Batch action invocation and native approval create/read evidence. |
-| `documents.native` / `comments.native` | `unvalidated` | Fixture adapter refs are in-memory seam results. | Native issue document/comment create/read evidence. |
-| `issues.native` | `unvalidated` | Escalation issue creation is seam-only. | Native issue create/read/update evidence. |
+| `documents.native` / `comments.native` | `confirmed` for bounded S04 readback | Live Paperclip sandbox proof exists in `runtime-evidence/M002-S04-live-artifact-flow.json`. | Broader document/comment behavior in other runtimes still needs own evidence. |
+| `issues.native` | `confirmed` for bounded S04 readback | Live Paperclip sandbox proof exists in `runtime-evidence/M002-S04-live-artifact-flow.json`. | Broader issue behavior in other runtimes still needs own evidence. |
 | `state.issue_scoped` | `unvalidated` | Cache overlay is explicitly not durable truth. | State set/get plus restart/readback evidence. |
 | `state.company_scoped`, `entities.api`, `config.api` | `fallback-only` | Existing docs record readback/API uncertainty. | Round-trip and restore proof for each surface. |
 | `activity.logging` | `unvalidated` | Circuit evidence reports activity diagnostics only. | Activity write/read visibility proof. |

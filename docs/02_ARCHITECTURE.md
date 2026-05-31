@@ -1,5 +1,7 @@
 # 02 - Architecture
 
+> **Historical v1.2 baseline:** This architecture document describes the original three-layer design. The active operating model is the **BOS Light v1.4.1 package**. Division ownership, routing rules, and trust boundaries in this document are consistent with v1.4.1, but v1.4.1 is authoritative where any conflict exists.
+
 ## Three layers
 
 ### 1. Concept Layer - BOS

@@ -1,0 +1,72 @@
+{
+  "schema_version": "bos-v141-agent-creation/v1",
+  "created_at": "2026-05-31T17:19:01.164273+00:00",
+  "base_url": "https://paperclip.oysana.com",
+  "company_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+  "adapter_type": "hermes_local",
+  "health": {
+    "status": "ok",
+    "version": "0.3.1",
+    "deploymentMode": "authenticated",
+    "deploymentExposure": "private",
+    "authReady": true,
+    "bootstrapStatus": "ready",
+    "bootstrapInviteActive": false,
+    "features": {
+      "companyDeletionEnabled": false
+    }
+  },
+  "operations": [
+    {
+      "division_id": "Div7.MissionControl",
+      "name": "Div7.MissionControl - Mission Control / Strategy",
+      "action": "created",
+      "agent_id": "1854f725-2987-4296-9d5e-e09f75d466bd",
+      "status": 201
+    },
+    {
+      "division_id": "Div1.HCO",
+      "name": "Div1.HCO - Head Communication Office",
+      "action": "created",
+      "agent_id": "8ad1fa82-4019-436b-af44-719264d235a5",
+      "status": 201
+    },
+    {
+      "division_id": "Div2.MasterPlanner",
+      "name": "Div2.MasterPlanner - Shaping / Product Planning",
+      "action": "skipped",
+      "reason": "already_exists"
+    },
+    {
+      "division_id": "Div3.Treasury",
+      "name": "Div3.Treasury - Treasury / Budget / Access",
+      "action": "skipped",
+      "reason": "already_exists"
+    },
+    {
+      "division_id": "Div4.Production",
+      "name": "Div4.Production - Production / Build / Delivery",
+      "action": "skipped",
+      "reason": "already_exists"
+    },
+    {
+      "division_id": "Div5.QualificationsLibraryLearning",
+      "name": "Div5.QualificationsLibraryLearning - Qualifications / Library / Learning",
+      "action": "skipped",
+      "reason": "already_exists"
+    },
+    {
+      "division_id": "Div6.External",
+      "name": "Div6.External - External / DMZ",
+      "action": "created",
+      "agent_id": "725db3d3-3969-40fe-9b53-440837daa843",
+      "status": 201
+    }
+  ],
+  "readback": {
+    "total_agents": 8,
+    "v141_agents_present": 7,
+    "v141_agents_missing": [],
+    "all_v141_present": true
+  }
+}

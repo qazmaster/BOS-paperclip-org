@@ -1,5 +1,7 @@
 # 01 - Context and Decision
 
+> **Historical context:** This document records the original decision to build BOS Light instead of porting the full BOS Chimera 4.1 kernel. The active operating model is the **BOS Light v1.4.1 package**. This file remains useful for provenance, but v1.4.1 controls active ownership, permission, and trust-boundary guidance.
+
 ## Background
 
 BOS Chimera 4.1 was originally a broad organizational operating system specification. It included a full kernel, event ledger, policy engine, workorder state machine, cryptographic signatures, zero-trust grants, memory sync, RUSH preemption, and many other infrastructure concepts.

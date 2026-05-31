@@ -1,5 +1,7 @@
 # 05 - Persistence Strategy Matrix
 
+> **Historical M002 context:** This matrix describes the intended persistence strategy at M002 closeout. The current handoff is `BOS_M004_DEVELOPMENT_HANDOFF.md`. Native issue/document/comment surfaces are `confirmed` for bounded S04 readback; plugin state, approvals, events, Hermes, and GSD-Pi remain blocked as documented in the current handoff.
+
 ## Rule
 
 Durable organizational truth must be visible in Paperclip-native artifacts. Private plugin state can cache overlays, but it must not be the only record for important decisions. As recorded in `docs/08_RUNTIME_CAPABILITY_HEALTH.md`, S04 confirms bounded native issue/document/comment artifact readback, while state, entities, config, approvals, activity, events, plugin UI, Hermes, and GSD-Pi remain `unvalidated` or `fallback-only`. This matrix describes the intended preferred surface plus required fallbacks when a runtime lacks those proven artifact surfaces.
