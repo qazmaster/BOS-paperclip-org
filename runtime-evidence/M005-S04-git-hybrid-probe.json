@@ -1,0 +1,154 @@
+{
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "missing_aipay_git_url",
+    "missing_git_credentials"
+  ],
+  "blocker_reason": "missing_aipay_git_url,missing_git_credentials",
+  "capability_promotions": [],
+  "generated_at": "2026-05-31T20:23:39.591288Z",
+  "git_binary_check": {
+    "available": true,
+    "returncode": 0,
+    "stderr_redacted": null,
+    "version": "git version 2.43.0",
+    "version_hash": "afe546045563315286ad2bcfb4a042a4e8e0aea3d76e2d31beeb1f549d19b865"
+  },
+  "git_env_discovery": {
+    "AIPAY_GIT_URL": {
+      "description": "Git URL for aipay.kz repository",
+      "present": false,
+      "value_redacted": null
+    },
+    "GITHUB_TOKEN": "<redacted>",
+    "GITLAB_TOKEN": "<redacted>",
+    "GIT_SSH_KEY": {
+      "description": "SSH private key path for git authentication",
+      "present": false,
+      "value_redacted": null
+    }
+  },
+  "git_ls_remote": {
+    "ok": false,
+    "reason": "missing_aipay_git_url",
+    "skipped": true
+  },
+  "hybrid_persistence_smoke": {
+    "betting_table_count": 2,
+    "bpi_ok": true,
+    "gate_ok": true,
+    "issue_id": "BOS-M005-S04-SMOKE",
+    "memory_keys": [
+      "bpi:BOS-M005-S04-SMOKE",
+      "status:BOS-M005-S04-SMOKE",
+      "gate:BOS-M005-S04-SMOKE",
+      "betting_table:M005-S04"
+    ],
+    "mirror_diagnostics": {
+      "artifact_refs": [
+        {
+          "created_at": "2026-05-31T20:23:39.592954Z",
+          "issue_id": "BOS-M005-S04-SMOKE",
+          "ref_id": "doc_1",
+          "type": "document"
+        },
+        {
+          "created_at": "2026-05-31T20:23:39.592975Z",
+          "issue_id": "BOS-M005-S04-SMOKE",
+          "ref_id": "comment_1",
+          "type": "comment"
+        },
+        {
+          "created_at": "2026-05-31T20:23:39.592989Z",
+          "issue_id": "BOS-M005-S04-SMOKE",
+          "ref_id": "doc_2",
+          "type": "document"
+        }
+      ],
+      "last_error": null,
+      "last_error_at": null,
+      "last_mirror_at": "2026-05-31T20:23:39.592994Z",
+      "total_comments": 1,
+      "total_documents": 2
+    },
+    "ok": true,
+    "status_ok": true
+  },
+  "inputs": {
+    "auth": {
+      "available_env": [
+        {
+          "env_name": "PAPERCLIP_API_KEY",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_AUTH_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_COOKIE",
+          "header": "Cookie",
+          "present": false
+        }
+      ],
+      "selected_env_name": null
+    },
+    "origin_present": false
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "passing": false,
+  "phase": "git_hybrid",
+  "safety": {
+    "max_paperclip_mutations": 0,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "m005-s04-git-hybrid/v1",
+  "state_reconstruction_smoke": {
+    "envelope": {
+      "diagnostics": {
+        "comments_scraped": 1,
+        "documents_scraped": 2,
+        "parse_errors": []
+      },
+      "fallback_used": false,
+      "found": {
+        "bpi": {
+          "formula": "(ev * confidence) / risk",
+          "score": 82.0,
+          "scored_at": "2026-05-31T20:23:39.593011Z",
+          "scored_by": "Div4.Production"
+        },
+        "gate_result": {
+          "verdict": "flag"
+        },
+        "status": {
+          "cycle_id": "M005-S04",
+          "status": "amber"
+        }
+      },
+      "issue_id": "BOS-M005-S04-SMOKE",
+      "missing": [],
+      "reconstructed_at": "2026-05-31T20:23:39.593582Z",
+      "schema_version": "1.0"
+    },
+    "issue_id": "BOS-M005-S04-SMOKE",
+    "ok": true,
+    "reconstruction_success": true
+  }
+}
