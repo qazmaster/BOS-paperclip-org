@@ -74,4 +74,16 @@ export class InMemoryPaperclipAdapter implements PaperclipAdapter {
   async logActivity(_message: string, _data?: unknown): Promise<void> {
     return;
   }
+
+  async getIssueDocuments(issueId: string): Promise<Array<{ title: string; markdown: string }>> {
+    return this.documents
+      .filter((d) => d.issueId === issueId)
+      .map((d) => ({ title: d.title, markdown: d.markdown }));
+  }
+
+  async getIssueComments(issueId: string): Promise<Array<{ markdown: string }>> {
+    return this.comments
+      .filter((c) => c.issueId === issueId)
+      .map((c) => ({ markdown: c.markdown }));
+  }
 }
