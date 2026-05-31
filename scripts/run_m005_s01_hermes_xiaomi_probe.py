@@ -373,7 +373,9 @@ def _auth_headers() -> tuple[dict[str, str], dict[str, Any]]:
 
 def _base_evidence(args: argparse.Namespace, defaults: Mapping[str, Any], auth_meta: Mapping[str, Any]) -> dict[str, Any]:
     adapter_config = dict(_as_mapping(defaults.get("adapter_config")) or {})
-    # Ensure secret references are used, not plaintext secrets
+    # Use secret references for Paperclip secret resolution, but also pass plaintext
+    # env values because hermes-paperclip-adapter@0.2.0 does not merge resolved
+    # ctx.config.env back into the Hermes subprocess env (docs/11).
     secret_ref = os.environ.get("XIAOMI_API_KEY_SECRET_REF") or "env:XIAOMI_API_KEY"
     base_url_ref = os.environ.get("XIAOMI_BASE_URL_SECRET_REF") or "env:XIAOMI_BASE_URL"
     adapter_config.setdefault("secret_ref", secret_ref)
@@ -426,9 +428,24 @@ def _make_agent_body(args: argparse.Namespace, defaults: Mapping[str, Any]) -> d
     adapter_config.setdefault("model", MODEL)
     adapter_config.setdefault("timeoutSec", args.agent_timeout_sec)
     adapter_config.setdefault("graceSec", args.agent_grace_sec)
-    # Use secret references, never plaintext values
+    # Prefer secret references when Paperclip resolves them, but also populate
+    # adapterConfig.env with plaintext values because hermes-paperclip-adapter@0.2.0
+    # does not merge resolved ctx.config.env back into the Hermes subprocess env.
+    # See docs/11_HERMES_BOS_AGENTS_SMOKE.md for the known upstream blocker.
     adapter_config.setdefault("secret_ref", os.environ.get("XIAOMI_API_KEY_SECRET_REF") or "env:XIAOMI_API_KEY")
     adapter_config.setdefault("base_url_ref", os.environ.get("XIAOMI_BASE_URL_SECRET_REF") or "env:XIAOMI_BASE_URL")
+    env = dict(adapter_config.get("env") or {})
+    xiaomi_key = os.environ.get("XIAOMI_API_KEY")
+    if xiaomi_key:
+        env.setdefault("XIAOMI_API_KEY", xiaomi_key)
+        # Hermes uses the OpenAI SDK against the Xiaomi backend; OPENAI_API_KEY is required.
+        env.setdefault("OPENAI_API_KEY", xiaomi_key)
+    xiaomi_url = os.environ.get("XIAOMI_BASE_URL")
+    if xiaomi_url:
+        env.setdefault("XIAOMI_BASE_URL", xiaomi_url)
+        env.setdefault("OPENAI_BASE_URL", xiaomi_url)
+    if env:
+        adapter_config["env"] = env
     return {
         "name": args.agent_name,
         "adapterType": ADAPTER_TYPE,

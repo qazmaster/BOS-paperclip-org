@@ -1,0 +1,127 @@
+{
+  "schema_version": "m005-s04-evidence-summary/v1",
+  "generated_at": "2026-05-31T22:35:10.773424Z",
+  "slice": "M005-S04",
+  "slice_title": "Git Integration + Hybrid State Persistence",
+  "probes": [
+    {
+      "probe_name": "git-hybrid-probe",
+      "evidence_path": "runtime-evidence/M005-S04-git-hybrid-probe.json",
+      "artifact_type": "fail-closed-blocker",
+      "schema_version": "m005-s04-git-hybrid/v1",
+      "validator": "scripts/validate_m005_s04_git_hybrid_probe.py",
+      "validation_command": "python3 scripts/validate_m005_s04_git_hybrid_probe.py --evidence runtime-evidence/M005-S04-git-hybrid-probe.json --allow-blocker",
+      "validation_result": "pass",
+      "phase": "git_hybrid",
+      "runtime_version": "unknown",
+      "runtime_build": "unknown",
+      "live_probe_enabled": false,
+      "blocker_codes": [
+        "missing_aipay_git_url",
+        "missing_git_credentials"
+      ],
+      "blocker_reason": "missing_aipay_git_url,missing_git_credentials",
+      "surfaces_assessed": {
+        "git.local_cli": "fallback-only",
+        "state.hybrid_persistence": "fallback-only"
+      },
+      "side_effect_counters": {
+        "comments_created": 0,
+        "documents_created": 0,
+        "escalation_issues_created": 0,
+        "paperclip_api_calls": 0
+      },
+      "capability_promotions": [],
+      "no_core_modification": {
+        "core_source_patched": false,
+        "direct_db_mutation": false,
+        "paperclip_core_patched": false,
+        "private_internal_imports": false,
+        "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation."
+      },
+      "notes": "Bounded S04 probe checked git binary availability (git version 2.43.0 present), discovered git credentials (all missing), skipped git ls-remote due to missing URL and credentials, smoke-tested hybrid persistence via simulated adapter (2 docs, 1 comment mirrored), and smoke-tested state reconstruction (3 found, 0 missing). Validator passed: fail-closed-blocker artifact is schema-valid with precise blocker codes, no capability promotions, and no core modification per MEM058."
+    }
+  ],
+  "capability_matrix_updates": {
+    "git.local_cli": {
+      "previous_status": null,
+      "current_status": "fallback-only",
+      "status_changed": true,
+      "evidence_source": "runtime-evidence/M005-S04-git-hybrid-probe.json",
+      "blocker_codes": [
+        "missing_aipay_git_url",
+        "missing_git_credentials"
+      ],
+      "promotion_blocked_reason": "fail-closed-blocker artifact does not satisfy passing proof requirements: missing_aipay_git_url and missing_git_credentials prevent authenticated git remote access; git binary is present and responsive. Live remote proof deferred until auth available."
+    },
+    "state.hybrid_persistence": {
+      "previous_status": null,
+      "current_status": "fallback-only",
+      "status_changed": true,
+      "evidence_source": "runtime-evidence/M005-S04-git-hybrid-probe.json",
+      "blocker_codes": [
+        "missing_aipay_git_url",
+        "missing_git_credentials"
+      ],
+      "promotion_blocked_reason": "fail-closed-blocker artifact does not satisfy passing proof requirements: simulated adapter smoke tests prove mirror/reconstruct logic but live Paperclip auth is missing; cannot confirm native artifact create-readback round-trip."
+    }
+  },
+  "confirmed_surfaces": [],
+  "fallback_only_surfaces": [
+    "hermes.execution.xiaomi",
+    "plugin.runtime.registration",
+    "registration.tools",
+    "registration.data",
+    "registration.actions",
+    "ui.dashboard_widgets",
+    "ui.issue_detail_tabs",
+    "config.api",
+    "state.company_scoped",
+    "entities.api",
+    "events.terminal_runs",
+    "git.local_cli",
+    "state.hybrid_persistence"
+  ],
+  "unvalidated_surfaces": [
+    "company_template.import_export",
+    "agents.syntax",
+    "plugin.runtime.version_build",
+    "state.issue_scoped",
+    "activity.logging",
+    "events.issue_lifecycle",
+    "approvals.native"
+  ],
+  "posture": {
+    "capability_promotions_require_passing_proof": true,
+    "fail_closed_blocker_artifacts_accepted": true,
+    "fail_closed_unsupported_artifacts_accepted": true,
+    "unsupported_boundaries_rejected": true,
+    "plaintext_credential_values_allowed": false,
+    "paperclip_core_or_direct_database_mutation_allowed": false,
+    "s12_disposition": "approved_rescope",
+    "s12_source": "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+    "m005_s01_source": "runtime-evidence/M005-S01-evidence-summary.json",
+    "m005_s02_source": "runtime-evidence/M005-S02-evidence-summary.json",
+    "m005_s03_source": "runtime-evidence/M005-S03-evidence-summary.json",
+    "m005_s04_source": "runtime-evidence/M005-S04-evidence-summary.json",
+    "no_promotion_from_blocker_evidence": true,
+    "mem058_compliant": true
+  },
+  "guardrails": {
+    "native_approval_mutated": false,
+    "no_secret_diagnostics": true,
+    "hermes_execution_attempted": false,
+    "hermes_execution_blocked_at_preflight": false,
+    "gsd_pi_execution_attempted": false,
+    "plugin_actions_invoked": 0,
+    "activity_logs_written": 0,
+    "issues_created": 0,
+    "documents_created": 0,
+    "comments_created": 0,
+    "agents_created": 0,
+    "approvals_created": 0,
+    "paperclip_api_calls": 0,
+    "plaintext_secrets_logged": false,
+    "unsupported_paths_used": 0
+  }
+}

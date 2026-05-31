@@ -36,7 +36,15 @@ export const PAPERCLIP_RUNTIME_CAPABILITY_KEYS = [
   "approvals.native",
   "ui.dashboard_widgets",
   "ui.issue_detail_tabs",
-  "hermes.execution.xiaomi"
+  "hermes.execution.xiaomi",
+  "git.local_cli",
+  "state.hybrid_persistence",
+  "workflow.mission_intake",
+  "workflow.hitl_gates",
+  "workflow.branch_policy",
+  "workflow.qa_review",
+  "workflow.pr_merge",
+  "runtime.circuit_breaker_human_resolution"
 ] as const;
 
 export type PaperclipRuntimeCapabilityKey = typeof PAPERCLIP_RUNTIME_CAPABILITY_KEYS[number];

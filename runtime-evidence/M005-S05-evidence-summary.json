@@ -1,0 +1,84 @@
+{
+  "confirmed_surfaces": [
+    "issues.native",
+    "documents.native",
+    "comments.native"
+  ],
+  "fallback_only_surfaces": [
+    "plugin.runtime.registration",
+    "registration.tools",
+    "registration.data",
+    "registration.actions",
+    "config.api",
+    "state.company_scoped",
+    "entities.api",
+    "events.terminal_runs",
+    "ui.dashboard_widgets",
+    "ui.issue_detail_tabs",
+    "hermes.execution.xiaomi",
+    "git.local_cli",
+    "state.hybrid_persistence",
+    "workflow.mission_intake",
+    "workflow.hitl_gates",
+    "workflow.branch_policy",
+    "workflow.qa_review",
+    "workflow.pr_merge",
+    "runtime.circuit_breaker_human_resolution"
+  ],
+  "generated_at": "2026-05-31T23:22:10.044582Z",
+  "guardrails": {
+    "mem058_compliant": true,
+    "no_capability_promotion_from_blocker": true,
+    "no_core_modification": true,
+    "plaintext_secrets_logged": false,
+    "unsupported_paths_used": false
+  },
+  "milestone": "M005",
+  "notes": "All five slices produce valid fail-closed-blocker artifacts with precise blocker codes. No capability promotions from blocker evidence per MEM058. S04 confirms 3 native artifact surfaces (issue/document/comment). S05 adds 6 new fallback-only workflow/runtime capabilities validated locally but unexercised live due to missing auth.",
+  "posture": {
+    "confirmed_surfaces": 3,
+    "fallback_only_surfaces": 19,
+    "unsupported_surfaces": 0,
+    "unvalidated_surfaces": 7
+  },
+  "schema_version": "m005-cumulative-evidence-summary/v1",
+  "slice_results": {
+    "S01": {
+      "artifact_type": "fail-closed-blocker",
+      "blocker_reason": "missing_auth",
+      "passing": false,
+      "status": "complete"
+    },
+    "S02": {
+      "artifact_type": "fail-closed-blocker",
+      "blocker_reason": "missing_auth,divisions_missing_after_fallback",
+      "passing": false,
+      "status": "complete"
+    },
+    "S03": {
+      "artifact_type": "fail-closed-blocker",
+      "blocker_reason": "missing_paperclip_api_key,missing_paperclip_base_url",
+      "passing": false,
+      "status": "complete"
+    },
+    "S04": {
+      "artifact_type": "fail-closed-blocker",
+      "blocker_reason": "missing_git_credentials,missing_aipay_git_url",
+      "passing": false,
+      "status": "complete"
+    },
+    "S05": {
+      "artifact_type": "fail-closed-blocker",
+      "blocker_reason": "missing_github_token,missing_paperclip_api_key",
+      "passing": false,
+      "status": "complete"
+    }
+  },
+  "slices": [
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05"
+  ]
+}

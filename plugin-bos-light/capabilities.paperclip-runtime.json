@@ -585,6 +585,193 @@
       },
       "adapter_assumptions": [],
       "notes": "S05 gives a canonical fallback-only ledger for all requested tabs and prevents M002 S04 native artifact proof or M003 S04 decision readback blocker evidence from being reused as UI proof."
+    },
+    {
+      "key": "git.local_cli",
+      "status": "fallback-only",
+      "paperclip_surface_name": "Local git CLI subprocess operations",
+      "requirement_ids": [
+        "C4",
+        "A1"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/gitOperations.ts",
+        "scripts/run_m005_s04_git_hybrid_probe.py",
+        "agents/Div4_Production/AGENTS.md"
+      ],
+      "evidence_source": "M005 S04 probe runtime-evidence/M005-S04-git-hybrid-probe.json: fail-closed-blocker artifact, git_binary_check.available=true, git_ls_remote skipped due to missing_aipay_git_url and missing_git_credentials; bounded ls-remote not attempted; zero capability promotions.",
+      "proof_command": "python3 scripts/validate_m005_s04_git_hybrid_probe.py --evidence runtime-evidence/M005-S04-git-hybrid-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S04-git-hybrid-probe.json: git_binary_check.available, git_binary_check.version_hash, git_ls_remote.ok, git_ls_remote.skipped, git_ls_remote.error_category",
+      "fallback_path": "Use local git CLI operations for repo manipulation (clone, branch, commit, push) when Paperclip GSD-Pi execution is unavailable. Git credentials passed via env only; never store secrets in code.",
+      "blocker_text": "M005 S04 blocked: missing_aipay_git_url and missing_git_credentials prevent authenticated git ls-remote probe. Cannot claim git remote access until live credentials are available. Git binary is present and responsive.",
+      "adapter_assumptions": [],
+      "notes": "GitOperations TypeScript module provides structured evidence envelopes, SSH/HTTPS auth discovery, missing binary detection, and secret redaction. 22 vitest tests pass. Live remote proof deferred until auth available."
+    },
+    {
+      "key": "state.hybrid_persistence",
+      "status": "fallback-only",
+      "paperclip_surface_name": "Hybrid in-memory + Paperclip native artifact mirroring persistence",
+      "requirement_ids": [
+        "C3",
+        "C7",
+        "A11a",
+        "A11b",
+        "A11d"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/hybridPersistence.ts",
+        "plugin-bos-light/src/stateReconstruction.ts",
+        "plugin-bos-light/src/persistence.ts",
+        "scripts/run_m005_s04_git_hybrid_probe.py"
+      ],
+      "evidence_source": "M005 S04 probe runtime-evidence/M005-S04-git-hybrid-probe.json: hybrid_persistence_smoke.ok=true using in-memory simulated adapter; mirror_diagnostics shows 2 documents and 1 comment created in simulation; state_reconstruction_smoke.ok=true with 3 found items and zero missing; artifact_type=fail-closed-blocker because git remote proof is missing.",
+      "proof_command": "python3 scripts/validate_m005_s04_git_hybrid_probe.py --evidence runtime-evidence/M005-S04-git-hybrid-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S04-git-hybrid-probe.json: hybrid_persistence_smoke.ok, hybrid_persistence_smoke.mirror_diagnostics, state_reconstruction_smoke.ok, state_reconstruction_smoke.envelope.found, state_reconstruction_smoke.envelope.missing",
+      "fallback_path": "Use HybridBOSPersistence wrapping InMemoryBOSPersistence with best-effort auto-mirror to Paperclip native documents/comments. On adapter failure, degrades to in-memory-only with logged diagnostics. State reconstructs from native artifacts on restart using markdown regex parsing.",
+      "blocker_text": "M005 S04 blocked: missing Paperclip auth prevents live native artifact mirror readback. Simulated adapter smoke tests prove the mirror/reconstruct logic is sound, but live Paperclip document/comment create-readback is not attempted. Cannot promote to confirmed until live auth enables bounded artifact round-trip.",
+      "adapter_assumptions": [
+        "createIssueDocument",
+        "addIssueComment",
+        "getIssueDocuments (extended read)",
+        "getIssueComments (extended read)"
+      ],
+      "notes": "HybridBOSPersistence (19 vitest tests) and StateReconstruction (17 vitest tests) both pass locally. Simulated adapter proves round-trip: save_bpi/save_status/save_gate_result mirror to docs/comments, then reconstruct scrapes and parses them back. Live Paperclip confirmation requires S05-style auth and bounded artifact readback."
+    },
+    {
+      "key": "workflow.mission_intake",
+      "status": "fallback-only",
+      "paperclip_surface_name": "Div7 mission intake with human approval gate",
+      "requirement_ids": [
+        "C7",
+        "A5"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/missionIntake.ts",
+        "plugin-bos-light/tests/missionIntake.test.ts"
+      ],
+      "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: mission_intake_smoke.ok=true via simulated adapter; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+      "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S05-e2e-governance-probe.json: mission_intake_smoke.ok",
+      "fallback_path": "Mission intake framing and approval request creation work through pure TypeScript logic and in-memory adapter. Human approval polling requires live Paperclip auth.",
+      "blocker_text": "M005 S05 blocked: missing Paperclip auth prevents live artifact creation for human approval requests. Mission intake logic is validated locally (18 vitest tests pass) but live approval gate is unexercised.",
+      "adapter_assumptions": [
+        "createIssueDocument",
+        "addIssueComment"
+      ],
+      "notes": "MissionIntake class frames vague goals into structured envelopes with inferred risk level, business goal, and requested divisions. Approval artifacts use document-primary/comment-fallback pattern."
+    },
+    {
+      "key": "workflow.hitl_gates",
+      "status": "fallback-only",
+      "paperclip_surface_name": "HITL runtime gates for resource grants, batch approval, and deploy",
+      "requirement_ids": [
+        "C7",
+        "A5"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/hitlGovernance.ts",
+        "plugin-bos-light/tests/hitlGovernance.test.ts"
+      ],
+      "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: hitl_gates_smoke.ok=true via simulated adapter; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+      "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S05-e2e-governance-probe.json: hitl_gates_smoke.ok",
+      "fallback_path": "Resource grant, batch approval, and deploy gate artifacts are created through pure TypeScript logic with document-primary/comment-fallback. Human decision polling requires live Paperclip auth.",
+      "blocker_text": "M005 S05 blocked: missing Paperclip auth prevents live artifact creation for HITL gates. Gate logic is validated locally (18 vitest tests pass) but live human decision polling is unexercised.",
+      "adapter_assumptions": [
+        "createIssueDocument",
+        "addIssueComment"
+      ],
+      "notes": "HITLGovernance class supports resource grant, batch approval, and production deploy gates with timeout handling and simulated decision orchestration."
+    },
+    {
+      "key": "workflow.branch_policy",
+      "status": "fallback-only",
+      "paperclip_surface_name": "Git branch policy enforcement for BOS missions",
+      "requirement_ids": [
+        "C4",
+        "A1"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/hitlGovernance.ts",
+        "plugin-bos-light/src/gitOperations.ts",
+        "plugin-bos-light/tests/hitlGovernance.test.ts"
+      ],
+      "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: branch_policy_smoke.ok=true via simulated enforcement; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+      "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S05-e2e-governance-probe.json: branch_policy_smoke.ok",
+      "fallback_path": "Branch policy enforcement operates on GitCommandEvidence structs before git push is executed. Blocks direct main/master push, force push, and non-conforming branch names.",
+      "blocker_text": "M005 S05 blocked: branch policy logic is validated locally (tests pass) but live git push enforcement requires authenticated git remote access.",
+      "adapter_assumptions": [],
+      "notes": "enforceBranchPolicy rejects direct main/master push, enforces feature/bos-{mission_id} naming, blocks non-fast-forward, and records blocked attempts with reason."
+    },
+    {
+      "key": "workflow.qa_review",
+      "status": "fallback-only",
+      "paperclip_surface_name": "Div5 QA review with diff hash and eval gate integration",
+      "requirement_ids": [
+        "C7",
+        "A6"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/qaReview.ts",
+        "plugin-bos-light/tests/qaReview.test.ts"
+      ],
+      "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: qa_review_smoke.ok=true via simulated diff review; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+      "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S05-e2e-governance-probe.json: qa_review_smoke.ok",
+      "fallback_path": "QA review performs diff parsing, SHA-256 hashing, security flag scanning, and eval gate evaluation locally. Review artifacts mirror to Paperclip via document-primary/comment-fallback when adapter is available.",
+      "blocker_text": "M005 S05 blocked: QA review logic is validated locally (21 vitest tests pass) but live artifact mirroring requires Paperclip auth.",
+      "adapter_assumptions": [
+        "createIssueDocument",
+        "addIssueComment"
+      ],
+      "notes": "QAReview class provides reviewDiff, runEvalGate, isApprovedForMerge, and produceReviewArtifact. Security scanning uses regex-based detection for secrets, injection, auth bypass, and TODO markers."
+    },
+    {
+      "key": "workflow.pr_merge",
+      "status": "fallback-only",
+      "paperclip_surface_name": "Div6.External GitHub PR create, review, merge, and CI trigger",
+      "requirement_ids": [
+        "C7",
+        "A1"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/externalIO.ts",
+        "plugin-bos-light/tests/externalIO.test.ts"
+      ],
+      "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: div6_pr_smoke.ok=true via simulated GitHub API; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+      "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S05-e2e-governance-probe.json: div6_pr_smoke.ok",
+      "fallback_path": "ExternalIOGateway auto-detects gh CLI and falls back to native HTTPS GitHub API. Missing GITHUB_TOKEN produces clean auth_failure blocker with zero side effects.",
+      "blocker_text": "M005 S05 blocked: missing GITHUB_TOKEN prevents authenticated GitHub API access. ExternalIO logic is validated locally (28 vitest tests pass) but live PR/merge/CI operations are unexercised.",
+      "adapter_assumptions": [],
+      "notes": "ExternalIOGateway provides GhCliAdapter (primary) and GitHubHttpAdapter (fallback). Supports PR create, merge (squash/merge/rebase), approve, workflow trigger, and run watch. All diagnostics are redacted."
+    },
+    {
+      "key": "runtime.circuit_breaker_human_resolution",
+      "status": "fallback-only",
+      "paperclip_surface_name": "Circuit Breaker OPEN human resolution with incident artifact and decision routing",
+      "requirement_ids": [
+        "C2",
+        "C7",
+        "A8",
+        "A9"
+      ],
+      "downstream_consumers": [
+        "plugin-bos-light/src/circuitBreakerHumanResolution.ts",
+        "plugin-bos-light/tests/circuitBreakerHumanResolution.test.ts",
+        "plugin-bos-light/src/circuitBreakerFlow.ts"
+      ],
+      "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: circuit_breaker_smoke.ok=true via simulated incident creation; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+      "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S05-e2e-governance-probe.json: circuit_breaker_smoke.ok",
+      "fallback_path": "CircuitBreakerHumanResolution creates incident artifacts with five human decision options via document-primary/comment-fallback. executeResolution routes decisions to abort, resume with limits, correction work order, Div7 escalation, or new mission intake.",
+      "blocker_text": "M005 S05 blocked: missing Paperclip auth prevents live incident artifact creation. Human resolution logic is validated locally (16 vitest tests pass) but live human decision polling is unexercised.",
+      "adapter_assumptions": [
+        "createIssueDocument",
+        "addIssueComment"
+      ],
+      "notes": "onOpen creates structured incident artifacts. awaitHumanDecision defaults to abort_mission on timeout for fail-closed safety. executeResolution produces structured payloads for downstream orchestration."
     }
   ],
   "runtime_execution_posture": {

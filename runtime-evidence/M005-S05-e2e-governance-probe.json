@@ -1,0 +1,83 @@
+{
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "missing_github_token",
+    "missing_paperclip_api_key"
+  ],
+  "blocker_reason": "missing_github_token,missing_paperclip_api_key",
+  "branch_policy_smoke": {
+    "blocked_attempts_count": 2,
+    "blocked_rules": [
+      "direct_main_push",
+      "non_fast_forward"
+    ],
+    "feature_push_allowed": true,
+    "force_push_blocked": true,
+    "main_push_blocked": true,
+    "ok": true
+  },
+  "capability_promotions": [],
+  "circuit_breaker_smoke": {
+    "artifact_type": "document",
+    "documents_count": 1,
+    "incident_created": true,
+    "ok": true,
+    "options_count": 5
+  },
+  "div6_pr_smoke": {
+    "adapter_used": "github_http",
+    "has_token": false,
+    "ok": true,
+    "pr_created": false
+  },
+  "env_discovery": {
+    "GITHUB_TOKEN": "<redacted>",
+    "GIT_SSH_KEY": {
+      "description": "SSH private key path for git authentication",
+      "present": false,
+      "value_redacted": null
+    },
+    "PAPERCLIP_API_KEY": "<redacted>"
+  },
+  "generated_at": "2026-05-31T23:14:55.422076Z",
+  "hitl_gates_smoke": {
+    "documents_count": 1,
+    "gate_artifact_created": true,
+    "gate_artifact_type": "document",
+    "ok": true
+  },
+  "mission_intake_smoke": {
+    "artifact_created": true,
+    "artifact_type": "document",
+    "comments_count": 0,
+    "documents_count": 1,
+    "mission_framed": true,
+    "ok": true
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Simulated adapters only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "passing": false,
+  "phase": "e2e_governance",
+  "qa_review_smoke": {
+    "diff_hash_present": true,
+    "eval_gate_overall": "PASSED",
+    "eval_gate_passed": true,
+    "files_changed_count": 1,
+    "lines_added": 3,
+    "lines_removed": 0,
+    "ok": true
+  },
+  "safety": {
+    "max_paperclip_mutations": 0,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "m005-s05-e2e-governance/v1"
+}
