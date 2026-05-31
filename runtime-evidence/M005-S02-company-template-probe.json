@@ -1,0 +1,151 @@
+{
+  "agent_activation": {
+    "agents_created": 0,
+    "creation_results": [],
+    "divisions_missing": [
+      "Div1.HCO",
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External",
+      "Div7.MissionControl"
+    ],
+    "divisions_present": [],
+    "profile_attached": 0
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "divisions_missing_after_fallback",
+    "missing_auth"
+  ],
+  "blocker_reason": "divisions_missing_after_fallback,missing_auth",
+  "capability_promotions": [],
+  "diagnostics": {
+    "health": {
+      "duration_ms": 1310,
+      "json": {
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentMode": "authenticated",
+        "status": "ok"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/health"
+    },
+    "version": {}
+  },
+  "generated_at": "2026-05-31T19:27:37.658810Z",
+  "import_attempt": {
+    "blocker_codes": [
+      "missing_auth"
+    ],
+    "side_effect_counters": {
+      "agents_created": 0,
+      "agents_updated": 0,
+      "approvals_created": 0,
+      "issues_created": 0,
+      "paperclip_api_calls": 1
+    },
+    "status": "preflight_blocked",
+    "surface": null
+  },
+  "inputs": {
+    "auth": {
+      "available_env": [
+        {
+          "env_name": "PAPERCLIP_API_KEY",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_AUTH_TOKEN",
+          "header": "Authorization",
+          "present": false
+        },
+        {
+          "env_name": "PAPERCLIP_COOKIE",
+          "header": "Cookie",
+          "present": false
+        }
+      ],
+      "selected_env_name": null
+    },
+    "base_url_present": true,
+    "base_url_source": "env_or_prior_s07_artifact",
+    "company_id_present": true,
+    "local_validation_status": "success",
+    "origin_present": false,
+    "previous_evidence": {
+      "local_validation": "runtime-evidence/M005-S02-local-validation.json",
+      "s07": "runtime-evidence/M002-S07-agent-visibility.json",
+      "s07_artifact_type": "m002-s07-agent-visibility/v1"
+    },
+    "template_division_count": 7,
+    "template_schema_version": "0.1-v1.4.1"
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "paperclip": {
+    "build": "unknown",
+    "version": "unknown"
+  },
+  "passing": false,
+  "phase": "company_template_import",
+  "readback": {
+    "all_v141_present": false,
+    "total_agents": null,
+    "v141_agents_missing": [
+      "Div1.HCO",
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External",
+      "Div7.MissionControl"
+    ],
+    "v141_agents_present": 0
+  },
+  "routing_validation": {
+    "rule_names": [
+      "backlog_shaping",
+      "budget_capacity",
+      "complex_decision",
+      "external_io_request",
+      "high_level_mission",
+      "implementation",
+      "paid_credentialed_external_io_request",
+      "qa_security_review"
+    ],
+    "rules_active": 8,
+    "test_route_result": "n/a-preflight-blocked"
+  },
+  "safety": {
+    "max_agent_creations": 7,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "m005-s02-company-template/v1",
+  "side_effect_counters": {
+    "agents_created": 0,
+    "agents_updated": 0,
+    "approvals_created": 0,
+    "issues_created": 0,
+    "paperclip_api_calls": 1
+  }
+}
