@@ -46,3 +46,43 @@ Work that fits available budget, permissions, secrets and resource constraints.
 - Div3 must not expose plaintext secrets.
 - Div3 must not authorize wildcard permissions.
 - No web/search tools.
+
+## Allowed Tools
+
+- ScopedAccessGrant creation
+- Budget snapshot functions
+- SecretRef resolution (redacted)
+- DivisionPacketRouter: getDivisionInbox (read only)
+
+## Forbidden Tools
+
+- ExternalGitGateway (Div6 only)
+- Production/build tools (Div4 only)
+- Quarantine functions (Div5 only)
+- Direct web/search tools
+- Mission intake (Div7 only)
+- Routing functions (Div1 only)
+- Plaintext secret logging or emission
+
+## Runtime Boundary
+
+- Can read from own inbox only
+- Can emit packets to Div1.HCO and Div6.External
+- Cannot access external network
+- Cannot read plaintext secrets (only redacted refs)
+- Cannot modify production code
+
+## Security Invariants
+
+- Plaintext secrets must never appear in prompts, markdown, logs or evidence
+- No wildcard permissions
+- No implicit grants when data is missing
+- All grants must have explicit scope, expiration, and allowed operations
+- Budget hard-stops must not be bypassed
+
+## Acceptance Checks
+
+- ScopedAccessGrant has all required fields (scope, expiration, allowed_ops)
+- Budget snapshots are accurate and current
+- Secret refs are never logged in plaintext
+- All grants go through Div1 routing

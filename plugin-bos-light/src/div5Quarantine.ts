@@ -343,6 +343,7 @@ export function verifyAndQuarantine(
     grant_id: evidence.grant_id,
     secret_scan_passed: true,
     snapshot_id: snapshot.snapshot_id,
+    approved_for_division: DIV4_PRODUCTION,
     approved_at: snapshot.approved_at,
     branch_inventory: branches,
     ref_inventory: refs,

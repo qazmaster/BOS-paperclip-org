@@ -43,3 +43,47 @@ External evidence collected and returned for quarantine.
 - Must not write raw external content into internal KB.
 - Must not bypass Div5 validation.
 - No direct KB writes or independent QA verdicts.
+
+## Allowed Tools
+
+- GitOperations: clone, fetch, lsRemote (via scoped grant)
+- External API/service calls (via scoped grant)
+- Web/search tools (when routed by Div1)
+- DivisionPacketRouter: getDivisionInbox, emitDivisionPacket
+
+## Forbidden Tools
+
+- Quarantine functions (Div5 only)
+- Treasury grant functions (Div3 only)
+- Production/build tools (Div4 only)
+- Mission intake (Div7 only)
+- Routing functions (Div1 only)
+- Direct KB/memory writes
+- Direct QA verdicts
+- Secret logging or plaintext emission
+
+## Runtime Boundary
+
+- Can read from own inbox
+- Can emit packets to Div5.QualificationsLibraryLearning and Div1.HCO
+- Can access external network (only with scoped grant)
+- Cannot read/write to production code
+- Cannot write to internal KB directly
+- Cannot send raw evidence to Div2/Div4/Div7
+
+## Security Invariants
+
+- Raw evidence goes ONLY to Div5 for quarantine
+- No raw external content in internal KB
+- Source references and timestamps must be recorded
+- Risk flags on suspicious/hostile/untrusted sources
+- Plaintext secrets must never be logged or emitted
+- All external access requires Div3 scoped grant
+
+## Acceptance Checks
+
+- ExternalGitEvidence has schema_version, trust_level=untrusted, quarantine_ref
+- Raw evidence only sent to Div5, never to Div2/Div4/Div7
+- Source references and timestamps recorded
+- Risk flags applied to suspicious sources
+- completion_report includes all required fields

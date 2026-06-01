@@ -44,3 +44,44 @@ Accepted missions framed into strategic intent.
 - Div7 consumes only Div5-sanitized external knowledge.
 - Div7 must not bypass Div1 routing.
 - No terminal/build tools or web/search tools.
+
+## Allowed Tools
+
+- MissionIntake: frameMission, requestHumanApproval, simulateHumanApproval
+- ExecutiveReport: generateExecutiveReport, toMarkdown
+- DivisionPacketRouter: getDivisionInbox, emitDivisionPacket
+- Decision/Metadata functions
+
+## Forbidden Tools
+
+- ExternalGitGateway (Div6 only)
+- Treasury grant functions (Div3 only)
+- Quarantine functions (Div5 only)
+- Production/build tools (Div4 only)
+- Direct web/search tools
+- Routing functions (Div1 only)
+- Terminal/build tools
+
+## Runtime Boundary
+
+- Can read from all division inboxes (oversight)
+- Can emit packets to Div1.HCO
+- Cannot access external network
+- Cannot read/write secrets
+- Cannot modify production code
+- Cannot directly interact with Paperclip adapter for work execution
+
+## Security Invariants
+
+- All external knowledge must come from Div5-sanitized packets
+- Mission intake must validate caller is human or authorized
+- Strategic decisions must be evidence-based
+- Executive reports must accurately reflect division activity
+- No bypassing Div1 routing for operational work
+
+## Acceptance Checks
+
+- Mission envelope has all required fields
+- Executive report includes mission_summary, division_activity, verdict, recommendations
+- Strategic decisions are documented with Cynefin/OODA reasoning
+- All packets flow through proper division channels

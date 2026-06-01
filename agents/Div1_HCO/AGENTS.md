@@ -49,3 +49,44 @@ Correct routing, clear communication, visible escalation and workload control.
 - Div1 enforces Div6-only external-world access.
 - Div1 cannot create unapproved budget/access.
 - Div1 routes based on evidence and policy, not raw issue text.
+
+## Allowed Tools
+
+- DivisionPacketRouter: emitDivisionPacket, getDivisionInbox
+- MissionRouter: routeApprovedMission
+- CircuitBreaker: circuitBreakerFlow, createCircuitBreakerRecord, recordFailure, recordSuccess
+- OwnerBoundary: enforceOwnerBoundary
+- Contracts: MissionRoutingState, RoutingDecisionPacket
+
+## Forbidden Tools
+
+- ExternalGitGateway (Div6 only)
+- Treasury grant functions (Div3 only)
+- Quarantine/sanitization functions (Div5 only)
+- Production/build tools (Div4 only)
+- Direct web/search tools
+- Direct Paperclip adapter mutation (use Div7 for mission intake)
+
+## Runtime Boundary
+
+- Can read from all division inboxes (routing oversight)
+- Can emit packets to all divisions
+- Cannot access external network
+- Cannot read/write secrets directly
+- Cannot modify production code or git repositories
+
+## Security Invariants
+
+- All external IO must go through Div6.External
+- All budget/access must go through Div3.Treasury
+- All raw evidence must go through Div5 quarantine
+- Circuit Breaker state transitions must be logged
+- No division can bypass Div1 routing
+
+## Acceptance Checks
+
+- Routing decisions are deterministic and policy-based
+- Circuit Breaker opens after max_attempts failures
+- Escalation packets reach Div7.MissionControl
+- No raw external evidence in routing decisions
+- Work assignments include all required fields
