@@ -148,6 +148,65 @@ describe("DefaultGitOperations", () => {
     });
   });
 
+  describe("lsRemote", () => {
+    it("shapes ls-remote command correctly", async () => {
+      const promise = ops.lsRemote("https://github.com/org/repo.git");
+      emitSuccess();
+      const evidence = await promise;
+      expect(evidence.command).toBe("git");
+      expect(evidence.args).toEqual(["ls-remote", "https://github.com/org/repo.git"]);
+      expect(evidence.success).toBe(true);
+      expect(evidence.error_category).toBe("none");
+    });
+
+    it("shapes ls-remote with optional refs", async () => {
+      const promise = ops.lsRemote("https://github.com/org/repo.git", ["HEAD", "refs/tags/v1.0.0"]);
+      emitSuccess();
+      const evidence = await promise;
+      expect(evidence.args).toEqual([
+        "ls-remote",
+        "https://github.com/org/repo.git",
+        "HEAD",
+        "refs/tags/v1.0.0",
+      ]);
+    });
+
+    it("includes all required evidence envelope fields for ls-remote", async () => {
+      const promise = ops.lsRemote("https://github.com/org/repo.git");
+      emitSuccess("abc123\tHEAD\n");
+      const evidence: GitCommandEvidence = await promise;
+      expect(evidence.command).toBeDefined();
+      expect(evidence.args).toBeInstanceOf(Array);
+      expect(evidence.cwd).toBeDefined();
+      expect(evidence.env_keys).toBeInstanceOf(Array);
+      expect(typeof evidence.exit_code).toBe("number");
+      expect(typeof evidence.stdout_hash).toBe("string");
+      expect(typeof evidence.stderr_hash).toBe("string");
+      expect(typeof evidence.duration_ms).toBe("number");
+      expect(typeof evidence.success).toBe("boolean");
+      expect(evidence.error_category).toBeDefined();
+      expect(evidence.redacted_diagnostics).toBeDefined();
+    });
+
+    it("classifies missing binary for ls-remote", async () => {
+      const promise = ops.lsRemote("https://github.com/org/repo.git");
+      const err = Object.assign(new Error("spawn git ENOENT"), { code: "ENOENT" });
+      emitError(err);
+      const evidence = await promise;
+      expect(evidence.success).toBe(false);
+      expect(evidence.error_category).toBe("missing_binary");
+      expect(evidence.redacted_diagnostics).toContain("git binary not found");
+    });
+
+    it("classifies auth failure for ls-remote", async () => {
+      const promise = ops.lsRemote("https://github.com/org/repo.git");
+      emitFailure(128, "fatal: Authentication failed for 'https://github.com/org/repo.git/'");
+      const evidence = await promise;
+      expect(evidence.success).toBe(false);
+      expect(evidence.error_category).toBe("auth_failure");
+    });
+  });
+
   describe("missing git binary detection", () => {
     it("detects missing git binary (ENOENT)", async () => {
       const promise = ops.clone("https://github.com/org/repo.git", "/tmp/repo");

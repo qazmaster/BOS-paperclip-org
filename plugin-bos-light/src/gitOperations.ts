@@ -23,6 +23,7 @@ export interface GitOperations {
   add(localPath: string, paths: string[]): Promise<GitCommandEvidence>;
   commit(localPath: string, message: string): Promise<GitCommandEvidence>;
   push(localPath: string, remote?: string, branch?: string, force?: boolean): Promise<GitCommandEvidence>;
+  lsRemote(repoUrl: string, refs?: string[]): Promise<GitCommandEvidence>;
 }
 
 const SECRET_PATTERNS = [
@@ -192,5 +193,10 @@ export class DefaultGitOperations implements GitOperations {
     if (branch) args.push(branch);
     if (force) args.push("--force");
     return runGit(localPath, args, this.secretRef);
+  }
+
+  async lsRemote(repoUrl: string, refs?: string[]): Promise<GitCommandEvidence> {
+    const args = ["ls-remote", repoUrl, ...(refs || [])];
+    return runGit(process.cwd(), args, this.secretRef);
   }
 }
