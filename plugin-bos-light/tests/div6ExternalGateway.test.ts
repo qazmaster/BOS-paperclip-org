@@ -238,6 +238,78 @@ describe("executeExternalGitOperation", () => {
     expect(evidence.git_evidence.success).toBe(true);
   });
 
+  it("populates parsed_metadata.refs on ls-remote success", async () => {
+    clearPacketRouter();
+    const grant = makeGrant(["read"]);
+    const promise = executeExternalGitOperation(
+      "Div6.External",
+      grant.grant_id,
+      "ls-remote"
+    );
+    emitSuccess(
+      "abc123def456789012345678901234567890abcd\tHEAD\ndef789abc123456789012345678901234567890d\trefs/heads/main\n"
+    );
+    const result = await promise;
+    const evidence = result as ExternalGitEvidence;
+    expect(evidence.parsed_metadata).toBeDefined();
+    expect(evidence.parsed_metadata!.refs).toEqual(["HEAD", "refs/heads/main"]);
+    expect(evidence.parsed_metadata!.branches).toEqual(["main"]);
+    expect(evidence.parsed_metadata!.commit_shas).toEqual([
+      "abc123def456789012345678901234567890abcd",
+      "def789abc123456789012345678901234567890d",
+    ]);
+  });
+
+  it("parsed_metadata is absent on clone success", async () => {
+    clearPacketRouter();
+    const grant = makeGrant(["clone"]);
+    const promise = executeExternalGitOperation(
+      "Div6.External",
+      grant.grant_id,
+      "clone",
+      "/tmp/repo"
+    );
+    emitSuccess("Cloning into '/tmp/repo'...\n");
+    const result = await promise;
+    const evidence = result as ExternalGitEvidence;
+    expect(evidence.operation).toBe("clone");
+    expect(evidence.parsed_metadata).toBeUndefined();
+  });
+
+  it("parsed_metadata is absent on fetch success", async () => {
+    clearPacketRouter();
+    const grant = makeGrant(["fetch"]);
+    const promise = executeExternalGitOperation(
+      "Div6.External",
+      grant.grant_id,
+      "fetch",
+      "/tmp/repo"
+    );
+    emitSuccess("From https://github.com/example/repo\n * branch            main       -> FETCH_HEAD\n");
+    const result = await promise;
+    const evidence = result as ExternalGitEvidence;
+    expect(evidence.operation).toBe("fetch");
+    expect(evidence.parsed_metadata).toBeUndefined();
+  });
+
+  it("parsed_metadata is empty on ls-remote failure", async () => {
+    clearPacketRouter();
+    const grant = makeGrant(["read"]);
+    const promise = executeExternalGitOperation(
+      "Div6.External",
+      grant.grant_id,
+      "ls-remote"
+    );
+    emitFailure(128, "fatal: Authentication failed");
+    const result = await promise;
+    const evidence = result as ExternalGitEvidence;
+    expect(evidence.git_evidence.success).toBe(false);
+    expect(evidence.parsed_metadata).toBeDefined();
+    expect(evidence.parsed_metadata!.refs).toEqual([]);
+    expect(evidence.parsed_metadata!.branches).toEqual([]);
+    expect(evidence.parsed_metadata!.commit_shas).toEqual([]);
+  });
+
   it("allows ls-remote with 'clone' permission", async () => {
     clearPacketRouter();
     const grant = makeGrant(["clone"]);

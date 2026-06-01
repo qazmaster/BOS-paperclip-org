@@ -15,6 +15,12 @@ export interface GitCommandEvidence {
   success: boolean;
   error_category: "none" | "missing_binary" | "non_fast_forward" | "auth_failure" | "generic";
   redacted_diagnostics: string;
+  /** Structured metadata parsed from git output, primarily for ls-remote refs/branches/SHAs. */
+  metadata?: {
+    refs?: string[];
+    branches?: string[];
+    commit_shas?: string[];
+  };
 }
 
 export interface GitOperations {
@@ -42,6 +48,27 @@ export function redactSecrets(input: string): string {
     result = result.replace(pattern, "[REDACTED]");
   }
   return result;
+}
+
+function parseLsRemoteOutput(stdout: string): { refs: string[]; branches: string[]; commit_shas: string[] } {
+  const lines = stdout.trim().split("\n");
+  const refs: string[] = [];
+  const branches: string[] = [];
+  const commit_shas: string[] = [];
+
+  for (const line of lines) {
+    const match = line.match(/^([a-f0-9]{40})\t(.+)$/);
+    if (match) {
+      const [, sha, ref] = match;
+      commit_shas.push(sha);
+      refs.push(ref);
+      if (ref.startsWith("refs/heads/")) {
+        branches.push(ref.replace("refs/heads/", ""));
+      }
+    }
+  }
+
+  return { refs, branches, commit_shas };
 }
 
 function sha256(input: string): string {
@@ -144,7 +171,7 @@ function runGit(cwd: string, args: string[], secretRef?: SecretRef): Promise<Git
       const category = classifyGitError(exitCode, stderr);
       const redactedStderr = redactSecrets(stderr);
       const redactedStdout = redactSecrets(stdout);
-      resolve({
+      const evidence: GitCommandEvidence = {
         command: "git",
         args,
         cwd,
@@ -156,7 +183,11 @@ function runGit(cwd: string, args: string[], secretRef?: SecretRef): Promise<Git
         success: exitCode === 0,
         error_category: category,
         redacted_diagnostics: category === "none" ? "OK" : `${category}: ${redactedStderr.slice(0, 500)}`,
-      });
+      };
+      if (args[0] === "ls-remote") {
+        evidence.metadata = parseLsRemoteOutput(stdout);
+      }
+      resolve(evidence);
     });
   });
 }

@@ -254,6 +254,10 @@ export async function executeExternalGitOperation(
     produced_by: DIV6_EXTERNAL,
   };
 
+  if (gitEvidence.metadata) {
+    evidence.parsed_metadata = gitEvidence.metadata;
+  }
+
   // Emit completion_report to Div5.QualificationsLibraryLearning with evidence payload
   emitDivisionPacket(DIV6_EXTERNAL, DIV5_QUALLIB, "completion_report", evidence);
 
