@@ -434,3 +434,41 @@ export interface MissionRouterUnauthorized {
   reason: string;
   rejected_at: string;
 }
+
+/* ── Treasury scoped access contracts (Div3 Secret Management) ── */
+
+export interface PaperclipSecretRef {
+  type: "secret_ref";
+  secret_id: string;
+  version: "latest";
+}
+
+export interface InlineEnvRef {
+  type: "inline_env";
+  env_key: string;
+}
+
+export type SecretRef = PaperclipSecretRef | InlineEnvRef;
+
+export type AllowedGitOperation = "clone" | "fetch" | "pull" | "push" | "read" | "write";
+
+export interface ScopedAccessGrant {
+  schema_version: "1.0";
+  grant_id: string;
+  mission_id: string;
+  repo_url: string;
+  allowed_ops: AllowedGitOperation[];
+  secret_ref: SecretRef;
+  granted_by: Division;
+  granted_at: string;
+  expires_at: string;
+}
+
+export interface TreasuryUnauthorized {
+  schema_version: "1.0";
+  authorized: false;
+  caller: Division;
+  required_role: "Div3.Treasury";
+  reason: string;
+  rejected_at: string;
+}
