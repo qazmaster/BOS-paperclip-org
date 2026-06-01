@@ -5,7 +5,8 @@ export type DivisionPacketType =
   | "escalation"
   | "resource_request"
   | "gate_decision"
-  | "completion_report";
+  | "completion_report"
+  | "work_assignment";
 
 export interface DivisionPacketEnvelope {
   schema_version: "1.0";

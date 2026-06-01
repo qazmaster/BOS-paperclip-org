@@ -401,3 +401,36 @@ export interface ExecutiveReport {
 export type OwnerBoundaryResult =
   | { authorized: true; caller: Division; allowed: Division }
   | { authorized: false; caller: Division; allowed: Division; reason: string };
+
+/* ── Mission routing contracts (Div1 Internal Routing Control) ── */
+
+export interface RoutingDecisionPacket {
+  schema_version: "1.0";
+  packet_id: string;
+  mission_id: string;
+  activated_divisions: Division[];
+  excluded_divisions: Division[];
+  routing_rule: string;
+  routed_by: "Div1.HCO";
+  routed_at: string;
+}
+
+export interface MissionRoutingState {
+  schema_version: "1.0";
+  mission_id: string;
+  status: "PENDING" | "ROUTED" | "REJECTED" | "IN_PROGRESS" | "COMPLETED" | "FAILED";
+  routing_packet_id: string | null;
+  activated_divisions: Division[];
+  excluded_divisions: Division[];
+  current_division: Division | null;
+  updated_at: string;
+}
+
+export interface MissionRouterUnauthorized {
+  schema_version: "1.0";
+  authorized: false;
+  caller: Division;
+  required_role: "Div1.HCO";
+  reason: string;
+  rejected_at: string;
+}
