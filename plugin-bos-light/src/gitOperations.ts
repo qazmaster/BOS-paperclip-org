@@ -33,7 +33,7 @@ export interface GitOperations {
   fetch(localPath: string, remote?: string, refs?: string[]): Promise<GitCommandEvidence>;
 }
 
-const SECRET_PATTERNS = [
+export const SECRET_PATTERNS = [
   /ghp_[a-zA-Z0-9]{36}/g,
   /glpat-[a-zA-Z0-9\-]{20}/g,
   /-----BEGIN OPENSSH PRIVATE KEY-----[\s\S]*?-----END OPENSSH PRIVATE KEY-----/g,
