@@ -1,0 +1,795 @@
+{
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "extended_route_discovery_unsupported",
+    "piko_tools_not_observed_extended",
+    "plugin_health_endpoint_unsupported",
+    "plugin_install_all_blocked",
+    "plugin_install_endpoint_unsupported",
+    "plugin_install_failed",
+    "plugin_not_found_extended_discovery",
+    "plugin_not_loaded",
+    "tool_registry_extended_unsupported"
+  ],
+  "blocker_reason": "extended_route_discovery_unsupported,piko_tools_not_observed_extended,plugin_health_endpoint_unsupported,plugin_install_all_blocked,plugin_install_endpoint_unsupported,plugin_install_failed,plugin_not_found_extended_discovery,plugin_not_loaded,tool_registry_extended_unsupported",
+  "capability_promotions": [],
+  "fallback_diagnostics": [
+    {
+      "code": "company_template_no_plugin_fields",
+      "has_plugin_config": false,
+      "has_plugins_array": false,
+      "implication": "Company template import/export path does not carry plugin registration metadata. If Paperclip company import supports plugin fields, they would need to be added to the template manually or via a separate plugin manifest upload.",
+      "inspected_file": "company-template/bos-company-template.json",
+      "message": "company-template/bos-company-template.json contains no plugin-related top-level keys. No plugins array, no plugin_config object, and no plugin_key or plugin registration fields were found in the template schema.",
+      "plugin_fields_found": [],
+      "schema_version": "0.1-v1.4.1"
+    },
+    {
+      "all_status_404": true,
+      "code": "all_plugin_routes_404",
+      "implication": "Plugin registration, load, and tool visibility cannot be achieved through the supported HTTP API surface. Manual UI-based plugin installation or a different API version may be required.",
+      "message": "All 21 plugin-specific routes probed returned HTTP 404. This includes plugin status/health, install, upsert, admin enable/disable/reload, and tool registry endpoints. The Paperclip sandbox at 0.3.1 does not expose these routes at the attempted path segments.",
+      "route_count": 21
+    }
+  ],
+  "generated_at": "2026-06-01T06:48:50Z",
+  "inputs": {
+    "auth_header_name": "Authorization",
+    "auth_token_env": "PAPERCLIP_API_KEY",
+    "auth_token_present": true,
+    "base_url": "https://paperclip.oysana.com",
+    "company_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "live_probe_enabled": true,
+    "origin": "",
+    "plugin_key": "bos-light",
+    "run_label": "m006-s01-20260601T064850Z",
+    "timeout_seconds": 15.0
+  },
+  "phase": "live",
+  "probes": {
+    "artifact_regression_smoke": {
+      "comment_id": "40ca7083-a7c9-42b0-8935-7796659fb02d",
+      "document_id": "0c3ec80c-65fe-4f13-b111-d2daf7145032",
+      "issue_id": "4d4e483f-ec31-4e03-8d6c-36fa7e036a17",
+      "probe": "artifact_regression_smoke",
+      "readbacks": {
+        "comment": {
+          "kind": "comment",
+          "ok": true,
+          "ref": "40ca7083-a7c9-42b0-8935-7796659fb02d",
+          "sha256": "b1b2ded71098c65e47d49b4c98eab3100dd306cb96893c1307f505b6ce58da9d",
+          "snippet": "M006 S01 regression smoke comment. Run label: m006-s01-20260601T064850Z.",
+          "status_code": 200
+        },
+        "document": {
+          "kind": "document",
+          "ok": true,
+          "ref": "0c3ec80c-65fe-4f13-b111-d2daf7145032",
+          "sha256": "a0fd8b17acd9d274b9639d69f3392c75024a5e96d4a91ee2ef3c78a8984ece46",
+          "snippet": "# M006 S01 Plugin Live Registration\n\nRun label: m006-s01-20260601T064850Z\n\nThis document verifies native document creation remains available.\nM006 S01 Evidence m006-s01-20260601T064850Z",
+          "status_code": 200
+        },
+        "issue": {
+          "kind": "issue",
+          "ok": true,
+          "ref": "4d4e483f-ec31-4e03-8d6c-36fa7e036a17",
+          "sha256": "d434f2c3a996907eb1d8129f68e17c691d91d266b4fa115fbcacc0fa9777d006",
+          "snippet": "M006 S01 regression smoke m006-s01-20260601T064850Z",
+          "status_code": 200
+        }
+      },
+      "results": [
+        {
+          "description": "Create regression smoke issue",
+          "duration_ms": 1128,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": true,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/issues",
+          "probe_id": "p05-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "assigneeAdapterOverrides",
+              "assigneeAgentId",
+              "assigneeUserId",
+              "billingCode",
+              "cancelledAt",
+              "checkoutRunId",
+              "companyId",
+              "completedAt",
+              "createdAt",
+              "createdByAgentId",
+              "createdByUserId",
+              "description",
+              "executionAgentNameKey",
+              "executionLockedAt",
+              "executionPolicy",
+              "executionRunId",
+              "executionState",
+              "executionWorkspaceId",
+              "executionWorkspacePreference",
+              "executionWorkspaceSettings",
+              "goalId",
+              "hiddenAt",
+              "id",
+              "identifier"
+            ]
+          },
+          "status_code": 201,
+          "truncated": false
+        },
+        {
+          "description": "Readback regression smoke issue",
+          "duration_ms": 1111,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": true,
+          "path": "/api/issues/4d4e483f-ec31-4e03-8d6c-36fa7e036a17",
+          "probe_id": "p05-r02",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "activeRecoveryAction",
+              "ancestors",
+              "assigneeAdapterOverrides",
+              "assigneeAgentId",
+              "assigneeUserId",
+              "billingCode",
+              "blockedBy",
+              "blockerAttention",
+              "blocks",
+              "cancelledAt",
+              "checkoutRunId",
+              "companyId",
+              "completedAt",
+              "createdAt",
+              "createdByAgentId",
+              "createdByUserId",
+              "currentExecutionWorkspace",
+              "description",
+              "documentSummaries",
+              "executionAgentNameKey",
+              "executionLockedAt",
+              "executionPolicy",
+              "executionRunId",
+              "executionState"
+            ]
+          },
+          "status_code": 200,
+          "truncated": false
+        },
+        {
+          "description": "Create regression smoke document",
+          "duration_ms": 1128,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "PUT",
+          "ok": true,
+          "path": "/api/issues/4d4e483f-ec31-4e03-8d6c-36fa7e036a17/documents/m006-s01-evidence",
+          "probe_id": "p05-r03",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "body",
+              "companyId",
+              "createdAt",
+              "createdByAgentId",
+              "createdByUserId",
+              "format",
+              "id",
+              "issueId",
+              "key",
+              "latestRevisionId",
+              "latestRevisionNumber",
+              "lockedAt",
+              "lockedByAgentId",
+              "lockedByUserId",
+              "title",
+              "updatedAt",
+              "updatedByAgentId",
+              "updatedByUserId"
+            ]
+          },
+          "status_code": 201,
+          "truncated": false
+        },
+        {
+          "description": "Readback regression smoke document",
+          "duration_ms": 1120,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": true,
+          "path": "/api/issues/4d4e483f-ec31-4e03-8d6c-36fa7e036a17/documents/m006-s01-evidence",
+          "probe_id": "p05-r04",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "body",
+              "companyId",
+              "createdAt",
+              "createdByAgentId",
+              "createdByUserId",
+              "format",
+              "id",
+              "issueId",
+              "key",
+              "latestRevisionId",
+              "latestRevisionNumber",
+              "lockedAt",
+              "lockedByAgentId",
+              "lockedByUserId",
+              "title",
+              "updatedAt",
+              "updatedByAgentId",
+              "updatedByUserId"
+            ]
+          },
+          "status_code": 200,
+          "truncated": false
+        },
+        {
+          "description": "Create regression smoke comment",
+          "duration_ms": 1128,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": true,
+          "path": "/api/issues/4d4e483f-ec31-4e03-8d6c-36fa7e036a17/comments",
+          "probe_id": "p05-r05",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "authorAgentId",
+              "authorType",
+              "authorUserId",
+              "body",
+              "companyId",
+              "createdAt",
+              "createdByRunId",
+              "id",
+              "issueId",
+              "metadata",
+              "presentation",
+              "updatedAt"
+            ]
+          },
+          "status_code": 201,
+          "truncated": false
+        },
+        {
+          "description": "Readback regression smoke comment",
+          "duration_ms": 1103,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": true,
+          "path": "/api/issues/4d4e483f-ec31-4e03-8d6c-36fa7e036a17/comments/40ca7083-a7c9-42b0-8935-7796659fb02d",
+          "probe_id": "p05-r06",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "authorAgentId",
+              "authorType",
+              "authorUserId",
+              "body",
+              "companyId",
+              "createdAt",
+              "createdByRunId",
+              "id",
+              "issueId",
+              "metadata",
+              "presentation",
+              "updatedAt"
+            ]
+          },
+          "status_code": 200,
+          "truncated": false
+        }
+      ],
+      "side_effects": {
+        "comments_created": 1,
+        "documents_created": 1,
+        "issues_created": 1
+      }
+    },
+    "extended_route_discovery": {
+      "observed_keys": [],
+      "plugin_found": false,
+      "plugin_key": "bos-light",
+      "probe": "extended_route_discovery",
+      "results": [
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1364,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/plugins/bos-light/status",
+          "probe_id": "p01-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1107,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/plugins/bos-light/health",
+          "probe_id": "p01-r02",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1106,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/settings/plugins",
+          "probe_id": "p01-r03",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1097,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/company/43c74adb-b194-44d1-8f8e-ba142544bb9d/plugins",
+          "probe_id": "p01-r04",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1081,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/admin/plugins",
+          "probe_id": "p01-r05",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1120,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/admin/plugins/bos-light",
+          "probe_id": "p01-r06",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1129,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": false,
+          "path": "/api/admin/plugins/bos-light/reload",
+          "probe_id": "p01-r07",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1122,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": false,
+          "path": "/api/admin/plugins/bos-light/enable",
+          "probe_id": "p01-r08",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended plugin route discovery",
+          "duration_ms": 1115,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": false,
+          "path": "/api/admin/plugins/bos-light/disable",
+          "probe_id": "p01-r09",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        }
+      ]
+    },
+    "plugin_health_deep": {
+      "plugin_key": "bos-light",
+      "probe": "plugin_health_deep",
+      "results": [
+        {
+          "description": "Plugin health",
+          "duration_ms": 1092,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/plugins/bos-light/health",
+          "probe_id": "p04-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Plugin status",
+          "duration_ms": 1121,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/plugins/bos-light/status",
+          "probe_id": "p04-r02",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Company-scoped plugin health",
+          "duration_ms": 1101,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/plugins/bos-light/health",
+          "probe_id": "p04-r03",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Company-scoped plugin status",
+          "duration_ms": 1112,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/plugins/bos-light/status",
+          "probe_id": "p04-r04",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        }
+      ],
+      "runtime_info": {
+        "build": null,
+        "plugin_loaded": null,
+        "version": null
+      }
+    },
+    "plugin_install_attempt": {
+      "install_attempted": true,
+      "install_succeeded": false,
+      "observed_keys": [],
+      "plugin_key": "bos-light",
+      "probe": "plugin_install_attempt",
+      "results": [
+        {
+          "description": "Plugin install attempt with safe payload",
+          "duration_ms": 1101,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": false,
+          "path": "/api/plugins",
+          "probe_id": "p02-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Plugin install attempt with safe payload",
+          "duration_ms": 1110,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": false,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/plugins",
+          "probe_id": "p02-r02",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Plugin install attempt with safe payload",
+          "duration_ms": 1129,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "PUT",
+          "ok": false,
+          "path": "/api/plugins/bos-light",
+          "probe_id": "p02-r03",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Plugin install attempt with safe payload",
+          "duration_ms": 1123,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": false,
+          "path": "/api/admin/plugins",
+          "probe_id": "p02-r04",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        }
+      ]
+    },
+    "tool_registry_extended": {
+      "observed_tools": [],
+      "piko_tools_observed": [],
+      "plugin_key": "bos-light",
+      "probe": "tool_registry_extended",
+      "results": [
+        {
+          "description": "Extended tool registry readback for piko:* tools",
+          "duration_ms": 1122,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/plugins/bos-light/tools",
+          "probe_id": "p03-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended tool registry readback for piko:* tools",
+          "duration_ms": 1093,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/plugins/bos-light/tools",
+          "probe_id": "p03-r02",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended tool registry readback for piko:* tools",
+          "duration_ms": 1089,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/tools",
+          "probe_id": "p03-r03",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Extended tool registry readback for piko:* tools",
+          "duration_ms": 1132,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/tools",
+          "probe_id": "p03-r04",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        }
+      ]
+    }
+  },
+  "redaction": {
+    "redaction_errors": [],
+    "secret_env_vars": [
+      "<redacted>"
+    ],
+    "secrets_redacted": true
+  },
+  "runner": {
+    "max_response_bytes": 131072,
+    "max_route_attempts": 32,
+    "script": "scripts/run_m006_s01_plugin_live_registration.py",
+    "standard_library_only": true
+  },
+  "runtime": {
+    "build": null,
+    "version": null
+  },
+  "schema_version": "m006-s01-plugin-live-registration/v1",
+  "side_effect_counters": {
+    "approval_requests_created": 0,
+    "comments_created": 1,
+    "documents_created": 1,
+    "gsd_pi_runs_started": 0,
+    "hermes_runs_started": 0,
+    "issues_created": 1
+  },
+  "validation_errors": []
+}

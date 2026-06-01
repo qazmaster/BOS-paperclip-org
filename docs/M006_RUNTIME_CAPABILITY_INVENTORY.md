@@ -35,7 +35,7 @@ curl -s https://paperclip.oysana.com/api/health
 
 ## 2. Plugin install path
 
-**Status: BLOCKED (M006 S00 live probe)**
+**Status: BLOCKED (M006 S00 + S01 live probes)**
 
 M006 S00 live probe evidence:
 
@@ -45,22 +45,41 @@ M006 S00 live probe evidence:
 | `/api/plugins` | GET | Empty list `[]` |
 | `/api/plugins/bos-light` | GET | 404 |
 
+M006 S01 extended probe evidence (2026-06-01):
+
+| Route | Method | Result |
+|---|---|---|
+| `/api/plugins/bos-light/status` | GET | 404 |
+| `/api/plugins/bos-light/health` | GET | 404 |
+| `/api/companies/{companyId}/settings/plugins` | GET | 404 |
+| `/api/company/{companyId}/plugins` | GET | 404 |
+| `/api/admin/plugins` | GET | 404 |
+| `/api/admin/plugins/bos-light` | GET | 404 |
+| `/api/admin/plugins/bos-light/reload` | POST | 404 |
+| `/api/admin/plugins/bos-light/enable` | POST | 404 |
+| `/api/admin/plugins/bos-light/disable` | POST | 404 |
+| `/api/plugins` | POST | 404 |
+| `/api/companies/{companyId}/plugins` | POST | 404 |
+| `/api/plugins/bos-light` | PUT | 404 |
+| `/api/admin/plugins` | POST | 404 |
+
 Plugin key `bos-light` was not observed in any response.
 
-**Blocker codes:** `plugin_not_found`, `plugin_install_endpoint_unsupported`
+**Blocker codes (S00):** `plugin_not_found`, `plugin_install_endpoint_unsupported`
+**Blocker codes (S01):** `extended_route_discovery_unsupported`, `plugin_install_all_blocked`, `plugin_install_endpoint_unsupported`, `plugin_install_failed`, `plugin_not_found_extended_discovery`
 
-**Required S00 proof (not achieved):**
+**Required S01 proof (not achieved):**
 - Command or UI path that installs `plugin-bos-light`
 - Post-install verification that Paperclip knows plugin key `bos-light`
 - No core patch, no registry mutation, no unsupported internals
 
-**Fallback:** If install path unavailable, operator installs manually. Plugin logic remains callable as local scripts (not autonomous).
+**Fallback:** If install path unavailable, operator installs manually. Plugin logic remains callable as local scripts (not autonomous). `company-template/bos-company-template.json` contains no plugin-related fields.
 
 ---
 
 ## 3. Tool registry visibility
 
-**Status: BLOCKED (M006 S00 live probe)**
+**Status: BLOCKED (M006 S00 + S01 live probes)**
 
 M006 S00 live probe evidence:
 
@@ -69,15 +88,25 @@ M006 S00 live probe evidence:
 | `/api/companies/{companyId}/plugins/bos-light/tools` | GET | 404 |
 | `/api/plugins/bos-light/tools` | GET | 404 |
 
-Zero `piko:*` tools observed. Both company-scoped and global plugin tool endpoints returned 404.
+M006 S01 extended probe evidence (2026-06-01):
 
-**Blocker codes:** `tool_registry_endpoint_unsupported`, `piko_tools_not_observed`
+| Route | Method | Result |
+|---|---|---|
+| `/api/companies/{companyId}/plugins/bos-light/tools` | GET | 404 |
+| `/api/plugins/bos-light/tools` | GET | 404 |
+| `/api/companies/{companyId}/tools` | GET | 404 |
+| `/api/tools` | GET | 404 |
+
+Zero `piko:*` tools observed. All tool registry endpoints returned 404.
+
+**Blocker codes (S00):** `tool_registry_endpoint_unsupported`, `piko_tools_not_observed`
+**Blocker codes (S01):** `tool_registry_extended_unsupported`, `piko_tools_not_observed_extended`
 
 Historical evidence:
 - `runtime-evidence/M002-S05-plugin-ui-surface-probe.json`: `registered_tool_keys=[]`, `readback_proof=null`
 - `runtime-evidence/M005-S01-plugin-ui-surface-probe.json`: same
 
-**Required S00 proof (not achieved):**
+**Required S01 proof (not achieved):**
 - `GET /api/companies/{companyId}/plugins` or equivalent returns `bos-light`
 - Tool list includes at least one `piko:*` tool
 - Tool schema (name, description, parameters) is readable
@@ -88,7 +117,7 @@ Historical evidence:
 
 ## 4. Agent-to-tool invocation path
 
-**Status: UNCONFIRMED (target of S01)**
+**Status: UNCONFIRMED (M006 S01 blocked)**
 
 Hypothesized paths:
 
@@ -98,10 +127,14 @@ Hypothesized paths:
 | Direct tool call from agent context | `ctx.tools.register` callback invoked | Requires plugin loaded |
 | Subprocess fallback | Agent runs local script | Not autonomous; manual patching |
 
-**Required S01 proof:**
+M006 S01 found all plugin routes returning 404, including all tool registry endpoints. Plugin not found, not installed, not loaded. Therefore agent-to-tool invocation path remains unconfirmed.
+
+**Required S01 proof (not achieved):**
 - Div5 agent invokes `piko:eval-gate` and receives result
 - Result includes tool name, parameters, output
 - Evidence saved with redacted diagnostics
+
+**Blocker codes (S01):** `extended_route_discovery_unsupported`, `plugin_not_found_extended_discovery`, `plugin_install_failed`, `plugin_not_loaded`, `tool_registry_extended_unsupported`, `piko_tools_not_observed_extended`
 
 ---
 
@@ -220,8 +253,8 @@ Unconfirmed surfaces:
 | `documents.native` | confirmed | M002 S04 proven |
 | `comments.native` | confirmed | M002 S04 proven |
 | `plugin.runtime.version_build` | confirmed | M006 S00 live: 0.3.1 / health.version:0.3.1 |
-| `plugin.runtime.registration` | fallback-only | No live install proof |
-| `registration.tools` | fallback-only | No live tool readback |
+| `plugin.runtime.registration` | fallback-only | S01 live probe (2026-06-01): all 13 extended plugin routes returned 404; `extended_route_discovery_unsupported`, `plugin_install_endpoint_unsupported`, `plugin_not_found_extended_discovery` |
+| `registration.tools` | fallback-only | S01 live probe (2026-06-01): all 4 tool registry routes returned 404; `tool_registry_extended_unsupported`, `piko_tools_not_observed_extended` |
 | `registration.data` | fallback-only | No live data provider proof |
 | `registration.actions` | fallback-only | No live action proof |
 | `config.api` | fallback-only | No read/write proof |
@@ -260,4 +293,4 @@ Unconfirmed surfaces:
 ---
 
 *Inventory updated: 2026-06-01*  
-*Status: S00 live validation complete. One capability promoted (`plugin.runtime.version_build` → confirmed). Four surfaces blocked with precise codes. Native artifact APIs re-confirmed via regression smoke.*
+*Status: S00 live validation complete. S01 live validation complete (fail-closed-blocker). One capability promoted (`plugin.runtime.version_build` → confirmed). Plugin install, tool registry, and agent-to-tool invocation remain blocked with precise S01 blocker codes. Native artifact APIs re-confirmed via S01 regression smoke with fresh refs and sha256 hashes.*

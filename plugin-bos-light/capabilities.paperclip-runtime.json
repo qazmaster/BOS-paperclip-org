@@ -84,15 +84,15 @@
         "plugin-bos-light/src/worker.ts",
         "manifest.paperclip-plugin.json"
       ],
-      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested plugin key bos-light but observed no live plugin registration keys and no readback proof because live Paperclip base URL/API key inputs were absent.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only plugin_registration evidence; confirmation requires live route readback proof for bos-light plugin load.",
-      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.plugin_registration.observed_registered_keys, surfaces.plugin_registration.readback_proof",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested plugin key bos-light but observed no live plugin registration keys and no readback proof because live Paperclip base URL/API key inputs were absent. M006 S01 live probe runtime-evidence/M006-S01-plugin-live-registration.json (2026-06-01) probed 13 extended plugin routes and found all returning HTTP 404 with blocker codes extended_route_discovery_unsupported, plugin_install_all_blocked, plugin_install_endpoint_unsupported, plugin_not_found_extended_discovery. company-template/bos-company-template.json contains no plugin-related fields.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only plugin_registration evidence; confirmation requires live route readback proof for bos-light plugin load. M006 S01 validator: python3 scripts/validate_m006_s01_plugin_live_registration.py --evidence runtime-evidence/M006-S01-plugin-live-registration.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.plugin_registration.observed_registered_keys, surfaces.plugin_registration.readback_proof; runtime-evidence/M006-S01-plugin-live-registration.json: probes.extended_route_discovery.plugin_found, probes.extended_route_discovery.observed_keys, probes.plugin_install_attempt.install_succeeded, probes.plugin_health_deep.runtime_info.plugin_loaded",
       "fallback_path": "Keep pure BOS Light logic callable directly while plugin entrypoint support is fallback-only and host plugin load remains unproved.",
-      "blocker_text": "Do not ship BOS Light as a loaded Paperclip plugin until S05-style evidence records runtime version/build and plugin registration readback for bos-light.",
+      "blocker_text": "Do not ship BOS Light as a loaded Paperclip plugin until S05-style or S01-style evidence records runtime version/build and plugin registration readback for bos-light. S01 blocker codes: extended_route_discovery_unsupported, plugin_install_all_blocked, plugin_install_endpoint_unsupported, plugin_not_found_extended_discovery.",
       "adapter_assumptions": [
         "confirm definePlugin import path"
       ],
-      "notes": "The local registration probe and optional chaining are diagnostic-only; S05 supplies the current canonical no-promotion ledger."
+      "notes": "The local registration probe and optional chaining are diagnostic-only; S05 and S01 supply the current canonical no-promotion ledger. S01 does not promote any capability; status remains fallback-only."
     },
     {
       "key": "registration.tools",
@@ -119,11 +119,11 @@
         "plugin-bos-light/src/worker.ts",
         "S04 artifact flow GSD-Pi quality branch"
       ],
-      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested piko:* tools but observed registered_tool_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only tools evidence; confirmation requires registered piko:* tool readback plus at least one successful piko invocation result.",
-      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.tools.observed_registered_keys, surfaces.tools.readback_proof, surfaces.tools.piko_invocation_results",
+      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested piko:* tools but observed registered_tool_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent. M006 S01 live probe runtime-evidence/M006-S01-plugin-live-registration.json (2026-06-01) probed 4 extended tool registry routes and found all returning HTTP 404 with blocker codes tool_registry_extended_unsupported, piko_tools_not_observed_extended. Zero piko:* tools observed.",
+      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only tools evidence; confirmation requires registered piko:* tool readback plus at least one successful piko invocation result. M006 S01 validator: python3 scripts/validate_m006_s01_plugin_live_registration.py --evidence runtime-evidence/M006-S01-plugin-live-registration.json --allow-blocker",
+      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: surfaces.tools.observed_registered_keys, surfaces.tools.readback_proof, surfaces.tools.piko_invocation_results; runtime-evidence/M006-S01-plugin-live-registration.json: probes.tool_registry_extended.observed_tools, probes.tool_registry_extended.piko_tools_observed",
       "fallback_path": "Run pure TypeScript functions directly in local tests or mirror Eval Gate and Circuit Breaker evidence through confirmed native document/comment artifact paths until host piko:* tool registration and invocation are proven.",
-      "blocker_text": "Do not present piko:* tools or GSD-Pi/Div4 quality automation as host-available until S05-style registration and invocation readbacks pass.",
+      "blocker_text": "Do not present piko:* tools or GSD-Pi/Div4 quality automation as host-available until S05-style or S01-style registration and invocation readbacks pass. S01 blocker codes: tool_registry_extended_unsupported, piko_tools_not_observed_extended.",
       "manifest_capabilities": [
         "tools.register"
       ],
@@ -139,7 +139,7 @@
       "adapter_assumptions": [
         "ctx.tools?.register"
       ],
-      "notes": "S05 keeps native action/tool side-effect counters at zero; local tool registration intent and M003 S04 decision readback blocker evidence are not Paperclip host proof."
+      "notes": "S05 and S01 keep native action/tool side-effect counters at zero; local tool registration intent and M003 S04 decision readback blocker evidence are not Paperclip host proof. S01 does not promote any capability; status remains fallback-only."
     },
     {
       "key": "registration.data",
