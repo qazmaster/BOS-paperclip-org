@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { DefaultGitOperations, redactSecrets, type GitCommandEvidence } from "../src/gitOperations";
+import type { SecretRef } from "../src/contracts";
 import { spawn, type ChildProcess } from "child_process";
 import { EventEmitter } from "events";
 
@@ -257,6 +258,52 @@ describe("DefaultGitOperations", () => {
       const env = spawnCall[2]?.env as NodeJS.ProcessEnv;
       expect(env?.GIT_USERNAME).toBe("oauth2");
       expect(env?.GIT_PASSWORD).toBe("glpat-testtoken123");
+    });
+  });
+
+  describe("with SecretRef", () => {
+    const originalEnv = process.env;
+
+    beforeEach(() => {
+      process.env = { ...originalEnv };
+    });
+
+    afterEach(() => {
+      process.env = originalEnv;
+    });
+
+    it("injects resolved token into git env when SecretRef resolves", async () => {
+      process.env.MY_GIT_TOKEN = "ghp_injected_token_123";
+      const secretRef: SecretRef = { type: "inline_env", env_key: "MY_GIT_TOKEN" };
+      const opsWithSecret = new DefaultGitOperations(secretRef);
+      const promise = opsWithSecret.clone("https://github.com/org/repo.git", "/tmp/repo");
+      emitSuccess();
+      await promise;
+      const spawnCall = vi.mocked(spawn).mock.calls[0];
+      const env = spawnCall[2]?.env as NodeJS.ProcessEnv;
+      expect(env?.GIT_USERNAME).toBe("ghp_injected_token_123");
+      expect(env?.GIT_PASSWORD).toBe("x-oauth-basic");
+    });
+
+    it("returns auth_failure when SecretRef resolution fails", async () => {
+      const secretRef: SecretRef = { type: "secret_ref", secret_id: "unknown", version: "latest" };
+      const opsWithSecret = new DefaultGitOperations(secretRef);
+      const evidence = await opsWithSecret.clone("https://github.com/org/repo.git", "/tmp/repo");
+      expect(evidence.success).toBe(false);
+      expect(evidence.error_category).toBe("auth_failure");
+      expect(evidence.redacted_diagnostics).toContain("secret_unavailable");
+      expect(evidence.redacted_diagnostics).toContain("PaperclipSecretRef");
+    });
+
+    it("falls back to process.env when no SecretRef provided", async () => {
+      process.env.GITHUB_TOKEN = "ghp_fallback_token";
+      const opsNoSecret = new DefaultGitOperations();
+      const promise = opsNoSecret.clone("https://github.com/org/repo.git", "/tmp/repo");
+      emitSuccess();
+      await promise;
+      const spawnCall = vi.mocked(spawn).mock.calls[0];
+      const env = spawnCall[2]?.env as NodeJS.ProcessEnv;
+      expect(env?.GIT_USERNAME).toBe("ghp_fallback_token");
     });
   });
 });

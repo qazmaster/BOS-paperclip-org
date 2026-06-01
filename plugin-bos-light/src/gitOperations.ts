@@ -1,5 +1,7 @@
 import { spawn } from "child_process";
 import { createHash } from "crypto";
+import { resolveSecretRef, redactSecretRef } from "./secretResolver";
+import type { SecretRef } from "./contracts";
 
 export interface GitCommandEvidence {
   command: string;
@@ -57,10 +59,14 @@ function classifyGitError(exitCode: number | null, stderr: string): GitCommandEv
   return "none";
 }
 
-function buildAuthEnv(): NodeJS.ProcessEnv {
+function buildAuthEnv(resolvedToken?: string): NodeJS.ProcessEnv {
   const env: NodeJS.ProcessEnv = { ...process.env };
   if (process.env.GIT_SSH_KEY) {
     env.GIT_SSH_COMMAND = `ssh -i ${process.env.GIT_SSH_KEY} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no`;
+  } else if (resolvedToken) {
+    env.GIT_ASKPASS = "echo";
+    env.GIT_USERNAME = resolvedToken;
+    env.GIT_PASSWORD = "x-oauth-basic";
   } else if (process.env.GITHUB_TOKEN) {
     env.GIT_ASKPASS = "echo";
     env.GIT_USERNAME = process.env.GITHUB_TOKEN;
@@ -73,10 +79,34 @@ function buildAuthEnv(): NodeJS.ProcessEnv {
   return env;
 }
 
-function runGit(cwd: string, args: string[]): Promise<GitCommandEvidence> {
+function runGit(cwd: string, args: string[], secretRef?: SecretRef): Promise<GitCommandEvidence> {
   return new Promise((resolve) => {
     const start = Date.now();
-    const env = buildAuthEnv();
+
+    let resolvedToken: string | undefined;
+    if (secretRef) {
+      const resolution = resolveSecretRef(secretRef);
+      if (resolution.status === "unavailable") {
+        const duration = Date.now() - start;
+        resolve({
+          command: "git",
+          args,
+          cwd,
+          env_keys: [],
+          exit_code: null,
+          stdout_hash: sha256(""),
+          stderr_hash: sha256(""),
+          duration_ms: duration,
+          success: false,
+          error_category: "auth_failure",
+          redacted_diagnostics: `secret_unavailable: ${resolution.code} — ${redactSecretRef(secretRef)}`,
+        });
+        return;
+      }
+      resolvedToken = resolution.value;
+    }
+
+    const env = buildAuthEnv(resolvedToken);
     const envKeys = Object.keys(env).filter(
       (k) => k.startsWith("GIT_") || k === "GITHUB_TOKEN" || k === "GITLAB_TOKEN"
     );
@@ -130,31 +160,37 @@ function runGit(cwd: string, args: string[]): Promise<GitCommandEvidence> {
 }
 
 export class DefaultGitOperations implements GitOperations {
+  private secretRef?: SecretRef;
+
+  constructor(secretRef?: SecretRef) {
+    this.secretRef = secretRef;
+  }
+
   async clone(repoUrl: string, localPath: string, branch?: string): Promise<GitCommandEvidence> {
     const args = ["clone", repoUrl, localPath];
     if (branch) {
       args.push("--branch", branch, "--single-branch");
     }
-    return runGit(process.cwd(), args);
+    return runGit(process.cwd(), args, this.secretRef);
   }
 
   async checkoutBranch(localPath: string, branch: string, create = false): Promise<GitCommandEvidence> {
     const args = create ? ["checkout", "-b", branch] : ["checkout", branch];
-    return runGit(localPath, args);
+    return runGit(localPath, args, this.secretRef);
   }
 
   async add(localPath: string, paths: string[]): Promise<GitCommandEvidence> {
-    return runGit(localPath, ["add", ...paths]);
+    return runGit(localPath, ["add", ...paths], this.secretRef);
   }
 
   async commit(localPath: string, message: string): Promise<GitCommandEvidence> {
-    return runGit(localPath, ["commit", "-m", message]);
+    return runGit(localPath, ["commit", "-m", message], this.secretRef);
   }
 
   async push(localPath: string, remote = "origin", branch?: string, force = false): Promise<GitCommandEvidence> {
     const args = ["push", remote];
     if (branch) args.push(branch);
     if (force) args.push("--force");
-    return runGit(localPath, args);
+    return runGit(localPath, args, this.secretRef);
   }
 }

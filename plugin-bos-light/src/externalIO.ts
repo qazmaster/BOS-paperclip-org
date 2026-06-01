@@ -1,5 +1,7 @@
 import { spawn } from "child_process";
 import * as https from "https";
+import { resolveSecretRef, redactSecretRef } from "./secretResolver";
+import type { SecretRef } from "./contracts";
 
 export interface PRCreateResult {
   number: number;
@@ -89,10 +91,13 @@ export function discoverGhBinary(): Promise<boolean> {
   });
 }
 
-function runGh(args: string[]): Promise<{ exitCode: number | null; stdout: string; stderr: string; duration: number }> {
+function runGh(args: string[], token?: string): Promise<{ exitCode: number | null; stdout: string; stderr: string; duration: number }> {
   return new Promise((resolve) => {
     const start = Date.now();
-    const env = { ...process.env };
+    const env: NodeJS.ProcessEnv = { ...process.env };
+    if (token) {
+      env.GITHUB_TOKEN = token;
+    }
     const child = spawn("gh", args, { env });
     let stdout = "";
     let stderr = "";
@@ -112,9 +117,11 @@ function runGh(args: string[]): Promise<{ exitCode: number | null; stdout: strin
 
 export class GhCliAdapter implements GitHubAdapter {
   private repo: string;
+  private token?: string;
 
-  constructor(repo: string) {
+  constructor(repo: string, token?: string) {
     this.repo = repo;
+    this.token = token;
   }
 
   private buildEvidence(
@@ -147,7 +154,7 @@ export class GhCliAdapter implements GitHubAdapter {
       "--json", "number,url,title,headRefName,baseRefName",
       "--repo", this.repo,
     ];
-    const { exitCode, stdout, stderr, duration } = await runGh(args);
+    const { exitCode, stdout, stderr, duration } = await runGh(args, this.token);
     let summary: Record<string, unknown> | null = null;
     if (exitCode === 0) {
       try {
@@ -163,7 +170,7 @@ export class GhCliAdapter implements GitHubAdapter {
     const args = ["pr", "merge", String(params.number), "--repo", this.repo];
     if (params.method) args.push(`--${params.method}`);
     args.push("--auto");
-    const { exitCode, stdout, stderr, duration } = await runGh(args);
+    const { exitCode, stdout, stderr, duration } = await runGh(args, this.token);
     return this.buildEvidence("pr_merge", exitCode, stderr, stdout, duration, {
       pr_number: params.number,
       method: params.method ?? "merge",
@@ -172,7 +179,7 @@ export class GhCliAdapter implements GitHubAdapter {
 
   async approvePR(params: { number: number }): Promise<ExternalIOEvidence> {
     const args = ["pr", "review", String(params.number), "--approve", "--repo", this.repo];
-    const { exitCode, stdout, stderr, duration } = await runGh(args);
+    const { exitCode, stdout, stderr, duration } = await runGh(args, this.token);
     return this.buildEvidence("pr_approve", exitCode, stderr, stdout, duration, {
       pr_number: params.number,
     });
@@ -180,7 +187,7 @@ export class GhCliAdapter implements GitHubAdapter {
 
   async triggerWorkflow(params: { workflow: string; ref: string }): Promise<ExternalIOEvidence> {
     const args = ["workflow", "run", params.workflow, "--ref", params.ref, "--repo", this.repo];
-    const { exitCode, stdout, stderr, duration } = await runGh(args);
+    const { exitCode, stdout, stderr, duration } = await runGh(args, this.token);
     return this.buildEvidence("workflow_trigger", exitCode, stderr, stdout, duration, {
       workflow: params.workflow,
       ref: params.ref,
@@ -189,7 +196,7 @@ export class GhCliAdapter implements GitHubAdapter {
 
   async watchWorkflowRun(params: { run_id: number }): Promise<ExternalIOEvidence> {
     const args = ["run", "watch", String(params.run_id), "--json", "status,conclusion", "--repo", this.repo];
-    const { exitCode, stdout, stderr, duration } = await runGh(args);
+    const { exitCode, stdout, stderr, duration } = await runGh(args, this.token);
     let summary: Record<string, unknown> | null = null;
     if (exitCode === 0) {
       try {
@@ -205,10 +212,33 @@ export class GhCliAdapter implements GitHubAdapter {
 export class GitHubHttpAdapter implements GitHubAdapter {
   private repo: string;
   private token: string;
+  private secretUnavailable?: { blocker: string; code: string };
 
-  constructor(repo: string) {
+  constructor(repo: string, secretRef?: SecretRef) {
     this.repo = repo;
-    this.token = process.env.GITHUB_TOKEN ?? "";
+    if (secretRef) {
+      const result = resolveSecretRef(secretRef);
+      if (result.status === "resolved") {
+        this.token = result.value;
+      } else {
+        this.token = "";
+        this.secretUnavailable = { blocker: result.blocker, code: result.code };
+      }
+    } else {
+      this.token = process.env.GITHUB_TOKEN ?? "";
+    }
+  }
+
+  private unavailableEvidence(action: string): ExternalIOEvidence {
+    return {
+      adapter: "github_http",
+      action,
+      success: false,
+      error_category: "auth_failure",
+      redacted_diagnostics: `secret_unavailable: ${this.secretUnavailable!.code}`,
+      response_summary: null,
+      duration_ms: 0,
+    };
   }
 
   private request(path: string, options: https.RequestOptions & { body?: string }): Promise<{ statusCode: number; body: string }> {
@@ -269,6 +299,7 @@ export class GitHubHttpAdapter implements GitHubAdapter {
   }
 
   async createPR(params: { title: string; body: string; head: string; base: string }): Promise<ExternalIOEvidence> {
+    if (this.secretUnavailable) return this.unavailableEvidence("pr_create");
     const start = Date.now();
     const body = JSON.stringify({ title: params.title, body: params.body, head: params.head, base: params.base });
     const { statusCode, body: responseBody } = await this.request("/pulls", { method: "POST", body });
@@ -280,6 +311,7 @@ export class GitHubHttpAdapter implements GitHubAdapter {
   }
 
   async mergePR(params: { number: number; method?: "squash" | "merge" | "rebase" }): Promise<ExternalIOEvidence> {
+    if (this.secretUnavailable) return this.unavailableEvidence("pr_merge");
     const start = Date.now();
     const body = JSON.stringify({ merge_method: params.method ?? "merge" });
     const { statusCode, body: responseBody } = await this.request(`/pulls/${params.number}/merge`, { method: "PUT", body });
@@ -291,6 +323,7 @@ export class GitHubHttpAdapter implements GitHubAdapter {
   }
 
   async approvePR(params: { number: number }): Promise<ExternalIOEvidence> {
+    if (this.secretUnavailable) return this.unavailableEvidence("pr_approve");
     const start = Date.now();
     const body = JSON.stringify({ event: "APPROVE" });
     const { statusCode, body: responseBody } = await this.request(`/pulls/${params.number}/reviews`, { method: "POST", body });
@@ -298,6 +331,7 @@ export class GitHubHttpAdapter implements GitHubAdapter {
   }
 
   async triggerWorkflow(params: { workflow: string; ref: string }): Promise<ExternalIOEvidence> {
+    if (this.secretUnavailable) return this.unavailableEvidence("workflow_trigger");
     const start = Date.now();
     // GitHub Actions workflow dispatch requires workflow_id or workflow file name
     const body = JSON.stringify({ ref: params.ref });
@@ -309,6 +343,7 @@ export class GitHubHttpAdapter implements GitHubAdapter {
   }
 
   async watchWorkflowRun(params: { run_id: number }): Promise<ExternalIOEvidence> {
+    if (this.secretUnavailable) return this.unavailableEvidence("workflow_watch");
     const start = Date.now();
     const { statusCode, body: responseBody } = await this.request(`/actions/runs/${params.run_id}`, { method: "GET" });
     let summary: Record<string, unknown> | null = null;
@@ -321,14 +356,32 @@ export class GitHubHttpAdapter implements GitHubAdapter {
 
 export class ExternalIOGateway {
   private repo: string;
+  private secretRef?: SecretRef;
   private _adapter: GitHubAdapter | null = null;
   private _useGh: boolean | null = null;
 
-  constructor(repo: string) {
+  constructor(repo: string, secretRef?: SecretRef) {
     this.repo = repo;
+    this.secretRef = secretRef;
   }
 
   async init(): Promise<void> {
+    if (this.secretRef) {
+      const result = resolveSecretRef(this.secretRef);
+      if (result.status === "unavailable") {
+        this._adapter = null;
+        this._useGh = false;
+        return;
+      }
+      const token = result.value;
+      const ghAvailable = await discoverGhBinary();
+      this._useGh = ghAvailable;
+      this._adapter = ghAvailable
+        ? new GhCliAdapter(this.repo, token)
+        : new GitHubHttpAdapter(this.repo, this.secretRef);
+      return;
+    }
+
     if (!hasGitHubToken()) {
       this._adapter = null;
       this._useGh = false;
@@ -344,8 +397,9 @@ export class ExternalIOGateway {
   }
 
   get preferredAdapter(): "gh_cli" | "github_http" | "none" {
-    if (!hasGitHubToken()) return "none";
     if (this._useGh === null) return "none";
+    if (!hasGitHubToken() && !this.secretRef) return "none";
+    if (this.secretRef && this._adapter === null) return "none";
     return this._useGh ? "gh_cli" : "github_http";
   }
 

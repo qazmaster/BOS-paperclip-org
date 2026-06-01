@@ -8,6 +8,7 @@ import {
   redactSecrets,
   type ExternalIOEvidence,
 } from "../src/externalIO";
+import type { SecretRef } from "../src/contracts";
 import { spawn, type ChildProcess } from "child_process";
 import * as https from "https";
 import { EventEmitter } from "events";
@@ -189,8 +190,8 @@ describe("GitHubHttpAdapter", () => {
       end: vi.fn(),
     });
     mockRes = Object.assign(new EventEmitter(), { statusCode: 200 });
-    vi.mocked(https.request).mockImplementation((_options, callback) => {
-      if (callback) process.nextTick(() => callback(mockRes as unknown as import("http").IncomingMessage));
+    (vi.mocked(https.request) as ReturnType<typeof vi.fn>).mockImplementation((_options: unknown, callback: unknown) => {
+      if (callback) process.nextTick(() => (callback as (res: import("http").IncomingMessage) => void)(mockRes as unknown as import("http").IncomingMessage));
       return mockReq as unknown as import("http").ClientRequest;
     });
   });
@@ -257,6 +258,57 @@ describe("GitHubHttpAdapter", () => {
     const evidence = await promise;
     expect(evidence.action).toBe("workflow_watch");
     expect(evidence.response_summary).toHaveProperty("conclusion", "success");
+  });
+});
+
+describe("GitHubHttpAdapter with SecretRef", () => {
+  let mockReq: EventEmitter;
+  let mockRes: EventEmitter & { statusCode?: number };
+
+  beforeEach(() => {
+    delete process.env.GITHUB_TOKEN;
+    mockReq = Object.assign(new EventEmitter(), {
+      write: vi.fn(),
+      end: vi.fn(),
+    });
+    mockRes = Object.assign(new EventEmitter(), { statusCode: 200 });
+    (vi.mocked(https.request) as ReturnType<typeof vi.fn>).mockImplementation((_options: unknown, callback: unknown) => {
+      if (callback) process.nextTick(() => (callback as (res: import("http").IncomingMessage) => void)(mockRes as unknown as import("http").IncomingMessage));
+      return mockReq as unknown as import("http").ClientRequest;
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  function emitResponse(body: string, statusCode = 200) {
+    mockRes.statusCode = statusCode;
+    process.nextTick(() => {
+      mockRes.emit("data", Buffer.from(body));
+      mockRes.emit("end");
+    });
+  }
+
+  it("uses resolved token from SecretRef", async () => {
+    process.env.HTTP_SECRET = "ghp_from_secret_ref";
+    const secretRef: SecretRef = { type: "inline_env", env_key: "HTTP_SECRET" };
+    const adapterWithSecret = new GitHubHttpAdapter("owner/repo", secretRef);
+    const promise = adapterWithSecret.createPR({ title: "Test", body: "Body", head: "feature", base: "main" });
+    emitResponse(JSON.stringify({ number: 42 }), 201);
+    await promise;
+    const reqCall = (vi.mocked(https.request) as ReturnType<typeof vi.fn>).mock.calls[0];
+    const options = reqCall[0] as https.RequestOptions;
+    expect(options.headers).toHaveProperty("Authorization", "token ghp_from_secret_ref");
+  });
+
+  it("returns auth_failure when SecretRef is unavailable", async () => {
+    const secretRef: SecretRef = { type: "secret_ref", secret_id: "missing", version: "latest" };
+    const adapterWithSecret = new GitHubHttpAdapter("owner/repo", secretRef);
+    const evidence = await adapterWithSecret.createPR({ title: "Test", body: "Body", head: "feature", base: "main" });
+    expect(evidence.success).toBe(false);
+    expect(evidence.error_category).toBe("auth_failure");
+    expect(evidence.redacted_diagnostics).toContain("secret_unavailable");
   });
 });
 
@@ -353,5 +405,52 @@ describe("ExternalIOGateway", () => {
     const evidence = await gateway.watchWorkflowRun({ run_id: 123 });
     expect(evidence.success).toBe(false);
     expect(evidence.error_category).toBe("auth_failure");
+  });
+});
+
+describe("ExternalIOGateway with SecretRef", () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    process.env = { ...originalEnv };
+    delete process.env.GITHUB_TOKEN;
+    vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
+  });
+
+  it("init resolves SecretRef and creates adapter with token", async () => {
+    process.env.GW_SECRET = "ghp_gateway_token";
+    const mockChild = Object.assign(new EventEmitter(), { stdout: new EventEmitter(), stderr: new EventEmitter() });
+    vi.mocked(spawn).mockReturnValue(mockChild as unknown as ChildProcess);
+
+    const secretRef: SecretRef = { type: "inline_env", env_key: "GW_SECRET" };
+    const gateway = new ExternalIOGateway("owner/repo", secretRef);
+    const promise = gateway.init();
+    process.nextTick(() => mockChild.emit("close", 0));
+    await promise;
+
+    expect(gateway.adapter).not.toBeNull();
+    expect(gateway.preferredAdapter).not.toBe("none");
+  });
+
+  it("init blocks when SecretRef resolution fails", async () => {
+    const secretRef: SecretRef = { type: "secret_ref", secret_id: "missing", version: "latest" };
+    const gateway = new ExternalIOGateway("owner/repo", secretRef);
+    await gateway.init();
+    expect(gateway.adapter).toBeNull();
+    expect(gateway.preferredAdapter).toBe("none");
+  });
+
+  it("createPR returns blocker when SecretRef resolution fails", async () => {
+    const secretRef: SecretRef = { type: "secret_ref", secret_id: "missing", version: "latest" };
+    const gateway = new ExternalIOGateway("owner/repo", secretRef);
+    await gateway.init();
+    const evidence = await gateway.createPR({ title: "Test", body: "Body", head: "feature", base: "main" });
+    expect(evidence.success).toBe(false);
+    expect(evidence.error_category).toBe("auth_failure");
+    expect(evidence.redacted_diagnostics).toContain("GITHUB_TOKEN missing");
   });
 });
