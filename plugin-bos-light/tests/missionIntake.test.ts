@@ -1,6 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { MissionIntake, type MissionEnvelope, type ApprovalResponse } from "../src/missionIntake";
+import { MissionIntake, type MissionEnvelope, type ApprovalResponse, type MissionIntakeUnauthorized } from "../src/missionIntake";
 import { InMemoryPaperclipAdapter } from "../src/paperclipAdapter";
+
+function assertMission(result: MissionEnvelope | MissionIntakeUnauthorized): MissionEnvelope {
+  if ("unauthorized" in result) {
+    throw new Error(`Expected mission, got unauthorized: ${result.reason}`);
+  }
+  return result;
+}
+
+function assertArtifact<T>(result: T | MissionIntakeUnauthorized): T {
+  if (result && typeof result === "object" && "unauthorized" in result) {
+    throw new Error(`Expected artifact, got unauthorized: ${(result as MissionIntakeUnauthorized).reason}`);
+  }
+  return result as T;
+}
 
 describe("MissionIntake", () => {
   let adapter: InMemoryPaperclipAdapter;
@@ -12,8 +26,15 @@ describe("MissionIntake", () => {
   });
 
   describe("frameMission", () => {
+    it("rejects non-Div7 callers with an unauthorized diagnostic", () => {
+      const result = intake.frameMission("Div3.Treasury", "Build a new payment integration for aipay.kz");
+      expect(result).toHaveProperty("unauthorized", true);
+      expect(result).toHaveProperty("caller", "Div3.Treasury");
+      expect((result as { reason: string }).reason).toContain("Div7.MissionControl");
+    });
+
     it("creates a structured mission envelope from a vague goal", () => {
-      const mission = intake.frameMission("Build a new payment integration for aipay.kz");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Build a new payment integration for aipay.kz"));
       expect(mission.schema_version).toBe("1.0");
       expect(mission.mission_id).toMatch(/^mission_\d+_[a-z0-9]+$/);
       expect(mission.title).toBe("Build a new payment integration for aipay.kz");
@@ -26,40 +47,48 @@ describe("MissionIntake", () => {
     });
 
     it("infers CRITICAL risk for security-related goals", () => {
-      const mission = intake.frameMission("Fix compliance gap in payment processing");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Fix compliance gap in payment processing"));
       expect(mission.risk_level).toBe("CRITICAL");
     });
 
     it("infers HIGH risk for production deployment goals", () => {
-      const mission = intake.frameMission("Deploy customer-facing feature to production");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Deploy customer-facing feature to production"));
       expect(mission.risk_level).toBe("HIGH");
     });
 
     it("infers LOW risk for experimental goals", () => {
-      const mission = intake.frameMission("Prototype a new UI experiment");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Prototype a new UI experiment"));
       expect(mission.risk_level).toBe("LOW");
     });
 
     it("infers MEDIUM risk for generic goals", () => {
-      const mission = intake.frameMission("Refactor internal utility");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Refactor internal utility"));
       expect(mission.risk_level).toBe("MEDIUM");
     });
 
     it("infers revenue business goal", () => {
-      const mission = intake.frameMission("Increase sales through new checkout flow");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Increase sales through new checkout flow"));
       expect(mission.business_goal).toBe("Increase revenue or monetization");
     });
 
     it("stores the framed mission internally", () => {
-      const mission = intake.frameMission("Test mission");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Test mission"));
       expect(intake.getMission(mission.mission_id)).toEqual(mission);
     });
   });
 
   describe("requestHumanApproval", () => {
+    it("rejects non-Div7 callers with an unauthorized diagnostic", async () => {
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature X"));
+      const result = await intake.requestHumanApproval("Div4.Production", mission);
+      expect(result).toHaveProperty("unauthorized", true);
+      expect(result).toHaveProperty("caller", "Div4.Production");
+      expect((result as { reason: string }).reason).toContain("Div7.MissionControl");
+    });
+
     it("creates a document artifact and updates mission status", async () => {
-      const mission = intake.frameMission("Implement feature X");
-      const artifact = await intake.requestHumanApproval(mission);
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature X"));
+      const artifact = assertArtifact(await intake.requestHumanApproval("Div7.MissionControl", mission));
 
       expect(artifact.artifact_type).toBe("document");
       expect(artifact.issue_id).toBe(mission.mission_id);
@@ -71,30 +100,30 @@ describe("MissionIntake", () => {
 
     it("falls back to comment when document creation fails", async () => {
       adapter.createIssueDocument = vi.fn().mockRejectedValue(new Error("Document creation failed"));
-      const mission = intake.frameMission("Implement feature Y");
-      const artifact = await intake.requestHumanApproval(mission);
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature Y"));
+      const artifact = assertArtifact(await intake.requestHumanApproval("Div7.MissionControl", mission));
 
       expect(artifact.artifact_type).toBe("comment");
       expect(adapter.comments.length).toBe(1);
     });
 
     it("stores the approval artifact internally", async () => {
-      const mission = intake.frameMission("Implement feature Z");
-      const artifact = await intake.requestHumanApproval(mission);
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature Z"));
+      const artifact = assertArtifact(await intake.requestHumanApproval("Div7.MissionControl", mission));
       expect(intake.getApprovalArtifact(mission.mission_id)).toEqual(artifact);
     });
   });
 
   describe("awaitHumanApproval", () => {
     it("returns TIMEOUT when no response is received within timeout", async () => {
-      const mission = intake.frameMission("Implement feature A");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature A"));
       const response = await intake.awaitHumanApproval(mission.mission_id, 50);
       expect(response.status).toBe("TIMEOUT");
       expect(response.reason).toContain("50ms");
     });
 
     it("returns APPROVED when simulateHumanResponse is called with approve", async () => {
-      const mission = intake.frameMission("Implement feature B");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature B"));
       const promise = intake.awaitHumanApproval(mission.mission_id, 5000);
 
       setTimeout(() => {
@@ -109,7 +138,7 @@ describe("MissionIntake", () => {
     });
 
     it("returns REJECTED when simulateHumanResponse is called with reject", async () => {
-      const mission = intake.frameMission("Implement feature C");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature C"));
       const promise = intake.awaitHumanApproval(mission.mission_id, 5000);
 
       setTimeout(() => {
@@ -131,7 +160,7 @@ describe("MissionIntake", () => {
       const handler = vi.fn();
       intake.addEventListener("mission_approved", handler);
 
-      const mission = intake.frameMission("Implement feature D");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature D"));
       intake.onApproval(mission);
 
       expect(handler).toHaveBeenCalledTimes(1);
@@ -147,7 +176,7 @@ describe("MissionIntake", () => {
       const handler = vi.fn();
       intake.addEventListener("mission_rejected", handler);
 
-      const mission = intake.frameMission("Implement feature E");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature E"));
       intake.onRejection(mission, "Out of scope");
 
       expect(handler).toHaveBeenCalledTimes(1);
@@ -164,7 +193,7 @@ describe("MissionIntake", () => {
       intake.addEventListener("mission_approved", handler);
       intake.removeEventListener("mission_approved", handler);
 
-      const mission = intake.frameMission("Implement feature F");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature F"));
       intake.onApproval(mission);
 
       expect(handler).not.toHaveBeenCalled();
@@ -184,7 +213,7 @@ describe("MissionIntake", () => {
       const handler = vi.fn();
       intake.addEventListener("mission_approved", handler);
 
-      const mission = intake.frameMission("Implement feature G");
+      const mission = assertMission(intake.frameMission("Div7.MissionControl", "Implement feature G"));
       intake.awaitHumanApproval(mission.mission_id, 5000);
       intake.simulateHumanResponse(mission.mission_id, {
         status: "APPROVED",

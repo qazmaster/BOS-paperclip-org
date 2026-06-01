@@ -1,5 +1,6 @@
 import type { PaperclipAdapter } from "./paperclipAdapter";
 import type { Division } from "./contracts";
+import { enforceOwnerBoundary } from "./ownerBoundary";
 
 export type RiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
@@ -41,6 +42,12 @@ export interface MissionEvent {
 
 export type MissionEventHandler = (event: MissionEvent) => void;
 
+export interface MissionIntakeUnauthorized {
+  unauthorized: true;
+  caller: Division;
+  reason: string;
+}
+
 export class MissionIntake {
   private adapter: PaperclipAdapter;
   private missions: Map<string, MissionEnvelope> = new Map();
@@ -60,7 +67,16 @@ export class MissionIntake {
     return `mission_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
   }
 
-  frameMission(vagueGoal: string): MissionEnvelope {
+  frameMission(callerDivision: Division, vagueGoal: string): MissionEnvelope | MissionIntakeUnauthorized {
+    const boundary = enforceOwnerBoundary(callerDivision, "Div7.MissionControl");
+    if (!boundary.authorized) {
+      return {
+        unauthorized: true,
+        caller: callerDivision,
+        reason: `Mission framing is restricted to Div7.MissionControl. ${boundary.reason}`,
+      };
+    }
+
     const mission: MissionEnvelope = {
       schema_version: "1.0",
       mission_id: this.generateMissionId(),
@@ -121,7 +137,19 @@ export class MissionIntake {
     return divisions;
   }
 
-  async requestHumanApproval(mission: MissionEnvelope): Promise<HumanApprovalArtifact> {
+  async requestHumanApproval(
+    callerDivision: Division,
+    mission: MissionEnvelope
+  ): Promise<HumanApprovalArtifact | MissionIntakeUnauthorized> {
+    const boundary = enforceOwnerBoundary(callerDivision, "Div7.MissionControl");
+    if (!boundary.authorized) {
+      return {
+        unauthorized: true,
+        caller: callerDivision,
+        reason: `Human approval requests are restricted to Div7.MissionControl. ${boundary.reason}`,
+      };
+    }
+
     const updated: MissionEnvelope = { ...mission, status: "PENDING_APPROVAL", updated_at: this.now() };
     this.missions.set(mission.mission_id, updated);
 

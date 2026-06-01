@@ -21,3 +21,4 @@ export * from "./liveArtifactFlow";
 export * from "./worker";
 export * from "./registrationProbe";
 export * from "./ownerBoundary";
+export * from "./divisionPacketRouter";
