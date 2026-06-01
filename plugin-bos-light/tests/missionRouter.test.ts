@@ -203,4 +203,111 @@ describe("routeApprovedMission", () => {
     expect(result.updated_at).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
     expect(new Date(result.updated_at).getTime()).not.toBeNaN();
   });
+
+  it("returns state with schema_version 1.0", () => {
+    const mission = makeMission(["Div2.MasterPlanner"]);
+    const result = routeApprovedMission("Div1.HCO", mission) as MissionRoutingState;
+
+    expect(result.schema_version).toBe("1.0");
+  });
+
+  it("handles empty requested_divisions by routing only status_update to Div7", () => {
+    const mission = makeMission([]);
+    const result = routeApprovedMission("Div1.HCO", mission) as MissionRoutingState;
+
+    expect(result.activated_divisions).toHaveLength(0);
+    expect(result.excluded_divisions).toContain("Div1.HCO");
+    expect(result.excluded_divisions).toContain("Div7.MissionControl");
+    expect(result.current_division).toBeNull();
+
+    const div7Inbox = getDivisionInbox("Div7.MissionControl");
+    expect(div7Inbox).toHaveLength(1);
+    expect(div7Inbox[0].packet_type).toBe("status_update");
+  });
+
+  it("rejects Div7.MissionControl caller with descriptive unauthorized reason", () => {
+    const mission = makeMission(ALL_DIVISIONS);
+    const result = routeApprovedMission("Div7.MissionControl", mission);
+
+    expect("authorized" in result).toBe(true);
+    const unauthorized = result as MissionRouterUnauthorized;
+    expect(unauthorized.authorized).toBe(false);
+    expect(unauthorized.caller).toBe("Div7.MissionControl");
+    expect(unauthorized.reason).toContain("Div7.MissionControl");
+    expect(unauthorized.reason).toContain("not authorized");
+    expect(unauthorized.rejected_at).toBeDefined();
+  });
+
+  it("rejects Div2.MasterPlanner caller with descriptive unauthorized reason", () => {
+    const mission = makeMission(ALL_DIVISIONS);
+    const result = routeApprovedMission("Div2.MasterPlanner", mission);
+
+    expect("authorized" in result).toBe(true);
+    const unauthorized = result as MissionRouterUnauthorized;
+    expect(unauthorized.authorized).toBe(false);
+    expect(unauthorized.caller).toBe("Div2.MasterPlanner");
+    expect(unauthorized.reason).toContain("Div2.MasterPlanner");
+    expect(unauthorized.reason).toContain("not authorized");
+  });
+
+  it("work_assignment payload includes assigned_to matching target division", () => {
+    const mission = makeMission(["Div2.MasterPlanner", "Div4.Production"]);
+    routeApprovedMission("Div1.HCO", mission);
+
+    for (const div of ["Div2.MasterPlanner", "Div4.Production"] as Division[]) {
+      const inbox = getDivisionInbox(div);
+      expect(inbox).toHaveLength(1);
+      const payload = inbox[0].payload as Record<string, unknown>;
+      expect(payload.assigned_to).toBe(div);
+    }
+  });
+
+  it("derives budget_capacity rule for Div3-only missions", () => {
+    const mission = makeMission(["Div3.Treasury"]);
+    routeApprovedMission("Div1.HCO", mission);
+
+    const div3Inbox = getDivisionInbox("Div3.Treasury");
+    const payload = div3Inbox[0].payload as Record<string, unknown>;
+    expect(payload.routing_rule).toBe("budget_capacity");
+  });
+
+  it("does not emit work_assignment to Div1.HCO even if explicitly requested", () => {
+    const mission = makeMission(["Div1.HCO", "Div2.MasterPlanner"]);
+    routeApprovedMission("Div1.HCO", mission);
+
+    const div1Inbox = getDivisionInbox("Div1.HCO");
+    expect(div1Inbox).toHaveLength(0);
+
+    const div2Inbox = getDivisionInbox("Div2.MasterPlanner");
+    expect(div2Inbox).toHaveLength(1);
+    expect(div2Inbox[0].packet_type).toBe("work_assignment");
+  });
+
+  it("isolates packet router state between tests via clearPacketRouter", () => {
+    const mission = makeMission(["Div2.MasterPlanner"]);
+    routeApprovedMission("Div1.HCO", mission);
+
+    // State exists before clear
+    expect(getDivisionInbox("Div2.MasterPlanner")).toHaveLength(1);
+    clearPacketRouter();
+
+    // State is gone after clear
+    expect(getDivisionInbox("Div2.MasterPlanner")).toHaveLength(0);
+    expect(getDivisionInbox("Div7.MissionControl")).toHaveLength(0);
+  });
+
+  it("preserves requested_divisions order in activated_divisions", () => {
+    const mission = makeMission([
+      "Div5.QualificationsLibraryLearning",
+      "Div3.Treasury",
+      "Div2.MasterPlanner",
+    ]);
+    const result = routeApprovedMission("Div1.HCO", mission) as MissionRoutingState;
+
+    expect(result.activated_divisions).toEqual([
+      "Div5.QualificationsLibraryLearning",
+      "Div3.Treasury",
+      "Div2.MasterPlanner",
+    ]);
+  });
 });
