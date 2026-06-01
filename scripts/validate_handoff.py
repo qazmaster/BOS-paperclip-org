@@ -15,6 +15,7 @@ ENTRYPOINT_FILES = [
     "HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md",
     "BOS_M002_DEVELOPMENT_HANDOFF.md",
     "BOS_M004_DEVELOPMENT_HANDOFF.md",
+    "BOS_M005_DEVELOPMENT_HANDOFF.md",
     "HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md",
     "MANIFEST.md",
 ]
@@ -61,6 +62,7 @@ ENTRYPOINT_REQUIRED_TERMS = {
     "00_START_HERE_FOR_NEW_AI_AGENT.md": ["v1.4.1", "SKILL_HCO_ROUTING_CONTROL.md", "validation"],
     "HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md": ["v1.4.1", "A12-A20", "validate_handoff.py"],
     "BOS_M002_DEVELOPMENT_HANDOFF.md": ["Canonical doctrine update", "v1.4.1"],
+    "BOS_M005_DEVELOPMENT_HANDOFF.md": ["M005", "runtime-evidence", "live"],
     "HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md": ["Canonical doctrine update", "v1.4.1", "A12-A20"],
 }
 

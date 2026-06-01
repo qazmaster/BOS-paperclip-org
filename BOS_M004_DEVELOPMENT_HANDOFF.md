@@ -1,8 +1,15 @@
 # Handoff: BOS Light v1.4.1 — Current State and Testing Guide
 
 > **Date:** 2026-05-31
-> **Status:** M002 closed (approved rescope), v1.4.1 doctrine imported, M003/M004 in progress
+> **Status:** M002 closed (approved rescope), v1.4.1 doctrine imported, M003/M004 closed, **M005 superseded this handoff**
+> **Note:** This document is historical. Current state and live proof are in `BOS_M005_DEVELOPMENT_HANDOFF.md`.
 > **Canonical doctrine:** v1.4.1 package is authoritative. Historical v1.2/v1.3 docs provide implementation background only.
+
+---
+
+## ⚠️ Historical document
+
+M005 (2026-06-01) proved all core integration surfaces live: Hermes Xiaomi execution, company template with 7 divisions, resource intake secrets, git hybrid operations, and E2E mission creation. Many blockers listed below were resolved in M005. See `BOS_M005_DEVELOPMENT_HANDOFF.md` for current state.
 
 ---
 

@@ -60,6 +60,18 @@ Do **not** port BOS Chimera 4.1 as a full kernel. Paperclip already provides the
 6. External IO routes through Div5 local check, Div3 when paid/credentialed, Div6 collection, then Div5 quarantine.
 7. Plugin runtime assumptions must be validated against current Paperclip before implementation.
 
+## M005 live runtime proof
+
+M005 proved all core integration surfaces against live Paperclip:
+
+- **S01** Hermes Xiaomi execution — `runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe-live*.json`
+- **S02** Company template (7 divisions) — `runtime-evidence/M005-S02-company-template-runtime-probe-live.json`
+- **S03** Resource intake / secrets — `runtime-evidence/M005-S03-resource-intake-runtime-probe-live.json`
+- **S04** Git hybrid operations — `runtime-evidence/M005-S04-git-hybrid-runtime-probe-live.json`
+- **S05** E2E mission creation — `runtime-evidence/M005-S05-e2e-mission-runtime-probe-live.json`
+
+Read `BOS_M005_DEVELOPMENT_HANDOFF.md` for full results, deferred items, and next priorities.
+
 ## Historical context to read after v1.4.1
 
 - `docs/01_CONTEXT_AND_DECISION.md`
@@ -67,7 +79,8 @@ Do **not** port BOS Chimera 4.1 as a full kernel. Paperclip already provides the
 - `docs/04_DATA_CONTRACTS.md`
 - `docs/06_ACCEPTANCE_TESTS.md`
 - `docs/07_RISKS_AND_SPIKES.md`
-- `BOS_M002_DEVELOPMENT_HANDOFF.md`
+- `BOS_M002_DEVELOPMENT_HANDOFF.md` — M002 runtime validation context
+- `BOS_M004_DEVELOPMENT_HANDOFF.md` — M004 state and blockers (superseded by M005)
 - `HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md`
 - `agents/README.md`
 - `plugin-bos-light/README.md`

@@ -1,7 +1,7 @@
 # BOS Chimera -> Paperclip Handoff Package
 
-Дата обновления: 2026-05-31
-Статус: **v1.4.1 canonical doctrine package imported, M002 closed with approved rescope, M004 handoff active**. Earlier M001/M002 and BOS Chimera materials remain historical context unless they are explicitly referenced by the v1.4.1 package.
+Дата обновления: 2026-06-01
+Статус: **v1.4.1 canonical doctrine package imported, M002 closed with approved rescope, M004 closed, M005 complete with live runtime proof**. All core integration surfaces proven: Hermes Xiaomi execution, company template with 7 divisions, resource intake secrets, git hybrid operations, and E2E mission creation. Earlier M001/M002 and BOS Chimera materials remain historical context unless they are explicitly referenced by the v1.4.1 package.
 
 This repository is a handoff package for a new AI agent or developer inheriting the BOS Light for Paperclip adaptation. It contains the original v1.2 implementation baseline, runtime-validation handoffs, and the new **BOS Light v1.4.1 doctrine package** that defines the active operating model.
 
@@ -44,7 +44,8 @@ Paperclip remains the **system of record** and **execution plane**: companies, a
 
 Current handoff (start here after v1.4.1 docs):
 
-- `BOS_M004_DEVELOPMENT_HANDOFF.md` — current state, blockers, testing guide, verification checklist
+- `BOS_M005_DEVELOPMENT_HANDOFF.md` — M005 live runtime proof results, testing guide, verification checklist, deferred items
+- `BOS_M004_DEVELOPMENT_HANDOFF.md` — historical M004 state and blockers (superseded by M005)
 
 Historical but still useful:
 
@@ -77,6 +78,7 @@ BOS_Chimera_Paperclip_Handoff/
   HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md
   BOS_M002_DEVELOPMENT_HANDOFF.md
   BOS_M004_DEVELOPMENT_HANDOFF.md
+  BOS_M005_DEVELOPMENT_HANDOFF.md   # ← current handoff with M005 live proof
   HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md
   MANIFEST.md
   docs/                         # v1.2 baseline + v1.4.1 canonical doctrine
@@ -85,6 +87,7 @@ BOS_Chimera_Paperclip_Handoff/
   company-template/
   plugin-bos-light/
   scripts/
+  runtime-evidence/             # M005 live probe evidence (JSON + screenshots)
   source-pdfs/
 ```
 
