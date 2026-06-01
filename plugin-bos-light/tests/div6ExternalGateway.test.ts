@@ -104,29 +104,31 @@ describe("executeExternalGitOperation", () => {
     });
   }
 
-  it("rejects non-Div6.External callers with ExternalGitGatewayUnauthorized", () => {
+  function emitError(err: Error) {
+    process.nextTick(() => {
+      mockChild.emit("error", err);
+    });
+  }
+
+  it("rejects non-Div6.External callers with ExternalGitGatewayUnauthorized", async () => {
     const nonDiv6 = ALL_DIVISIONS.filter((d) => d !== "Div6.External");
 
     for (const caller of nonDiv6) {
       clearPacketRouter();
       const grant = makeGrant();
-      const result = executeExternalGitOperation(
+      const result = await executeExternalGitOperation(
         caller,
         grant.grant_id,
         "ls-remote"
       );
 
-      // executeExternalGitOperation is async, but for auth failures it returns synchronously
-      // We can await it to get the result
-      result.then((res) => {
-        expect("authorized" in res).toBe(true);
-        const unauthorized = res as ExternalGitGatewayUnauthorized;
-        expect(unauthorized.authorized).toBe(false);
-        expect(unauthorized.caller).toBe(caller);
-        expect(unauthorized.required_role).toBe("Div6.External");
-        expect(unauthorized.reason).toContain("Div6.External");
-        expect(unauthorized.rejected_at).toBeDefined();
-      });
+      expect("authorized" in result).toBe(true);
+      const unauthorized = result as ExternalGitGatewayUnauthorized;
+      expect(unauthorized.authorized).toBe(false);
+      expect(unauthorized.caller).toBe(caller);
+      expect(unauthorized.required_role).toBe("Div6.External");
+      expect(unauthorized.reason).toContain("Div6.External");
+      expect(unauthorized.rejected_at).toBeDefined();
     }
   });
 
@@ -599,5 +601,117 @@ describe("executeExternalGitOperation", () => {
     expect(evidence.git_evidence.success).toBe(false);
     expect(evidence.git_evidence.error_category).toBe("auth_failure");
     expect(evidence.git_evidence.redacted_diagnostics).toContain("secret_unavailable");
+  });
+
+  describe("git execution via gateway", () => {
+    it("detects missing git binary (ENOENT) for ls-remote", async () => {
+      clearPacketRouter();
+      const grant = makeGrant(["read"]);
+      const promise = executeExternalGitOperation(
+        "Div6.External",
+        grant.grant_id,
+        "ls-remote"
+      );
+      const err = Object.assign(new Error("spawn git ENOENT"), { code: "ENOENT" });
+      emitError(err);
+      const result = await promise;
+      expect("authorized" in result).toBe(false);
+      const evidence = result as ExternalGitEvidence;
+      expect(evidence.git_evidence.success).toBe(false);
+      expect(evidence.git_evidence.error_category).toBe("missing_binary");
+      expect(evidence.git_evidence.redacted_diagnostics).toContain("git binary not found");
+      expect(evidence.trust_level).toBe("untrusted");
+    });
+
+    it("detects missing git binary (ENOENT) for clone", async () => {
+      clearPacketRouter();
+      const grant = makeGrant(["clone"]);
+      const promise = executeExternalGitOperation(
+        "Div6.External",
+        grant.grant_id,
+        "clone",
+        "/tmp/repo"
+      );
+      const err = Object.assign(new Error("spawn git ENOENT"), { code: "ENOENT" });
+      emitError(err);
+      const result = await promise;
+      expect("authorized" in result).toBe(false);
+      const evidence = result as ExternalGitEvidence;
+      expect(evidence.git_evidence.success).toBe(false);
+      expect(evidence.git_evidence.error_category).toBe("missing_binary");
+      expect(evidence.git_evidence.redacted_diagnostics).toContain("git binary not found");
+      expect(evidence.trust_level).toBe("untrusted");
+    });
+
+    it("detects missing git binary (ENOENT) for fetch", async () => {
+      clearPacketRouter();
+      const grant = makeGrant(["fetch"]);
+      const promise = executeExternalGitOperation(
+        "Div6.External",
+        grant.grant_id,
+        "fetch",
+        "/tmp/repo"
+      );
+      const err = Object.assign(new Error("spawn git ENOENT"), { code: "ENOENT" });
+      emitError(err);
+      const result = await promise;
+      expect("authorized" in result).toBe(false);
+      const evidence = result as ExternalGitEvidence;
+      expect(evidence.git_evidence.success).toBe(false);
+      expect(evidence.git_evidence.error_category).toBe("missing_binary");
+      expect(evidence.git_evidence.redacted_diagnostics).toContain("git binary not found");
+      expect(evidence.trust_level).toBe("untrusted");
+    });
+
+    it("detects auth failure for clone", async () => {
+      clearPacketRouter();
+      const grant = makeGrant(["clone"]);
+      const promise = executeExternalGitOperation(
+        "Div6.External",
+        grant.grant_id,
+        "clone",
+        "/tmp/repo"
+      );
+      emitFailure(128, "fatal: Authentication failed for 'https://github.com/example/repo.git/'");
+      const result = await promise;
+      expect("authorized" in result).toBe(false);
+      const evidence = result as ExternalGitEvidence;
+      expect(evidence.git_evidence.success).toBe(false);
+      expect(evidence.git_evidence.error_category).toBe("auth_failure");
+      expect(evidence.trust_level).toBe("untrusted");
+    });
+
+    it("detects auth failure for fetch", async () => {
+      clearPacketRouter();
+      const grant = makeGrant(["fetch"]);
+      const promise = executeExternalGitOperation(
+        "Div6.External",
+        grant.grant_id,
+        "fetch",
+        "/tmp/repo"
+      );
+      emitFailure(128, "fatal: Authentication failed for 'https://github.com/example/repo.git/'");
+      const result = await promise;
+      expect("authorized" in result).toBe(false);
+      const evidence = result as ExternalGitEvidence;
+      expect(evidence.git_evidence.success).toBe(false);
+      expect(evidence.git_evidence.error_category).toBe("auth_failure");
+      expect(evidence.trust_level).toBe("untrusted");
+    });
+
+    it("includes redacted_diagnostics in all evidence envelopes", async () => {
+      clearPacketRouter();
+      const grant = makeGrant(["read"]);
+      const promise = executeExternalGitOperation(
+        "Div6.External",
+        grant.grant_id,
+        "ls-remote"
+      );
+      emitSuccess("ok");
+      const result = await promise;
+      const evidence = result as ExternalGitEvidence;
+      expect(typeof evidence.git_evidence.redacted_diagnostics).toBe("string");
+      expect(evidence.git_evidence.redacted_diagnostics.length).toBeGreaterThan(0);
+    });
   });
 });
