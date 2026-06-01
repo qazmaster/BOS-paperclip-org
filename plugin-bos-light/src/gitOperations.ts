@@ -24,6 +24,7 @@ export interface GitOperations {
   commit(localPath: string, message: string): Promise<GitCommandEvidence>;
   push(localPath: string, remote?: string, branch?: string, force?: boolean): Promise<GitCommandEvidence>;
   lsRemote(repoUrl: string, refs?: string[]): Promise<GitCommandEvidence>;
+  fetch(localPath: string, remote?: string, refs?: string[]): Promise<GitCommandEvidence>;
 }
 
 const SECRET_PATTERNS = [
@@ -198,5 +199,10 @@ export class DefaultGitOperations implements GitOperations {
   async lsRemote(repoUrl: string, refs?: string[]): Promise<GitCommandEvidence> {
     const args = ["ls-remote", repoUrl, ...(refs || [])];
     return runGit(process.cwd(), args, this.secretRef);
+  }
+
+  async fetch(localPath: string, remote = "origin", refs?: string[]): Promise<GitCommandEvidence> {
+    const args = ["fetch", remote, ...(refs || [])];
+    return runGit(localPath, args, this.secretRef);
   }
 }

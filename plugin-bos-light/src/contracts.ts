@@ -472,3 +472,12 @@ export interface TreasuryUnauthorized {
   reason: string;
   rejected_at: string;
 }
+
+export interface ExternalGitGatewayUnauthorized {
+  schema_version: "1.0";
+  authorized: false;
+  caller: Division;
+  required_role: "Div6.External";
+  reason: string;
+  rejected_at: string;
+}
