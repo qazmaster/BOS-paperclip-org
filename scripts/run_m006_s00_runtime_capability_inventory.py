@@ -179,6 +179,12 @@ def _redact_value(key: str, value: Any) -> Any:
     if SECRET_KEY_RE.search(key) and not key.endswith("_env") and not key.endswith("Env"):
         if isinstance(value, (bool, int, float)) or value is None:
             return value
+        if isinstance(value, str):
+            return "<redacted>"
+        if isinstance(value, Mapping):
+            return {str(child_key): _redact_value(str(child_key), child_value) for child_key, child_value in value.items()}
+        if isinstance(value, list):
+            return [_redact_value(key, item) for item in value]
         return "<redacted>"
     if isinstance(value, str):
         return _redact_string(value)

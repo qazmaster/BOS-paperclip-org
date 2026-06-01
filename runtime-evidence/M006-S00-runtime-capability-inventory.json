@@ -1,0 +1,520 @@
+{
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "missing_secret_env",
+    "piko_tools_not_observed",
+    "plugin_install_endpoint_unsupported",
+    "plugin_not_found",
+    "tool_registry_endpoint_unsupported"
+  ],
+  "blocker_reason": "missing_secret_env,piko_tools_not_observed,plugin_install_endpoint_unsupported,plugin_not_found,tool_registry_endpoint_unsupported",
+  "capability_promotions": [],
+  "fallback_diagnostics": [],
+  "generated_at": "2026-06-01T06:12:36Z",
+  "inputs": {
+    "auth_header_name": "Authorization",
+    "auth_token_env": "PAPERCLIP_API_KEY",
+    "auth_token_present": true,
+    "base_url": "https://paperclip.oysana.com",
+    "company_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "live_probe_enabled": true,
+    "origin": "",
+    "plugin_key": "bos-light",
+    "run_label": "m006-s00-20260601T061236Z",
+    "timeout_seconds": 15.0
+  },
+  "phase": "live",
+  "probes": {
+    "artifact_regression_smoke": {
+      "comment_id": "c5326c31-feb2-459d-8a63-e1e9197b06ac",
+      "document_id": "7b588916-1f46-4fd9-a44a-f23363479b70",
+      "issue_id": "e02de4e1-9fe8-4df8-b39a-2230b646c71e",
+      "probe": "artifact_regression_smoke",
+      "readbacks": {
+        "comment": {
+          "kind": "comment",
+          "ok": true,
+          "ref": "c5326c31-feb2-459d-8a63-e1e9197b06ac",
+          "sha256": "45f10eda5a945696bc47c694f3cf8df324d9db71ee7f60d91ef94175bb048d02",
+          "snippet": "M006 S00 regression smoke comment. Run label: m006-s00-20260601T061236Z.",
+          "status_code": 200
+        },
+        "document": {
+          "kind": "document",
+          "ok": true,
+          "ref": "7b588916-1f46-4fd9-a44a-f23363479b70",
+          "sha256": "eac173c1eff8cf6f9fd18f4cd8cd34bcbb51bbdbf19afc5fca3ad921c3f6c586",
+          "snippet": "# M006 S00 Runtime Capability Inventory\n\nRun label: m006-s00-20260601T061236Z\n\nThis document verifies native document creation remains available.\nM006 S00 Evidence m006-s00-20260601T061236Z",
+          "status_code": 200
+        },
+        "issue": {
+          "kind": "issue",
+          "ok": true,
+          "ref": "e02de4e1-9fe8-4df8-b39a-2230b646c71e",
+          "sha256": "616b9ced858464b0cb106af1e6b344b3caf03f1b86102842819b84b8471e2ff7",
+          "snippet": "M006 S00 regression smoke m006-s00-20260601T061236Z",
+          "status_code": 200
+        }
+      },
+      "results": [
+        {
+          "description": "Create regression smoke issue",
+          "duration_ms": 1094,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": true,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/issues",
+          "probe_id": "p05-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "assigneeAdapterOverrides",
+              "assigneeAgentId",
+              "assigneeUserId",
+              "billingCode",
+              "cancelledAt",
+              "checkoutRunId",
+              "companyId",
+              "completedAt",
+              "createdAt",
+              "createdByAgentId",
+              "createdByUserId",
+              "description",
+              "executionAgentNameKey",
+              "executionLockedAt",
+              "executionPolicy",
+              "executionRunId",
+              "executionState",
+              "executionWorkspaceId",
+              "executionWorkspacePreference",
+              "executionWorkspaceSettings",
+              "goalId",
+              "hiddenAt",
+              "id",
+              "identifier"
+            ]
+          },
+          "status_code": 201,
+          "truncated": false
+        },
+        {
+          "description": "Readback regression smoke issue",
+          "duration_ms": 1125,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": true,
+          "path": "/api/issues/e02de4e1-9fe8-4df8-b39a-2230b646c71e",
+          "probe_id": "p05-r02",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "activeRecoveryAction",
+              "ancestors",
+              "assigneeAdapterOverrides",
+              "assigneeAgentId",
+              "assigneeUserId",
+              "billingCode",
+              "blockedBy",
+              "blockerAttention",
+              "blocks",
+              "cancelledAt",
+              "checkoutRunId",
+              "companyId",
+              "completedAt",
+              "createdAt",
+              "createdByAgentId",
+              "createdByUserId",
+              "currentExecutionWorkspace",
+              "description",
+              "documentSummaries",
+              "executionAgentNameKey",
+              "executionLockedAt",
+              "executionPolicy",
+              "executionRunId",
+              "executionState"
+            ]
+          },
+          "status_code": 200,
+          "truncated": false
+        },
+        {
+          "description": "Create regression smoke document",
+          "duration_ms": 1124,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "PUT",
+          "ok": true,
+          "path": "/api/issues/e02de4e1-9fe8-4df8-b39a-2230b646c71e/documents/m006-s00-evidence",
+          "probe_id": "p05-r03",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "body",
+              "companyId",
+              "createdAt",
+              "createdByAgentId",
+              "createdByUserId",
+              "format",
+              "id",
+              "issueId",
+              "key",
+              "latestRevisionId",
+              "latestRevisionNumber",
+              "lockedAt",
+              "lockedByAgentId",
+              "lockedByUserId",
+              "title",
+              "updatedAt",
+              "updatedByAgentId",
+              "updatedByUserId"
+            ]
+          },
+          "status_code": 201,
+          "truncated": false
+        },
+        {
+          "description": "Readback regression smoke document",
+          "duration_ms": 1115,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": true,
+          "path": "/api/issues/e02de4e1-9fe8-4df8-b39a-2230b646c71e/documents/m006-s00-evidence",
+          "probe_id": "p05-r04",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "body",
+              "companyId",
+              "createdAt",
+              "createdByAgentId",
+              "createdByUserId",
+              "format",
+              "id",
+              "issueId",
+              "key",
+              "latestRevisionId",
+              "latestRevisionNumber",
+              "lockedAt",
+              "lockedByAgentId",
+              "lockedByUserId",
+              "title",
+              "updatedAt",
+              "updatedByAgentId",
+              "updatedByUserId"
+            ]
+          },
+          "status_code": 200,
+          "truncated": false
+        },
+        {
+          "description": "Create regression smoke comment",
+          "duration_ms": 1111,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": true,
+          "path": "/api/issues/e02de4e1-9fe8-4df8-b39a-2230b646c71e/comments",
+          "probe_id": "p05-r05",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "authorAgentId",
+              "authorType",
+              "authorUserId",
+              "body",
+              "companyId",
+              "createdAt",
+              "createdByRunId",
+              "id",
+              "issueId",
+              "metadata",
+              "presentation",
+              "updatedAt"
+            ]
+          },
+          "status_code": 201,
+          "truncated": false
+        },
+        {
+          "description": "Readback regression smoke comment",
+          "duration_ms": 1110,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": true,
+          "path": "/api/issues/e02de4e1-9fe8-4df8-b39a-2230b646c71e/comments/c5326c31-feb2-459d-8a63-e1e9197b06ac",
+          "probe_id": "p05-r06",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "authorAgentId",
+              "authorType",
+              "authorUserId",
+              "body",
+              "companyId",
+              "createdAt",
+              "createdByRunId",
+              "id",
+              "issueId",
+              "metadata",
+              "presentation",
+              "updatedAt"
+            ]
+          },
+          "status_code": 200,
+          "truncated": false
+        }
+      ],
+      "side_effects": {
+        "comments_created": 1,
+        "documents_created": 1,
+        "issues_created": 1
+      }
+    },
+    "health_version": {
+      "probe": "health_version",
+      "results": [
+        {
+          "description": "Paperclip health/version readback",
+          "duration_ms": 1247,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": true,
+          "path": "/api/health",
+          "probe_id": "p01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "authReady",
+              "bootstrapInviteActive",
+              "bootstrapStatus",
+              "deploymentExposure",
+              "deploymentMode",
+              "features",
+              "status",
+              "version"
+            ]
+          },
+          "status_code": 200,
+          "truncated": false
+        }
+      ],
+      "runtime": {
+        "build": "health.version:0.3.1",
+        "version": "0.3.1"
+      }
+    },
+    "plugin_install_path": {
+      "observed_keys": [],
+      "plugin_found": false,
+      "plugin_key": "bos-light",
+      "probe": "plugin_install_path",
+      "results": [
+        {
+          "description": "Plugin install path discovery",
+          "duration_ms": 1087,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/plugins",
+          "probe_id": "p02-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Plugin install path discovery",
+          "duration_ms": 1114,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": true,
+          "path": "/api/plugins",
+          "probe_id": "p02-r02",
+          "response_summary": {
+            "array_length": 0,
+            "json_type": "list",
+            "text_snippet": null
+          },
+          "status_code": 200,
+          "truncated": false
+        },
+        {
+          "description": "Plugin install path discovery",
+          "duration_ms": 1115,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/plugins/bos-light",
+          "probe_id": "p02-r03",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        }
+      ]
+    },
+    "secret_materialization": {
+      "probe": "secret_materialization",
+      "results": [
+        {
+          "description": "Secret materialization test for GITHUB_TOKEN_AIPAY via Hermes testEnvironment",
+          "duration_ms": 1587,
+          "error": null,
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": true,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment",
+          "probe_id": "p04-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "adapterType",
+              "checks",
+              "status",
+              "testedAt"
+            ]
+          },
+          "status_code": 200,
+          "truncated": false
+        },
+        {
+          "description": "Secret materialization test for GITHUB_TOKEN_AIPAY via Hermes testEnvironment",
+          "duration_ms": 1099,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "POST",
+          "ok": false,
+          "path": "/api/adapters/hermes_local/test-environment",
+          "probe_id": "p04-r02",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        }
+      ],
+      "secret_name": "<redacted>",
+      "secret_present_in_env": false,
+      "secret_ref": "<redacted>",
+      "test_status": "pass"
+    },
+    "tool_registry": {
+      "observed_tools": [],
+      "piko_tools_observed": [],
+      "plugin_key": "bos-light",
+      "probe": "tool_registry",
+      "results": [
+        {
+          "description": "Tool registry readback for piko:* tools",
+          "duration_ms": 1108,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/plugins/bos-light/tools",
+          "probe_id": "p03-r01",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        },
+        {
+          "description": "Tool registry readback for piko:* tools",
+          "duration_ms": 1115,
+          "error": "http_error",
+          "malformed_json_reason": null,
+          "message": null,
+          "method": "GET",
+          "ok": false,
+          "path": "/api/plugins/bos-light/tools",
+          "probe_id": "p03-r02",
+          "response_summary": {
+            "json_type": "dict",
+            "text_snippet": null,
+            "top_level_keys": [
+              "error"
+            ]
+          },
+          "status_code": 404,
+          "truncated": false
+        }
+      ]
+    }
+  },
+  "redaction": {
+    "redaction_errors": [],
+    "secret_env_vars": [
+      "<redacted>",
+      "<redacted>"
+    ],
+    "secrets_redacted": true
+  },
+  "runner": {
+    "max_response_bytes": 131072,
+    "max_route_attempts": 32,
+    "script": "scripts/run_m006_s00_runtime_capability_inventory.py",
+    "standard_library_only": true
+  },
+  "runtime": {
+    "build": "health.version:0.3.1",
+    "version": "0.3.1"
+  },
+  "schema_version": "m006-s00-runtime-capability-inventory/v1",
+  "side_effect_counters": {
+    "approval_requests_created": 0,
+    "comments_created": 1,
+    "documents_created": 1,
+    "gsd_pi_runs_started": 0,
+    "hermes_runs_started": 0,
+    "issues_created": 1
+  },
+  "validation_errors": []
+}
