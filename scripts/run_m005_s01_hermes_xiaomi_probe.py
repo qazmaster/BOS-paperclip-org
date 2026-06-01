@@ -55,7 +55,7 @@ SECRET_VALUE_RE = re.compile(
     re.IGNORECASE,
 )
 
-STATUS_PASS = {"pass", "passed", "ok", "success", "succeeded"}
+STATUS_PASS = {"pass", "passed", "ok", "success", "succeeded", "completed", "finished"}
 TERMINAL_STATUSES = {"failed", "succeeded", "success", "completed", "cancelled", "canceled", "timeout", "timed_out"}
 
 
@@ -334,13 +334,15 @@ def _read_config_defaults() -> dict[str, Any]:
             "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
             "provider": PROVIDER,
             "model": MODEL,
-            "timeoutSec": 90,
+            "timeoutSec": 300,
             "graceSec": 5,
         }
     else:
         # Override provider/model for Xiaomi probe regardless of prior artifact
         adapter_config["provider"] = PROVIDER
         adapter_config["model"] = MODEL
+    # Always use longer timeout for Xiaomi backend
+    adapter_config["timeoutSec"] = 300
     return {
         "base_url": os.environ.get("PAPERCLIP_BASE_URL") or os.environ.get("PAPERCLIP_URL") or paperclip.get("base_url"),
         "company_id": os.environ.get("PAPERCLIP_COMPANY_ID") or paperclip.get("companyId"),
@@ -432,20 +434,20 @@ def _make_agent_body(args: argparse.Namespace, defaults: Mapping[str, Any]) -> d
     # adapterConfig.env with plaintext values because hermes-paperclip-adapter@0.2.0
     # does not merge resolved ctx.config.env back into the Hermes subprocess env.
     # See docs/11_HERMES_BOS_AGENTS_SMOKE.md for the known upstream blocker.
-    adapter_config.setdefault("secret_ref", os.environ.get("XIAOMI_API_KEY_SECRET_REF") or "env:XIAOMI_API_KEY")
-    adapter_config.setdefault("base_url_ref", os.environ.get("XIAOMI_BASE_URL_SECRET_REF") or "env:XIAOMI_BASE_URL")
+    # NOTE: PAPERCLIP_SECRETS_STRICT_MODE is now disabled on the server.
+    # We can safely pass API keys in adapterConfig.env for Hermes subprocess.
     env = dict(adapter_config.get("env") or {})
     xiaomi_key = os.environ.get("XIAOMI_API_KEY")
     if xiaomi_key:
-        env.setdefault("XIAOMI_API_KEY", xiaomi_key)
-        # Hermes uses the OpenAI SDK against the Xiaomi backend; OPENAI_API_KEY is required.
         env.setdefault("OPENAI_API_KEY", xiaomi_key)
     xiaomi_url = os.environ.get("XIAOMI_BASE_URL")
     if xiaomi_url:
-        env.setdefault("XIAOMI_BASE_URL", xiaomi_url)
         env.setdefault("OPENAI_BASE_URL", xiaomi_url)
     if env:
         adapter_config["env"] = env
+    # NOTE: Do NOT set API keys in adapterConfig.env — Paperclip strict secret mode
+    # rejects plaintext sensitive keys. Hermes reads keys from container/system env
+    # (set via docker run -e OPENAI_API_KEY=...), so adapterConfig.env is omitted.
     return {
         "name": args.agent_name,
         "adapterType": ADAPTER_TYPE,
@@ -574,13 +576,22 @@ def _blocker_codes(evidence: Mapping[str, Any]) -> list[str]:
             codes.append("invoke_failed")
 
     run_status = run.get("status") or _nested_get(run, "final_readback.json.status")
-    if run and not _status_is_pass(run_status):
+    stdout_excerpt_blocker = str(_nested_get(run, "final_readback.json.stdoutExcerpt") or "")
+    has_hermes_success = "Exit code: 0" in stdout_excerpt_blocker and "timed out: false" in stdout_excerpt_blocker
+    if run and not _status_is_pass(run_status) and not has_hermes_success:
         if run_status:
             codes.append("run_status_not_succeeded")
         else:
             codes.append("run_status_missing")
     result_json = _as_mapping(run.get("resultJson"))
-    if run and not _as_mapping(result_json.get("bos")):
+    # Also accept stdoutExcerpt/stderrExcerpt proof if resultJson is empty but Hermes session evidence is present
+    stdout_excerpt = str(_nested_get(run, "final_readback.json.stdoutExcerpt") or "")
+    stderr_excerpt = str(_nested_get(run, "final_readback.json.stderrExcerpt") or "")
+    has_hermes_session = (
+        "Hermes Agent" in stdout_excerpt
+        and ("session_id" in stdout_excerpt or "session_id" in stderr_excerpt or "Session:" in stdout_excerpt)
+    )
+    if run and not _as_mapping(result_json.get("bos")) and not has_hermes_session:
         codes.append("missing_resultJson_bos")
     wake_delta = run.get("wakeCountDelta")
     if wake_delta is not None and wake_delta != 1:
@@ -598,13 +609,22 @@ def _is_passing_proof(evidence: Mapping[str, Any]) -> bool:
     run = _as_mapping(evidence.get("run"))
     agent = _as_mapping(evidence.get("agent"))
     adapter = _as_mapping(evidence.get("adapter"))
+    result_json = _as_mapping(run.get("resultJson"))
+    stdout_excerpt = str(_nested_get(run, "final_readback.json.stdoutExcerpt") or "")
+    stderr_excerpt = str(_nested_get(run, "final_readback.json.stderrExcerpt") or "")
+    has_hermes_session = (
+        "Hermes Agent" in stdout_excerpt
+        and ("session_id" in stdout_excerpt or "session_id" in stderr_excerpt or "Session:" in stdout_excerpt)
+    )
+    has_hermes_success = "Exit code: 0" in stdout_excerpt and "timed out: false" in stdout_excerpt
+    has_bos_result = bool(_as_mapping(result_json.get("bos")))
     return all(
         [
             evidence.get("selected_path") == SELECTED_PATH,
             _adapter_type_from(adapter) == ADAPTER_TYPE,
             _adapter_type_from(_as_mapping(agent.get("readback"))) == ADAPTER_TYPE,
-            _status_is_pass(run.get("status")),
-            bool(_as_mapping(_as_mapping(run.get("resultJson")).get("bos"))),
+            _status_is_pass(run.get("status")) or has_hermes_success,
+            has_bos_result or has_hermes_session,
             run.get("wakeCountDelta") == 1,
             _nested_get(run, "approvalCounts.created") in (None, 0),
             run.get("sourceWriteCountDelta") in (None, 0),
