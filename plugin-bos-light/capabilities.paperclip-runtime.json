@@ -52,7 +52,7 @@
     },
     {
       "key": "plugin.runtime.version_build",
-      "status": "unvalidated",
+      "status": "confirmed",
       "paperclip_surface_name": "Plugin runtime version and build metadata",
       "requirement_ids": [
         "C6"
@@ -62,15 +62,15 @@
         "future runtime probe",
         "health report"
       ],
-      "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json recorded runtime.version=unknown and runtime.build=unknown because live Paperclip base URL/API key inputs were absent; S01/S02/S03/M002 S04 version diagnostics and M003 S04 null runtime diagnostics do not prove BOS Light plugin runtime compatibility.",
-      "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates the fail-closed S05 probe; confirmation still requires a future S05-style live plugin/UI probe with runtime version/build and readback proof.",
-      "runtime_evidence_field": "runtime-evidence/M005-S01-plugin-ui-surface-probe.json: runtime.version, runtime.build",
+      "evidence_source": "M006 S00 live probe runtime-evidence/M006-S00-runtime-capability-inventory.json records runtime version 0.3.1, build health.version:0.3.1, via successful health/version GET /api/health with status 200 and live response body containing version string. M005 S01 S05-style probe previously recorded runtime.version=unknown and runtime.build=unknown due to missing auth; M006 S00 supersedes with live evidence.",
+      "proof_command": "python3 scripts/validate_m006_s00_runtime_capability_inventory.py --evidence runtime-evidence/M006-S00-runtime-capability-inventory.json (validates fail-closed-blocker artifact schema, redaction, no-promotion, and precise blocker codes; the health_version probe within the artifact provides live version/build readback).",
+      "runtime_evidence_field": "runtime-evidence/M006-S00-runtime-capability-inventory.json: runtime.version, runtime.build, probes.health_version.runtime.version, probes.health_version.runtime.build",
       "fallback_path": "Fail closed by showing BOS Light plugin runtime version/build as unknown and keeping SDK-dependent plugin surfaces unvalidated or fallback-only.",
-      "blocker_text": "Cannot set minimum supported BOS Light plugin runtime or breaking-change posture until S05-style live evidence captures version/build together with plugin registration/readback proof.",
+      "blocker_text": "",
       "adapter_assumptions": [
         "worker comment: confirm min version and breaking changes after C6"
       ],
-      "notes": "S05 intentionally does not promote plugin runtime version/build from M002 S04 native artifact proof or M003 S04 decision readback blocker evidence; M002 S04 confirms only native issue/document/comment artifact APIs."
+      "notes": "M006 S00 confirms bounded runtime version/build readback from Paperclip health endpoint. It does not confirm plugin registration, load, or SDK compatibility. Plugin runtime version/build is now observed live at 0.3.1 / health.version:0.3.1."
     },
     {
       "key": "plugin.runtime.registration",
@@ -406,7 +406,7 @@
         "managed Betting Table issue/project",
         "PaperclipAdapter.createEscalationIssue"
       ],
-      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue create/readback, issue ref e7ede16c-6535-41ef-bd44-3f9d24980caf, readback status 200, and sha256 391e92efd9d78c673e1abd821e01b22fe29eed9056a25d69b7f5249007c102ce.",
+      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue create/readback, issue ref e7ede16c-6535-41ef-bd44-3f9d24980caf, readback status 200, and sha256 391e92efd9d78c673e1abd821e01b22fe29eed9056a25d69b7f5249007c102ce. M006 S00 regression smoke re-confirms: issue create/readback OK, issue ref e02de4e1-9fe8-4df8-b39a-2230b646c71e, readback status 200, sha256 616b9ced858464b0cb106af1e6b344b3caf03f1b86102842819b84b8471e2ff7.",
       "proof_command": "python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final (verifies runtime version/build, readbacks.issue.ok, side_effect_counts.issues_created=1, no core/DB/secret violations, and zero Hermes/GSD-Pi/approval side effects).",
       "runtime_evidence_field": "runtime-evidence/M002-S04-live-artifact-flow.json: runtime.version, runtime.build, readbacks.issue.ok, readbacks.issue.ref, readbacks.issue.sha256, side_effect_counts.issues_created",
       "fallback_path": "If native issue create/readback is unavailable in another runtime, attach escalation or artifact details to an existing issue document/comment and require manual issue creation.",
@@ -437,7 +437,7 @@
         "BPI/gate restore",
         "PaperclipAdapter.createIssueDocument"
       ],
-      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue document create/readback, document ref 7595fd85-80e5-41a4-96c7-01cb3c2de588, readback status 200, and sha256 a9a25242499c29048662f4ca340c81e3088d6016f17cc53bc6da2d23e3d04663 containing BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker text.",
+      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue document create/readback, document ref 7595fd85-80e5-41a4-96c7-01cb3c2de588, readback status 200, and sha256 a9a25242499c29048662f4ca340c81e3088d6016f17cc53bc6da2d23e3d04663 containing BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker text. M006 S00 regression smoke re-confirms: document create/readback OK, document ref 7b588916-1f46-4fd9-a44a-f23363479b70, readback status 200, sha256 eac173c1eff8cf6f9fd18f4cd8cd34bcbb51bbdbf19afc5fca3ad921c3f6c586.",
       "proof_command": "python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final (verifies runtime version/build, readbacks.document.ok, side_effect_counts.documents_created=1, artifact family snippets, no core/DB/secret violations, and zero Hermes/GSD-Pi/approval side effects).",
       "runtime_evidence_field": "runtime-evidence/M002-S04-live-artifact-flow.json: runtime.version, runtime.build, readbacks.document.ok, readbacks.document.ref, readbacks.document.sha256, side_effect_counts.documents_created, artifact_families.*.surfaces",
       "fallback_path": "If native documents fail, mirror the artifact into a native comment when available; otherwise preserve the deterministic markdown-only artifact for operator copy/paste.",
@@ -465,7 +465,7 @@
         "restore from issue history",
         "PaperclipAdapter.addIssueComment"
       ],
-      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue comment create/readback, comment ref 8233ea7b-ab03-4e9b-8684-6e3ceabde00f, readback status 200, and sha256 7bd1d276aaf8bf85255c4ed25598dc0a58b2f0314de45743c12db451d8c6fc0e containing BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker text.",
+      "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue comment create/readback, comment ref 8233ea7b-ab03-4e9b-8684-6e3ceabde00f, readback status 200, and sha256 7bd1d276aaf8bf85255c4ed25598dc0a58b2f0314de45743c12db451d8c6fc0e containing BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker text. M006 S00 regression smoke re-confirms: comment create/readback OK, comment ref c5326c31-feb2-459d-8a63-e1e9197b06ac, readback status 200, sha256 45f10eda5a945696bc47c694f3cf8df324d9db71ee7f60d91ef94175bb048d02.",
       "proof_command": "python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final (verifies runtime version/build, readbacks.comments[0].ok, side_effect_counts.comments_created=1, artifact family snippets, no core/DB/secret violations, and zero Hermes/GSD-Pi/approval side effects).",
       "runtime_evidence_field": "runtime-evidence/M002-S04-live-artifact-flow.json: runtime.version, runtime.build, readbacks.comments[0].ok, readbacks.comments[0].ref, readbacks.comments[0].sha256, side_effect_counts.comments_created, artifact_families.*.surfaces",
       "fallback_path": "If native comments fail, use native documents or markdown-only operator instructions; comment fallbacks for approval requests remain diagnostics and never become native approvals.",

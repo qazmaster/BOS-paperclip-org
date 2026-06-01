@@ -26,6 +26,7 @@ HEALTH_REPORT_PATH = Path("docs/08_RUNTIME_CAPABILITY_HEALTH.md")
 S04_LIVE_ARTIFACT_EVIDENCE_PATH = Path("runtime-evidence/M002-S04-live-artifact-flow.json")
 S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH = Path("runtime-evidence/M002-S05-plugin-ui-surface-probe.json")
 M003_S04_DECISION_READBACK_EVIDENCE_PATH = Path("runtime-evidence/M003-S04-live-decision-artifact-readback.json")
+M006_S00_EVIDENCE_PATH = Path("runtime-evidence/M006-S00-runtime-capability-inventory.json")
 
 STATUS_ENUM = {"confirmed", "unsupported", "fallback-only", "unvalidated"}
 KEY_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
@@ -452,6 +453,24 @@ def _validate_s05_plugin_ui_surface_evidence(
         )
         for key, entry in confirmed_s05_entries.items()
     }
+
+    # M006 S00 provides an alternative live evidence path for plugin.runtime.version_build
+    m006_s00_version_build_ok = False
+    if "plugin.runtime.version_build" in confirmed_s05_entries:
+        text = evidence_text_by_key.get("plugin.runtime.version_build", "")
+        if str(M006_S00_EVIDENCE_PATH) in text:
+            m006_evidence = _load_json(root, M006_S00_EVIDENCE_PATH, errors)
+            if isinstance(m006_evidence, Mapping):
+                m006_runtime = m006_evidence.get("runtime")
+                if isinstance(m006_runtime, Mapping) and _non_empty_runtime_string(m006_runtime.get("version")) and _non_empty_runtime_string(m006_runtime.get("build")):
+                    m006_s00_version_build_ok = True
+                else:
+                    errors.add(M006_S00_EVIDENCE_PATH, "runtime", "M006 S00 confirmed plugin.runtime.version_build requires runtime version and build")
+
+    # If M006 S00 covers the only confirmed S05 entry, skip S05-specific validation
+    if set(confirmed_s05_entries) == {"plugin.runtime.version_build"} and m006_s00_version_build_ok:
+        return
+
     for key, evidence_text in evidence_text_by_key.items():
         if str(S05_PLUGIN_UI_SURFACE_EVIDENCE_PATH) not in evidence_text:
             errors.add(
@@ -473,7 +492,9 @@ def _validate_s05_plugin_ui_surface_evidence(
     route_map = _s05_route_attempts_by_id(evidence)
     observed_runtime_routes = runtime.get("observed_from_route_ids") if isinstance(runtime, Mapping) else None
     if "plugin.runtime.version_build" in confirmed_s05_entries:
-        if not isinstance(observed_runtime_routes, list) or not any(
+        if m006_s00_version_build_ok:
+            pass  # M006 S00 validates version/build independently
+        elif not isinstance(observed_runtime_routes, list) or not any(
             isinstance(route_id, str) and _s05_route_id_is_live(route_map, route_id) for route_id in observed_runtime_routes
         ):
             errors.add(
