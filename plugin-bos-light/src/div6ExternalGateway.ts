@@ -256,7 +256,7 @@ export async function executeExternalGitOperation(
     produced_by: DIV6_EXTERNAL,
   };
 
-  if (localPath) {
+  if (operation === "clone" || localPath) {
     evidence.local_path = localPath;
   }
 
