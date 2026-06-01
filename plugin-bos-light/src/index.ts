@@ -30,4 +30,5 @@ export * from "./treasury";
 export * from "./div6ExternalGateway";
 export * from "./qaReview";
 export * from "./div5Quarantine";
+export * from "./div5PostProductionVerification";
 export * from "./div4Production";
