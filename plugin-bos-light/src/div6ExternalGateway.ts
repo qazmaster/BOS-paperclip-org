@@ -26,6 +26,12 @@ export interface ExternalGitEvidence {
   quarantine_ref: string;
   produced_at: string;
   produced_by: "Div6.External";
+  /** Optional structured metadata parsed from git output (refs, branches, commit SHAs). */
+  parsed_metadata?: {
+    branches?: string[];
+    refs?: string[];
+    commit_shas?: string[];
+  };
 }
 
 function now(): string {

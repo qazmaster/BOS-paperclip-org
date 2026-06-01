@@ -481,3 +481,43 @@ export interface ExternalGitGatewayUnauthorized {
   reason: string;
   rejected_at: string;
 }
+
+/* ── Div5 Quarantine and Verification contracts ── */
+
+export interface Div5QuarantineUnauthorized {
+  schema_version: "1.0";
+  authorized: false;
+  caller: Division;
+  required_role: "Div5.QualificationsLibraryLearning";
+  reason: string;
+  rejected_at: string;
+}
+
+export interface QuarantineVerdict {
+  schema_version: "1.0";
+  quarantine_ref: string;
+  mission_id: string;
+  grant_id: string;
+  status: "PENDING" | "SCANNING" | "APPROVED" | "REJECTED";
+  secret_scan_passed: boolean;
+  branch_inventory: string[];
+  ref_inventory: string[];
+  commit_shas: string[];
+  scanned_at: string;
+  scanned_by: "Div5.QualificationsLibraryLearning";
+  security_flags_ref: string[];
+}
+
+export interface SanitizedRepoSnapshot {
+  schema_version: "1.0";
+  snapshot_id: string;
+  quarantine_ref: string;
+  mission_id: string;
+  approved_for_division: "Div4.Production";
+  branch_inventory: string[];
+  ref_inventory: string[];
+  commit_shas: string[];
+  secret_scan_passed: boolean;
+  approved_at: string;
+  approved_by: "Div5.QualificationsLibraryLearning";
+}
