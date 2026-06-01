@@ -26,3 +26,4 @@ export * from "./missionIntake";
 export * from "./missionRouter";
 export * from "./executiveReport";
 export * from "./secretResolver";
+export * from "./treasury";
