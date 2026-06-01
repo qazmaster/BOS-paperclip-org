@@ -23,4 +23,5 @@ export * from "./registrationProbe";
 export * from "./ownerBoundary";
 export * from "./divisionPacketRouter";
 export * from "./missionIntake";
+export * from "./missionRouter";
 export * from "./executiveReport";
