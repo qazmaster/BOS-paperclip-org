@@ -60,6 +60,7 @@ GIT_ENV_VARS = {
     "AIPAY_GIT_URL": "Git URL for aipay.kz repository",
     "GIT_SSH_KEY": "SSH private key path for git authentication",
     "GITHUB_TOKEN": "GitHub personal access token for HTTPS auth",
+    "GITHUB_TOKEN_AIPAY": "GitHub personal access token for aipay.kz (alias)",
     "GITLAB_TOKEN": "GitLab personal access token for HTTPS auth",
 }
 
@@ -482,7 +483,7 @@ def _git_binary_check() -> dict[str, Any]:
 def _git_ls_remote_probe(git_url: str) -> dict[str, Any]:
     env = dict(os.environ)
     ssh_key = os.environ.get("GIT_SSH_KEY")
-    github_token = os.environ.get("GITHUB_TOKEN")
+    github_token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN_AIPAY")
     gitlab_token = os.environ.get("GITLAB_TOKEN")
 
     if ssh_key:
@@ -698,8 +699,9 @@ def _blocker_codes(evidence: Mapping[str, Any]) -> list[str]:
 
     ssh_key = credentials.get("GIT_SSH_KEY", {})
     github_token = credentials.get("GITHUB_TOKEN", {})
+    github_token_aipay = credentials.get("GITHUB_TOKEN_AIPAY", {})
     gitlab_token = credentials.get("GITLAB_TOKEN", {})
-    if not (ssh_key.get("present") or github_token.get("present") or gitlab_token.get("present")):
+    if not (ssh_key.get("present") or github_token.get("present") or github_token_aipay.get("present") or gitlab_token.get("present")):
         codes.append("missing_git_credentials")
 
     ls_remote = _as_mapping(evidence.get("git_ls_remote"))

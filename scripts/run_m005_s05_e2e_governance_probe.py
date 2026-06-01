@@ -47,6 +47,7 @@ SECRET_VALUE_RE = re.compile(
 
 DISCOVERED_ENV_VARS = {
     "GITHUB_TOKEN": "GitHub personal access token for PR/merge/CI",
+    "GITHUB_TOKEN_AIPAY": "GitHub personal access token for aipay.kz (alias)",
     "GIT_SSH_KEY": "SSH private key path for git authentication",
     "PAPERCLIP_API_KEY": "Paperclip API key for native artifact operations",
 }
@@ -261,7 +262,7 @@ class SimulatedCircuitBreakerHumanResolution:
 class SimulatedExternalIO:
     def __init__(self, repo: str) -> None:
         self.repo = repo
-        self.token = os.environ.get("GITHUB_TOKEN")
+        self.token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN_AIPAY")
 
     def create_pr(self, title: str, body: str, head: str, base: str) -> dict[str, Any]:
         if not self.token:
@@ -393,7 +394,7 @@ def _smoke_div6_pr() -> dict[str, Any]:
         "ok": True,
         "pr_created": evidence["success"],
         "adapter_used": evidence["adapter"],
-        "has_token": bool(os.environ.get("GITHUB_TOKEN")),
+        "has_token": bool(os.environ.get("GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN_AIPAY")),
     }
 
 
@@ -437,7 +438,7 @@ def _base_evidence() -> dict[str, Any]:
 
 def _is_passing_proof(evidence: Mapping[str, Any]) -> bool:
     env = evidence.get("env_discovery", {})
-    has_github = env.get("GITHUB_TOKEN", {}).get("present", False)
+    has_github = env.get("GITHUB_TOKEN", {}).get("present", False) or env.get("GITHUB_TOKEN_AIPAY", {}).get("present", False)
     has_paperclip = env.get("PAPERCLIP_API_KEY", {}).get("present", False)
 
     smoke_keys = [
@@ -458,7 +459,7 @@ def _blocker_codes(evidence: Mapping[str, Any]) -> list[str]:
     codes: list[str] = []
     env = evidence.get("env_discovery", {})
 
-    if not env.get("GITHUB_TOKEN", {}).get("present", False):
+    if not (env.get("GITHUB_TOKEN", {}).get("present", False) or env.get("GITHUB_TOKEN_AIPAY", {}).get("present", False)):
         codes.append("missing_github_token")
     if not env.get("PAPERCLIP_API_KEY", {}).get("present", False):
         codes.append("missing_paperclip_api_key")
