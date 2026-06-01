@@ -406,6 +406,7 @@ describe("executeProductionWork", () => {
     const statusPayload = div5Inbox[0].payload as Record<string, unknown>;
     expect(statusPayload.mission_id).toBe("mission_001");
     expect(statusPayload.snapshot_id).toBe(payload.snapshot_id);
+    expect(statusPayload.local_path).toBe("/tmp/test-repo");
     expect(statusPayload.pushed).toBe(false);
     expect(statusPayload.status).toBe("COMPLETED");
   });

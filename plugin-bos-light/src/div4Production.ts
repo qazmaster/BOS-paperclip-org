@@ -222,6 +222,7 @@ export async function executeProductionWork(
     snapshot_id: snapshotId,
     commit_sha: evidence.commit_sha,
     branch_created: evidence.branch_created,
+    local_path: localPath,
     pushed: false,
     status: "COMPLETED",
   });

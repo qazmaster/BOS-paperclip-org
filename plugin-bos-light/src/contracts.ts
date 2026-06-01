@@ -493,6 +493,33 @@ export interface Div5QuarantineUnauthorized {
   rejected_at: string;
 }
 
+export interface PostProductionCheck {
+  check_id: string;
+  passed: boolean;
+  detail: string;
+}
+
+export interface PostProductionVerdict {
+  schema_version: "1.0";
+  mission_id: string;
+  snapshot_id: string;
+  branch_created: string;
+  commit_sha: string;
+  checks: PostProductionCheck[];
+  overall: "PASS" | "FAIL";
+  evaluated_at: string;
+  evaluated_by: "Div5.QualificationsLibraryLearning";
+}
+
+export interface Div5PostProductionUnauthorized {
+  schema_version: "1.0";
+  authorized: false;
+  caller: Division;
+  required_role: "Div5.QualificationsLibraryLearning";
+  reason: string;
+  rejected_at: string;
+}
+
 export interface QuarantineVerdict {
   schema_version: "1.0";
   quarantine_ref: string;
