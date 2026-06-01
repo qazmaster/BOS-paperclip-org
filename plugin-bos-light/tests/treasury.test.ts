@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import {
   issueScopedAccessGrant,
 } from "../src/treasury";
+import { resolveSecretRef } from "../src/secretResolver";
 import { getDivisionInbox, clearPacketRouter } from "../src/divisionPacketRouter";
 import type { Division, ScopedAccessGrant, TreasuryUnauthorized, SecretRef } from "../src/contracts";
 
@@ -399,5 +400,51 @@ describe("issueScopedAccessGrant", () => {
     ) as ScopedAccessGrant;
 
     expect(result1.grant_id).not.toBe(result2.grant_id);
+  });
+
+  it("fail-closed: resolveSecretRef returns unavailable for PaperclipSecretRef", () => {
+    const ref: SecretRef = { type: "secret_ref", secret_id: "git-token-1", version: "latest" };
+    const resolution = resolveSecretRef(ref);
+
+    expect(resolution.status).toBe("unavailable");
+    expect("code" in resolution && resolution.code).toBe("secret_unavailable");
+    expect("blocker" in resolution && resolution.blocker).toContain("not resolvable");
+  });
+
+  it("status_update payload does not contain raw secret_ref object", () => {
+    issueScopedAccessGrant(
+      "Div3.Treasury",
+      "mission_001",
+      "https://github.com/example/repo.git",
+      ["clone"],
+      makeSecretRef("paperclip")
+    );
+
+    const div1Inbox = getDivisionInbox("Div1.HCO");
+    expect(div1Inbox).toHaveLength(1);
+
+    const payload = div1Inbox[0].payload as Record<string, unknown>;
+    expect("secret_ref" in payload).toBe(false);
+    expect("secret_ref_redacted" in payload).toBe(true);
+  });
+
+  it("multiple grants accumulate in division inboxes", () => {
+    issueScopedAccessGrant(
+      "Div3.Treasury",
+      "mission_001",
+      "https://github.com/example/repo1.git",
+      ["clone"],
+      makeSecretRef("paperclip")
+    );
+    issueScopedAccessGrant(
+      "Div3.Treasury",
+      "mission_002",
+      "https://github.com/example/repo2.git",
+      ["fetch"],
+      makeSecretRef("inline")
+    );
+
+    expect(getDivisionInbox("Div6.External")).toHaveLength(2);
+    expect(getDivisionInbox("Div1.HCO")).toHaveLength(2);
   });
 });
