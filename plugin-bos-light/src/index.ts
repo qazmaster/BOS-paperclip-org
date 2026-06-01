@@ -20,3 +20,4 @@ export * from "./liveDecisionArtifactReadback";
 export * from "./liveArtifactFlow";
 export * from "./worker";
 export * from "./registrationProbe";
+export * from "./ownerBoundary";

@@ -363,3 +363,41 @@ export interface BOSConfig {
   circuit_breaker_max_attempts: number;
   circuit_breaker_half_open_threshold: number;
 }
+
+/* ── Boundary packet contracts (Owner Interface Boundary) ── */
+
+export interface DivisionPacket {
+  schema_version: "1.0";
+  packet_id: string;
+  from_division: Division;
+  to_division: Division;
+  payload: unknown;
+  timestamp: string;
+}
+
+export interface ExecutiveStatusPacket {
+  schema_version: "1.0";
+  packet_id: string;
+  from_division: Division;
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED";
+  payload: unknown;
+  timestamp: string;
+}
+
+export interface ExecutiveReport {
+  schema_version: "1.0";
+  report_id: string;
+  issued_by: "Div7.MissionControl";
+  title: string;
+  summary: string;
+  findings: Array<{
+    division: Division;
+    status: string;
+    detail: string;
+  }>;
+  issued_at: string;
+}
+
+export type OwnerBoundaryResult =
+  | { authorized: true; caller: Division; allowed: Division }
+  | { authorized: false; caller: Division; allowed: Division; reason: string };
