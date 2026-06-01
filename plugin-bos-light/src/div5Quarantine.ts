@@ -334,6 +334,7 @@ export function verifyAndQuarantine(
     secret_scan_passed: true,
     approved_at: scannedAt,
     approved_by: DIV5_QUALLIB,
+    ...(evidence.local_path !== undefined ? { local_path: evidence.local_path } : {}),
   };
 
   const gateDecision = emitDivisionPacket(DIV5_QUALLIB, DIV4_PRODUCTION, "gate_decision", {
@@ -346,6 +347,7 @@ export function verifyAndQuarantine(
     branch_inventory: branches,
     ref_inventory: refs,
     commit_shas: commitShas,
+    ...(snapshot.local_path !== undefined ? { local_path: snapshot.local_path } : {}),
   });
 
   const statusUpdate = emitDivisionPacket(DIV5_QUALLIB, DIV1_HCO, "status_update", {

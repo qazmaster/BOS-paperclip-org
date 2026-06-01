@@ -636,4 +636,94 @@ describe("verifyAndQuarantine", () => {
     expect(success.verdict.commit_shas).toEqual([]);
     expect(success.verdict.ref_inventory).toEqual(evidence.git_evidence.args);
   });
+
+  it("propagates local_path from evidence into SanitizedRepoSnapshot", () => {
+    const evidence = makeExternalGitEvidence({
+      local_path: "/tmp/test-repo",
+      parsed_metadata: {
+        branches: ["main"],
+        refs: ["refs/heads/main"],
+        commit_shas: ["abc123def456789012345678901234567890abcd"],
+      },
+    });
+    seedCompletionReport(evidence);
+
+    const result = verifyAndQuarantine(
+      "Div5.QualificationsLibraryLearning",
+      evidence.quarantine_ref,
+      evidence.grant_id
+    );
+
+    expect("authorized" in result).toBe(true);
+    const success = result as Extract<VerifyAndQuarantineResult, { authorized: true }>;
+    expect(success.snapshot).toBeDefined();
+    expect(success.snapshot!.local_path).toBe("/tmp/test-repo");
+  });
+
+  it("omits local_path from snapshot when evidence lacks it", () => {
+    const evidence = makeExternalGitEvidence({
+      parsed_metadata: {
+        branches: ["main"],
+        refs: ["refs/heads/main"],
+        commit_shas: ["abc123def456789012345678901234567890abcd"],
+      },
+    });
+    seedCompletionReport(evidence);
+
+    const result = verifyAndQuarantine(
+      "Div5.QualificationsLibraryLearning",
+      evidence.quarantine_ref,
+      evidence.grant_id
+    );
+
+    expect("authorized" in result).toBe(true);
+    const success = result as Extract<VerifyAndQuarantineResult, { authorized: true }>;
+    expect(success.snapshot).toBeDefined();
+    expect(success.snapshot!).not.toHaveProperty("local_path");
+  });
+
+  it("propagates local_path through gate_decision to Div4.Production", () => {
+    const evidence = makeExternalGitEvidence({
+      local_path: "/workspace/clone-42",
+      parsed_metadata: {
+        branches: ["main"],
+        refs: ["refs/heads/main"],
+        commit_shas: ["abc123def456789012345678901234567890abcd"],
+      },
+    });
+    seedCompletionReport(evidence);
+
+    verifyAndQuarantine(
+      "Div5.QualificationsLibraryLearning",
+      evidence.quarantine_ref,
+      evidence.grant_id
+    );
+
+    const div4Inbox = getDivisionInbox("Div4.Production");
+    expect(div4Inbox.length).toBe(1);
+    const payload = div4Inbox[0].payload as Record<string, unknown>;
+    expect(payload.local_path).toBe("/workspace/clone-42");
+  });
+
+  it("omits local_path from gate_decision when evidence lacks it", () => {
+    const evidence = makeExternalGitEvidence({
+      parsed_metadata: {
+        branches: ["main"],
+        refs: ["refs/heads/main"],
+        commit_shas: ["abc123def456789012345678901234567890abcd"],
+      },
+    });
+    seedCompletionReport(evidence);
+
+    verifyAndQuarantine(
+      "Div5.QualificationsLibraryLearning",
+      evidence.quarantine_ref,
+      evidence.grant_id
+    );
+
+    const div4Inbox = getDivisionInbox("Div4.Production");
+    expect(div4Inbox.length).toBe(1);
+    const payload = div4Inbox[0].payload as Record<string, unknown>;
+    expect(payload).not.toHaveProperty("local_path");
+  });
 });
