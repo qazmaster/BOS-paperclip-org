@@ -536,4 +536,120 @@ describe("executeProductionWork", () => {
     // Verify diff_hash is a 64-char hex string (sha256)
     expect(success.evidence.diff_hash).toMatch(/^[a-f0-9]{64}$/);
   });
+
+  it("rejects when secret_scan_passed is truthy but not boolean true", async () => {
+    const payload = makeGateDecisionPayload({ secret_scan_passed: "yes" });
+    seedGateDecision(payload);
+
+    const result = await executeProductionWork(
+      "Div4.Production",
+      payload.snapshot_id as string
+    );
+
+    const unauthorized = result as Extract<ExecuteProductionWorkResult, { authorized: false }>;
+    expect(unauthorized.authorized).toBe(false);
+    expect(unauthorized.reason).toContain("secret_scan_passed");
+  });
+
+  it("rejects when snapshotId is whitespace-only", async () => {
+    const result = await executeProductionWork("Div4.Production", "   ");
+    const unauthorized = result as Extract<ExecuteProductionWorkResult, { authorized: false }>;
+    expect(unauthorized.authorized).toBe(false);
+    expect(unauthorized.reason).toContain("snapshotId");
+  });
+
+  it("rejects when local_path is whitespace-only", async () => {
+    const payload = makeGateDecisionPayload({ local_path: "   " });
+    seedGateDecision(payload);
+
+    const result = await executeProductionWork(
+      "Div4.Production",
+      payload.snapshot_id as string
+    );
+
+    const unauthorized = result as Extract<ExecuteProductionWorkResult, { authorized: false }>;
+    expect(unauthorized.authorized).toBe(false);
+    expect(unauthorized.reason).toContain("local_path");
+  });
+
+  it("rejects when git rev-parse emits an error event", async () => {
+    const payload = makeGateDecisionPayload();
+    seedGateDecision(payload);
+
+    const mockGitOps = createMockGitOps();
+
+    process.nextTick(() => {
+      mockChild.emit("error", new Error("ENOENT: no such file or directory"));
+    });
+
+    const result = await executeProductionWork(
+      "Div4.Production",
+      payload.snapshot_id as string,
+      mockGitOps
+    );
+
+    const unauthorized = result as Extract<ExecuteProductionWorkResult, { authorized: false }>;
+    expect(unauthorized.authorized).toBe(false);
+    expect(unauthorized.reason).toContain("HEAD commit SHA");
+  });
+
+  it("emitted packets contain diff_hash in completion_report", async () => {
+    const payload = makeGateDecisionPayload();
+    seedGateDecision(payload);
+
+    const mockGitOps = createMockGitOps();
+    emitRevParseSuccess("abc123");
+
+    await executeProductionWork(
+      "Div4.Production",
+      payload.snapshot_id as string,
+      mockGitOps
+    );
+
+    const div1Inbox = getDivisionInbox("Div1.HCO");
+    const reportPayload = div1Inbox[0].payload as Record<string, unknown>;
+    expect(reportPayload.diff_hash).toBeDefined();
+    expect(typeof reportPayload.diff_hash).toBe("string");
+    expect(reportPayload.diff_hash).toHaveLength(64);
+  });
+
+  it("emitted packets contain branch_created", async () => {
+    const payload = makeGateDecisionPayload();
+    seedGateDecision(payload);
+
+    const mockGitOps = createMockGitOps();
+    emitRevParseSuccess("abc123");
+
+    await executeProductionWork(
+      "Div4.Production",
+      payload.snapshot_id as string,
+      mockGitOps
+    );
+
+    const div1Inbox = getDivisionInbox("Div1.HCO");
+    const reportPayload = div1Inbox[0].payload as Record<string, unknown>;
+    expect(reportPayload.branch_created).toMatch(/^bos-smoke-test\/\d+$/);
+
+    const div5Inbox = getDivisionInbox("Div5.QualificationsLibraryLearning");
+    const statusPayload = div5Inbox[0].payload as Record<string, unknown>;
+    expect(statusPayload.branch_created).toMatch(/^bos-smoke-test\/\d+$/);
+  });
+
+  it("emitted completion_report contains files_changed", async () => {
+    const payload = makeGateDecisionPayload();
+    seedGateDecision(payload);
+
+    const mockGitOps = createMockGitOps();
+    emitRevParseSuccess("abc123");
+
+    await executeProductionWork(
+      "Div4.Production",
+      payload.snapshot_id as string,
+      mockGitOps
+    );
+
+    const div1Inbox = getDivisionInbox("Div1.HCO");
+    const reportPayload = div1Inbox[0].payload as Record<string, unknown>;
+    expect(reportPayload.files_changed).toEqual([".bos-smoke-test.md"]);
+  });
 });
