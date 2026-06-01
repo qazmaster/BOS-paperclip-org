@@ -539,6 +539,86 @@ describe("verifyAndQuarantine", () => {
     expect(success.verdict.security_flags_ref).toEqual([]);
   });
 
+  it("rejects when git_evidence is missing from completion_report", () => {
+    const evidence = makeExternalGitEvidence({ git_evidence: undefined as unknown as GitCommandEvidence });
+    seedCompletionReport(evidence);
+
+    const result = verifyAndQuarantine(
+      "Div5.QualificationsLibraryLearning",
+      evidence.quarantine_ref,
+      evidence.grant_id
+    );
+
+    expect("authorized" in result).toBe(true);
+    const success = result as Extract<VerifyAndQuarantineResult, { authorized: true }>;
+    expect(success.verdict.status).toBe("REJECTED");
+    expect(success.verdict.secret_scan_passed).toBe(true);
+    expect(success.emitted.escalation).toBeDefined();
+    expect(success.emitted.status_update).toBeDefined();
+    expect(success.emitted.gate_decision).toBeUndefined();
+    expect(success.snapshot).toBeUndefined();
+
+    const div1Inbox = getDivisionInbox("Div1.HCO");
+    const escalation = div1Inbox.find((p) => p.packet_type === "escalation");
+    expect(escalation).toBeDefined();
+    const payload = escalation!.payload as Record<string, unknown>;
+    expect(payload.reason).toContain("Missing git_evidence");
+  });
+
+  it("snapshot is undefined on rejection and fully sanitized on approval", () => {
+    // Rejection case — no snapshot
+    clearPacketRouter();
+    const rejectEvidence = makeExternalGitEvidence({
+      git_evidence: makeGitEvidence({ success: false, error_category: "generic" }),
+    });
+    seedCompletionReport(rejectEvidence);
+
+    const rejectResult = verifyAndQuarantine(
+      "Div5.QualificationsLibraryLearning",
+      rejectEvidence.quarantine_ref,
+      rejectEvidence.grant_id
+    );
+
+    expect("authorized" in rejectResult).toBe(true);
+    const rejectSuccess = rejectResult as Extract<VerifyAndQuarantineResult, { authorized: true }>;
+    expect(rejectSuccess.snapshot).toBeUndefined();
+    expect(rejectSuccess.verdict.status).toBe("REJECTED");
+    expect(rejectSuccess.verdict.branch_inventory).toEqual([]);
+    expect(rejectSuccess.verdict.ref_inventory).toEqual([]);
+    expect(rejectSuccess.verdict.commit_shas).toEqual([]);
+
+    // Approval case — snapshot is fully sanitized
+    clearPacketRouter();
+    const approveEvidence = makeExternalGitEvidence({
+      parsed_metadata: {
+        branches: ["main", "feature/x"],
+        refs: ["HEAD", "refs/heads/main", "refs/heads/feature/x"],
+        commit_shas: ["abc123def456789012345678901234567890abcd"],
+      },
+    });
+    seedCompletionReport(approveEvidence);
+
+    const approveResult = verifyAndQuarantine(
+      "Div5.QualificationsLibraryLearning",
+      approveEvidence.quarantine_ref,
+      approveEvidence.grant_id
+    );
+
+    expect("authorized" in approveResult).toBe(true);
+    const approveSuccess = approveResult as Extract<VerifyAndQuarantineResult, { authorized: true }>;
+    expect(approveSuccess.snapshot).toBeDefined();
+    expect(approveSuccess.snapshot!.secret_scan_passed).toBe(true);
+    expect(approveSuccess.snapshot!.approved_for_division).toBe("Div4.Production");
+    expect(approveSuccess.snapshot!.branch_inventory).toEqual(["main", "feature/x"]);
+    expect(approveSuccess.snapshot!.ref_inventory).toEqual(["HEAD", "refs/heads/main", "refs/heads/feature/x"]);
+    expect(approveSuccess.snapshot!.commit_shas).toEqual(["abc123def456789012345678901234567890abcd"]);
+    expect(approveSuccess.verdict.status).toBe("APPROVED");
+    expect(approveSuccess.verdict.secret_scan_passed).toBe(true);
+    expect(approveSuccess.verdict.branch_inventory).toEqual(["main", "feature/x"]);
+    expect(approveSuccess.verdict.ref_inventory).toEqual(["HEAD", "refs/heads/main", "refs/heads/feature/x"]);
+    expect(approveSuccess.verdict.commit_shas).toEqual(["abc123def456789012345678901234567890abcd"]);
+  });
+
   it("handles missing parsed_metadata gracefully", () => {
     const evidence = makeExternalGitEvidence({ parsed_metadata: undefined });
     seedCompletionReport(evidence);
