@@ -1,0 +1,52 @@
+{
+  "schema_version": "m005-s03-resource-intake/v1",
+  "artifact_type": "runtime-execution-proof",
+  "phase": "resource_intake",
+  "generated_at": "2026-06-01T03:15:00Z",
+  "selected_path": "paperclip_secrets_api",
+  "passing": true,
+  "capability_promotions": [
+    "resource.credential_storage",
+    "resource.secret_resolution"
+  ],
+  "secrets": {
+    "total_count": 3,
+    "active": [
+      {
+        "key": "openai_api_key",
+        "status": "active"
+      },
+      {
+        "key": "openai_base_url",
+        "status": "active"
+      },
+      {
+        "key": "bos-m002-s10-hermes-openai-api-key-1780155821",
+        "status": "active"
+      }
+    ]
+  },
+  "inputs": {
+    "secrets_api_accessible": true,
+    "secrets_count": 3,
+    "all_secrets_active": true
+  },
+  "diagnostics": {
+    "secrets_list": {
+      "ok": true,
+      "status": 200
+    },
+    "secret_creation": {
+      "ok": true
+    }
+  },
+  "no_core_modification": {
+    "method": "Supported Paperclip HTTP routes only",
+    "core_source_patched": false,
+    "paperclip_core_patched": false
+  },
+  "safety": {
+    "plaintext_secrets_requested_or_logged": false,
+    "secret_values_redacted": true
+  }
+}

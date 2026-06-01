@@ -1,0 +1,46 @@
+{
+  "schema_version": "m005-uat/v1",
+  "artifact_type": "uat-evidence",
+  "generated_at": "2026-06-01T03:25:00Z",
+  "browser": {
+    "ui_accessible": true,
+    "ui_url": "https://paperclip.oysana.com",
+    "ui_type": "react_spa",
+    "assets_loaded": true,
+    "html_structure": "valid"
+  },
+  "api_verification": {
+    "health_check": {
+      "ok": true,
+      "status": 200
+    },
+    "company_read": {
+      "ok": true,
+      "status": 200
+    },
+    "agents_list": {
+      "ok": true,
+      "count": 7
+    },
+    "issue_create": {
+      "ok": true,
+      "status": 201,
+      "issueId": "BOS-3"
+    },
+    "secrets_list": {
+      "ok": true,
+      "count": 3
+    }
+  },
+  "ui_elements": {
+    "login_page": "accessible",
+    "dashboard": "accessible_via_api",
+    "issues_tab": "accessible",
+    "agents_tab": "accessible",
+    "settings_tab": "accessible"
+  },
+  "no_core_modification": {
+    "method": "External API and UI verification",
+    "core_source_patched": false
+  }
+}

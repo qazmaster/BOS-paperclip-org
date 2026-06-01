@@ -1,0 +1,398 @@
+{
+  "adapter": {
+    "adapterConfig": {
+      "graceSec": 5,
+      "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+      "model": "mimo-v2.5-pro",
+      "provider": "xiaomi",
+      "timeoutSec": 90
+    },
+    "adapterType": "hermes_local",
+    "registry_readback": {
+      "capabilities": {
+        "requiresMaterializedRuntimeSkills": false,
+        "supportsInstructionsBundle": false,
+        "supportsLocalAgentJwt": true,
+        "supportsModelProfiles": false,
+        "supportsSkills": true
+      },
+      "disabled": false,
+      "label": "hermes_local",
+      "loaded": true,
+      "modelsCount": 0,
+      "overridePaused": false,
+      "source": "builtin",
+      "type": "hermes_local"
+    },
+    "testEnvironment": {
+      "http_status": 200,
+      "response": {
+        "duration_ms": 1627,
+        "json": {
+          "adapterType": "hermes_local",
+          "checks": [
+            {
+              "code": "hermes_version",
+              "level": "info",
+              "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+            },
+            {
+              "code": "hermes_model_configured",
+              "level": "info",
+              "message": "Model: mimo-v2.5-pro"
+            },
+            {
+              "code": "hermes_no_api_keys",
+              "hint": "Set ANTHROPIC_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ZAI_API_KEY in the agent's env secrets. Hermes may also have keys configured in ~/.hermes/.env",
+              "level": "warn",
+              "message": "No LLM API keys found in environment"
+            }
+          ],
+          "status": "warn",
+          "testedAt": "2026-05-31T23:38:57.022Z"
+        },
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "truncated": false,
+        "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+      },
+      "status": "warn"
+    }
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "missing_xiaomi_api_key",
+    "missing_xiaomi_base_url",
+    "test_environment_hermes_no_api_keys"
+  ],
+  "blocker_reason": "missing_xiaomi_api_key,missing_xiaomi_base_url,test_environment_hermes_no_api_keys",
+  "capability_promotions": [],
+  "diagnostics": {
+    "adapters": {
+      "duration_ms": 1098,
+      "json": [
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "acpx_local",
+          "loaded": true,
+          "modelsCount": 16,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "acpx_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "claude_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "claude_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "codex_local",
+          "loaded": true,
+          "modelsCount": 10,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "codex_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "cursor",
+          "loaded": true,
+          "modelsCount": 39,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "cursor_cloud",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor_cloud"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "gemini_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "gemini_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "grok_local",
+          "loaded": true,
+          "modelsCount": 1,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "grok_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "hermes_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "hermes_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "http",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "http"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "openclaw_gateway",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "openclaw_gateway"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "opencode_local",
+          "loaded": true,
+          "modelsCount": 5,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "opencode_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "pi_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "pi_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "process",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "process"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/adapters"
+    },
+    "health": {
+      "duration_ms": 1205,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/health"
+    },
+    "runSkipped": {
+      "bounded_runtime_invocations": 0,
+      "codes": [
+        "missing_xiaomi_api_key",
+        "missing_xiaomi_base_url",
+        "test_environment_hermes_no_api_keys"
+      ],
+      "reason": "preflight_not_supported_or_not_authenticated"
+    },
+    "testEnvironment": {
+      "duration_ms": 1627,
+      "json": {
+        "adapterType": "hermes_local",
+        "checks": [
+          {
+            "code": "hermes_version",
+            "level": "info",
+            "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+          },
+          {
+            "code": "hermes_model_configured",
+            "level": "info",
+            "message": "Model: mimo-v2.5-pro"
+          },
+          {
+            "code": "hermes_no_api_keys",
+            "hint": "Set ANTHROPIC_API_KEY, OPENROUTER_API_KEY, OPENAI_API_KEY, or ZAI_API_KEY in the agent's env secrets. Hermes may also have keys configured in ~/.hermes/.env",
+            "level": "warn",
+            "message": "No LLM API keys found in environment"
+          }
+        ],
+        "status": "warn",
+        "testedAt": "2026-05-31T23:38:57.022Z"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+    },
+    "version": {}
+  },
+  "generated_at": "2026-05-31T23:38:53.242234Z",
+  "inputs": {
+    "auth": {
+      "available_env": [
+        {
+          "env_name": "PAPERCLIP_API_KEY",
+          "header": "Authorization",
+          "present": true
+        }
+      ],
+      "selected_env_name": "PAPERCLIP_API_KEY"
+    },
+    "base_url_present": true,
+    "base_url_source": "env_or_prior_s08_artifact",
+    "company_id_present": true,
+    "origin_present": false,
+    "previous_evidence": {
+      "smoke": "runtime-evidence/M002-S08-runtime-execution-smoke.json",
+      "smoke_artifact_type": "fail-closed-blocker",
+      "smoke_blocker_reason": "run_status_not_succeeded,missing_resultJson_bos"
+    },
+    "xiaomi_api_key_secret_ref_present": false,
+    "xiaomi_base_url_secret_ref_present": false
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "paperclip": {
+    "build": "0.3.1",
+    "version": "0.3.1"
+  },
+  "passing": false,
+  "phase": "hermes",
+  "safety": {
+    "max_runtime_invocations": 1,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "m005-s01-hermes-xiaomi/v1",
+  "selected_path": "hermes_local_with_xiaomi_backend"
+}

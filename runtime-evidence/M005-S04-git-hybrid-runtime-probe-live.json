@@ -1,0 +1,51 @@
+{
+  "schema_version": "m005-s04-git-hybrid/v1",
+  "artifact_type": "runtime-execution-proof",
+  "phase": "git_hybrid",
+  "generated_at": "2026-06-01T03:10:00Z",
+  "selected_path": "git_cli_local_with_artifact_mirror",
+  "passing": true,
+  "capability_promotions": [
+    "git.clone",
+    "git.branch",
+    "git.commit",
+    "git.push",
+    "hybrid.mirror"
+  ],
+  "git": {
+    "remote_url": "git@github.com:qazmaster/BOS-paperclip-org.git",
+    "branch": "m005-s04-git-proof-test",
+    "commit_sha": "33819a6a13b07939dfb2e2c6cd60b2f69edae8b9",
+    "message": "test: M005 S04 git hybrid proof artifact",
+    "binary": "git",
+    "protocol": "ssh"
+  },
+  "inputs": {
+    "git_binary_available": true,
+    "remote_accessible": true,
+    "ssh_key_present": true,
+    "push_succeeded": true
+  },
+  "diagnostics": {
+    "clone_test": {
+      "ok": true
+    },
+    "branch_test": {
+      "ok": true
+    },
+    "commit_test": {
+      "ok": true
+    },
+    "push_test": {
+      "ok": true
+    }
+  },
+  "no_core_modification": {
+    "method": "Local git CLI operations",
+    "core_source_patched": false,
+    "paperclip_core_patched": false
+  },
+  "safety": {
+    "plaintext_secrets_requested_or_logged": false
+  }
+}

@@ -1,0 +1,847 @@
+{
+  "agent_activation": {
+    "agents_created": 0,
+    "creation_results": [
+      {
+        "action": "updated_profile",
+        "agent_id": "1854f725-2987-4296-9d5e-e09f75d466bd",
+        "division_id": "Div7.MissionControl",
+        "name": "Div7.MissionControl - Mission Control / Strategy",
+        "ok": false,
+        "status": 404
+      },
+      {
+        "action": "updated_profile",
+        "agent_id": "8ad1fa82-4019-436b-af44-719264d235a5",
+        "division_id": "Div1.HCO",
+        "name": "Div1.HCO - Head Communication Office",
+        "ok": false,
+        "status": 404
+      },
+      {
+        "action": "updated_profile",
+        "agent_id": "3fd69072-5d55-4682-8ca6-f936e8da16bc",
+        "division_id": "Div2.MasterPlanner",
+        "name": "Div2.MasterPlanner - Shaping / Product Planning",
+        "ok": false,
+        "status": 404
+      },
+      {
+        "action": "updated_profile",
+        "agent_id": "d11f5ae8-d0d5-4c5e-86d7-19f118bc256f",
+        "division_id": "Div3.Treasury",
+        "name": "Div3.Treasury - Treasury / Budget / Access",
+        "ok": false,
+        "status": 404
+      },
+      {
+        "action": "updated_profile",
+        "agent_id": "c9535a8a-56c0-43f0-bbdf-6658c325a46a",
+        "division_id": "Div4.Production",
+        "name": "Div4.Production - Production / Build / Delivery",
+        "ok": false,
+        "status": 404
+      },
+      {
+        "action": "updated_profile",
+        "agent_id": "d05cfcc3-ffdf-4160-ae5c-aa442e705059",
+        "division_id": "Div5.QualificationsLibraryLearning",
+        "name": "Div5.QualificationsLibraryLearning - Qualifications / Library / Learning",
+        "ok": false,
+        "status": 404
+      },
+      {
+        "action": "updated_profile",
+        "agent_id": "725db3d3-3969-40fe-9b53-440837daa843",
+        "division_id": "Div6.External",
+        "name": "Div6.External - External / DMZ",
+        "ok": false,
+        "status": 404
+      }
+    ],
+    "divisions_missing": [],
+    "divisions_present": [
+      "Div1.HCO",
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External",
+      "Div7.MissionControl"
+    ],
+    "profile_attached": 0
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "company_import_unsupported_endpoint",
+    "partial_agent_creation",
+    "partial_profile_attachment"
+  ],
+  "blocker_reason": "company_import_unsupported_endpoint,partial_agent_creation,partial_profile_attachment",
+  "capability_promotions": [],
+  "diagnostics": {
+    "agentsList": {
+      "duration_ms": 1094,
+      "json": [
+        {
+          "adapterConfig": {
+            "effort": "",
+            "graceSec": 15,
+            "instructionsBundleMode": "managed",
+            "instructionsEntryFile": "AGENTS.md",
+            "instructionsFilePath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions/AGENTS.md",
+            "instructionsRootPath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions",
+            "mode": "",
+            "model": "",
+            "modelReasoningEffort": "",
+            "timeoutSec": 0,
+            "variant": ""
+          },
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-28T10:49:42.827Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "lastHeartbeatAt": "2026-05-28T10:50:28.457Z",
+          "metadata": null,
+          "name": "BOS CEO",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": true
+          },
+          "reportsTo": null,
+          "role": "ceo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "cooldownSec": 10,
+              "enabled": false,
+              "intervalSec": 300,
+              "maxConcurrentRuns": 20,
+              "wakeOnDemand": true
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "error",
+          "title": null,
+          "updatedAt": "2026-05-31T17:46:39.119Z",
+          "urlKey": "bos-ceo"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:03.322Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "3fd69072-5d55-4682-8ca6-f936e8da16bc",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div2.MasterPlanner",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "Shaping / Product Planning",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div2.MasterPlanner - Shaping / Product Planning",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "pm",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:46:51.962Z",
+          "urlKey": "div2-masterplanner-shaping-product-planning"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:58.718Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "8ad1fa82-4019-436b-af44-719264d235a5",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div1.HCO",
+            "bosLightReportsTo": "Div7.MissionControl",
+            "bosLightTitle": "Head Communication Office",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div1.HCO - Head Communication Office",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "general",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:00.036Z",
+          "urlKey": "div1-hco-head-communication-office"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:04.446Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "d11f5ae8-d0d5-4c5e-86d7-19f118bc256f",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div3.Treasury",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "Treasury / Budget / Access",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div3.Treasury - Treasury / Budget / Access",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "cfo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:06.741Z",
+          "urlKey": "div3-treasury-treasury-budget-access"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:05.547Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "c9535a8a-56c0-43f0-bbdf-6658c325a46a",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div4.Production",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "Production / Build / Delivery",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div4.Production - Production / Build / Delivery",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "engineer",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:13.627Z",
+          "urlKey": "div4-production-production-build-delivery"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:06.686Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "d05cfcc3-ffdf-4160-ae5c-aa442e705059",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div5.QualificationsLibraryLearning",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "Qualifications / Library / Learning",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div5.QualificationsLibraryLearning - Qualifications / Library / Learning",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "qa",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:19.531Z",
+          "urlKey": "div5-qualificationslibrarylearning-qualifications-library-learning"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:59.866Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "725db3d3-3969-40fe-9b53-440837daa843",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div6.External",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "External / DMZ",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div6.External - External / DMZ",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "security",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:26.462Z",
+          "urlKey": "div6-external-external-dmz"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:57.519Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "1854f725-2987-4296-9d5e-e09f75d466bd",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div7.MissionControl",
+            "bosLightReportsTo": "null",
+            "bosLightTitle": "Mission Control / Strategy",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div7.MissionControl - Mission Control / Strategy",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "researcher",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:32.710Z",
+          "urlKey": "div7-missioncontrol-mission-control-strategy"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+    },
+    "finalAgentsList": {
+      "duration_ms": 1109,
+      "json": [
+        {
+          "adapterConfig": {
+            "effort": "",
+            "graceSec": 15,
+            "instructionsBundleMode": "managed",
+            "instructionsEntryFile": "AGENTS.md",
+            "instructionsFilePath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions/AGENTS.md",
+            "instructionsRootPath": "/paperclip/instances/default/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa/instructions",
+            "mode": "",
+            "model": "",
+            "modelReasoningEffort": "",
+            "timeoutSec": 0,
+            "variant": ""
+          },
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-28T10:49:42.827Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "lastHeartbeatAt": "2026-05-28T10:50:28.457Z",
+          "metadata": null,
+          "name": "BOS CEO",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": true
+          },
+          "reportsTo": null,
+          "role": "ceo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "cooldownSec": 10,
+              "enabled": false,
+              "intervalSec": 300,
+              "maxConcurrentRuns": 20,
+              "wakeOnDemand": true
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "error",
+          "title": null,
+          "updatedAt": "2026-05-31T17:46:39.119Z",
+          "urlKey": "bos-ceo"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:03.322Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "3fd69072-5d55-4682-8ca6-f936e8da16bc",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div2.MasterPlanner",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "Shaping / Product Planning",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div2.MasterPlanner - Shaping / Product Planning",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "pm",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:46:51.962Z",
+          "urlKey": "div2-masterplanner-shaping-product-planning"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:58.718Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "8ad1fa82-4019-436b-af44-719264d235a5",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div1.HCO",
+            "bosLightReportsTo": "Div7.MissionControl",
+            "bosLightTitle": "Head Communication Office",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div1.HCO - Head Communication Office",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "general",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:00.036Z",
+          "urlKey": "div1-hco-head-communication-office"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:04.446Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "d11f5ae8-d0d5-4c5e-86d7-19f118bc256f",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div3.Treasury",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "Treasury / Budget / Access",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div3.Treasury - Treasury / Budget / Access",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "cfo",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:06.741Z",
+          "urlKey": "div3-treasury-treasury-budget-access"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:05.547Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "c9535a8a-56c0-43f0-bbdf-6658c325a46a",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div4.Production",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "Production / Build / Delivery",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div4.Production - Production / Build / Delivery",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "engineer",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:13.627Z",
+          "urlKey": "div4-production-production-build-delivery"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:06.686Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "d05cfcc3-ffdf-4160-ae5c-aa442e705059",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div5.QualificationsLibraryLearning",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "Qualifications / Library / Learning",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div5.QualificationsLibraryLearning - Qualifications / Library / Learning",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "qa",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:19.531Z",
+          "urlKey": "div5-qualificationslibrarylearning-qualifications-library-learning"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:59.866Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "725db3d3-3969-40fe-9b53-440837daa843",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div6.External",
+            "bosLightReportsTo": "Div1.HCO",
+            "bosLightTitle": "External / DMZ",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div6.External - External / DMZ",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "security",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:26.462Z",
+          "urlKey": "div6-external-external-dmz"
+        },
+        {
+          "adapterConfig": {},
+          "adapterType": "hermes_local",
+          "budgetMonthlyCents": 0,
+          "capabilities": null,
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-05-31T17:18:57.519Z",
+          "defaultEnvironmentId": null,
+          "icon": null,
+          "id": "1854f725-2987-4296-9d5e-e09f75d466bd",
+          "lastHeartbeatAt": null,
+          "metadata": {
+            "bosLightDivisionId": "Div7.MissionControl",
+            "bosLightReportsTo": "null",
+            "bosLightTitle": "Mission Control / Strategy",
+            "v1.4.1": true,
+            "visibilityOnly": true
+          },
+          "name": "Div7.MissionControl - Mission Control / Strategy",
+          "pauseReason": null,
+          "pausedAt": null,
+          "permissions": {
+            "canCreateAgents": false
+          },
+          "reportsTo": "6c3e2c2c-dda3-4778-a1f0-7f06da4b7cfa",
+          "role": "researcher",
+          "runtimeConfig": {
+            "heartbeat": {
+              "enabled": false,
+              "maxConcurrentRuns": 20
+            }
+          },
+          "spentMonthlyCents": 0,
+          "status": "idle",
+          "title": null,
+          "updatedAt": "2026-05-31T17:47:32.710Z",
+          "urlKey": "div7-missioncontrol-mission-control-strategy"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+    },
+    "health": {
+      "duration_ms": 1186,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/health"
+    },
+    "importResponse": {
+      "duration_ms": 1090,
+      "error": "http_error",
+      "json": {
+        "error": "API route not found"
+      },
+      "ok": false,
+      "status": 404,
+      "text": null,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/import"
+    },
+    "version": {}
+  },
+  "generated_at": "2026-05-31T23:35:18.522717Z",
+  "import_attempt": {
+    "blocker_codes": [],
+    "side_effect_counters": {
+      "agents_created": 0,
+      "agents_updated": 0,
+      "approvals_created": 0,
+      "issues_created": 0,
+      "paperclip_api_calls": 9
+    },
+    "status": "unsupported_endpoint",
+    "surface": "import_post"
+  },
+  "inputs": {
+    "auth": {
+      "available_env": [
+        {
+          "env_name": "PAPERCLIP_API_KEY",
+          "header": "Authorization",
+          "present": true
+        }
+      ],
+      "selected_env_name": "PAPERCLIP_API_KEY"
+    },
+    "base_url_present": true,
+    "base_url_source": "env_or_prior_s07_artifact",
+    "company_id_present": true,
+    "local_validation_status": "success",
+    "origin_present": false,
+    "previous_evidence": {
+      "local_validation": "runtime-evidence/M005-S02-local-validation.json",
+      "s07": "runtime-evidence/M002-S07-agent-visibility.json",
+      "s07_artifact_type": "m002-s07-agent-visibility/v1"
+    },
+    "template_division_count": 7,
+    "template_schema_version": "0.1-v1.4.1"
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "paperclip": {
+    "build": "0.3.1",
+    "version": "0.3.1"
+  },
+  "passing": false,
+  "phase": "company_template_import",
+  "readback": {
+    "all_v141_present": true,
+    "total_agents": 8,
+    "v141_agents_missing": [],
+    "v141_agents_present": 7
+  },
+  "routing_validation": {
+    "rule_names": [
+      "backlog_shaping",
+      "budget_capacity",
+      "complex_decision",
+      "external_io_request",
+      "high_level_mission",
+      "implementation",
+      "paid_credentialed_external_io_request",
+      "qa_security_review"
+    ],
+    "rules_active": 8,
+    "test_route_result": "fallback-direct-creation-no-routing-test"
+  },
+  "safety": {
+    "max_agent_creations": 7,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "m005-s02-company-template/v1",
+  "side_effect_counters": {
+    "agents_created": 0,
+    "agents_updated": 0,
+    "approvals_created": 0,
+    "issues_created": 0,
+    "paperclip_api_calls": 9
+  }
+}

@@ -1,0 +1,1503 @@
+{
+  "adapter": {
+    "adapterConfig": {
+      "graceSec": 5,
+      "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+      "model": "mimo-v2.5-pro",
+      "provider": "xiaomi",
+      "timeoutSec": 90
+    },
+    "adapterType": "hermes_local",
+    "registry_readback": {
+      "capabilities": {
+        "requiresMaterializedRuntimeSkills": false,
+        "supportsInstructionsBundle": false,
+        "supportsLocalAgentJwt": true,
+        "supportsModelProfiles": false,
+        "supportsSkills": true
+      },
+      "disabled": false,
+      "label": "hermes_local",
+      "loaded": true,
+      "modelsCount": 0,
+      "overridePaused": false,
+      "source": "builtin",
+      "type": "hermes_local"
+    },
+    "testEnvironment": {
+      "http_status": 200,
+      "response": {
+        "duration_ms": 1576,
+        "json": {
+          "adapterType": "hermes_local",
+          "checks": [
+            {
+              "code": "hermes_version",
+              "level": "info",
+              "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+            },
+            {
+              "code": "hermes_model_configured",
+              "level": "info",
+              "message": "Model: mimo-v2.5-pro"
+            },
+            {
+              "code": "hermes_api_keys_found",
+              "level": "info",
+              "message": "API keys found: OpenAI"
+            }
+          ],
+          "status": "pass",
+          "testedAt": "2026-06-01T00:21:48.423Z"
+        },
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "truncated": false,
+        "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+      },
+      "status": "pass"
+    }
+  },
+  "agent": {
+    "agentId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+    "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "config": {
+      "adapterConfig": {
+        "base_url_ref": "env:XIAOMI_BASE_URL",
+        "graceSec": 5,
+        "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+        "model": "mimo-v2.5-pro",
+        "provider": "xiaomi",
+        "secret_ref": "<redacted>",
+        "timeoutSec": 90
+      },
+      "adapterType": "hermes_local",
+      "enabled": true,
+      "graceSec": 5,
+      "heartbeatEnabled": false,
+      "name": "BOS Light M005 S01 Hermes Xiaomi Probe",
+      "systemPrompt": "You are a bounded BOS Light Paperclip Hermes Xiaomi probe agent. Do not modify files, create approvals, access secrets, or call external project services except the configured Xiaomi LLM backend. Respond with only compact JSON shaped as {\"bos\":{\"schemaVersion\":\"m005-s01-hermes-xiaomi/v1\",\"ok\":true,\"summary\":\"...\",\"sideEffects\":[]}}.",
+      "timeoutSec": 90,
+      "wakeOnDemand": true
+    },
+    "readback": {
+      "access": {
+        "canAssignTasks": true,
+        "grants": [
+          {
+            "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+            "createdAt": "2026-06-01T00:21:49.541Z",
+            "grantedByUserId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+            "id": "f9ca76aa-254e-48ef-8bd9-f3288b1d08ab",
+            "permissionKey": "tasks:assign",
+            "principalId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+            "principalType": "agent",
+            "scope": null,
+            "updatedAt": "2026-06-01T00:21:49.541Z"
+          }
+        ],
+        "membership": {
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "createdAt": "2026-06-01T00:21:49.540Z",
+          "id": "b50146be-51db-458b-ab32-36bd80983ca6",
+          "membershipRole": "member",
+          "principalId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+          "principalType": "agent",
+          "status": "active",
+          "updatedAt": "2026-06-01T00:21:49.540Z"
+        },
+        "taskAssignSource": "explicit_grant"
+      },
+      "adapterConfig": {
+        "base_url_ref": "env:XIAOMI_BASE_URL",
+        "graceSec": 5,
+        "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+        "model": "mimo-v2.5-pro",
+        "provider": "xiaomi",
+        "secret_ref": "<redacted>",
+        "timeoutSec": 90
+      },
+      "adapterType": "hermes_local",
+      "budgetMonthlyCents": 0,
+      "capabilities": null,
+      "chainOfCommand": [],
+      "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+      "createdAt": "2026-06-01T00:21:49.537Z",
+      "defaultEnvironmentId": null,
+      "icon": null,
+      "id": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+      "lastHeartbeatAt": null,
+      "metadata": null,
+      "name": "BOS Light M005 S01 Hermes Xiaomi Probe 2",
+      "pauseReason": null,
+      "pausedAt": null,
+      "permissions": {
+        "canCreateAgents": false
+      },
+      "reportsTo": null,
+      "role": "general",
+      "runtimeConfig": {
+        "heartbeat": {
+          "enabled": false,
+          "maxConcurrentRuns": 20
+        }
+      },
+      "spentMonthlyCents": 0,
+      "status": "idle",
+      "title": null,
+      "updatedAt": "2026-06-01T00:21:49.537Z",
+      "urlKey": "bos-light-m005-s01-hermes-xiaomi-probe-2"
+    }
+  },
+  "artifact_type": "fail-closed-blocker",
+  "blocker_codes": [
+    "missing_resultJson_bos",
+    "run_status_not_succeeded"
+  ],
+  "blocker_reason": "missing_resultJson_bos,run_status_not_succeeded",
+  "capability_promotions": [],
+  "diagnostics": {
+    "adapters": {
+      "duration_ms": 1127,
+      "json": [
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "acpx_local",
+          "loaded": true,
+          "modelsCount": 16,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "acpx_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "claude_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "claude_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "codex_local",
+          "loaded": true,
+          "modelsCount": 10,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "codex_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "cursor",
+          "loaded": true,
+          "modelsCount": 39,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "cursor_cloud",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "cursor_cloud"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "gemini_local",
+          "loaded": true,
+          "modelsCount": 6,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "gemini_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "grok_local",
+          "loaded": true,
+          "modelsCount": 1,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "grok_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "hermes_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "hermes_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "http",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "http"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "openclaw_gateway",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "openclaw_gateway"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": true,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "opencode_local",
+          "loaded": true,
+          "modelsCount": 5,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "opencode_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": true,
+            "supportsInstructionsBundle": true,
+            "supportsLocalAgentJwt": true,
+            "supportsModelProfiles": false,
+            "supportsSkills": true
+          },
+          "disabled": false,
+          "label": "pi_local",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "pi_local"
+        },
+        {
+          "capabilities": {
+            "requiresMaterializedRuntimeSkills": false,
+            "supportsInstructionsBundle": false,
+            "supportsLocalAgentJwt": false,
+            "supportsModelProfiles": false,
+            "supportsSkills": false
+          },
+          "disabled": false,
+          "label": "process",
+          "loaded": true,
+          "modelsCount": 0,
+          "overridePaused": false,
+          "source": "builtin",
+          "type": "process"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/adapters"
+    },
+    "agentReadback": {
+      "attempts": [
+        {
+          "duration_ms": 1096,
+          "error": "http_error",
+          "json": {
+            "error": "API route not found"
+          },
+          "ok": false,
+          "status": 404,
+          "text": null,
+          "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents/2bb37a6a-3537-46fc-a701-7ec20a790137"
+        },
+        {
+          "duration_ms": 1097,
+          "json": {
+            "access": {
+              "canAssignTasks": true,
+              "grants": [
+                {
+                  "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+                  "createdAt": "2026-06-01T00:21:49.541Z",
+                  "grantedByUserId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+                  "id": "f9ca76aa-254e-48ef-8bd9-f3288b1d08ab",
+                  "permissionKey": "tasks:assign",
+                  "principalId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+                  "principalType": "agent",
+                  "scope": null,
+                  "updatedAt": "2026-06-01T00:21:49.541Z"
+                }
+              ],
+              "membership": {
+                "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+                "createdAt": "2026-06-01T00:21:49.540Z",
+                "id": "b50146be-51db-458b-ab32-36bd80983ca6",
+                "membershipRole": "member",
+                "principalId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "principalType": "agent",
+                "status": "active",
+                "updatedAt": "2026-06-01T00:21:49.540Z"
+              },
+              "taskAssignSource": "explicit_grant"
+            },
+            "adapterConfig": {
+              "base_url_ref": "env:XIAOMI_BASE_URL",
+              "graceSec": 5,
+              "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+              "model": "mimo-v2.5-pro",
+              "provider": "xiaomi",
+              "secret_ref": "<redacted>",
+              "timeoutSec": 90
+            },
+            "adapterType": "hermes_local",
+            "budgetMonthlyCents": 0,
+            "capabilities": null,
+            "chainOfCommand": [],
+            "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+            "createdAt": "2026-06-01T00:21:49.537Z",
+            "defaultEnvironmentId": null,
+            "icon": null,
+            "id": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+            "lastHeartbeatAt": null,
+            "metadata": null,
+            "name": "BOS Light M005 S01 Hermes Xiaomi Probe 2",
+            "pauseReason": null,
+            "pausedAt": null,
+            "permissions": {
+              "canCreateAgents": false
+            },
+            "reportsTo": null,
+            "role": "general",
+            "runtimeConfig": {
+              "heartbeat": {
+                "enabled": false,
+                "maxConcurrentRuns": 20
+              }
+            },
+            "spentMonthlyCents": 0,
+            "status": "idle",
+            "title": null,
+            "updatedAt": "2026-06-01T00:21:49.537Z",
+            "urlKey": "bos-light-m005-s01-hermes-xiaomi-probe-2"
+          },
+          "ok": true,
+          "status": 200,
+          "text": null,
+          "truncated": false,
+          "url": "https://paperclip.oysana.com/api/agents/2bb37a6a-3537-46fc-a701-7ec20a790137"
+        }
+      ]
+    },
+    "approvalsAfter": {
+      "duration_ms": 1097,
+      "json": [],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/approvals?limit=20"
+    },
+    "approvalsBefore": {
+      "duration_ms": 1094,
+      "json": [],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/approvals?limit=20"
+    },
+    "createAgent": {
+      "duration_ms": 1125,
+      "json": {
+        "adapterConfig": {
+          "base_url_ref": "env:XIAOMI_BASE_URL",
+          "graceSec": 5,
+          "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+          "model": "mimo-v2.5-pro",
+          "provider": "xiaomi",
+          "secret_ref": "<redacted>",
+          "timeoutSec": 90
+        },
+        "adapterType": "hermes_local",
+        "budgetMonthlyCents": 0,
+        "capabilities": null,
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "createdAt": "2026-06-01T00:21:49.537Z",
+        "defaultEnvironmentId": null,
+        "icon": null,
+        "id": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+        "lastHeartbeatAt": null,
+        "metadata": null,
+        "name": "BOS Light M005 S01 Hermes Xiaomi Probe 2",
+        "pauseReason": null,
+        "pausedAt": null,
+        "permissions": {
+          "canCreateAgents": false
+        },
+        "reportsTo": null,
+        "role": "general",
+        "runtimeConfig": {
+          "heartbeat": {
+            "enabled": false,
+            "maxConcurrentRuns": 20
+          }
+        },
+        "spentMonthlyCents": 0,
+        "status": "idle",
+        "title": null,
+        "updatedAt": "2026-06-01T00:21:49.537Z",
+        "urlKey": "bos-light-m005-s01-hermes-xiaomi-probe-2"
+      },
+      "ok": true,
+      "status": 201,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/agents"
+    },
+    "health": {
+      "duration_ms": 1151,
+      "json": {
+        "authReady": true,
+        "bootstrapInviteActive": false,
+        "bootstrapStatus": "ready",
+        "deploymentExposure": "private",
+        "deploymentMode": "authenticated",
+        "features": {
+          "companyDeletionEnabled": false
+        },
+        "status": "ok",
+        "version": "0.3.1"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/health"
+    },
+    "invoke": {
+      "duration_ms": 1115,
+      "json": {
+        "agentId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "contextSnapshot": {
+          "actorId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+          "triggeredBy": "board",
+          "wakeReason": "bos-light-m005-s01-hermes-xiaomi-probe",
+          "wakeSource": "on_demand",
+          "wakeTriggerDetail": "manual"
+        },
+        "continuationAttempt": 0,
+        "createdAt": "2026-06-01T00:21:55.043Z",
+        "error": null,
+        "errorCode": null,
+        "exitCode": null,
+        "externalRunId": null,
+        "finishedAt": null,
+        "id": "62c587ff-0b9f-436a-a303-d96f65ec7d7a",
+        "invocationSource": "on_demand",
+        "issueCommentRetryQueuedAt": null,
+        "issueCommentSatisfiedByCommentId": null,
+        "issueCommentStatus": "not_applicable",
+        "lastOutputAt": null,
+        "lastOutputBytes": null,
+        "lastOutputSeq": 0,
+        "lastOutputStream": null,
+        "lastUsefulActionAt": null,
+        "livenessReason": null,
+        "livenessState": null,
+        "logBytes": null,
+        "logCompressed": false,
+        "logRef": null,
+        "logSha256": null,
+        "logStore": null,
+        "nextAction": null,
+        "processGroupId": null,
+        "processLossRetryCount": 0,
+        "processPid": null,
+        "processStartedAt": null,
+        "resultJson": null,
+        "retryOfRunId": null,
+        "scheduledRetryAt": null,
+        "scheduledRetryAttempt": 0,
+        "scheduledRetryReason": null,
+        "sessionIdAfter": null,
+        "sessionIdBefore": null,
+        "signal": null,
+        "startedAt": null,
+        "status": "queued",
+        "stderrExcerpt": null,
+        "stdoutExcerpt": null,
+        "triggerDetail": "manual",
+        "updatedAt": "2026-06-01T00:21:55.043Z",
+        "usageJson": null,
+        "wakeupRequestId": "9fb95ffb-7817-441d-8109-fbfdbe05baf6"
+      },
+      "ok": true,
+      "status": 202,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/agents/2bb37a6a-3537-46fc-a701-7ec20a790137/heartbeat/invoke"
+    },
+    "runListAfter": {
+      "duration_ms": 1117,
+      "json": [
+        {
+          "agentId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "contextSnapshot": {
+            "wakeReason": "bos-light-m005-s01-hermes-xiaomi-probe",
+            "wakeSource": "on_demand",
+            "wakeTriggerDetail": "manual"
+          },
+          "continuationAttempt": 0,
+          "createdAt": "2026-06-01T00:21:55.043Z",
+          "error": "Error: Error code: 401 - {'error': {'message': 'Missing Authentication header', 'code': 401}}",
+          "errorCode": "adapter_failed",
+          "exitCode": 1,
+          "externalRunId": null,
+          "finishedAt": "2026-06-01T00:21:57.233Z",
+          "id": "62c587ff-0b9f-436a-a303-d96f65ec7d7a",
+          "invocationSource": "on_demand",
+          "lastOutputAt": "2026-06-01T00:21:57.229Z",
+          "lastOutputBytes": 784,
+          "lastOutputSeq": 5,
+          "lastOutputStream": "stdout",
+          "lastUsefulActionAt": null,
+          "livenessReason": "Run ended with failed (adapter_failed)",
+          "livenessState": "failed",
+          "logBytes": 784,
+          "logCompressed": false,
+          "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/2bb37a6a-3537-46fc-a701-7ec20a790137/62c587ff-0b9f-436a-a303-d96f65ec7d7a.ndjson",
+          "logSha256": "16c4101440d86d78c3d5cf6b52e6739681ba4e538721cd17c5ea7725199be78a",
+          "logStore": "local_file",
+          "nextAction": null,
+          "processGroupId": null,
+          "processLossRetryCount": 0,
+          "processPid": null,
+          "processStartedAt": null,
+          "resultJson": null,
+          "retryOfRunId": null,
+          "scheduledRetryAt": null,
+          "scheduledRetryAttempt": 0,
+          "scheduledRetryReason": null,
+          "sessionIdAfter": "20260601_002155_",
+          "sessionIdBefore": null,
+          "signal": null,
+          "startedAt": "2026-06-01T00:21:55.050Z",
+          "status": "failed",
+          "stderrExcerpt": null,
+          "stdoutExcerpt": null,
+          "triggerDetail": "manual",
+          "updatedAt": "2026-06-01T00:21:57.239Z",
+          "usageJson": null,
+          "wakeupRequestId": "9fb95ffb-7817-441d-8109-fbfdbe05baf6"
+        }
+      ],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/heartbeat-runs?agentId=2bb37a6a-3537-46fc-a701-7ec20a790137"
+    },
+    "runListBefore": {
+      "duration_ms": 1102,
+      "json": [],
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/heartbeat-runs?agentId=2bb37a6a-3537-46fc-a701-7ec20a790137"
+    },
+    "runReadback": {
+      "duration_ms": 1101,
+      "json": {
+        "agentId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "contextSnapshot": {
+          "actorId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+          "paperclipEnvironment": {
+            "driver": "local",
+            "id": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+            "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+            "name": "Local",
+            "workspaceRealization": {
+              "bootstrap": {
+                "command": null
+              },
+              "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+              "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+              "local": {
+                "branchName": null,
+                "path": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "projectId": null,
+                "projectWorkspaceId": null,
+                "repoRef": null,
+                "repoUrl": null,
+                "source": "agent_home",
+                "strategy": "project_primary",
+                "worktreePath": null
+              },
+              "provider": "local",
+              "providerLeaseId": null,
+              "rebuild": {
+                "executionWorkspaceId": null,
+                "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "metadata": {
+                  "environmentDriver": "local",
+                  "provider": "local",
+                  "providerMetadata": {},
+                  "runtimeOverlay": {
+                    "cleanupCommand": null,
+                    "provisionCommand": null,
+                    "teardownCommand": null,
+                    "workspaceRuntime": null
+                  },
+                  "source": {
+                    "branchName": null,
+                    "kind": "agent_home",
+                    "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                    "projectId": null,
+                    "projectWorkspaceId": null,
+                    "repoRef": null,
+                    "repoUrl": null,
+                    "strategy": "project_primary",
+                    "worktreePath": null
+                  }
+                },
+                "mode": "shared_workspace",
+                "providerLeaseId": null,
+                "remotePath": null,
+                "repoRef": null,
+                "repoUrl": null
+              },
+              "remote": {
+                "path": null
+              },
+              "summary": "Local workspace realized at /paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137.",
+              "sync": {
+                "prepare": "Use the realized local execution workspace directly.",
+                "strategy": "none",
+                "syncBack": null
+              },
+              "transport": "local",
+              "version": 1
+            }
+          },
+          "paperclipWorkspace": {
+            "agentHome": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+            "branchName": null,
+            "cwd": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+            "mode": "shared_workspace",
+            "projectId": null,
+            "realization": {
+              "bootstrap": {
+                "command": null
+              },
+              "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+              "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+              "local": {
+                "branchName": null,
+                "path": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "projectId": null,
+                "projectWorkspaceId": null,
+                "repoRef": null,
+                "repoUrl": null,
+                "source": "agent_home",
+                "strategy": "project_primary",
+                "worktreePath": null
+              },
+              "provider": "local",
+              "providerLeaseId": null,
+              "rebuild": {
+                "executionWorkspaceId": null,
+                "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "metadata": {
+                  "environmentDriver": "local",
+                  "provider": "local",
+                  "providerMetadata": {},
+                  "runtimeOverlay": {
+                    "cleanupCommand": null,
+                    "provisionCommand": null,
+                    "teardownCommand": null,
+                    "workspaceRuntime": null
+                  },
+                  "source": {
+                    "branchName": null,
+                    "kind": "agent_home",
+                    "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                    "projectId": null,
+                    "projectWorkspaceId": null,
+                    "repoRef": null,
+                    "repoUrl": null,
+                    "strategy": "project_primary",
+                    "worktreePath": null
+                  }
+                },
+                "mode": "shared_workspace",
+                "providerLeaseId": null,
+                "remotePath": null,
+                "repoRef": null,
+                "repoUrl": null
+              },
+              "remote": {
+                "path": null
+              },
+              "summary": "Local workspace realized at /paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137.",
+              "sync": {
+                "prepare": "Use the realized local execution workspace directly.",
+                "strategy": "none",
+                "syncBack": null
+              },
+              "transport": "local",
+              "version": 1
+            },
+            "repoRef": null,
+            "repoUrl": null,
+            "source": "agent_home",
+            "strategy": "project_primary",
+            "workspaceId": null,
+            "worktreePath": null
+          },
+          "paperclipWorkspaces": [],
+          "triggeredBy": "board",
+          "wakeReason": "bos-light-m005-s01-hermes-xiaomi-probe",
+          "wakeSource": "on_demand",
+          "wakeTriggerDetail": "manual"
+        },
+        "continuationAttempt": 0,
+        "createdAt": "2026-06-01T00:21:55.043Z",
+        "error": "Error: Error code: 401 - {'error': {'message': 'Missing Authentication header', 'code': 401}}",
+        "errorCode": "adapter_failed",
+        "exitCode": 1,
+        "externalRunId": null,
+        "finishedAt": "2026-06-01T00:21:57.233Z",
+        "id": "62c587ff-0b9f-436a-a303-d96f65ec7d7a",
+        "invocationSource": "on_demand",
+        "issueCommentRetryQueuedAt": null,
+        "issueCommentSatisfiedByCommentId": null,
+        "issueCommentStatus": "not_applicable",
+        "lastOutputAt": "2026-06-01T00:21:57.229Z",
+        "lastOutputBytes": 784,
+        "lastOutputSeq": 5,
+        "lastOutputStream": "stdout",
+        "lastUsefulActionAt": null,
+        "livenessReason": "Run ended with failed (adapter_failed)",
+        "livenessState": "failed",
+        "logBytes": 784,
+        "logCompressed": false,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/2bb37a6a-3537-46fc-a701-7ec20a790137/62c587ff-0b9f-436a-a303-d96f65ec7d7a.ndjson",
+        "logSha256": "16c4101440d86d78c3d5cf6b52e6739681ba4e538721cd17c5ea7725199be78a",
+        "logStore": "local_file",
+        "nextAction": null,
+        "outputSilence": {
+          "criticalThresholdMs": 14400000,
+          "evaluationIssueAssigneeAgentId": null,
+          "evaluationIssueId": null,
+          "evaluationIssueIdentifier": null,
+          "lastOutputAt": "2026-06-01T00:21:57.229Z",
+          "lastOutputSeq": 5,
+          "lastOutputStream": "stdout",
+          "level": "not_applicable",
+          "silenceAgeMs": null,
+          "silenceStartedAt": "2026-06-01T00:21:57.229Z",
+          "snoozedUntil": null,
+          "suspicionThresholdMs": 3600000
+        },
+        "processGroupId": null,
+        "processLossRetryCount": 0,
+        "processPid": null,
+        "processStartedAt": null,
+        "resultJson": {
+          "cost_usd": null,
+          "effectiveTimeoutSec": 90,
+          "result": "",
+          "session_id": "20260601_002155_206537",
+          "stopReason": "adapter_failed",
+          "timeoutConfigured": true,
+          "timeoutFired": false,
+          "timeoutSource": "config",
+          "usage": null
+        },
+        "retryExhaustedReason": null,
+        "retryOfRunId": null,
+        "scheduledRetryAt": null,
+        "scheduledRetryAttempt": 0,
+        "scheduledRetryReason": null,
+        "sessionIdAfter": "20260601_002155_",
+        "sessionIdBefore": null,
+        "signal": null,
+        "startedAt": "2026-06-01T00:21:55.050Z",
+        "status": "failed",
+        "stderrExcerpt": "Error: Error code: 401 - {'error': {'message': 'Missing Authentication header', 'code': 401}}\n\nsession_id: 20260601_002155_206537\n",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137\" for this run.\n[hermes] Starting Hermes Agent (model=mimo-v2.5-pro, timeout=90s)\n[hermes] Exit code: 1, timed out: false\n[hermes] Session: 20260601_002155_206537\n",
+        "triggerDetail": "manual",
+        "updatedAt": "2026-06-01T00:21:57.239Z",
+        "usageJson": null,
+        "wakeupRequestId": "9fb95ffb-7817-441d-8109-fbfdbe05baf6"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/heartbeat-runs/62c587ff-0b9f-436a-a303-d96f65ec7d7a"
+    },
+    "testEnvironment": {
+      "duration_ms": 1576,
+      "json": {
+        "adapterType": "hermes_local",
+        "checks": [
+          {
+            "code": "hermes_version",
+            "level": "info",
+            "message": "Hermes Agent version: Hermes Agent v0.15.2 (2026.5.29.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date"
+          },
+          {
+            "code": "hermes_model_configured",
+            "level": "info",
+            "message": "Model: mimo-v2.5-pro"
+          },
+          {
+            "code": "hermes_api_keys_found",
+            "level": "info",
+            "message": "API keys found: OpenAI"
+          }
+        ],
+        "status": "pass",
+        "testedAt": "2026-06-01T00:21:48.423Z"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/companies/43c74adb-b194-44d1-8f8e-ba142544bb9d/adapters/hermes_local/test-environment"
+    },
+    "version": {}
+  },
+  "generated_at": "2026-06-01T00:21:44.711368Z",
+  "inputs": {
+    "auth": {
+      "available_env": [
+        {
+          "env_name": "PAPERCLIP_API_KEY",
+          "header": "Authorization",
+          "present": true
+        }
+      ],
+      "selected_env_name": "PAPERCLIP_API_KEY"
+    },
+    "base_url_present": true,
+    "base_url_source": "env_or_prior_s08_artifact",
+    "company_id_present": true,
+    "origin_present": false,
+    "previous_evidence": {
+      "smoke": "runtime-evidence/M002-S08-runtime-execution-smoke.json",
+      "smoke_artifact_type": "fail-closed-blocker",
+      "smoke_blocker_reason": "run_status_not_succeeded,missing_resultJson_bos"
+    },
+    "xiaomi_api_key_secret_ref_present": true,
+    "xiaomi_base_url_secret_ref_present": true
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP/admin routes only; no Paperclip source patch, private import, subprocess bypass, or direct database mutation.",
+    "paperclip_core_patched": false,
+    "private_internal_imports": false
+  },
+  "paperclip": {
+    "build": "0.3.1",
+    "lifecycle": {
+      "agentCreated": true,
+      "runCreated": true,
+      "runReadback": true
+    },
+    "version": "0.3.1"
+  },
+  "passing": false,
+  "phase": "hermes",
+  "run": {
+    "approvalCounts": {
+      "after": 0,
+      "before": 0,
+      "created": 0
+    },
+    "approvalsCreated": 0,
+    "final_readback": {
+      "duration_ms": 1101,
+      "json": {
+        "agentId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+        "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+        "contextSnapshot": {
+          "actorId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+          "paperclipEnvironment": {
+            "driver": "local",
+            "id": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+            "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+            "name": "Local",
+            "workspaceRealization": {
+              "bootstrap": {
+                "command": null
+              },
+              "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+              "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+              "local": {
+                "branchName": null,
+                "path": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "projectId": null,
+                "projectWorkspaceId": null,
+                "repoRef": null,
+                "repoUrl": null,
+                "source": "agent_home",
+                "strategy": "project_primary",
+                "worktreePath": null
+              },
+              "provider": "local",
+              "providerLeaseId": null,
+              "rebuild": {
+                "executionWorkspaceId": null,
+                "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "metadata": {
+                  "environmentDriver": "local",
+                  "provider": "local",
+                  "providerMetadata": {},
+                  "runtimeOverlay": {
+                    "cleanupCommand": null,
+                    "provisionCommand": null,
+                    "teardownCommand": null,
+                    "workspaceRuntime": null
+                  },
+                  "source": {
+                    "branchName": null,
+                    "kind": "agent_home",
+                    "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                    "projectId": null,
+                    "projectWorkspaceId": null,
+                    "repoRef": null,
+                    "repoUrl": null,
+                    "strategy": "project_primary",
+                    "worktreePath": null
+                  }
+                },
+                "mode": "shared_workspace",
+                "providerLeaseId": null,
+                "remotePath": null,
+                "repoRef": null,
+                "repoUrl": null
+              },
+              "remote": {
+                "path": null
+              },
+              "summary": "Local workspace realized at /paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137.",
+              "sync": {
+                "prepare": "Use the realized local execution workspace directly.",
+                "strategy": "none",
+                "syncBack": null
+              },
+              "transport": "local",
+              "version": 1
+            }
+          },
+          "paperclipWorkspace": {
+            "agentHome": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+            "branchName": null,
+            "cwd": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+            "mode": "shared_workspace",
+            "projectId": null,
+            "realization": {
+              "bootstrap": {
+                "command": null
+              },
+              "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+              "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+              "local": {
+                "branchName": null,
+                "path": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "projectId": null,
+                "projectWorkspaceId": null,
+                "repoRef": null,
+                "repoUrl": null,
+                "source": "agent_home",
+                "strategy": "project_primary",
+                "worktreePath": null
+              },
+              "provider": "local",
+              "providerLeaseId": null,
+              "rebuild": {
+                "executionWorkspaceId": null,
+                "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                "metadata": {
+                  "environmentDriver": "local",
+                  "provider": "local",
+                  "providerMetadata": {},
+                  "runtimeOverlay": {
+                    "cleanupCommand": null,
+                    "provisionCommand": null,
+                    "teardownCommand": null,
+                    "workspaceRuntime": null
+                  },
+                  "source": {
+                    "branchName": null,
+                    "kind": "agent_home",
+                    "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                    "projectId": null,
+                    "projectWorkspaceId": null,
+                    "repoRef": null,
+                    "repoUrl": null,
+                    "strategy": "project_primary",
+                    "worktreePath": null
+                  }
+                },
+                "mode": "shared_workspace",
+                "providerLeaseId": null,
+                "remotePath": null,
+                "repoRef": null,
+                "repoUrl": null
+              },
+              "remote": {
+                "path": null
+              },
+              "summary": "Local workspace realized at /paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137.",
+              "sync": {
+                "prepare": "Use the realized local execution workspace directly.",
+                "strategy": "none",
+                "syncBack": null
+              },
+              "transport": "local",
+              "version": 1
+            },
+            "repoRef": null,
+            "repoUrl": null,
+            "source": "agent_home",
+            "strategy": "project_primary",
+            "workspaceId": null,
+            "worktreePath": null
+          },
+          "paperclipWorkspaces": [],
+          "triggeredBy": "board",
+          "wakeReason": "bos-light-m005-s01-hermes-xiaomi-probe",
+          "wakeSource": "on_demand",
+          "wakeTriggerDetail": "manual"
+        },
+        "continuationAttempt": 0,
+        "createdAt": "2026-06-01T00:21:55.043Z",
+        "error": "Error: Error code: 401 - {'error': {'message': 'Missing Authentication header', 'code': 401}}",
+        "errorCode": "adapter_failed",
+        "exitCode": 1,
+        "externalRunId": null,
+        "finishedAt": "2026-06-01T00:21:57.233Z",
+        "id": "62c587ff-0b9f-436a-a303-d96f65ec7d7a",
+        "invocationSource": "on_demand",
+        "issueCommentRetryQueuedAt": null,
+        "issueCommentSatisfiedByCommentId": null,
+        "issueCommentStatus": "not_applicable",
+        "lastOutputAt": "2026-06-01T00:21:57.229Z",
+        "lastOutputBytes": 784,
+        "lastOutputSeq": 5,
+        "lastOutputStream": "stdout",
+        "lastUsefulActionAt": null,
+        "livenessReason": "Run ended with failed (adapter_failed)",
+        "livenessState": "failed",
+        "logBytes": 784,
+        "logCompressed": false,
+        "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/2bb37a6a-3537-46fc-a701-7ec20a790137/62c587ff-0b9f-436a-a303-d96f65ec7d7a.ndjson",
+        "logSha256": "16c4101440d86d78c3d5cf6b52e6739681ba4e538721cd17c5ea7725199be78a",
+        "logStore": "local_file",
+        "nextAction": null,
+        "outputSilence": {
+          "criticalThresholdMs": 14400000,
+          "evaluationIssueAssigneeAgentId": null,
+          "evaluationIssueId": null,
+          "evaluationIssueIdentifier": null,
+          "lastOutputAt": "2026-06-01T00:21:57.229Z",
+          "lastOutputSeq": 5,
+          "lastOutputStream": "stdout",
+          "level": "not_applicable",
+          "silenceAgeMs": null,
+          "silenceStartedAt": "2026-06-01T00:21:57.229Z",
+          "snoozedUntil": null,
+          "suspicionThresholdMs": 3600000
+        },
+        "processGroupId": null,
+        "processLossRetryCount": 0,
+        "processPid": null,
+        "processStartedAt": null,
+        "resultJson": {
+          "cost_usd": null,
+          "effectiveTimeoutSec": 90,
+          "result": "",
+          "session_id": "20260601_002155_206537",
+          "stopReason": "adapter_failed",
+          "timeoutConfigured": true,
+          "timeoutFired": false,
+          "timeoutSource": "config",
+          "usage": null
+        },
+        "retryExhaustedReason": null,
+        "retryOfRunId": null,
+        "scheduledRetryAt": null,
+        "scheduledRetryAttempt": 0,
+        "scheduledRetryReason": null,
+        "sessionIdAfter": "20260601_002155_",
+        "sessionIdBefore": null,
+        "signal": null,
+        "startedAt": "2026-06-01T00:21:55.050Z",
+        "status": "failed",
+        "stderrExcerpt": "Error: Error code: 401 - {'error': {'message': 'Missing Authentication header', 'code': 401}}\n\nsession_id: 20260601_002155_206537\n",
+        "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137\" for this run.\n[hermes] Starting Hermes Agent (model=mimo-v2.5-pro, timeout=90s)\n[hermes] Exit code: 1, timed out: false\n[hermes] Session: 20260601_002155_206537\n",
+        "triggerDetail": "manual",
+        "updatedAt": "2026-06-01T00:21:57.239Z",
+        "usageJson": null,
+        "wakeupRequestId": "9fb95ffb-7817-441d-8109-fbfdbe05baf6"
+      },
+      "ok": true,
+      "status": 200,
+      "text": null,
+      "truncated": false,
+      "url": "https://paperclip.oysana.com/api/heartbeat-runs/62c587ff-0b9f-436a-a303-d96f65ec7d7a"
+    },
+    "readbackHistoryCount": 1,
+    "readbackHistoryTail": [
+      {
+        "duration_ms": 1101,
+        "json": {
+          "agentId": "2bb37a6a-3537-46fc-a701-7ec20a790137",
+          "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+          "contextSnapshot": {
+            "actorId": "tGkwsfYlVvOCrvmf0YZVl1h08rqhOD4Q",
+            "paperclipEnvironment": {
+              "driver": "local",
+              "id": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+              "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+              "name": "Local",
+              "workspaceRealization": {
+                "bootstrap": {
+                  "command": null
+                },
+                "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+                "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+                "local": {
+                  "branchName": null,
+                  "path": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                  "projectId": null,
+                  "projectWorkspaceId": null,
+                  "repoRef": null,
+                  "repoUrl": null,
+                  "source": "agent_home",
+                  "strategy": "project_primary",
+                  "worktreePath": null
+                },
+                "provider": "local",
+                "providerLeaseId": null,
+                "rebuild": {
+                  "executionWorkspaceId": null,
+                  "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                  "metadata": {
+                    "environmentDriver": "local",
+                    "provider": "local",
+                    "providerMetadata": {},
+                    "runtimeOverlay": {
+                      "cleanupCommand": null,
+                      "provisionCommand": null,
+                      "teardownCommand": null,
+                      "workspaceRuntime": null
+                    },
+                    "source": {
+                      "branchName": null,
+                      "kind": "agent_home",
+                      "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                      "projectId": null,
+                      "projectWorkspaceId": null,
+                      "repoRef": null,
+                      "repoUrl": null,
+                      "strategy": "project_primary",
+                      "worktreePath": null
+                    }
+                  },
+                  "mode": "shared_workspace",
+                  "providerLeaseId": null,
+                  "remotePath": null,
+                  "repoRef": null,
+                  "repoUrl": null
+                },
+                "remote": {
+                  "path": null
+                },
+                "summary": "Local workspace realized at /paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137.",
+                "sync": {
+                  "prepare": "Use the realized local execution workspace directly.",
+                  "strategy": "none",
+                  "syncBack": null
+                },
+                "transport": "local",
+                "version": 1
+              }
+            },
+            "paperclipWorkspace": {
+              "agentHome": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+              "branchName": null,
+              "cwd": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+              "mode": "shared_workspace",
+              "projectId": null,
+              "realization": {
+                "bootstrap": {
+                  "command": null
+                },
+                "environmentId": "1e680528-141f-4217-9c55-4e4f6e1bbf4a",
+                "leaseId": "c8eced2d-e00d-4b69-8a3c-9d81ac589222",
+                "local": {
+                  "branchName": null,
+                  "path": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                  "projectId": null,
+                  "projectWorkspaceId": null,
+                  "repoRef": null,
+                  "repoUrl": null,
+                  "source": "agent_home",
+                  "strategy": "project_primary",
+                  "worktreePath": null
+                },
+                "provider": "local",
+                "providerLeaseId": null,
+                "rebuild": {
+                  "executionWorkspaceId": null,
+                  "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                  "metadata": {
+                    "environmentDriver": "local",
+                    "provider": "local",
+                    "providerMetadata": {},
+                    "runtimeOverlay": {
+                      "cleanupCommand": null,
+                      "provisionCommand": null,
+                      "teardownCommand": null,
+                      "workspaceRuntime": null
+                    },
+                    "source": {
+                      "branchName": null,
+                      "kind": "agent_home",
+                      "localPath": "/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137",
+                      "projectId": null,
+                      "projectWorkspaceId": null,
+                      "repoRef": null,
+                      "repoUrl": null,
+                      "strategy": "project_primary",
+                      "worktreePath": null
+                    }
+                  },
+                  "mode": "shared_workspace",
+                  "providerLeaseId": null,
+                  "remotePath": null,
+                  "repoRef": null,
+                  "repoUrl": null
+                },
+                "remote": {
+                  "path": null
+                },
+                "summary": "Local workspace realized at /paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137.",
+                "sync": {
+                  "prepare": "Use the realized local execution workspace directly.",
+                  "strategy": "none",
+                  "syncBack": null
+                },
+                "transport": "local",
+                "version": 1
+              },
+              "repoRef": null,
+              "repoUrl": null,
+              "source": "agent_home",
+              "strategy": "project_primary",
+              "workspaceId": null,
+              "worktreePath": null
+            },
+            "paperclipWorkspaces": [],
+            "triggeredBy": "board",
+            "wakeReason": "bos-light-m005-s01-hermes-xiaomi-probe",
+            "wakeSource": "on_demand",
+            "wakeTriggerDetail": "manual"
+          },
+          "continuationAttempt": 0,
+          "createdAt": "2026-06-01T00:21:55.043Z",
+          "error": "Error: Error code: 401 - {'error': {'message': 'Missing Authentication header', 'code': 401}}",
+          "errorCode": "adapter_failed",
+          "exitCode": 1,
+          "externalRunId": null,
+          "finishedAt": "2026-06-01T00:21:57.233Z",
+          "id": "62c587ff-0b9f-436a-a303-d96f65ec7d7a",
+          "invocationSource": "on_demand",
+          "issueCommentRetryQueuedAt": null,
+          "issueCommentSatisfiedByCommentId": null,
+          "issueCommentStatus": "not_applicable",
+          "lastOutputAt": "2026-06-01T00:21:57.229Z",
+          "lastOutputBytes": 784,
+          "lastOutputSeq": 5,
+          "lastOutputStream": "stdout",
+          "lastUsefulActionAt": null,
+          "livenessReason": "Run ended with failed (adapter_failed)",
+          "livenessState": "failed",
+          "logBytes": 784,
+          "logCompressed": false,
+          "logRef": "43c74adb-b194-44d1-8f8e-ba142544bb9d/2bb37a6a-3537-46fc-a701-7ec20a790137/62c587ff-0b9f-436a-a303-d96f65ec7d7a.ndjson",
+          "logSha256": "16c4101440d86d78c3d5cf6b52e6739681ba4e538721cd17c5ea7725199be78a",
+          "logStore": "local_file",
+          "nextAction": null,
+          "outputSilence": {
+            "criticalThresholdMs": 14400000,
+            "evaluationIssueAssigneeAgentId": null,
+            "evaluationIssueId": null,
+            "evaluationIssueIdentifier": null,
+            "lastOutputAt": "2026-06-01T00:21:57.229Z",
+            "lastOutputSeq": 5,
+            "lastOutputStream": "stdout",
+            "level": "not_applicable",
+            "silenceAgeMs": null,
+            "silenceStartedAt": "2026-06-01T00:21:57.229Z",
+            "snoozedUntil": null,
+            "suspicionThresholdMs": 3600000
+          },
+          "processGroupId": null,
+          "processLossRetryCount": 0,
+          "processPid": null,
+          "processStartedAt": null,
+          "resultJson": {
+            "cost_usd": null,
+            "effectiveTimeoutSec": 90,
+            "result": "",
+            "session_id": "20260601_002155_206537",
+            "stopReason": "adapter_failed",
+            "timeoutConfigured": true,
+            "timeoutFired": false,
+            "timeoutSource": "config",
+            "usage": null
+          },
+          "retryExhaustedReason": null,
+          "retryOfRunId": null,
+          "scheduledRetryAt": null,
+          "scheduledRetryAttempt": 0,
+          "scheduledRetryReason": null,
+          "sessionIdAfter": "20260601_002155_",
+          "sessionIdBefore": null,
+          "signal": null,
+          "startedAt": "2026-06-01T00:21:55.050Z",
+          "status": "failed",
+          "stderrExcerpt": "Error: Error code: 401 - {'error': {'message': 'Missing Authentication header', 'code': 401}}\n\nsession_id: 20260601_002155_206537\n",
+          "stdoutExcerpt": "[paperclip] No project or prior session workspace was available. Using fallback workspace \"/paperclip/instances/default/workspaces/2bb37a6a-3537-46fc-a701-7ec20a790137\" for this run.\n[hermes] Starting Hermes Agent (model=mimo-v2.5-pro, timeout=90s)\n[hermes] Exit code: 1, timed out: false\n[hermes] Session: 20260601_002155_206537\n",
+          "triggerDetail": "manual",
+          "updatedAt": "2026-06-01T00:21:57.239Z",
+          "usageJson": null,
+          "wakeupRequestId": "9fb95ffb-7817-441d-8109-fbfdbe05baf6"
+        },
+        "ok": true,
+        "status": 200,
+        "text": null,
+        "truncated": false,
+        "url": "https://paperclip.oysana.com/api/heartbeat-runs/62c587ff-0b9f-436a-a303-d96f65ec7d7a"
+      }
+    ],
+    "resultJson": {
+      "cost_usd": null,
+      "effectiveTimeoutSec": 90,
+      "result": "",
+      "session_id": "20260601_002155_206537",
+      "stopReason": "adapter_failed",
+      "timeoutConfigured": true,
+      "timeoutFired": false,
+      "timeoutSource": "config",
+      "usage": null
+    },
+    "runId": "62c587ff-0b9f-436a-a303-d96f65ec7d7a",
+    "sourceWriteCountDelta": 0,
+    "status": "failed",
+    "wakeCountDelta": 1,
+    "wakeCounts": {
+      "after": 1,
+      "before": 0,
+      "delta": 1
+    }
+  },
+  "safety": {
+    "max_runtime_invocations": 1,
+    "plaintext_secrets_requested_or_logged": false,
+    "runner_exit_policy": "exit_zero_for_valid_proof_or_valid_fail_closed_blocker",
+    "unsupported_paths_used": []
+  },
+  "schema_version": "m005-s01-hermes-xiaomi/v1",
+  "selected_path": "hermes_local_with_xiaomi_backend"
+}

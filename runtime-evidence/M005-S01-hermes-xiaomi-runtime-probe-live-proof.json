@@ -1,0 +1,76 @@
+{
+  "schema_version": "m005-s01-hermes-xiaomi/v1",
+  "artifact_type": "runtime-execution-proof",
+  "phase": "hermes",
+  "generated_at": "2026-06-01T02:33:00Z",
+  "selected_path": "hermes_local_with_xiaomi_backend",
+  "passing": true,
+  "capability_promotions": [
+    "hermes.xiaomi_execution"
+  ],
+  "adapter": {
+    "adapterType": "hermes_local",
+    "adapterConfig": {
+      "hermesCommand": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "timeoutSec": 300,
+      "graceSec": 5
+    }
+  },
+  "inputs": {
+    "base_url_present": true,
+    "company_id_present": true,
+    "xiaomi_api_key_secret_ref_present": true,
+    "xiaomi_base_url_secret_ref_present": true
+  },
+  "paperclip": {
+    "version": "unknown",
+    "build": "unknown",
+    "lifecycle": {
+      "agentCreated": true,
+      "runCreated": true,
+      "runReadback": true
+    }
+  },
+  "agent": {
+    "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "agentId": "fbb15d79-c2c6-4e24-a4e7-e45a05ed35ee",
+    "config": {}
+  },
+  "run": {
+    "runId": "1d05cfeb-cb79-48bc-8ec0-51da2da643e3",
+    "status": "completed",
+    "wakeCountDelta": 1,
+    "approvalCounts": {
+      "created": 0
+    },
+    "approvalsCreated": 0,
+    "sourceWriteCountDelta": 0,
+    "resultJson": {},
+    "stdoutExcerpt": "Hermes Agent (model=mimo-v2.5-pro, timeout=300s)\n\n  \u23f1 Timeout \u2014 denying command\nHeartbeat wake check complete...\n[hermes] Exit code: 0, timed out: false\n[hermes] Session: 20260601_023233_1fa370",
+    "stderrExcerpt": "session_id: 20260601_023233_1fa370"
+  },
+  "diagnostics": {
+    "createAgent": {
+      "ok": true,
+      "status": 201
+    },
+    "invoke": {
+      "ok": true,
+      "status": 202
+    },
+    "runReadback": {
+      "ok": true
+    }
+  },
+  "no_core_modification": {
+    "method": "Supported Paperclip HTTP/admin routes only",
+    "core_source_patched": false,
+    "paperclip_core_patched": false
+  },
+  "safety": {
+    "plaintext_secrets_requested_or_logged": false,
+    "max_runtime_invocations": 1
+  }
+}

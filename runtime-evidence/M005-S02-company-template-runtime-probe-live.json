@@ -1,0 +1,77 @@
+{
+  "schema_version": "m005-s02-company-template/v1",
+  "artifact_type": "runtime-execution-proof",
+  "phase": "company_template",
+  "generated_at": "2026-06-01T03:05:00Z",
+  "selected_path": "paperclip_company_template",
+  "passing": true,
+  "capability_promotions": [
+    "company.template_imported",
+    "company.divisions_active"
+  ],
+  "company": {
+    "companyId": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "name": "BOS Light Sandbox",
+    "divisions": [
+      {
+        "id": "Div1.HCO",
+        "name": "Head Communication Office",
+        "role": "general"
+      },
+      {
+        "id": "Div2.MasterPlanner",
+        "name": "Shaping / Product Planning",
+        "role": "pm"
+      },
+      {
+        "id": "Div3.Treasury",
+        "name": "Treasury / Access",
+        "role": "cfo"
+      },
+      {
+        "id": "Div4.Production",
+        "name": "Production / Build / Delivery",
+        "role": "engineer"
+      },
+      {
+        "id": "Div5.QualificationsLibraryLearning",
+        "name": "Qualifications / Library / Learning",
+        "role": "qa"
+      },
+      {
+        "id": "Div6.External",
+        "name": "External / DMZ",
+        "role": "security"
+      },
+      {
+        "id": "Div7.MissionControl",
+        "name": "Mission Control / Strategy",
+        "role": "researcher"
+      }
+    ]
+  },
+  "inputs": {
+    "company_id_present": true,
+    "divisions_count": 7,
+    "all_divisions_active": true
+  },
+  "diagnostics": {
+    "company_read": {
+      "ok": true,
+      "status": 200
+    },
+    "agents_list": {
+      "ok": true,
+      "status": 200,
+      "count": 7
+    }
+  },
+  "no_core_modification": {
+    "method": "Supported Paperclip HTTP routes only",
+    "core_source_patched": false,
+    "paperclip_core_patched": false
+  },
+  "safety": {
+    "plaintext_secrets_requested_or_logged": false
+  }
+}
