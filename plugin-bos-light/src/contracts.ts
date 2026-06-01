@@ -520,4 +520,30 @@ export interface SanitizedRepoSnapshot {
   secret_scan_passed: boolean;
   approved_at: string;
   approved_by: "Div5.QualificationsLibraryLearning";
+  /** Optional local workspace path propagated from Div6 → Div5 → Div4. */
+  local_path?: string;
+}
+
+/* ── Div4 Production contracts ── */
+
+export interface Div4ProductionUnauthorized {
+  schema_version: "1.0";
+  authorized: false;
+  caller: Division;
+  required_role: "Div4.Production";
+  reason: string;
+  rejected_at: string;
+}
+
+export interface ProductionWorkEvidence {
+  schema_version: "1.0";
+  mission_id: string;
+  snapshot_id: string;
+  commit_sha: string;
+  diff_hash: string;
+  branch_created: string;
+  files_changed: string[];
+  pushed: false;
+  produced_at: string;
+  produced_by: "Div4.Production";
 }

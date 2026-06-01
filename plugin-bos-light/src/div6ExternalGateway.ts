@@ -26,6 +26,8 @@ export interface ExternalGitEvidence {
   quarantine_ref: string;
   produced_at: string;
   produced_by: "Div6.External";
+  /** Optional local workspace path to propagate downstream (Div6 → Div5 → Div4). */
+  local_path?: string;
   /** Optional structured metadata parsed from git output (refs, branches, commit SHAs). */
   parsed_metadata?: {
     branches?: string[];
@@ -253,6 +255,10 @@ export async function executeExternalGitOperation(
     produced_at: now(),
     produced_by: DIV6_EXTERNAL,
   };
+
+  if (localPath) {
+    evidence.local_path = localPath;
+  }
 
   if (gitEvidence.metadata) {
     evidence.parsed_metadata = gitEvidence.metadata;
