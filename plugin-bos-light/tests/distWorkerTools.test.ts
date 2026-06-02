@@ -313,7 +313,8 @@ describe("dist/worker.js plugin tools", () => {
   describe("bos-route-packet", () => {
     it("routes intake to Div7.MissionControl", async () => {
       const result = await handler("bos-route-packet")({ mission_id: "m1", packet_type: "intake" }) as any;
-      expect(result.routed_to).toBe("Div7.MissionControl");
+      expect(result.routed_to).toEqual(["Div7.MissionControl"]);
+      expect(result.routing_rule).toBe("requires_executive_decision");
       expect(result.packet_type).toBe("intake");
       expect(result.mission_id).toBe("m1");
       expect(result.payload).toEqual({});
@@ -322,27 +323,32 @@ describe("dist/worker.js plugin tools", () => {
 
     it("routes planning to Div2.MasterPlanner", async () => {
       const result = await handler("bos-route-packet")({ mission_id: "m1", packet_type: "planning" }) as any;
-      expect(result.routed_to).toBe("Div2.MasterPlanner");
+      expect(result.routed_to).toEqual(["Div2.MasterPlanner"]);
+      expect(result.routing_rule).toBe("backlog_shaping");
     });
 
     it("routes execution to Div4.Production", async () => {
       const result = await handler("bos-route-packet")({ mission_id: "m1", packet_type: "execution" }) as any;
-      expect(result.routed_to).toBe("Div4.Production");
+      expect(result.routed_to).toEqual(["Div4.Production"]);
+      expect(result.routing_rule).toBe("implementation");
     });
 
     it("routes review to Div1.HCO", async () => {
       const result = await handler("bos-route-packet")({ mission_id: "m1", packet_type: "review" }) as any;
-      expect(result.routed_to).toBe("Div1.HCO");
+      expect(result.routed_to).toEqual(["Div1.HCO"]);
+      expect(result.routing_rule).toBe("operational_review");
     });
 
     it("routes external to Div6.External", async () => {
       const result = await handler("bos-route-packet")({ mission_id: "m1", packet_type: "external" }) as any;
-      expect(result.routed_to).toBe("Div6.External");
+      expect(result.routed_to).toEqual(["Div6.External"]);
+      expect(result.routing_rule).toBe("external_io");
     });
 
     it("defaults unknown packet_type to Div7.MissionControl", async () => {
       const result = await handler("bos-route-packet")({ mission_id: "m1", packet_type: "unknown_type" }) as any;
-      expect(result.routed_to).toBe("Div7.MissionControl");
+      expect(result.routed_to).toEqual(["Div7.MissionControl"]);
+      expect(result.routing_rule).toBe("unknown_fallback");
     });
 
     it("includes payload when provided", async () => {
