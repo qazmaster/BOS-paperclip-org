@@ -6,7 +6,7 @@
  *   bos-circuit-breaker, bos-decide, bos-route-packet
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { activate } from "../dist/worker.js";
+import { activate, AgentActionValidator, createValidatedToolWrapper } from "../dist/worker.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -389,6 +389,153 @@ describe("dist/worker.js plugin tools", () => {
       expect(names).toContain("bos-circuit-breaker");
       expect(names).toContain("bos-decide");
       expect(names).toContain("bos-route-packet");
+    });
+  });
+
+  // =========================================================================
+  // Grant Policy Enforcement
+  // =========================================================================
+  describe("grant policy enforcement", () => {
+    it("exposes AgentActionValidator and createValidatedToolWrapper as exports", () => {
+      expect(AgentActionValidator).toBeDefined();
+      expect(createValidatedToolWrapper).toBeDefined();
+      expect(typeof createValidatedToolWrapper).toBe("function");
+    });
+
+    it("default tools work for Div7.MissionControl (not in denied list for BOS tools)", async () => {
+      const result = await handler("bos-bpi-score")({ mission_id: "m1" }) as any;
+      // Div7.MissionControl is not denied bos-bpi-score (not in denied list)
+      expect(result.error).toBeUndefined();
+      expect(result.mission_id).toBe("m1");
+    });
+
+    it("tool wrapper returns grant_denied for tools denied to a division", async () => {
+      const validator = new AgentActionValidator();
+      const wrap = createValidatedToolWrapper(validator, "Div4.Production", "test-mission");
+      const testHandler = wrap("web_search", async () => ({ result: "found" }));
+
+      // Div4.PProduction is denied web_search (external-world access check fires first)
+      const result = await testHandler() as any;
+      expect(result.error).toBe("grant_denied");
+      expect(result.division).toBe("Div4.Production");
+      expect(result.reason).toContain("external-world access");
+      expect(result.denialId).toBeDefined();
+    });
+
+    it("tool wrapper allows access for tools not in denied list", async () => {
+      const validator = new AgentActionValidator();
+      const wrap = createValidatedToolWrapper(validator, "Div4.Production", "test-mission");
+      const testHandler = wrap("repo_read", async () => ({ result: "content" }));
+
+      // Div4.Production is allowed repo_read
+      const result = await testHandler() as any;
+      expect(result.error).toBeUndefined();
+      expect(result.result).toBe("content");
+    });
+
+    it("denial log records grant denials with correct fields", async () => {
+      const validator = new AgentActionValidator();
+      const wrap = createValidatedToolWrapper(validator, "Div2.MasterPlanner", "test-mission");
+      const testHandler = wrap("external_api", async () => ({}));
+
+      await testHandler();
+
+      const denials = validator.getDenialLog();
+      expect(denials.length).toBe(1);
+      expect(denials[0].division).toBe("Div2.MasterPlanner");
+      expect(denials[0].toolName).toBe("external_api");
+      expect(denials[0].missionId).toBe("test-mission");
+      expect(denials[0].denialId).toMatch(/^den_/);
+      expect(denials[0].reason).toContain("external-world access");
+    });
+
+    it("denial log filters by division", async () => {
+      const validator = new AgentActionValidator();
+
+      // Deny for Div2
+      const wrap2 = createValidatedToolWrapper(validator, "Div2.MasterPlanner", "m1");
+      await wrap2("web_search", async () => ({}))();
+      await wrap2("external_api", async () => ({}))();
+
+      // Deny for Div4
+      const wrap4 = createValidatedToolWrapper(validator, "Div4.Production", "m1");
+      await wrap4("web_search", async () => ({}))();
+
+      expect(validator.getDenialLog().length).toBe(3);
+      expect(validator.getDenialsForDivision("Div2.MasterPlanner").length).toBe(2);
+      expect(validator.getDenialsForDivision("Div4.Production").length).toBe(1);
+    });
+
+    it("denial log filters by mission", async () => {
+      const validator = new AgentActionValidator();
+
+      const wrapA = createValidatedToolWrapper(validator, "Div4.Production", "mission-alpha");
+      await wrapA("web_search", async () => ({}))();
+
+      const wrapB = createValidatedToolWrapper(validator, "Div4.Production", "mission-beta");
+      await wrapB("web_search", async () => ({}))();
+
+      expect(validator.getDenialsForMission("mission-alpha").length).toBe(1);
+      expect(validator.getDenialsForMission("mission-beta").length).toBe(1);
+      expect(validator.getDenialsForMission("mission-gamma").length).toBe(0);
+    });
+
+    it("cross-division: Div4 can use repo_read but not web_search", async () => {
+      const validator = new AgentActionValidator();
+      const wrap = createValidatedToolWrapper(validator, "Div4.Production", "cross-test");
+
+      // Allowed: repo_read
+      const allowedHandler = wrap("repo_read", async () => ({ data: "ok" }));
+      const allowedResult = await allowedHandler() as any;
+      expect(allowedResult.error).toBeUndefined();
+      expect(allowedResult.data).toBe("ok");
+
+      // Denied: web_search
+      const deniedHandler = wrap("web_search", async () => ({ data: "nope" }));
+      const deniedResult = await deniedHandler() as any;
+      expect(deniedResult.error).toBe("grant_denied");
+      expect(deniedResult.division).toBe("Div4.Production");
+    });
+
+    it("cross-division: Div6.External can use web_search but Div3.Treasury cannot", async () => {
+      const validator = new AgentActionValidator();
+
+      // Div6.External allowed web_search
+      const wrap6 = createValidatedToolWrapper(validator, "Div6.External", "ext-test");
+      const handler6 = wrap6("web_search", async () => ({ found: true }));
+      const result6 = await handler6() as any;
+      expect(result6.error).toBeUndefined();
+      expect(result6.found).toBe(true);
+
+      // Div3.Treasury denied web_search
+      const wrap3 = createValidatedToolWrapper(validator, "Div3.Treasury", "treasury-test");
+      const handler3 = wrap3("web_search", async () => ({}));
+      const result3 = await handler3() as any;
+      expect(result3.error).toBe("grant_denied");
+      expect(result3.reason).toContain("external-world access");
+    });
+
+    it("grant_denied response includes decision metadata", async () => {
+      const validator = new AgentActionValidator();
+      const wrapProd = createValidatedToolWrapper(validator, "Div4.Production", "meta-test");
+      const handler = wrapProd("external_api", async () => ({}));
+      const result = await handler() as any;
+
+      expect(result.error).toBe("grant_denied");
+      expect(result.tool).toBe("external_api");
+      expect(result.division).toBe("Div4.Production");
+      expect(result.decision).toBeDefined();
+      expect(result.decision.status).toBe("denied");
+    });
+
+    it("clearDenialLog resets the log", async () => {
+      const validator = new AgentActionValidator();
+      const wrap = createValidatedToolWrapper(validator, "Div4.Production", "clear-test");
+      await wrap("web_search", async () => ({}))();
+      expect(validator.getDenialLog().length).toBe(1);
+
+      validator.clearDenialLog();
+      expect(validator.getDenialLog().length).toBe(0);
     });
   });
 });
