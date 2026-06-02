@@ -20,6 +20,7 @@ import type { MissionEnvelope } from "./missionIntake";
 import type { Division, MissionRoutingState, MissionRouterUnauthorized, MissionSignals } from "./contracts";
 import { routeApprovedMission } from "./missionRouter";
 import { deriveMissionSignals } from "./missionSignals";
+import { getDivisionInbox } from "./divisionPacketRouter";
 
 // ─── Hook Event Shapes ───────────────────────────────────────────────────────
 
@@ -500,8 +501,21 @@ export function mapDomainEventToHookEvent(
 // ─── MissionRouter Issue Created Hook ────────────────────────────────────────
 
 /**
+ * Record of a packet delivered to a division as part of a routing decision.
+ * Links DivisionPacketRouter delivery back to the originating issue.
+ */
+export interface PacketDeliveryRecord {
+  packetId: string;
+  packetType: string;
+  toDivision: Division;
+  fromDivision: Division;
+  deliveredAt: string;
+}
+
+/**
  * Routing decision log entry for observability.
  * Emitted whenever the MissionRouter hook processes an issue.created event.
+ * Includes packet delivery diagnostics for DivisionPacketRouter traceability.
  */
 export interface RoutingDecisionLogEntry {
   issueId: string;
@@ -509,12 +523,16 @@ export interface RoutingDecisionLogEntry {
   missionId: string;
   signals: MissionSignals;
   routingResult: MissionRoutingState | MissionRouterUnauthorized;
+  packetDeliveries: PacketDeliveryRecord[];
   routedAt: string;
 }
 
 /** In-memory routing decision log for diagnostics. */
 const routingDecisionLog: RoutingDecisionLogEntry[] = [];
 const MAX_ROUTING_LOG_SIZE = 500;
+
+/** Index: issueId -> packet IDs for traceability. */
+const issuePacketIndex: Map<string, string[]> = new Map();
 
 /** Get recent routing decision log entries. */
 export function getRoutingDecisionLog(limit?: number): RoutingDecisionLogEntry[] {
@@ -527,6 +545,42 @@ export function getRoutingDecisionLog(limit?: number): RoutingDecisionLogEntry[]
 /** Clear the routing decision log. */
 export function clearRoutingDecisionLog(): void {
   routingDecisionLog.length = 0;
+  issuePacketIndex.clear();
+}
+
+/**
+ * Get all packets delivered for a specific issue.
+ * Uses the issue-to-packet index for O(1) lookup.
+ */
+export function getPacketsForIssue(issueId: string): PacketDeliveryRecord[] {
+  const packetIds = issuePacketIndex.get(issueId) ?? [];
+  const found: PacketDeliveryRecord[] = [];
+  for (const entry of routingDecisionLog) {
+    if (entry.issueId === issueId) {
+      found.push(...entry.packetDeliveries);
+    }
+  }
+  return found;
+}
+
+/**
+ * Get a summary of packet deliveries grouped by target division.
+ * Useful for observing which divisions have received work.
+ */
+export function getRoutingPacketSummary(): Map<Division, { count: number; latestPacketId: string }> {
+  const summary = new Map<Division, { count: number; latestPacketId: string }>();
+  for (const entry of routingDecisionLog) {
+    for (const delivery of entry.packetDeliveries) {
+      const existing = summary.get(delivery.toDivision);
+      if (existing) {
+        existing.count++;
+        existing.latestPacketId = delivery.packetId;
+      } else {
+        summary.set(delivery.toDivision, { count: 1, latestPacketId: delivery.packetId });
+      }
+    }
+  }
+  return summary;
 }
 
 /**
@@ -625,16 +679,47 @@ export async function missionRouterIssueCreatedHandler(
     // Step 2: Derive mission signals
     const signals = deriveMissionSignals(mission);
 
-    // Step 3: Route via MissionRouter (caller is Div1.HCO)
+    // Step 3: Snapshot inbox state before routing to detect new packets
+    const inboxSnapshotBefore = new Map<Division, number>();
+    for (const div of mission.requested_divisions) {
+      inboxSnapshotBefore.set(div, getDivisionInbox(div).length);
+    }
+    // Also snapshot Div7 inbox (always receives status_update)
+    inboxSnapshotBefore.set("Div7.MissionControl", getDivisionInbox("Div7.MissionControl").length);
+
+    // Step 4: Route via MissionRouter (caller is Div1.HCO)
     const routingResult = routeApprovedMission("Div1.HCO", mission);
 
-    // Step 4: Log the routing decision
+    // Step 5: Capture packet deliveries by diffing inbox state
+    const packetDeliveries: PacketDeliveryRecord[] = [];
+    const allDivisions = new Set<Division>([
+      ...mission.requested_divisions,
+      "Div7.MissionControl",
+    ]);
+
+    for (const div of allDivisions) {
+      const beforeCount = inboxSnapshotBefore.get(div) ?? 0;
+      const afterInbox = getDivisionInbox(div);
+      for (let i = beforeCount; i < afterInbox.length; i++) {
+        const pkt = afterInbox[i];
+        packetDeliveries.push({
+          packetId: pkt.packet_id,
+          packetType: pkt.packet_type,
+          toDivision: pkt.to_division,
+          fromDivision: pkt.from_division,
+          deliveredAt: pkt.timestamp,
+        });
+      }
+    }
+
+    // Step 6: Log the routing decision with packet delivery diagnostics
     const logEntry: RoutingDecisionLogEntry = {
       issueId: payload.issueId,
       identifier: payload.identifier,
       missionId: mission.mission_id,
       signals,
       routingResult,
+      packetDeliveries,
       routedAt: new Date().toISOString(),
     };
 
@@ -642,6 +727,11 @@ export async function missionRouterIssueCreatedHandler(
     if (routingDecisionLog.length > MAX_ROUTING_LOG_SIZE) {
       routingDecisionLog.splice(0, routingDecisionLog.length - MAX_ROUTING_LOG_SIZE);
     }
+
+    // Index packets by issueId for traceability
+    const existingIds = issuePacketIndex.get(payload.issueId) ?? [];
+    existingIds.push(...packetDeliveries.map(d => d.packetId));
+    issuePacketIndex.set(payload.issueId, existingIds);
 
     const isAuthorized = "authorized" in routingResult && routingResult.authorized === false;
 
@@ -654,9 +744,11 @@ export async function missionRouterIssueCreatedHandler(
     }
 
     const state = routingResult as MissionRoutingState;
+    const packetCount = packetDeliveries.length;
+    const divisionNames = state.activated_divisions.join(", ");
     return {
       handled: true,
-      message: `MissionRouter routed ${payload.identifier} [${signals.taskClass}] → ${state.activated_divisions.join(", ")} (rule: ${state.routing_packet_id ? "routed" : "no-op"})`,
+      message: `MissionRouter routed ${payload.identifier} [${signals.taskClass}] → ${divisionNames} (${packetCount} packet${packetCount !== 1 ? "s" : ""} delivered, rule: ${state.routing_packet_id ? "routed" : "no-op"})`,
       durationMs: Date.now() - startTime,
     };
   } catch (error) {

@@ -5,10 +5,13 @@ import {
   issueCreatedToMissionEnvelope,
   getRoutingDecisionLog,
   clearRoutingDecisionLog,
+  getPacketsForIssue,
+  getRoutingPacketSummary,
   createBosLightHookManager,
   type IssueLifecycleHookEvent,
   type IssueCreatedPayload,
   type RoutingDecisionLogEntry,
+  type PacketDeliveryRecord,
 } from "../src/issueLifecycleHooks";
 import { clearPacketRouter, getDivisionInbox } from "../src/divisionPacketRouter";
 import type { MissionRoutingState, MissionRouterUnauthorized, Division } from "../src/contracts";
@@ -556,5 +559,265 @@ describe("createBosLightHookManager with MissionRouter integration", () => {
     const state = routingResult as MissionRoutingState;
     expect(state.activated_divisions).not.toContain("Div7.MissionControl");
     expect(state.activated_divisions).toContain("Div4.Production");
+  });
+});
+
+// ─── DivisionPacketRouter Wiring ─────────────────────────────────────────────
+
+describe("DivisionPacketRouter wiring to routing decisions", () => {
+  beforeEach(() => {
+    clearPacketRouter();
+    clearRoutingDecisionLog();
+  });
+
+  it("routing decision includes packet delivery records", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-001",
+      identifier: "BOS-PKT-1",
+      title: "Implement feature code",
+      description: "Build new feature",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    expect(log).toHaveLength(1);
+    expect(log[0].packetDeliveries).toBeDefined();
+    expect(log[0].packetDeliveries.length).toBeGreaterThan(0);
+  });
+
+  it("packet delivery records contain correct packet metadata", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-002",
+      identifier: "BOS-PKT-2",
+      title: "Implement dark mode code",
+      description: "Build new dark theme feature",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const deliveries = log[0].packetDeliveries;
+
+    // Each delivery should have valid fields
+    for (const d of deliveries) {
+      expect(d.packetId).toMatch(/^pkt_/);
+      expect(d.packetType).toBeDefined();
+      expect(d.toDivision).toBeDefined();
+      expect(d.fromDivision).toBe("Div1.HCO");
+      expect(d.deliveredAt).toBeDefined();
+    }
+  });
+
+  it("Div4 receives work_assignment packet from routing decision", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-003",
+      identifier: "BOS-PKT-3",
+      title: "Build new code feature",
+      description: "Implement the feature",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const div4Delivery = log[0].packetDeliveries.find(
+      d => d.toDivision === "Div4.Production"
+    );
+
+    expect(div4Delivery).toBeDefined();
+    expect(div4Delivery!.packetType).toBe("work_assignment");
+  });
+
+  it("Div5 receives QA request packet when QA keywords present", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-004",
+      identifier: "BOS-PKT-4",
+      title: "Implement and test new feature",
+      description: "Build code and verify quality",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const div5Delivery = log[0].packetDeliveries.find(
+      d => d.toDivision === "Div5.QualificationsLibraryLearning"
+    );
+
+    expect(div5Delivery).toBeDefined();
+    expect(div5Delivery!.packetType).toBe("work_assignment");
+  });
+
+  it("Div7 receives status_update packet for oversight on routine routing", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-005",
+      identifier: "BOS-PKT-5",
+      title: "Fix CSS bug",
+      description: "Simple layout fix",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const div7Delivery = log[0].packetDeliveries.find(
+      d => d.toDivision === "Div7.MissionControl"
+    );
+
+    expect(div7Delivery).toBeDefined();
+    expect(div7Delivery!.packetType).toBe("status_update");
+  });
+
+  it("Div7 receives work_assignment packet when executive decision needed", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-006",
+      identifier: "BOS-PKT-6",
+      title: "Strategic direction unclear",
+      description: "Ambiguous policy decision needed",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const div7WorkAssignment = log[0].packetDeliveries.find(
+      d => d.toDivision === "Div7.MissionControl" && d.packetType === "work_assignment"
+    );
+
+    expect(div7WorkAssignment).toBeDefined();
+  });
+
+  it("getPacketsForIssue returns packets linked to issue", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-007",
+      identifier: "BOS-PKT-7",
+      title: "Build and test new code feature",
+      description: "Implement and verify quality",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const packets = getPacketsForIssue("issue-pkt-007");
+    expect(packets.length).toBeGreaterThan(0);
+    expect(packets[0].packetId).toMatch(/^pkt_/);
+  });
+
+  it("getPacketsForIssue returns empty for unknown issue", () => {
+    const packets = getPacketsForIssue("nonexistent-issue");
+    expect(packets).toHaveLength(0);
+  });
+
+  it("getRoutingPacketSummary groups packets by target division", async () => {
+    // Route a code+QA issue
+    const event1 = makeCreatedEvent({
+      issueId: "issue-pkt-008",
+      identifier: "BOS-PKT-8",
+      title: "Build and test new code feature",
+      description: "Implement code and verify quality",
+    });
+
+    await missionRouterIssueCreatedHandler(event1);
+
+    const summary = getRoutingPacketSummary();
+    // Div4 and Div5 should be in summary
+    expect(summary.has("Div4.Production")).toBe(true);
+    expect(summary.has("Div5.QualificationsLibraryLearning")).toBe(true);
+
+    const div4Info = summary.get("Div4.Production");
+    expect(div4Info!.count).toBeGreaterThanOrEqual(1);
+    expect(div4Info!.latestPacketId).toMatch(/^pkt_/);
+  });
+
+  it("getRoutingPacketSummary accumulates across multiple routing decisions", async () => {
+    const event1 = makeCreatedEvent({
+      issueId: "issue-pkt-009",
+      identifier: "BOS-PKT-9",
+      title: "Build code feature A",
+    });
+    const event2 = makeCreatedEvent({
+      issueId: "issue-pkt-010",
+      identifier: "BOS-PKT-10",
+      title: "Build code feature B",
+    });
+
+    await missionRouterIssueCreatedHandler(event1);
+    await missionRouterIssueCreatedHandler(event2);
+
+    const summary = getRoutingPacketSummary();
+    const div4Info = summary.get("Div4.Production");
+    expect(div4Info!.count).toBeGreaterThanOrEqual(2);
+  });
+
+  it("clearRoutingDecisionLog also clears packet index", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-011",
+      identifier: "BOS-PKT-11",
+      title: "Build code feature",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+    expect(getPacketsForIssue("issue-pkt-011").length).toBeGreaterThan(0);
+
+    clearRoutingDecisionLog();
+    expect(getPacketsForIssue("issue-pkt-011")).toHaveLength(0);
+    expect(getRoutingPacketSummary().size).toBe(0);
+  });
+
+  it("packet delivery count matches activated divisions + Div7 oversight", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-pkt-012",
+      identifier: "BOS-PKT-12",
+      title: "Build and test new code feature",
+      description: "Implement code and run quality audit",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const state = log[0].routingResult as MissionRoutingState;
+    const deliveryCount = log[0].packetDeliveries.length;
+
+    // Each activated division gets a work_assignment + Div7 gets a status_update
+    const expectedMinPackets = state.activated_divisions.length + 1; // +1 for Div7 status_update
+    expect(deliveryCount).toBeGreaterThanOrEqual(expectedMinPackets);
+  });
+
+  it("e2e: full routing flow logs decisions with packets and inbox visibility", async () => {
+    const manager = createBosLightHookManager();
+
+    const event = makeCreatedEvent({
+      issueId: "issue-e2e-pkt-001",
+      identifier: "BOS-E2E-PKT-1",
+      title: "Implement and test new authentication feature",
+      description: "Build code and run quality tests",
+    });
+
+    await manager.dispatchEvent(event);
+
+    // 1. Routing decision was logged
+    const decisionLog = getRoutingDecisionLog();
+    expect(decisionLog).toHaveLength(1);
+
+    // 2. Decision includes packet delivery records
+    const { packetDeliveries, routingResult } = decisionLog[0];
+    expect(packetDeliveries.length).toBeGreaterThan(0);
+
+    // 3. Packets are visible in division inboxes
+    const state = routingResult as MissionRoutingState;
+    for (const division of state.activated_divisions) {
+      const inbox = getDivisionInbox(division);
+      expect(inbox.length).toBeGreaterThanOrEqual(1);
+    }
+
+    // 4. Packets traceable by issue ID
+    const tracedPackets = getPacketsForIssue("issue-e2e-pkt-001");
+    expect(tracedPackets.length).toBe(packetDeliveries.length);
+
+    // 5. Summary shows affected divisions
+    const summary = getRoutingPacketSummary();
+    expect(summary.size).toBeGreaterThan(0);
+
+    // 6. Handler message includes packet count
+    const routerHandler = (await manager.getInvocationLog()).find(
+      l => l.handlerName === "bos-light-mission-router"
+    );
+    expect(routerHandler!.result.message).toContain("packet");
   });
 });
