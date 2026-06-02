@@ -1,0 +1,115 @@
+{
+  "milestone": "M010",
+  "slice": "S03",
+  "created_at": "2026-06-02T19:42:58.265Z",
+  "schema_version": "M010-S03-agent-integration/v1",
+  "agent_visibility": {
+    "total_expected": 7,
+    "total_present": 7,
+    "all_present": true,
+    "readback_checks": {
+      "v141_agents_present": true,
+      "v141_agents_missing_empty": true,
+      "all_v141_present": true
+    },
+    "agents": [
+      {
+        "division": "Div1.HCO",
+        "agent_id": "8ad1fa82-4019-436b-af44-719264d235a5",
+        "action": "created",
+        "status": 201,
+        "present": true,
+        "metadata_correct": true,
+        "expected_title_fragment": "Div1.HCO"
+      },
+      {
+        "division": "Div2.MasterPlanner",
+        "agent_id": null,
+        "action": "skipped",
+        "status": null,
+        "present": true,
+        "metadata_correct": true,
+        "expected_title_fragment": "Div2.MasterPlanner"
+      },
+      {
+        "division": "Div3.Treasury",
+        "agent_id": null,
+        "action": "skipped",
+        "status": null,
+        "present": true,
+        "metadata_correct": true,
+        "expected_title_fragment": "Div3.Treasury"
+      },
+      {
+        "division": "Div4.Production",
+        "agent_id": null,
+        "action": "skipped",
+        "status": null,
+        "present": true,
+        "metadata_correct": true,
+        "expected_title_fragment": "Div4.Production"
+      },
+      {
+        "division": "Div5.QualificationsLibraryLearning",
+        "agent_id": null,
+        "action": "skipped",
+        "status": null,
+        "present": true,
+        "metadata_correct": true,
+        "expected_title_fragment": "Div5.QualificationsLibraryLearning"
+      },
+      {
+        "division": "Div6.External",
+        "agent_id": "725db3d3-3969-40fe-9b53-440837daa843",
+        "action": "created",
+        "status": 201,
+        "present": true,
+        "metadata_correct": true,
+        "expected_title_fragment": "Div6.External"
+      },
+      {
+        "division": "Div7.MissionControl",
+        "agent_id": "1854f725-2987-4296-9d5e-e09f75d466bd",
+        "action": "created",
+        "status": 201,
+        "present": true,
+        "metadata_correct": true,
+        "expected_title_fragment": "Div7.MissionControl"
+      }
+    ]
+  },
+  "tool_enforcement": {
+    "source": "plugin-bos-light/tests/agentIntegration.test.ts",
+    "description": "63 division-specific tool access integration tests covering all 7 divisions' allow/deny boundaries via AgentActionValidator and createValidatedToolWrapper",
+    "test_sections": [
+      "Div4.Production",
+      "Div6.External",
+      "Div3.Treasury",
+      "Div7.MissionControl",
+      "Div1.HCO",
+      "Div2.MasterPlanner",
+      "Div5.QualificationsLibraryLearning",
+      "grant lifecycle",
+      "denial log accumulation and filtering",
+      "cross-division boundary matrix"
+    ],
+    "enforcement_mechanism": "AgentActionValidator.validate() with division-specific deniedToolsByDivision and external-world access checks via createValidatedToolWrapper",
+    "denial_log_enabled": true
+  },
+  "hook_integration": {
+    "source": "plugin-bos-light/tests/agentIntegration.test.ts",
+    "description": "21 agent-to-hook integration tests proving full issue routing flow: event dispatch through MissionRouter, two-pass CHAOTIC/COMPLICATED routing via Div7 executive decision, and division inbox packet delivery",
+    "test_sections": [
+      "full issue routing flow",
+      "two-pass routing through Div7 executive decision",
+      "division inbox packet delivery",
+      "edge cases",
+      "MissionSignals derivation through routing"
+    ],
+    "hook_manager": "IssueLifecycleHookManager with bos-light-log-created and bos-light-mission-router handlers",
+    "routing_decision_log": true,
+    "hook_invocation_log": true,
+    "routing_packet_summary": true
+  },
+  "overall_verdict": "pass"
+}
