@@ -6,7 +6,13 @@
  *   bos-circuit-breaker, bos-decide, bos-route-packet
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { activate, AgentActionValidator, createValidatedToolWrapper } from "../dist/worker.js";
+import {
+  activate, AgentActionValidator, createValidatedToolWrapper,
+  IssueLifecycleHookManager, mapDomainEventToHookEvent, createBosLightHookManager,
+  missionRouterIssueCreatedHandler, logIssueCreatedHandler, logIssueUpdatedHandler, logIssueAssignmentHandler,
+  deriveMissionSignalsFromText, inferDivisionsFromText, requiresExecutiveDecision,
+  getRoutingDecisionLog, clearRoutingDecisionLog, getRoutingPacketSummary, getPacketsForIssue,
+} from "../dist/worker.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -380,8 +386,8 @@ describe("dist/worker.js plugin tools", () => {
   // Registration
   // =========================================================================
   describe("registration", () => {
-    it("registers all 6 tools", () => {
-      expect(ctx.tools.register).toHaveBeenCalledTimes(6);
+    it("registers all 7 tools (6 BOS + bos-dispatch-event)", () => {
+      expect(ctx.tools.register).toHaveBeenCalledTimes(7);
       const names = ctx._tools.map((t) => t.name);
       expect(names).toContain("bos-bpi-score");
       expect(names).toContain("bos-blueprint-gen");
@@ -389,6 +395,22 @@ describe("dist/worker.js plugin tools", () => {
       expect(names).toContain("bos-circuit-breaker");
       expect(names).toContain("bos-decide");
       expect(names).toContain("bos-route-packet");
+      expect(names).toContain("bos-dispatch-event");
+    });
+
+    it("stores hook manager on ctx._hookManager", () => {
+      expect(ctx._hookManager).toBeDefined();
+      expect(ctx._hookManager).toBeInstanceOf(IssueLifecycleHookManager);
+    });
+
+    it("hook manager has all 4 handlers registered", () => {
+      const allHandlers = ctx._hookManager.listAllHandlers();
+      expect(allHandlers.length).toBe(4);
+      const handlerNames = allHandlers.map(h => h.handlerName);
+      expect(handlerNames).toContain("bos-light-log-created");
+      expect(handlerNames).toContain("bos-light-log-updated");
+      expect(handlerNames).toContain("bos-light-log-assignment");
+      expect(handlerNames).toContain("bos-light-mission-router");
     });
   });
 
@@ -536,6 +558,580 @@ describe("dist/worker.js plugin tools", () => {
 
       validator.clearDenialLog();
       expect(validator.getDenialLog().length).toBe(0);
+    });
+  });
+
+  // =========================================================================
+  // Issue Lifecycle Hook Manager
+  // =========================================================================
+  describe("IssueLifecycleHookManager", () => {
+    it("is exported and constructable", () => {
+      const manager = new IssueLifecycleHookManager();
+      expect(manager).toBeDefined();
+      expect(manager.listAllHandlers()).toEqual([]);
+    });
+
+    it("registers and lists handlers for each event type", () => {
+      const manager = new IssueLifecycleHookManager();
+      manager.on("issue.created", "test-handler", async () => ({ handled: true, durationMs: 0 }));
+      expect(manager.listHandlers("issue.created")).toEqual(["test-handler"]);
+      expect(manager.listHandlers("issue.updated")).toEqual([]);
+    });
+
+    it("throws on duplicate handler registration", () => {
+      const manager = new IssueLifecycleHookManager();
+      manager.on("issue.created", "h1", async () => ({ handled: true, durationMs: 0 }));
+      expect(() => manager.on("issue.created", "h1", async () => ({ handled: true, durationMs: 0 }))).toThrow('Handler "h1" is already registered for event "issue.created"');
+    });
+
+    it("unregisters handlers with off()", () => {
+      const manager = new IssueLifecycleHookManager();
+      manager.on("issue.created", "h1", async () => ({ handled: true, durationMs: 0 }));
+      expect(manager.off("issue.created", "h1")).toBe(true);
+      expect(manager.off("issue.created", "h1")).toBe(false);
+      expect(manager.listHandlers("issue.created")).toEqual([]);
+    });
+
+    it("dispatches events to registered handlers and logs invocations", async () => {
+      const manager = new IssueLifecycleHookManager();
+      const mockHandler = vi.fn(async () => ({ handled: true, message: "ok", durationMs: 5 }));
+      manager.on("issue.created", "test-handler", mockHandler);
+
+      const event = {
+        eventType: "issue.created" as const,
+        eventId: "evt-001",
+        occurredAt: "2026-06-02T10:00:00.000Z",
+        payload: { issueId: "issue-1", companyId: "c1", identifier: "BOS-1", title: "Test", status: "open", createdAt: "2026-06-02T10:00:00.000Z" },
+      };
+
+      const logs = await manager.dispatchEvent(event);
+      expect(logs.length).toBe(1);
+      expect(logs[0].handlerName).toBe("test-handler");
+      expect(logs[0].result.handled).toBe(true);
+      expect(mockHandler).toHaveBeenCalledTimes(1);
+
+      expect(manager.getInvocationCount()).toBe(1);
+      expect(manager.getInvocationLogByIssueId("issue-1").length).toBe(1);
+      expect(manager.getInvocationCountByEventType()["issue.created"]).toBe(1);
+    });
+
+    it("returns empty-handler log when no handlers registered for event", async () => {
+      const manager = new IssueLifecycleHookManager();
+      const event = {
+        eventType: "issue.created" as const,
+        eventId: "evt-002",
+        occurredAt: "2026-06-02T10:00:00.000Z",
+        payload: { issueId: "issue-2", companyId: "c1", identifier: "BOS-2", title: "Test", status: "open", createdAt: "2026-06-02T10:00:00.000Z" },
+      };
+
+      const logs = await manager.dispatchEvent(event);
+      expect(logs.length).toBe(1);
+      expect(logs[0].handlerName).toBe("(no handlers)");
+      expect(logs[0].result.handled).toBe(false);
+    });
+
+    it("captures handler errors in invocation log", async () => {
+      const manager = new IssueLifecycleHookManager();
+      manager.on("issue.created", "fail-handler", async () => { throw new Error("boom"); });
+
+      const event = {
+        eventType: "issue.created" as const,
+        eventId: "evt-003",
+        occurredAt: "2026-06-02T10:00:00.000Z",
+        payload: { issueId: "issue-3", companyId: "c1", identifier: "BOS-3", title: "Test", status: "open", createdAt: "2026-06-02T10:00:00.000Z" },
+      };
+
+      const logs = await manager.dispatchEvent(event);
+      expect(logs[0].result.handled).toBe(false);
+      expect(logs[0].result.error).toBe("boom");
+    });
+
+    it("clearInvocationLog resets the log", async () => {
+      const manager = new IssueLifecycleHookManager();
+      manager.on("issue.created", "h", async () => ({ handled: true, durationMs: 0 }));
+      await manager.dispatchEvent({
+        eventType: "issue.created" as const,
+        eventId: "evt-004",
+        occurredAt: new Date().toISOString(),
+        payload: { issueId: "i4", companyId: "c1", identifier: "B-4", title: "T", status: "open", createdAt: new Date().toISOString() },
+      });
+      expect(manager.getInvocationCount()).toBe(1);
+      manager.clearInvocationLog();
+      expect(manager.getInvocationCount()).toBe(0);
+    });
+  });
+
+  // =========================================================================
+  // mapDomainEventToHookEvent
+  // =========================================================================
+  describe("mapDomainEventToHookEvent", () => {
+    it("maps issue.created domain event", () => {
+      const domainEvent = {
+        eventId: "de-001",
+        eventType: "issue.created",
+        occurredAt: "2026-06-02T10:00:00.000Z",
+        payload: { issueId: "i1", companyId: "c1", identifier: "BOS-1", title: "Test", status: "open", createdAt: "2026-06-02T10:00:00.000Z" },
+      };
+      const hookEvent = mapDomainEventToHookEvent(domainEvent);
+      expect(hookEvent).not.toBeNull();
+      expect(hookEvent!.eventType).toBe("issue.created");
+      expect(hookEvent!.eventId).toBe("de-001");
+    });
+
+    it("maps issue.checked_out to issue.assignment", () => {
+      const domainEvent = {
+        eventId: "de-002",
+        eventType: "issue.checked_out",
+        occurredAt: "2026-06-02T10:00:00.000Z",
+        payload: { issueId: "i1", companyId: "c1", identifier: "BOS-1" },
+      };
+      const hookEvent = mapDomainEventToHookEvent(domainEvent);
+      expect(hookEvent).not.toBeNull();
+      expect(hookEvent!.eventType).toBe("issue.assignment");
+    });
+
+    it("returns null for unrecognized event types", () => {
+      const domainEvent = {
+        eventId: "de-003",
+        eventType: "comment.created",
+        occurredAt: "2026-06-02T10:00:00.000Z",
+        payload: {},
+      };
+      expect(mapDomainEventToHookEvent(domainEvent)).toBeNull();
+    });
+  });
+
+  // =========================================================================
+  // createBosLightHookManager
+  // =========================================================================
+  describe("createBosLightHookManager", () => {
+    it("creates manager with 4 registered handlers", () => {
+      const manager = createBosLightHookManager();
+      const allHandlers = manager.listAllHandlers();
+      expect(allHandlers.length).toBe(4);
+    });
+
+    it("includes mission router handler for issue.created", () => {
+      const manager = createBosLightHookManager();
+      const createdHandlers = manager.listHandlers("issue.created");
+      expect(createdHandlers).toContain("bos-light-log-created");
+      expect(createdHandlers).toContain("bos-light-mission-router");
+    });
+  });
+
+  // =========================================================================
+  // MissionSignals derivation (inlined)
+  // =========================================================================
+  describe("deriveMissionSignalsFromText", () => {
+    it("classifies technical tasks", () => {
+      const signals = deriveMissionSignalsFromText("Implement auth flow");
+      expect(signals.taskClass).toBe("technical");
+      expect(signals.requiresImplementation).toBe(true);
+    });
+
+    it("classifies incident signals as CRITICAL", () => {
+      const signals = deriveMissionSignalsFromText("Critical outage in production");
+      expect(signals.incidentSignals).toBe(true);
+      expect(signals.riskLevel).toBe("CRITICAL");
+    });
+
+    it("classifies strategy tasks with policy signals", () => {
+      const signals = deriveMissionSignalsFromText("Strategic policy experiment");
+      expect(signals.taskClass).toBe("strategy");
+      expect(signals.policySignals).toBe(true);
+    });
+
+    it("detects external data requirements", () => {
+      const signals = deriveMissionSignalsFromText("Third-party API integration webhook");
+      expect(signals.requiresExternalData).toBe(true);
+    });
+  });
+
+  describe("requiresExecutiveDecision", () => {
+    it("returns true for incident signals", () => {
+      expect(requiresExecutiveDecision({
+        taskClass: "strategy", requiresExternalData: false, requiresBudgetOrAccess: false,
+        requiresImplementation: false, requiresQA: false, riskLevel: "CRITICAL",
+        ambiguityLevel: "low", incidentSignals: true, policySignals: false,
+      } as any)).toBe(true);
+    });
+
+    it("returns true for strategy task class", () => {
+      expect(requiresExecutiveDecision({
+        taskClass: "strategy", requiresExternalData: false, requiresBudgetOrAccess: false,
+        requiresImplementation: false, requiresQA: false, riskLevel: "MEDIUM",
+        ambiguityLevel: "low", incidentSignals: false, policySignals: true,
+      } as any)).toBe(true);
+    });
+
+    it("returns false for routine technical task", () => {
+      expect(requiresExecutiveDecision({
+        taskClass: "technical", requiresExternalData: false, requiresBudgetOrAccess: false,
+        requiresImplementation: true, requiresQA: false, riskLevel: "MEDIUM",
+        ambiguityLevel: "low", incidentSignals: false, policySignals: false,
+      } as any)).toBe(false);
+    });
+  });
+
+  // =========================================================================
+  // Routing Decision Log
+  // =========================================================================
+  describe("routing decision log", () => {
+    beforeEach(() => {
+      clearRoutingDecisionLog();
+    });
+
+    it("starts empty", () => {
+      expect(getRoutingDecisionLog()).toEqual([]);
+    });
+
+    it("getRoutingPacketSummary returns empty map initially", () => {
+      const summary = getRoutingPacketSummary();
+      expect(summary.size).toBe(0);
+    });
+
+    it("getPacketsForIssue returns empty array initially", () => {
+      expect(getPacketsForIssue("any-issue")).toEqual([]);
+    });
+  });
+
+  // =========================================================================
+  // bos-dispatch-event tool
+  // =========================================================================
+  describe("bos-dispatch-event tool", () => {
+    it("dispatches issue.created event through hook manager", async () => {
+      const result = await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-dispatch-001",
+          companyId: "company-1",
+          identifier: "BOS-D1",
+          title: "Implement feature",
+          description: "Build the code feature",
+          status: "open",
+          priority: "high",
+          createdAt: new Date().toISOString(),
+        },
+      }) as any;
+
+      expect(result.error).toBeUndefined();
+      expect(result.dispatched).toBe(true);
+      expect(result.event_type).toBe("issue.created");
+      expect(result.handlers_invoked).toBe(2); // log-created + mission-router
+      expect(result.results.length).toBe(2);
+      expect(result.eventId).toBeDefined();
+      expect(result.dispatched_at).toBeDefined();
+    });
+
+    it("dispatches issue.updated event through hook manager", async () => {
+      const result = await handler("bos-dispatch-event")({
+        event_type: "issue.updated",
+        payload: {
+          issueId: "issue-dispatch-002",
+          companyId: "company-1",
+          identifier: "BOS-D2",
+          status: "in_progress",
+          previousStatus: "open",
+          updatedAt: new Date().toISOString(),
+          changedFields: ["status"],
+        },
+      }) as any;
+
+      expect(result.dispatched).toBe(true);
+      expect(result.handlers_invoked).toBe(1); // log-updated only
+      expect(result.results[0].handler).toBe("bos-light-log-updated");
+      expect(result.results[0].handled).toBe(true);
+    });
+
+    it("dispatches issue.assignment event through hook manager", async () => {
+      const result = await handler("bos-dispatch-event")({
+        event_type: "issue.assignment",
+        payload: {
+          issueId: "issue-dispatch-003",
+          companyId: "company-1",
+          identifier: "BOS-D3",
+          assigneeAgentId: "agent-001",
+          assignedAt: new Date().toISOString(),
+        },
+      }) as any;
+
+      expect(result.dispatched).toBe(true);
+      expect(result.handlers_invoked).toBe(1); // log-assignment only
+      expect(result.results[0].handler).toBe("bos-light-log-assignment");
+    });
+
+    it("returns error when event_type is missing", async () => {
+      const result = await handler("bos-dispatch-event")({ payload: {} }) as any;
+      expect(result.error).toBe("event_type and payload required");
+    });
+
+    it("returns error when payload is missing", async () => {
+      const result = await handler("bos-dispatch-event")({ event_type: "issue.created" }) as any;
+      expect(result.error).toBe("event_type and payload required");
+    });
+
+    it("returns error when both params missing", async () => {
+      const result = await handler("bos-dispatch-event")({}) as any;
+      expect(result.error).toBe("event_type and payload required");
+    });
+  });
+
+  // =========================================================================
+  // MissionRouter integration via bos-dispatch-event
+  // =========================================================================
+  describe("MissionRouter integration via bos-dispatch-event", () => {
+    beforeEach(() => {
+      clearRoutingDecisionLog();
+    });
+
+    it("routes a technical issue to Div4.Production (routine, no Div7)", async () => {
+      const result = await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-route-001",
+          companyId: "company-1",
+          identifier: "BOS-R1",
+          title: "Fix login bug",
+          description: "Users cannot login due to auth error",
+          status: "open",
+          createdAt: new Date().toISOString(),
+        },
+      }) as any;
+
+      expect(result.dispatched).toBe(true);
+      const routerResult = result.results.find((r: any) => r.handler === "bos-light-mission-router");
+      expect(routerResult).toBeDefined();
+      expect(routerResult.handled).toBe(true);
+      expect(routerResult.message).toContain("Div4.Production");
+      expect(routerResult.message).toContain("implementation");
+
+      // Check routing decision log
+      const log = getRoutingDecisionLog();
+      expect(log.length).toBe(1);
+      expect(log[0].issueId).toBe("issue-route-001");
+      expect(log[0].signals.taskClass).toBe("technical");
+      expect(log[0].routingResult.activated_divisions).toContain("Div4.Production");
+      expect(log[0].twoPassRouting).toBeUndefined();
+    });
+
+    it("routes a critical incident through Div7 executive decision (two-pass)", async () => {
+      const result = await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-route-002",
+          companyId: "company-1",
+          identifier: "BOS-R2",
+          title: "Critical outage in production",
+          description: "Emergency crash recovery needed",
+          status: "open",
+          priority: "critical",
+          createdAt: new Date().toISOString(),
+        },
+      }) as any;
+
+      const routerResult = result.results.find((r: any) => r.handler === "bos-light-mission-router");
+      expect(routerResult.handled).toBe(true);
+      expect(routerResult.message).toContain("Div7 (executive decision)");
+      expect(routerResult.message).toContain("CHAOTIC");
+
+      const log = getRoutingDecisionLog();
+      expect(log.length).toBe(1);
+      expect(log[0].twoPassRouting).toBeDefined();
+      expect(log[0].twoPassRouting!.decisionDelegated.cynefin_domain).toBe("CHAOTIC");
+      expect(log[0].twoPassRouting!.operationalRoutingResult.activated_divisions).toContain("Div1.HCO");
+    });
+
+    it("routes a strategy/policy issue through Div7 (COMPLICATED domain)", async () => {
+      const result = await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-route-003",
+          companyId: "company-1",
+          identifier: "BOS-R3",
+          title: "Strategic policy experiment",
+          description: "Ambiguous strategy direction needed",
+          status: "open",
+          createdAt: new Date().toISOString(),
+        },
+      }) as any;
+
+      const routerResult = result.results.find((r: any) => r.handler === "bos-light-mission-router");
+      expect(routerResult.handled).toBe(true);
+      expect(routerResult.message).toContain("Div7 (executive decision)");
+
+      const log = getRoutingDecisionLog();
+      expect(log[0].twoPassRouting).toBeDefined();
+      expect(log[0].twoPassRouting!.decisionDelegated.cynefin_domain).toBe("COMPLICATED");
+    });
+
+    it("routes multi-division issues with QA signals", async () => {
+      const result = await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-route-004",
+          companyId: "company-1",
+          identifier: "BOS-R4",
+          title: "Code feature with security review",
+          description: "Build and test the new feature",
+          status: "open",
+          createdAt: new Date().toISOString(),
+        },
+      }) as any;
+
+      const routerResult = result.results.find((r: any) => r.handler === "bos-light-mission-router");
+      expect(routerResult.handled).toBe(true);
+      // Should route to both Div4.Production and Div5 (code + review keywords)
+      expect(routerResult.message).toContain("multi_division_workflow");
+
+      const log = getRoutingDecisionLog();
+      expect(log[0].routingResult.activated_divisions).toContain("Div4.Production");
+      expect(log[0].routingResult.activated_divisions).toContain("Div5.QualificationsLibraryLearning");
+    });
+
+    it("records packet deliveries in routing decision log", async () => {
+      await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-route-005",
+          companyId: "company-1",
+          identifier: "BOS-R5",
+          title: "Fix login bug",
+          status: "open",
+          createdAt: new Date().toISOString(),
+        },
+      });
+
+      const log = getRoutingDecisionLog();
+      expect(log[0].packetDeliveries.length).toBeGreaterThan(0);
+      expect(log[0].packetDeliveries[0].packetId).toBeDefined();
+      expect(log[0].packetDeliveries[0].toDivision).toBeDefined();
+      expect(log[0].packetDeliveries[0].fromDivision).toBe("Div1.HCO");
+    });
+
+    it("getPacketsForIssue returns packets for routed issue", async () => {
+      await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-route-006",
+          companyId: "company-1",
+          identifier: "BOS-R6",
+          title: "Fix login bug",
+          status: "open",
+          createdAt: new Date().toISOString(),
+        },
+      });
+
+      const packets = getPacketsForIssue("issue-route-006");
+      expect(packets.length).toBeGreaterThan(0);
+    });
+
+    it("getRoutingPacketSummary counts packets by division", async () => {
+      await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-route-007",
+          companyId: "company-1",
+          identifier: "BOS-R7",
+          title: "Fix login bug",
+          status: "open",
+          createdAt: new Date().toISOString(),
+        },
+      });
+
+      const summary = getRoutingPacketSummary();
+      expect(summary.size).toBeGreaterThan(0);
+    });
+  });
+
+  // =========================================================================
+  // Hook manager invocation log after dispatch
+  // =========================================================================
+  describe("hook manager invocation log after dispatch", () => {
+    it("tracks invocation log entries for dispatched events", async () => {
+      const hookMgr = ctx._hookManager as InstanceType<typeof IssueLifecycleHookManager>;
+      hookMgr.clearInvocationLog();
+
+      await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: {
+          issueId: "issue-log-001",
+          companyId: "company-1",
+          identifier: "BOS-L1",
+          title: "Implement feature",
+          status: "open",
+          createdAt: new Date().toISOString(),
+        },
+      });
+
+      const invLog = hookMgr.getInvocationLog();
+      expect(invLog.length).toBe(2); // log-created + mission-router
+      expect(invLog[0].handlerName).toBe("bos-light-log-created");
+      expect(invLog[1].handlerName).toBe("bos-light-mission-router");
+      expect(invLog[0].eventType).toBe("issue.created");
+      expect(invLog[0].issueId).toBe("issue-log-001");
+    });
+
+    it("tracks invocation count by event type", async () => {
+      const hookMgr = ctx._hookManager as InstanceType<typeof IssueLifecycleHookManager>;
+      hookMgr.clearInvocationLog();
+
+      await handler("bos-dispatch-event")({
+        event_type: "issue.created",
+        payload: { issueId: "i1", companyId: "c1", identifier: "B-1", title: "T", status: "open", createdAt: new Date().toISOString() },
+      });
+      await handler("bos-dispatch-event")({
+        event_type: "issue.updated",
+        payload: { issueId: "i1", companyId: "c1", identifier: "B-1", updatedAt: new Date().toISOString(), changedFields: ["status"] },
+      });
+
+      const counts = hookMgr.getInvocationCountByEventType();
+      expect(counts["issue.created"]).toBe(2); // 2 handlers for issue.created
+      expect(counts["issue.updated"]).toBe(1); // 1 handler for issue.updated
+    });
+  });
+
+  // =========================================================================
+  // ctx.events.on registration
+  // =========================================================================
+  describe("ctx.events.on registration", () => {
+    it("registers event handler when ctx.events.on is available", async () => {
+      const tools: RegisteredTool[] = [];
+      const eventsOn = vi.fn();
+      const mockCtx = {
+        logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+        tools: {
+          register: vi.fn(async (name: string, handler: (params: Record<string, unknown>) => Promise<unknown>) => {
+            tools.push({ name, handler });
+          }),
+        },
+        events: { on: eventsOn, emit: vi.fn() },
+        _tools: tools,
+      };
+
+      await activate(mockCtx as any);
+
+      expect(eventsOn).toHaveBeenCalledTimes(1);
+      expect(eventsOn).toHaveBeenCalledWith("issue.lifecycle", expect.any(Function));
+      expect(mockCtx.logger.info).toHaveBeenCalledWith(
+        "Registered issue.lifecycle event handler via ctx.events.on"
+      );
+    });
+
+    it("skips event registration when ctx.events is not available", async () => {
+      const tools: RegisteredTool[] = [];
+      const mockCtx = {
+        logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+        tools: {
+          register: vi.fn(async (name: string, handler: (params: Record<string, unknown>) => Promise<unknown>) => {
+            tools.push({ name, handler });
+          }),
+        },
+        _tools: tools,
+      };
+
+      await activate(mockCtx as any);
+      // Should not throw; hook manager still created
+      expect(mockCtx._hookManager).toBeDefined();
     });
   });
 });
