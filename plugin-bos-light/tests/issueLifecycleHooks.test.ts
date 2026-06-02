@@ -6,12 +6,14 @@ import {
   logIssueAssignmentHandler,
   mapDomainEventToHookEvent,
   createBosLightHookManager,
+  clearRoutingDecisionLog,
   type IssueLifecycleHookEvent,
   type IssueCreatedPayload,
   type IssueUpdatedPayload,
   type IssueAssignmentPayload,
   type HookHandlerResult,
 } from "../src/issueLifecycleHooks";
+import { clearPacketRouter } from "../src/divisionPacketRouter";
 import type { PaperclipDomainEvent } from "../src/pluginRegistration";
 
 // ─── Test Helpers ────────────────────────────────────────────────────────────
@@ -685,6 +687,11 @@ describe("mapDomainEventToHookEvent", () => {
 // ─── createBosLightHookManager ───────────────────────────────────────────────
 
 describe("createBosLightHookManager", () => {
+  beforeEach(() => {
+    clearPacketRouter();
+    clearRoutingDecisionLog();
+  });
+
   it("creates manager with default logging hooks", () => {
     const manager = createBosLightHookManager();
 
@@ -703,10 +710,12 @@ describe("createBosLightHookManager", () => {
     const manager = createBosLightHookManager();
     const logs = await manager.dispatchEvent(makeCreatedEvent());
 
-    expect(logs).toHaveLength(1);
-    expect(logs[0].result.handled).toBe(true);
-    expect(logs[0].result.message).toContain("Issue created");
-    expect(logs[0].handlerName).toBe("bos-light-log-created");
+    // Now 2 handlers fire: bos-light-log-created + bos-light-mission-router
+    expect(logs).toHaveLength(2);
+    const logEntry = logs.find(l => l.handlerName === "bos-light-log-created");
+    expect(logEntry).toBeDefined();
+    expect(logEntry!.result.handled).toBe(true);
+    expect(logEntry!.result.message).toContain("Issue created");
   });
 
   it("fires issue.updated hook on update event", async () => {
@@ -746,10 +755,10 @@ describe("createBosLightHookManager", () => {
     expect(updateLogs[0].result.handled).toBe(true);
     expect(assignLogs[0].result.handled).toBe(true);
 
-    // All three invocations should be logged
-    expect(manager.getInvocationCount()).toBe(3);
+    // All three invocations should be logged (create fires 2 handlers: log + router)
+    expect(manager.getInvocationCount()).toBe(4);
     expect(manager.getInvocationCountByEventType()).toEqual({
-      "issue.created": 1,
+      "issue.created": 2,
       "issue.updated": 1,
       "issue.assignment": 1,
     });
@@ -776,12 +785,17 @@ describe("createBosLightHookManager", () => {
 
     const logs = await manager.dispatchEvent(hookEvent!);
 
-    // Both handlers should fire
-    expect(logs).toHaveLength(2);
-    expect(logs[0].handlerName).toBe("bos-light-log-created");
-    expect(logs[0].result.handled).toBe(true);
-    expect(logs[1].handlerName).toBe("custom-triage");
-    expect(logs[1].result.handled).toBe(true);
-    expect(logs[1].result.message).toContain("BOS flow");
+    // All three handlers should fire (log + router + custom-triage for created)
+    expect(logs).toHaveLength(3);
+    const logEntry = logs.find(l => l.handlerName === "bos-light-log-created");
+    const routerEntry = logs.find(l => l.handlerName === "bos-light-mission-router");
+    const customEntry = logs.find(l => l.handlerName === "custom-triage");
+    expect(logEntry).toBeDefined();
+    expect(logEntry!.result.handled).toBe(true);
+    expect(routerEntry).toBeDefined();
+    expect(routerEntry!.result.handled).toBe(true);
+    expect(customEntry).toBeDefined();
+    expect(customEntry!.result.handled).toBe(true);
+    expect(customEntry!.result.message).toContain("BOS flow");
   });
 });

@@ -13,7 +13,7 @@
  * 
  * Timeout is set to 30 seconds for live network requests.
  */
-import { describe, expect, it, beforeAll } from "vitest";
+import { describe, expect, it, beforeAll, beforeEach } from "vitest";
 import {
   PluginRegistrationClient,
   createRegistrationClient,
@@ -23,7 +23,9 @@ import {
   IssueLifecycleHookManager,
   createBosLightHookManager,
   mapDomainEventToHookEvent,
+  clearRoutingDecisionLog,
 } from "../src/issueLifecycleHooks";
+import { clearPacketRouter } from "../src/divisionPacketRouter";
 
 // Load environment variables from root .env if not already set
 const PAPERCLIP_BASE_URL = process.env.PAPERCLIP_BASE_URL || "https://paperclip.oysana.com";
@@ -184,6 +186,11 @@ describe("Live Paperclip Plugin Registration", () => {
   });
 
   describe("Issue Lifecycle Hooks Verification", () => {
+    beforeEach(() => {
+      clearPacketRouter();
+      clearRoutingDecisionLog();
+    });
+
     it("creates and initializes hook manager", () => {
       const manager = createBosLightHookManager();
 
@@ -191,10 +198,11 @@ describe("Live Paperclip Plugin Registration", () => {
       const allHandlers = manager.listAllHandlers();
       console.log("Registered hook handlers:", allHandlers);
 
-      expect(allHandlers.length).toBe(3);
+      expect(allHandlers.length).toBe(4);
       expect(allHandlers.map(h => h.handlerName)).toContain("bos-light-log-created");
       expect(allHandlers.map(h => h.handlerName)).toContain("bos-light-log-updated");
       expect(allHandlers.map(h => h.handlerName)).toContain("bos-light-log-assignment");
+      expect(allHandlers.map(h => h.handlerName)).toContain("bos-light-mission-router");
     });
 
     it("dispatches issue.created event to hooks", async () => {
@@ -223,10 +231,12 @@ describe("Live Paperclip Plugin Registration", () => {
       const logs = await manager.dispatchEvent(event);
       console.log("Issue created hook dispatch logs:", logs);
 
-      expect(logs.length).toBe(1);
+      expect(logs.length).toBe(2);
       expect(logs[0].eventType).toBe("issue.created");
       expect(logs[0].result.handled).toBe(true);
       expect(logs[0].result.message).toContain("TEST-001");
+      expect(logs[1].eventType).toBe("issue.created");
+      expect(logs[1].handlerName).toBe("bos-light-mission-router");
     });
 
     it("dispatches issue.updated event to hooks", async () => {

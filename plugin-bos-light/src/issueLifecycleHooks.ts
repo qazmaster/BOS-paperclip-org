@@ -17,9 +17,9 @@
 
 import type { PaperclipDomainEvent } from "./pluginRegistration";
 import type { MissionEnvelope } from "./missionIntake";
-import type { Division, MissionRoutingState, MissionRouterUnauthorized, MissionSignals, DecisionDelegatedPayload } from "./contracts";
+import type { Division, MissionRoutingState, MissionRouterUnauthorized, DecisionDelegatedPayload } from "./contracts";
 import { routeApprovedMission, routeAfterDecision } from "./missionRouter";
-import { deriveMissionSignals } from "./missionSignals";
+import { deriveMissionSignals, type MissionSignals } from "./missionSignals";
 import { getDivisionInbox } from "./divisionPacketRouter";
 import { decide, createDecisionDelegated, delegateDecisionToDiv1 } from "./decision";
 
