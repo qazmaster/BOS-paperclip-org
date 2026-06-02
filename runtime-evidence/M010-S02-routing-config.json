@@ -1,0 +1,144 @@
+{
+  "milestone": "M010",
+  "slice": "S02",
+  "routing_rules_tested": 12,
+  "packet_types_tested": 14,
+  "rule_results": [
+    {
+      "rule": "requires_executive_decision",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div7.MissionControl"
+      ],
+      "packet_type": "intake"
+    },
+    {
+      "rule": "backlog_shaping",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div2.MasterPlanner"
+      ],
+      "packet_type": "planning"
+    },
+    {
+      "rule": "budget_capacity",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div3.Treasury"
+      ],
+      "packet_type": "budget"
+    },
+    {
+      "rule": "implementation",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div4.Production"
+      ],
+      "packet_type": "execution"
+    },
+    {
+      "rule": "qa_security_review",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "packet_type": "qa_review"
+    },
+    {
+      "rule": "operational_review",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div1.HCO"
+      ],
+      "packet_type": "review"
+    },
+    {
+      "rule": "external_io",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div6.External"
+      ],
+      "packet_type": "external"
+    },
+    {
+      "rule": "external_io_request",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div5.QualificationsLibraryLearning",
+        "Div6.External"
+      ],
+      "packet_type": "external_io"
+    },
+    {
+      "rule": "paid_credentialed_external_io_request",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div3.Treasury",
+        "Div5.QualificationsLibraryLearning",
+        "Div6.External"
+      ],
+      "packet_type": "paid_external_io"
+    },
+    {
+      "rule": "multi_division_workflow",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div2.MasterPlanner",
+        "Div4.Production",
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "packet_type": "multi_division"
+    },
+    {
+      "rule": "complex_safe_to_fail",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div2.MasterPlanner",
+        "Div3.Treasury",
+        "Div4.Production",
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "packet_type": "complex"
+    },
+    {
+      "rule": "chaotic_incident_flow",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div1.HCO",
+        "Div3.Treasury",
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "packet_type": "chaotic"
+    },
+    {
+      "rule": "complicated_expert_review",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div2.MasterPlanner",
+        "Div4.Production",
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "packet_type": "complicated"
+    },
+    {
+      "rule": "standard_operational",
+      "verdict": "pass",
+      "target_divisions": [
+        "Div2.MasterPlanner",
+        "Div4.Production",
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "packet_type": "standard"
+    }
+  ],
+  "cross_validation": {
+    "dist_vs_src_match": true,
+    "mismatches": [],
+    "packet_types_in_table": 14,
+    "expected_packet_types": 14,
+    "named_rules_in_table": 14,
+    "expected_named_rules": 12
+  },
+  "overall_verdict": "pass",
+  "timestamp": "2026-06-02T19:17:07.032Z"
+}
