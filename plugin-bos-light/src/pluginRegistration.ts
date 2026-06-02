@@ -692,3 +692,257 @@ export function buildRegistrationStatus(input: {
     lastProbedAt: new Date().toISOString(),
   };
 }
+
+// ─── Plugin Registration Client ──────────────────────────────────────────────
+
+/**
+ * Configuration for connecting to a Paperclip instance.
+ */
+export interface PaperclipConnectionConfig {
+  baseUrl: string;
+  apiKey: string;
+  companyId?: string;
+  timeout?: number;
+}
+
+/**
+ * Result of a plugin registration attempt.
+ */
+export interface RegistrationResult {
+  success: boolean;
+  status: PluginRegistrationStatus;
+  error?: string;
+  timestamp: string;
+}
+
+/**
+ * Client for attempting plugin registration with Paperclip.
+ * 
+ * Since Paperclip 0.3.1 does not support plugin registration via API,
+ * this client performs live probes and reports the status.
+ */
+export class PluginRegistrationClient {
+  private config: PaperclipConnectionConfig;
+  
+  constructor(config: PaperclipConnectionConfig) {
+    this.config = {
+      timeout: 10000,
+      ...config,
+    };
+  }
+  
+  /**
+   * Probe the Paperclip instance to check plugin runtime availability.
+   */
+  async probePluginRuntime(): Promise<PluginRegistrationStatus> {
+    const discoveredRoutes: string[] = [];
+    const probedRoutes: string[] = [];
+    let observedVersion: string | null = null;
+    let error: string | null = null;
+    
+    try {
+      // First, check the health endpoint to get the version
+      const healthResponse = await this.fetchWithTimeout(
+        `${this.config.baseUrl}/api/health`
+      );
+      
+      if (healthResponse.ok) {
+        const healthData = await healthResponse.json();
+        observedVersion = healthData.version || null;
+      }
+      
+      // Probe plugin-specific routes
+      const pluginRoutes = [
+        "/api/plugins",
+        "/api/plugins/bos-light",
+        "/api/plugins/bos-light/status",
+        "/api/plugins/bos-light/health",
+      ];
+      
+      for (const route of pluginRoutes) {
+        probedRoutes.push(route);
+        try {
+          const response = await this.fetchWithTimeout(
+            `${this.config.baseUrl}${route}`
+          );
+          if (response.ok) {
+            discoveredRoutes.push(route);
+          }
+        } catch (e) {
+          // Route not available
+        }
+      }
+      
+      // Check if we can list plugins
+      if (discoveredRoutes.includes("/api/plugins")) {
+        const pluginsResponse = await this.fetchWithTimeout(
+          `${this.config.baseUrl}/api/plugins`
+        );
+        if (pluginsResponse.ok) {
+          const plugins = await pluginsResponse.json();
+          // If we get an empty array, plugins are supported but none installed
+          if (Array.isArray(plugins)) {
+            error = null;
+          }
+        }
+      }
+      
+    } catch (e) {
+      error = e instanceof Error ? e.message : "Unknown error during probe";
+    }
+    
+    return buildRegistrationStatus({
+      observedVersion,
+      probedRoutes,
+      discoveredRoutes,
+      error,
+    });
+  }
+  
+  /**
+   * Attempt to register the BOS Light plugin.
+   * 
+   * Since Paperclip 0.3.1 doesn't support plugin registration via API,
+   * this method probes the runtime and returns the status.
+   */
+  async registerPlugin(): Promise<RegistrationResult> {
+    const timestamp = new Date().toISOString();
+    
+    try {
+      const status = await this.probePluginRuntime();
+      
+      if (!status.runtimeAvailable) {
+        return {
+          success: false,
+          status,
+          error: "Plugin registration not available: Paperclip plugin runtime is not deployed (post-V1 feature).",
+          timestamp,
+        };
+      }
+      
+      // If runtime is available, try to register
+      const registerResponse = await this.fetchWithTimeout(
+        `${this.config.baseUrl}/api/plugins`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${this.config.apiKey}`,
+          },
+          body: JSON.stringify({
+            manifest: BOS_LIGHT_MANIFEST,
+            companyId: this.config.companyId,
+          }),
+        }
+      );
+      
+      if (registerResponse.ok) {
+        return {
+          success: true,
+          status: {
+            ...status,
+            workerStarted: true,
+          },
+          timestamp,
+        };
+      } else {
+        const errorData = await registerResponse.json().catch(() => ({}));
+        return {
+          success: false,
+          status,
+          error: `Registration failed: ${registerResponse.status} ${registerResponse.statusText}. ${errorData.error || ""}`,
+          timestamp,
+        };
+      }
+      
+    } catch (e) {
+      return {
+        success: false,
+        status: buildRegistrationStatus({
+          observedVersion: null,
+          probedRoutes: [],
+          discoveredRoutes: [],
+          error: e instanceof Error ? e.message : "Unknown error",
+        }),
+        error: e instanceof Error ? e.message : "Unknown error during registration",
+        timestamp,
+      };
+    }
+  }
+  
+  /**
+   * Check if a specific plugin is registered.
+   */
+  async isPluginRegistered(pluginId: string): Promise<boolean> {
+    try {
+      const response = await this.fetchWithTimeout(
+        `${this.config.baseUrl}/api/plugins/${pluginId}`
+      );
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
+  
+  /**
+   * List all registered plugins.
+   */
+  async listPlugins(): Promise<Array<{ id: string; status: string }>> {
+    try {
+      const response = await this.fetchWithTimeout(
+        `${this.config.baseUrl}/api/plugins`
+      );
+      
+      if (response.ok) {
+        const plugins = await response.json();
+        return Array.isArray(plugins) ? plugins : [];
+      }
+      return [];
+    } catch {
+      return [];
+    }
+  }
+  
+  /**
+   * Helper to fetch with timeout.
+   */
+  private async fetchWithTimeout(
+    url: string,
+    options: RequestInit = {}
+  ): Promise<Response> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      this.config.timeout
+    );
+    
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+        headers: {
+          "Authorization": `Bearer ${this.config.apiKey}`,
+          ...options.headers,
+        },
+      });
+      return response;
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+}
+
+/**
+ * Create a plugin registration client for the live Paperclip instance.
+ */
+export function createRegistrationClient(
+  baseUrl?: string,
+  apiKey?: string,
+  companyId?: string
+): PluginRegistrationClient {
+  return new PluginRegistrationClient({
+    baseUrl: baseUrl || process.env.PAPERCLIP_BASE_URL || "https://paperclip.oysana.com",
+    apiKey: apiKey || process.env.PAPERCLIP_API_KEY || "",
+    companyId: companyId || process.env.PAPERCLIP_COMPANY_ID,
+  });
+}

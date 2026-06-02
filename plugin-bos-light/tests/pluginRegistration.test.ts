@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   BOS_LIGHT_MANIFEST,
   BOS_LIGHT_REQUIRED_CAPABILITIES,
@@ -6,6 +6,8 @@ import {
   ORCHESTRATION_EVENTS,
   PLUGIN_REGISTRATION_PROBE_ROUTES,
   buildRegistrationStatus,
+  PluginRegistrationClient,
+  createRegistrationClient,
 } from "../src/pluginRegistration";
 
 describe("Plugin Registration API", () => {
@@ -234,6 +236,240 @@ describe("Plugin Registration API", () => {
         error: "Custom error",
       });
       expect(status.error).toBe("Custom error");
+    });
+  });
+  
+  describe("PluginRegistrationClient", () => {
+    const mockBaseUrl = "https://test.paperclip.example";
+    const mockApiKey = "test-api-key";
+    
+    beforeEach(() => {
+      vi.restoreAllMocks();
+    });
+    
+    it("creates client with default config", () => {
+      const client = new PluginRegistrationClient({
+        baseUrl: mockBaseUrl,
+        apiKey: mockApiKey,
+      });
+      expect(client).toBeDefined();
+    });
+    
+    it("probes plugin runtime successfully", async () => {
+      const fetchMock = vi.fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ version: "0.3.1" }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => [],
+        })
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        })
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        })
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        });
+      
+      vi.stubGlobal("fetch", fetchMock);
+      
+      const client = new PluginRegistrationClient({
+        baseUrl: mockBaseUrl,
+        apiKey: mockApiKey,
+      });
+      
+      const status = await client.probePluginRuntime();
+      
+      expect(status.observedVersion).toBe("0.3.1");
+      expect(status.pluginRoutesFound).toBe(true);
+      expect(status.runtimeAvailable).toBe(true);
+    });
+    
+    it("handles probe failure gracefully", async () => {
+      const fetchMock = vi.fn().mockRejectedValue(new Error("Network error"));
+      vi.stubGlobal("fetch", fetchMock);
+      
+      const client = new PluginRegistrationClient({
+        baseUrl: mockBaseUrl,
+        apiKey: mockApiKey,
+      });
+      
+      const status = await client.probePluginRuntime();
+      
+      expect(status.runtimeAvailable).toBe(false);
+      expect(status.error).toContain("Network error");
+    });
+    
+    it("attempts plugin registration", async () => {
+      const fetchMock = vi.fn()
+        // Health endpoint
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ version: "1.0.0" }),
+        })
+        // /api/plugins probe
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => [{ id: "existing-plugin" }],
+        })
+        // /api/plugins/bos-light probe
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        })
+        // /api/plugins/bos-light/status probe
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        })
+        // /api/plugins/bos-light/health probe
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        })
+        // /api/plugins listing check
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => [{ id: "existing-plugin" }],
+        })
+        // POST /api/plugins for registration
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ id: "bos-light", status: "registered" }),
+        });
+      
+      vi.stubGlobal("fetch", fetchMock);
+      
+      const client = new PluginRegistrationClient({
+        baseUrl: mockBaseUrl,
+        apiKey: mockApiKey,
+        companyId: "test-company-id",
+      });
+      
+      const result = await client.registerPlugin();
+      
+      expect(result.success).toBe(true);
+      expect(result.status.runtimeAvailable).toBe(true);
+      expect(result.status.workerStarted).toBe(true);
+    });
+    
+    it("reports failure when runtime not available", async () => {
+      const fetchMock = vi.fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ version: "0.3.1" }),
+        })
+        .mockResolvedValue({
+          ok: false,
+          status: 404,
+        });
+      
+      vi.stubGlobal("fetch", fetchMock);
+      
+      const client = new PluginRegistrationClient({
+        baseUrl: mockBaseUrl,
+        apiKey: mockApiKey,
+      });
+      
+      const result = await client.registerPlugin();
+      
+      expect(result.success).toBe(false);
+      expect(result.error).toContain("not available");
+    });
+    
+    it("checks if plugin is registered", async () => {
+      const fetchMock = vi.fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ id: "bos-light" }),
+        })
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        });
+      
+      vi.stubGlobal("fetch", fetchMock);
+      
+      const client = new PluginRegistrationClient({
+        baseUrl: mockBaseUrl,
+        apiKey: mockApiKey,
+      });
+      
+      const registered = await client.isPluginRegistered("bos-light");
+      expect(registered).toBe(true);
+      
+      const notRegistered = await client.isPluginRegistered("other-plugin");
+      expect(notRegistered).toBe(false);
+    });
+    
+    it("lists plugins from API", async () => {
+      const fetchMock = vi.fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => [
+            { id: "plugin-1", status: "active" },
+            { id: "plugin-2", status: "inactive" },
+          ],
+        });
+      
+      vi.stubGlobal("fetch", fetchMock);
+      
+      const client = new PluginRegistrationClient({
+        baseUrl: mockBaseUrl,
+        apiKey: mockApiKey,
+      });
+      
+      const plugins = await client.listPlugins();
+      
+      expect(plugins).toHaveLength(2);
+      expect(plugins[0].id).toBe("plugin-1");
+    });
+    
+    it("returns empty array when API unavailable", async () => {
+      const fetchMock = vi.fn().mockRejectedValue(new Error("Connection refused"));
+      vi.stubGlobal("fetch", fetchMock);
+      
+      const client = new PluginRegistrationClient({
+        baseUrl: mockBaseUrl,
+        apiKey: mockApiKey,
+      });
+      
+      const plugins = await client.listPlugins();
+      
+      expect(plugins).toHaveLength(0);
+    });
+  });
+  
+  describe("createRegistrationClient", () => {
+    it("creates client from environment variables", () => {
+      const originalEnv = process.env;
+      process.env = {
+        ...originalEnv,
+        PAPERCLIP_BASE_URL: "https://env.paperclip.example",
+        PAPERCLIP_API_KEY: "env-api-key",
+        PAPERCLIP_COMPANY_ID: "env-company-id",
+      };
+      
+      const client = createRegistrationClient();
+      expect(client).toBeDefined();
+      
+      process.env = originalEnv;
+    });
+    
+    it("uses provided parameters over environment", () => {
+      const client = createRegistrationClient(
+        "https://custom.paperclip.example",
+        "custom-key",
+        "custom-company"
+      );
+      expect(client).toBeDefined();
     });
   });
 });
