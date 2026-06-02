@@ -96,3 +96,27 @@ Verified, sanitized work.
 - PostProductionVerdict has 7 checks with pass/fail detail
 - Failed checks produce actionable diagnostics
 - Status updates emitted to Div1.HCO and Div7.MissionControl
+
+## R026 — Qualification Includes Routing-Boundary Compliance
+
+Div5 must verify not only artifact quality, but also whether the work respected Div7/Div1 boundaries.
+
+Additional owns:
+
+- routing-boundary compliance evidence
+- detection of Div7 terminal operational handling
+- recommendation signals when decision/routing doctrine fails
+
+Rules:
+
+- Flag any work where Div7 directly executed or assigned operational tasks without Div1.HCO routing.
+- Treat Div7 DecisionRecord as strategic evidence, not as proof of operational correctness.
+- Verify that post-Div7 work followed the expected route: Div7 -> Div1 -> required operational divisions.
+- For COMPLEX tasks, verify safe-to-fail constraints and acceptance criteria were created before production.
+- For CHAOTIC tasks, verify incident/Circuit Breaker flow was controlled by Div1, with Div3/Div5 evidence as needed.
+- Return routing compliance failures to Div1 as RoutingRiskSignal or equivalent correction evidence.
+- Escalate repeated R026 violations to Div1; Div1 may escalate strategic doctrine issues to Div7.
+
+Required acceptance check:
+
+- Div5 fails or blocks acceptance if the artifact was produced through a Div7 terminal route that bypassed Div1 operational routing.

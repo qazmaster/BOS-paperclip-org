@@ -67,8 +67,15 @@ describe("routeApprovedMission", () => {
     }
   });
 
-  it("excludes Div1.HCO and Div7.MissionControl from activated divisions", () => {
-    const mission = makeMission(ALL_DIVISIONS);
+  it("excludes Div1.HCO from activated divisions for routine missions", () => {
+    // Routine mission without Div7 in requested_divisions
+    const mission = makeMission([
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External"
+    ]);
     const result = routeApprovedMission("Div1.HCO", mission) as MissionRoutingState;
 
     expect(result.activated_divisions).not.toContain("Div1.HCO");
@@ -77,13 +84,27 @@ describe("routeApprovedMission", () => {
     expect(result.excluded_divisions).toContain("Div7.MissionControl");
   });
 
-  it("emits work_assignment packets to all activated divisions", () => {
+  it("routes to Div7 when Div7 is in requested_divisions (executive decision needed)", () => {
     const mission = makeMission(ALL_DIVISIONS);
+    const result = routeApprovedMission("Div1.HCO", mission) as MissionRoutingState;
+
+    // With Div7 in requested_divisions, mission requires executive decision
+    expect(result.activated_divisions).toContain("Div7.MissionControl");
+    expect(result.activated_divisions).toHaveLength(1);
+  });
+
+  it("emits work_assignment packets to all activated divisions for routine missions", () => {
+    // Routine mission without Div7
+    const mission = makeMission([
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External"
+    ]);
     routeApprovedMission("Div1.HCO", mission);
 
-    for (const div of ALL_DIVISIONS) {
-      if (div === "Div1.HCO" || div === "Div7.MissionControl") continue;
-
+    for (const div of ["Div2.MasterPlanner", "Div3.Treasury", "Div4.Production", "Div5.QualificationsLibraryLearning", "Div6.External"] as Division[]) {
       const inbox = getDivisionInbox(div);
       expect(inbox).toHaveLength(1);
       expect(inbox[0].packet_type).toBe("work_assignment");
@@ -92,8 +113,29 @@ describe("routeApprovedMission", () => {
     }
   });
 
-  it("emits a status_update packet to Div7.MissionControl", () => {
+  it("emits a work_assignment packet to Div7 when executive decision is needed", () => {
     const mission = makeMission(ALL_DIVISIONS);
+    routeApprovedMission("Div1.HCO", mission);
+
+    // When Div7 is in requested_divisions, it receives work_assignment for executive decision
+    const div7Inbox = getDivisionInbox("Div7.MissionControl");
+    expect(div7Inbox).toHaveLength(1);
+    expect(div7Inbox[0].packet_type).toBe("work_assignment");
+    expect(div7Inbox[0].from_division).toBe("Div1.HCO");
+    expect(div7Inbox[0].to_division).toBe("Div7.MissionControl");
+
+    const payload = div7Inbox[0].payload as Record<string, unknown>;
+    expect(payload.mission_id).toBe(mission.mission_id);
+    expect(payload.routing_rule).toBe("requires_executive_decision");
+    expect(payload.requires_decision).toBe(true);
+  });
+
+  it("emits status_update to Div7 for routine missions (oversight only)", () => {
+    // Routine mission without Div7
+    const mission = makeMission([
+      "Div2.MasterPlanner",
+      "Div4.Production"
+    ]);
     routeApprovedMission("Div1.HCO", mission);
 
     const div7Inbox = getDivisionInbox("Div7.MissionControl");
@@ -109,17 +151,13 @@ describe("routeApprovedMission", () => {
     expect(Array.isArray(payload.excluded_divisions)).toBe(true);
   });
 
-  it("does not emit work_assignment when no divisions remain after exclusion", () => {
+  it("routes to Div7 when only Div1 and Div7 are in requested divisions", () => {
     const mission = makeMission(["Div1.HCO", "Div7.MissionControl"]);
     const result = routeApprovedMission("Div1.HCO", mission) as MissionRoutingState;
 
-    expect(result.activated_divisions).toHaveLength(0);
-    expect(result.current_division).toBeNull();
-
-    // Div7 still gets status_update even if no work was assigned
-    const div7Inbox = getDivisionInbox("Div7.MissionControl");
-    expect(div7Inbox).toHaveLength(1);
-    expect(div7Inbox[0].packet_type).toBe("status_update");
+    // Div7 presence triggers executive decision routing
+    expect(result.activated_divisions).toContain("Div7.MissionControl");
+    expect(result.current_division).toBe("Div7.MissionControl");
   });
 
   it("sets current_division to the first activated division", () => {

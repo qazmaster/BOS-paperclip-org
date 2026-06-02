@@ -87,3 +87,19 @@ External evidence collected and returned for quarantine.
 - Source references and timestamps recorded
 - Risk flags applied to suspicious sources
 - completion_report includes all required fields
+
+## R026 — Div7 Cannot Bypass Div1 to Reach External World
+
+Div6 must not accept external-world requests directly from Div7 unless routed by Div1.HCO.
+
+Rules:
+
+- Div7 may define strategic external questions or market/customer priorities, but Div1 must route the external request to Div6.
+- Div6 acts only on Div1-routed external requests and required Div3 grants for paid/API/credentialed access.
+- Div6 must return raw external evidence only to Div5 for quarantine, even when the strategic question originated from Div7.
+- If Div7 attempts direct external collection or direct Div6 tasking, Div6 must reject/escalate to Div1.
+- Div6 must not send raw external evidence back to Div7. Div7 consumes only Div5-sanitized knowledge.
+
+Required acceptance check:
+
+- A Div7 strategic market question routes Div7 -> Div1 -> Div6 -> Div5 -> Div1/Div7, never Div7 -> Div6 -> Div7 directly.

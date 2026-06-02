@@ -96,3 +96,37 @@ python3 scripts/validate_handoff.py
 ```
 
 A passing validator means the root entrypoints, baseline handoff files, v1.4.1 doctrine/skill package, and manifest hashes are present and current. It does **not** prove live Paperclip runtime compatibility.
+
+## M008 architecture update (Div7 delegation + Div1 routing)
+
+M008 fixed the critical architecture gap where Div7 could become a terminal handler for technical work. Read `HANDOFF_M008_COMPLETE.md` for full details.
+
+### Key changes
+
+- **Two-pass routing**: Pre-decision on MissionSignals (deterministic, no LLM), post-decision on Cynefin domain from DecisionDelegated packet.
+- **Div7 → Div1 delegation**: Every non-policy-only Div7 decision emits DecisionDelegated to Div1.HCO. Div7 cannot self-execute technical work.
+- **Division authority clarification**: Div7=regime controller, Div1=operational authority, Div3=capability gatekeeper, Div4=production executor, Div5=QA/verification, Div6=external gateway.
+- **Grant policy**: Div3 issues BudgetGrant/AccessGrant only in response to Div1 requests. Routine grants deterministic. External-world access Div6-only.
+- **Div4 protocol**: Blockers raised to Div1 only. QA handoff through Div1 to Div5. No direct cross-division communication.
+
+### Key invariants
+
+```
+No route → no grant.
+No budget → no access.
+No access → no execution.
+No Div6 route → no external-world capability.
+Div7 decision → DecisionDelegated → Div1 routing (not terminal).
+Div4 builds, but does not decide the system.
+```
+
+### Test suite
+
+```bash
+cd plugin-bos-light && npx vitest run    # 618 tests, 39 files
+cd plugin-bos-light && npx tsc --noEmit  # TypeScript clean
+```
+
+### R026 v1.4.2 patch alignment
+
+Our implementation aligns 95%+ with the official v1.4.2 R026 Agent Boundary Update patch. See `HANDOFF_M008_COMPLETE.md` for detailed comparison table.

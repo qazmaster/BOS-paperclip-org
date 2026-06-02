@@ -7,7 +7,13 @@ export type DivisionPacketType =
   | "gate_decision"
   | "completion_report"
   | "work_assignment"
-  | "access_grant";
+  | "access_grant"
+  | "decision_delegated"
+  | "blocker_raised"
+  | "qa_review_requested"
+  | "budget_grant"
+  | "grant_denied"
+  | "grant_revoked";
 
 export interface DivisionPacketEnvelope {
   schema_version: "1.0";

@@ -1,6 +1,7 @@
 import type {
   CynefinDomain,
   DecisionDiagnostics,
+  DecisionDelegatedPayload,
   DecisionDomainEvidence,
   DecisionMetadata,
   DecisionOODASections,
@@ -8,8 +9,11 @@ import type {
   DecisionResult,
   DecisionRiskTier,
   DecisionType,
-  DecisionValidationFailure
+  DecisionValidationFailure,
+  RecommendedMode,
+  RoutingDirective
 } from "./contracts";
+import { emitDivisionPacket, type DivisionPacketDiagnostic } from "./divisionPacketRouter";
 
 export interface DecisionInput {
   issue_id: string;
@@ -459,4 +463,112 @@ export function decide(input: unknown): DecisionResult {
     ...base,
     record_markdown: renderDecisionRecord(base)
   };
+}
+
+/**
+ * Determine if a decision is policy-only (no operational follow-up needed).
+ * Policy-only decisions stay in Div7 without delegation to Div1.
+ */
+export function isPolicyOnlyDecision(decision: DecisionMetadata): boolean {
+  return (
+    decision.cynefin_domain === "CLEAR" &&
+    decision.decision_type === "BATCH_APPROVAL" &&
+    decision.risk_tier === "LOW"
+  );
+}
+
+function recommendedModeFor(domain: CynefinDomain, decisionType: DecisionType): RecommendedMode {
+  if (domain === "CHAOTIC") return "STABILIZE_FIRST";
+  if (domain === "COMPLEX") return "SAFE_TO_FAIL_EXPERIMENT";
+  if (domain === "COMPLICATED") return "EXPERT_REVIEW";
+  return "PLAYBOOK";
+}
+
+function routingDirectiveFor(domain: CynefinDomain): RoutingDirective {
+  switch (domain) {
+    case "COMPLEX":
+      return {
+        targetDivisions: ["Div2.MasterPlanner", "Div3.Treasury", "Div4.Production", "Div5.QualificationsLibraryLearning"],
+        routingRule: "complex_safe_to_fail",
+        requiresBudgetGrant: true,
+        requiresQA: true,
+        requiresQuarantine: false,
+        requiresHumanApproval: false
+      };
+    case "CHAOTIC":
+      return {
+        targetDivisions: ["Div1.HCO", "Div3.Treasury", "Div5.QualificationsLibraryLearning"],
+        routingRule: "chaotic_incident_flow",
+        requiresBudgetGrant: false,
+        requiresQA: true,
+        requiresQuarantine: false,
+        requiresHumanApproval: false
+      };
+    case "COMPLICATED":
+      return {
+        targetDivisions: ["Div2.MasterPlanner", "Div4.Production", "Div5.QualificationsLibraryLearning"],
+        routingRule: "complicated_expert_review",
+        requiresBudgetGrant: false,
+        requiresQA: true,
+        requiresQuarantine: false,
+        requiresHumanApproval: false
+      };
+    default:
+      return {
+        targetDivisions: ["Div2.MasterPlanner", "Div4.Production", "Div5.QualificationsLibraryLearning"],
+        routingRule: "standard_operational",
+        requiresBudgetGrant: false,
+        requiresQA: false,
+        requiresQuarantine: false,
+        requiresHumanApproval: false
+      };
+  }
+}
+
+function escalationLevelFor(domain: CynefinDomain, risk: DecisionRiskTier): DecisionDelegatedPayload["escalation_level"] {
+  if (domain === "CHAOTIC") return "critical";
+  if (risk === "CRITICAL") return "critical";
+  if (risk === "HIGH") return "escalate";
+  if (domain === "COMPLEX") return "monitor";
+  return "none";
+}
+
+/**
+ * Create a DecisionDelegated payload from a DecisionMetadata.
+ * This is the bridge between Div7 strategic decision and Div1 operational routing.
+ */
+export function createDecisionDelegated(decision: DecisionMetadata): DecisionDelegatedPayload {
+  return {
+    schema_version: "1.0",
+    decision_id: decision.decision_id,
+    cynefin_domain: decision.cynefin_domain,
+    recommended_mode: recommendedModeFor(decision.cynefin_domain, decision.decision_type),
+    routing_directive: routingDirectiveFor(decision.cynefin_domain),
+    constraints: decision.diagnostics.risk_reasons,
+    required_followup_divisions: routingDirectiveFor(decision.cynefin_domain).targetDivisions,
+    escalation_level: escalationLevelFor(decision.cynefin_domain, decision.risk_tier)
+  };
+}
+
+/**
+ * Delegate a decision from Div7 to Div1.
+ * Skips emission for policy-only decisions.
+ * Returns the DecisionDelegated payload and packet diagnostic, or null if policy-only.
+ */
+export function delegateDecisionToDiv1(decision: DecisionResult): {
+  payload: DecisionDelegatedPayload;
+  diagnostic: DivisionPacketDiagnostic;
+} | null {
+  if (!decision.accepted) return null;
+  if (isPolicyOnlyDecision(decision)) return null;
+
+  const payload = createDecisionDelegated(decision);
+  const diagnostic = emitDivisionPacket(
+    "Div7.MissionControl",
+    "Div1.HCO",
+    "decision_delegated",
+    payload
+  );
+
+  return { payload, diagnostic };
 }

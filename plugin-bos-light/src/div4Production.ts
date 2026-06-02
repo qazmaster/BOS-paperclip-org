@@ -5,6 +5,8 @@ import type {
   Division,
   ProductionWorkEvidence,
   Div4ProductionUnauthorized,
+  BlockerRaisedPacket,
+  QAReviewRequestedPacket,
 } from "./contracts";
 import { getDivisionInbox, emitDivisionPacket } from "./divisionPacketRouter";
 import type { DivisionPacketDiagnostic } from "./divisionPacketRouter";
@@ -52,6 +54,69 @@ function getHeadCommitSha(localPath: string): Promise<string> {
       }
     });
   });
+}
+
+/**
+ * Raise a blocker to Div1.HCO.
+ * Div4 must use this instead of direct cross-division communication.
+ */
+export function raiseBlocker(
+  missionId: string,
+  taskId: string,
+  blockerType: BlockerRaisedPacket["blocker_type"],
+  description: string,
+  requestedAction: string
+): BlockerRaisedPacket {
+  const blockerId = `blk_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+  const packet: BlockerRaisedPacket = {
+    schema_version: "1.0",
+    packet_type: "blocker_raised",
+    blocker_id: blockerId,
+    mission_id: missionId,
+    task_id: taskId,
+    blocker_type: blockerType,
+    description,
+    requested_action: requestedAction,
+    raised_by: DIV4_PRODUCTION,
+    raised_at: now(),
+  };
+
+  emitDivisionPacket(DIV4_PRODUCTION, DIV1_HCO, "blocker_raised", packet);
+  return packet;
+}
+
+/**
+ * Request QA review from Div5 through Div1 routing.
+ * Div4 must use this to hand off completed work for independent verification.
+ */
+export function requestQAReview(
+  missionId: string,
+  taskId: string,
+  snapshotId: string,
+  commitSha: string,
+  branchCreated: string,
+  filesChanged: string[],
+  localChecksPassed: boolean,
+  implementationNotes: string
+): QAReviewRequestedPacket {
+  const packet: QAReviewRequestedPacket = {
+    schema_version: "1.0",
+    packet_type: "qa_review_requested",
+    mission_id: missionId,
+    task_id: taskId,
+    snapshot_id: snapshotId,
+    commit_sha: commitSha,
+    branch_created: branchCreated,
+    files_changed: filesChanged,
+    local_checks_passed: localChecksPassed,
+    implementation_notes: implementationNotes,
+    requested_by: DIV4_PRODUCTION,
+    requested_at: now(),
+  };
+
+  emitDivisionPacket(DIV4_PRODUCTION, DIV1_HCO, "qa_review_requested", packet);
+  return packet;
 }
 
 export interface ExecuteProductionWorkSuccess {

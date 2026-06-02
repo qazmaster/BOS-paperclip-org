@@ -435,6 +435,49 @@ export interface MissionRouterUnauthorized {
   rejected_at: string;
 }
 
+/* ── Decision Delegation contracts (Div7 → Div1) ── */
+
+export type RoutingPhase =
+  | "pre_decision"
+  | "post_div7_decision"
+  | "operational";
+
+export type RecommendedMode =
+  | "PLAYBOOK"
+  | "EXPERT_REVIEW"
+  | "SAFE_TO_FAIL_EXPERIMENT"
+  | "STABILIZE_FIRST";
+
+export interface RoutingDirective {
+  targetDivisions: Division[];
+  routingRule: string;
+  requiresBudgetGrant: boolean;
+  requiresQA: boolean;
+  requiresQuarantine: boolean;
+  requiresHumanApproval: boolean;
+}
+
+export interface DecisionDelegatedPayload {
+  schema_version: "1.0";
+  decision_id: string;
+  cynefin_domain: CynefinDomain;
+  recommended_mode: RecommendedMode;
+  routing_directive: RoutingDirective;
+  constraints: string[];
+  required_followup_divisions: Division[];
+  escalation_level: "none" | "monitor" | "escalate" | "critical";
+}
+
+export interface DecisionDelegatedPacket {
+  schema_version: "1.0";
+  packet_id: string;
+  packet_type: "decision_delegated";
+  from_division: "Div7.MissionControl";
+  to_division: "Div1.HCO";
+  payload: DecisionDelegatedPayload;
+  timestamp: string;
+}
+
 /* ── Treasury scoped access contracts (Div3 Secret Management) ── */
 
 export interface PaperclipSecretRef {
@@ -573,4 +616,187 @@ export interface ProductionWorkEvidence {
   pushed: false;
   produced_at: string;
   produced_by: "Div4.Production";
+}
+
+/* ── Div3 Treasury Grant contracts ── */
+
+export interface GrantRequest {
+  schema_version: "1.0";
+  requested_by: "Div1.HCO";
+  target_division: Division;
+  mission_id: string;
+  paperclip_task_id?: string;
+  purpose: string;
+  requested_tools: string[];
+  requested_secrets: string[];
+  estimated_cost: number;
+  risk_level: DecisionRiskTier;
+  ttl_minutes: number;
+  requested_at: string;
+}
+
+export interface BudgetGrant {
+  schema_version: "1.0";
+  grant_id: string;
+  grant_type: "BUDGET_GRANT";
+  mission_id: string;
+  target_division: Division;
+  allowed_tools: string[];
+  denied_tools: string[];
+  token_cap: number;
+  ttl_minutes: number;
+  secrets: string[];
+  requires_qa: boolean;
+  granted_by: "Div3.Treasury";
+  granted_at: string;
+  expires_at: string;
+}
+
+export interface AccessGrant {
+  schema_version: "1.0";
+  grant_id: string;
+  grant_type: "ACCESS_GRANT";
+  mission_id: string;
+  target_division: Division;
+  allowed_tools: string[];
+  denied_tools: string[];
+  secrets: string[];
+  adapter_scope: string;
+  granted_by: "Div3.Treasury";
+  granted_at: string;
+  expires_at: string;
+}
+
+export interface EmergencyGrant {
+  schema_version: "1.0";
+  grant_id: string;
+  grant_type: "EMERGENCY_GRANT";
+  mission_id: string;
+  target_division: Division;
+  authorization_ref: string;
+  authorized_by: "Div7.MissionControl";
+  allowed_tools: string[];
+  denied_tools: string[];
+  token_cap: number;
+  ttl_minutes: number;
+  secrets: string[];
+  requires_qa: boolean;
+  granted_by: "Div3.Treasury";
+  granted_at: string;
+  expires_at: string;
+}
+
+export interface GrantApproved {
+  schema_version: "1.0";
+  decision_id: string;
+  status: "approved";
+  budget_grant_id: string;
+  access_grant_id?: string;
+  allowed_tools: string[];
+  denied_tools: string[];
+  token_cap: number;
+  ttl_minutes: number;
+  rationale: string;
+  decided_by: "Div3.Treasury";
+  decided_at: string;
+}
+
+export interface GrantDenied {
+  schema_version: "1.0";
+  decision_id: string;
+  status: "denied";
+  reason: string;
+  required_route?: Division[];
+  rationale: string;
+  decided_by: "Div3.Treasury";
+  decided_at: string;
+}
+
+export interface GrantEscalated {
+  schema_version: "1.0";
+  decision_id: string;
+  status: "escalate";
+  reason: string;
+  escalation_target: "Div1.HCO" | "Div7.MissionControl" | "HumanOwner";
+  rationale: string;
+  decided_by: "Div3.Treasury";
+  decided_at: string;
+}
+
+export type GrantDecision = GrantApproved | GrantDenied | GrantEscalated;
+
+/* ── Div4 Production task contracts ── */
+
+export interface ProductionTaskPacket {
+  schema_version: "1.0";
+  task_id: string;
+  mission_id: string;
+  blueprint_id: string;
+  target_division: "Div4.Production";
+  scope: {
+    files_allowed: string[];
+    implementation_plan: string;
+    constraints: string[];
+    acceptance_criteria: string[];
+  };
+  grant: {
+    budget_grant_id: string;
+    access_grant_id?: string;
+    allowed_tools: string[];
+    denied_tools: string[];
+    token_cap: number;
+    ttl_minutes: number;
+  };
+  assigned_by: "Div1.HCO";
+  assigned_at: string;
+}
+
+export interface BlockerRaisedPacket {
+  schema_version: "1.0";
+  packet_type: "blocker_raised";
+  blocker_id: string;
+  mission_id: string;
+  task_id: string;
+  blocker_type:
+    | "missing_blueprint"
+    | "missing_access"
+    | "missing_budget"
+    | "missing_dependency"
+    | "external_info_needed"
+    | "tests_impossible"
+    | "acceptance_criteria_unclear"
+    | "scope_conflict"
+    | "grant_expired"
+    | "grant_revoked"
+    | "budget_exhausted"
+    | "circuit_breaker_triggered";
+  description: string;
+  requested_action: string;
+  raised_by: "Div4.Production";
+  raised_at: string;
+}
+
+export interface QAReviewRequestedPacket {
+  schema_version: "1.0";
+  packet_type: "qa_review_requested";
+  mission_id: string;
+  task_id: string;
+  snapshot_id: string;
+  commit_sha: string;
+  branch_created: string;
+  files_changed: string[];
+  local_checks_passed: boolean;
+  implementation_notes: string;
+  requested_by: "Div4.Production";
+  requested_at: string;
+}
+
+export interface ProductionCompletedPacket {
+  schema_version: "1.0";
+  packet_type: "production_completed";
+  mission_id: string;
+  task_id: string;
+  evidence: ProductionWorkEvidence;
+  completed_by: "Div4.Production";
+  completed_at: string;
 }
