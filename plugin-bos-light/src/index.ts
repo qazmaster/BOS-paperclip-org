@@ -34,3 +34,5 @@ export * from "./div5PostProductionVerification";
 export * from "./div4Production";
 export * from "./issueLifecycleHooks";
 export * from "./agentActionValidator";
+export * from "./bosTaskMetadata";
+export * from "./metadataMirror";
