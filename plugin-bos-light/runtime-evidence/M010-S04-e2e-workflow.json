@@ -1,6 +1,6 @@
 {
   "artifact": "M010-S04-e2e-workflow",
-  "generated_at": "2026-06-02T19:56:00.000Z",
+  "generated_at": "2026-06-02T19:57:48.257Z",
   "test_file": "tests/e2eWorkflow.test.ts",
   "total_tests": 37,
   "passed": 37,
@@ -23,7 +23,7 @@
         "bos-route-packet"
       ],
       "verdict": "pass",
-      "tests": 8
+      "tests": 9
     },
     {
       "scenario": "COMPLEX",
@@ -32,13 +32,17 @@
       "routing_mode": "two-pass (Div7 executive decision)",
       "decision_delegated_mode": "probe",
       "routing_rule": "complicated_expert_review",
-      "target_divisions": ["Div2.MasterPlanner", "Div4.Production", "Div5.QualificationsLibraryLearning"],
+      "target_divisions": [
+        "Div2.MasterPlanner",
+        "Div4.Production",
+        "Div5.QualificationsLibraryLearning"
+      ],
       "tools_exercised": [
         "bos-dispatch-event",
         "bos-route-packet"
       ],
       "verdict": "pass",
-      "tests": 7
+      "tests": 8
     },
     {
       "scenario": "CHAOTIC",
@@ -47,7 +51,11 @@
       "routing_mode": "two-pass (Div7 executive decision)",
       "decision_delegated_mode": "act",
       "routing_rule": "chaotic_incident_flow",
-      "target_divisions": ["Div1.HCO", "Div3.Treasury", "Div5.QualificationsLibraryLearning"],
+      "target_divisions": [
+        "Div1.HCO",
+        "Div3.Treasury",
+        "Div5.QualificationsLibraryLearning"
+      ],
       "tools_exercised": [
         "bos-dispatch-event",
         "bos-circuit-breaker",
@@ -55,7 +63,7 @@
         "bos-eval-gate"
       ],
       "verdict": "pass",
-      "tests": 9
+      "tests": 10
     },
     {
       "scenario": "Grant Policy Cross-Division Enforcement",
@@ -67,9 +75,10 @@
       "scenario": "Cross-Scenario Integration",
       "description": "All three Cynefin domains through one activate() call",
       "verdict": "pass",
-      "tests": 7
+      "tests": 4
     }
   ],
   "verification_command": "cd plugin-bos-light && npx vitest run tests/e2eWorkflow.test.ts",
-  "verification_exit_code": 0
+  "verification_exit_code": 0,
+  "overall_verdict": "pass"
 }
