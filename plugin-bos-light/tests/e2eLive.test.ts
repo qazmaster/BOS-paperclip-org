@@ -44,6 +44,9 @@ const BOS_T1_PROJECT = "proj-bos";
 const BOS_T2_ISSUE = "issue-bos-t2-e2e";
 const BOS_T2_IDENTIFIER = "BOS-T2";
 
+const BOS_T3_ISSUE = "issue-bos-t3-e2e";
+const BOS_T3_IDENTIFIER = "BOS-T3";
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function makeBosT1Payload(overrides: Partial<IssueCreatedPayload> = {}): IssueCreatedPayload {
@@ -77,6 +80,33 @@ function isRoutingState(r: MissionRoutingState | MissionRouterUnauthorized): r i
 
 function isUnauthorized(r: MissionRoutingState | MissionRouterUnauthorized): r is MissionRouterUnauthorized {
   return "authorized" in r && r.authorized === false;
+}
+
+// ─── BOS-T3 Helpers ─────────────────────────────────────────────────────────
+
+function makeBosT3Payload(overrides: Partial<IssueCreatedPayload> = {}): IssueCreatedPayload {
+  return {
+    issueId: BOS_T3_ISSUE,
+    companyId: BOS_T1_COMPANY,
+    identifier: BOS_T3_IDENTIFIER,
+    title: "Critical production outage: cascading service failure emergency",
+    description: "Immediate incident response required. Critical runaway failure in production services with emergency breaker tripped. Circuit breaker open, systems crashing and down.",
+    status: "open",
+    priority: "critical",
+    projectId: BOS_T1_PROJECT,
+    createdAt: "2026-06-02T14:00:00.000Z",
+    ...overrides,
+  };
+}
+
+function makeBosT3Event(overrides: Partial<IssueCreatedPayload> = {}): IssueLifecycleHookEvent {
+  return {
+    eventType: "issue.created",
+    eventId: "evt-bos-t3-e2e",
+    occurredAt: "2026-06-02T14:00:00.000Z",
+    payload: makeBosT3Payload(overrides),
+    actor: { type: "user", id: "user-bos" },
+  };
 }
 
 // ─── BOS-T2 Helpers ─────────────────────────────────────────────────────────
@@ -1257,6 +1287,587 @@ describe("E2E Live: BOS-T2 COMPLEX Routing", () => {
       );
       expect(firstPassDiv7).toBeDefined();
       expect(secondPassDiv4).toBeDefined();
+    });
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// BOS-T3 CHAOTIC Routing: Incident flow, emergency grant, stabilize-first
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("E2E Live: BOS-T3 CHAOTIC Routing", () => {
+  beforeEach(() => {
+    clearPacketRouter();
+    clearRoutingDecisionLog();
+  });
+
+  // ── 1. Incident Signal Detection: Routes to Div7 ──────────────────────────
+
+  describe("Incident signal detection routes to Div7", () => {
+    it("routes BOS-T3 to Div7 as requires_executive_decision (incident signals)", async () => {
+      const event = makeBosT3Event();
+      const result = await missionRouterIssueCreatedHandler(event);
+
+      expect(result.handled).toBe(true);
+
+      const log = getRoutingDecisionLog();
+      expect(log).toHaveLength(1);
+
+      const firstPassResult = log[0].routingResult as MissionRoutingState;
+      expect(firstPassResult.status).toBe("ROUTED");
+      expect(firstPassResult.activated_divisions).toContain("Div7.MissionControl");
+      expect(firstPassResult.activated_divisions).toHaveLength(1);
+      expect(firstPassResult.excluded_divisions).toContain("Div1.HCO");
+    });
+
+    it("detects incident signals in BOS-T3 mission signals", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const { signals } = log[0];
+
+      expect(signals.incidentSignals).toBe(true);
+      expect(signals.riskLevel).toBe("CRITICAL"); // priority=critical + incident keywords
+    });
+
+    it("triggers two-pass routing for CHAOTIC mission", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      expect(log[0].twoPassRouting).toBeDefined();
+
+      const twoPass = log[0].twoPassRouting!;
+      expect(twoPass.decisionDelegated).toBeDefined();
+      expect(twoPass.operationalRoutingResult).toBeDefined();
+      expect(twoPass.operationalPacketDeliveries).toBeDefined();
+      expect(twoPass.completedAt).toBeDefined();
+    });
+
+    it("risk level escalates to CRITICAL for incident keywords", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const { signals } = log[0];
+
+      // CRITICAL priority + incident keywords (outage, emergency, critical, crash) → CRITICAL
+      expect(signals.riskLevel).toBe("CRITICAL");
+    });
+
+    it("deterministic CHAOTIC routing across 5 invocations", async () => {
+      for (let i = 0; i < 5; i++) {
+        clearPacketRouter();
+        clearRoutingDecisionLog();
+
+        const event = makeBosT3Event({
+          issueId: `issue-bos-t3-det-${i}`,
+          identifier: `BOS-T3-${i}`,
+        });
+        await missionRouterIssueCreatedHandler(event);
+
+        const log = getRoutingDecisionLog();
+        expect(log[0].twoPassRouting).toBeDefined();
+        expect(log[0].twoPassRouting!.decisionDelegated.cynefin_domain).toBe("CHAOTIC");
+      }
+    });
+  });
+
+  // ── 2. DecisionDelegated: CHAOTIC Domain Classification ───────────────────
+
+  describe("DecisionDelegated: CHAOTIC domain classification", () => {
+    it("DecisionDelegated payload has cynefin_domain=CHAOTIC", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const decisionDelegated = log[0].twoPassRouting!.decisionDelegated;
+
+      expect(decisionDelegated.cynefin_domain).toBe("CHAOTIC");
+      expect(decisionDelegated.schema_version).toBe("1.0");
+      expect(decisionDelegated.decision_id).toBeDefined();
+    });
+
+    it("DecisionDelegated has STABILIZE_FIRST recommended mode", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const decisionDelegated = log[0].twoPassRouting!.decisionDelegated;
+
+      expect(decisionDelegated.recommended_mode).toBe("STABILIZE_FIRST");
+    });
+
+    it("DecisionDelegated has chaotic_incident_flow routing rule", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const directive = log[0].twoPassRouting!.decisionDelegated.routing_directive;
+
+      expect(directive.routingRule).toBe("chaotic_incident_flow");
+      expect(directive.requiresQA).toBe(true);
+      expect(directive.requiresQuarantine).toBe(false);
+    });
+
+    it("DecisionDelegated targets Div1.HCO, Div3.Treasury, Div5.QualificationsLibraryLearning", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const directive = log[0].twoPassRouting!.decisionDelegated.routing_directive;
+
+      expect(directive.targetDivisions).toContain("Div1.HCO");
+      expect(directive.targetDivisions).toContain("Div3.Treasury");
+      expect(directive.targetDivisions).toContain("Div5.QualificationsLibraryLearning");
+      expect(directive.targetDivisions).toHaveLength(3);
+    });
+
+    it("DecisionDelegated does NOT require budget grant for CHAOTIC (emergency protocol)", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const directive = log[0].twoPassRouting!.decisionDelegated.routing_directive;
+
+      // CHAOTIC routing does not requireBudgetGrant (emergency protocol bypasses normal grant flow)
+      expect(directive.requiresBudgetGrant).toBe(false);
+    });
+
+    it("DecisionDelegated has critical escalation level", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const decisionDelegated = log[0].twoPassRouting!.decisionDelegated;
+
+      // CHAOTIC domain always gets critical escalation level
+      expect(decisionDelegated.escalation_level).toBe("critical");
+    });
+
+    it("DecisionDelegated has incident/containment constraints", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const decisionDelegated = log[0].twoPassRouting!.decisionDelegated;
+
+      expect(decisionDelegated.constraints.length).toBeGreaterThan(0);
+      // CRITICAL risk with incident signals generates incident-related constraints
+      expect(decisionDelegated.constraints.some(c =>
+        c.toLowerCase().includes("incident") ||
+        c.toLowerCase().includes("runaway") ||
+        c.toLowerCase().includes("active") ||
+        c.toLowerCase().includes("critical")
+      )).toBe(true);
+    });
+
+    it("DecisionDelegated packet emitted from Div7 to Div1", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const div1Inbox = getDivisionInbox("Div1.HCO");
+      const delegatedPacket = div1Inbox.find(
+        p => p.packet_type === "decision_delegated" && p.from_division === "Div7.MissionControl"
+      );
+      expect(delegatedPacket).toBeDefined();
+      expect(delegatedPacket!.to_division).toBe("Div1.HCO");
+    });
+  });
+
+  // ── 3. Second-Pass: Chaotic Incident Flow Routing ─────────────────────────
+
+  describe("Second-pass: chaotic incident flow operational routing", () => {
+    it("operational routing activates Div1.HCO, Div3.Treasury, Div5.QualificationsLibraryLearning", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const opResult = log[0].twoPassRouting!.operationalRoutingResult;
+
+      expect(isRoutingState(opResult)).toBe(true);
+      if (!isRoutingState(opResult)) throw new Error("Expected routing state");
+
+      expect(opResult.activated_divisions).toContain("Div1.HCO");
+      expect(opResult.activated_divisions).toContain("Div3.Treasury");
+      expect(opResult.activated_divisions).toContain("Div5.QualificationsLibraryLearning");
+      expect(opResult.activated_divisions).toHaveLength(3);
+    });
+
+    it("operational routing excludes Div7.MissionControl from target divisions", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const opResult = log[0].twoPassRouting!.operationalRoutingResult;
+
+      expect(isRoutingState(opResult)).toBe(true);
+      if (!isRoutingState(opResult)) throw new Error("Expected routing state");
+
+      // Div7 is excluded from operational routing (it makes the decision, doesn't execute)
+      expect(opResult.excluded_divisions).toContain("Div7.MissionControl");
+    });
+
+    it("delivers work_assignment packets to all three target divisions", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const div1Inbox = getDivisionInbox("Div1.HCO");
+      const div3Inbox = getDivisionInbox("Div3.Treasury");
+      const div5Inbox = getDivisionInbox("Div5.QualificationsLibraryLearning");
+
+      // Each should have at least one work_assignment from second pass
+      // (Div1 also receives decision_delegated from Div7)
+      const div1WorkPacket = div1Inbox.find(p => p.packet_type === "work_assignment");
+      const div3WorkPacket = div3Inbox.find(p => p.packet_type === "work_assignment");
+      const div5WorkPacket = div5Inbox.find(p => p.packet_type === "work_assignment");
+
+      expect(div1WorkPacket).toBeDefined();
+      expect(div3WorkPacket).toBeDefined();
+      expect(div5WorkPacket).toBeDefined();
+    });
+
+    it("second-pass packets carry CHAOTIC decision metadata", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const opDeliveries = log[0].twoPassRouting!.operationalPacketDeliveries;
+
+      expect(opDeliveries.length).toBeGreaterThanOrEqual(3);
+
+      // Find a work_assignment delivery with decision metadata
+      const delivery = opDeliveries.find(d => d.packetType === "work_assignment");
+      expect(delivery).toBeDefined();
+      expect(delivery!.packetId).toMatch(/^pkt_/);
+      expect(delivery!.fromDivision).toBe("Div1.HCO");
+    });
+
+    it("delivers status_update to Div7 confirming operational routing", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const div7Inbox = getDivisionInbox("Div7.MissionControl");
+      const statusUpdate = div7Inbox.find(
+        p => p.packet_type === "status_update" && p.from_division === "Div1.HCO"
+      );
+      expect(statusUpdate).toBeDefined();
+    });
+
+    it("CHAOTIC routing does NOT activate Div2.MasterPlanner or Div4.Production", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const opResult = log[0].twoPassRouting!.operationalRoutingResult;
+
+      expect(isRoutingState(opResult)).toBe(true);
+      if (!isRoutingState(opResult)) throw new Error("Expected routing state");
+
+      // CHAOTIC incident flow targets Div1, Div3, Div5 only (no Div2 or Div4)
+      expect(opResult.activated_divisions).not.toContain("Div2.MasterPlanner");
+      expect(opResult.activated_divisions).not.toContain("Div4.Production");
+    });
+  });
+
+  // ── 4. Emergency Grant Handling ───────────────────────────────────────────
+
+  describe("Emergency grant handling for CHAOTIC routing", () => {
+    it("CHAOTIC routing directive does not require budget grant (emergency protocol)", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      const directive = log[0].twoPassRouting!.decisionDelegated.routing_directive;
+
+      // CHAOTIC routing uses emergency protocol, not standard budget grant
+      expect(directive.requiresBudgetGrant).toBe(false);
+    });
+
+    it("CRITICAL risk grant request escalates to Div7.MissionControl", () => {
+      // If an emergency grant IS requested for CHAOTIC mission, CRITICAL risk escalates
+      const request: GrantRequest = {
+        schema_version: "1.0",
+        requested_by: "Div1.HCO",
+        target_division: "Div3.Treasury",
+        mission_id: BOS_T3_ISSUE,
+        paperclip_task_id: BOS_T3_ISSUE,
+        purpose: "Emergency incident containment for BOS-T3",
+        requested_tools: ["budget_snapshot", "grant_creation"],
+        requested_secrets: [],
+        estimated_cost: 30_000,
+        risk_level: "CRITICAL",
+        ttl_minutes: 60,
+        requested_at: new Date().toISOString(),
+      };
+
+      const decision = validateGrantRequest(request);
+
+      // CRITICAL risk always escalates to Div7.MissionControl
+      expect(decision.status).toBe("escalate");
+      if (decision.status === "escalate") {
+        expect(decision.escalation_target).toBe("Div7.MissionControl");
+      }
+    });
+
+    it("Div3.Treasury allowed tools include budget_snapshot and grant_creation", () => {
+      const request: GrantRequest = {
+        schema_version: "1.0",
+        requested_by: "Div1.HCO",
+        target_division: "Div3.Treasury",
+        mission_id: BOS_T3_ISSUE,
+        paperclip_task_id: BOS_T3_ISSUE,
+        purpose: "Treasury operations for incident response",
+        requested_tools: ["budget_snapshot", "grant_creation", "secret_ref_resolution"],
+        requested_secrets: [],
+        estimated_cost: 20_000,
+        risk_level: "MEDIUM",
+        ttl_minutes: 60,
+        requested_at: new Date().toISOString(),
+      };
+
+      const decision = validateGrantRequest(request);
+
+      expect(decision.status).toBe("approved");
+      if (decision.status === "approved") {
+        expect(decision.allowed_tools).toContain("budget_snapshot");
+        expect(decision.allowed_tools).toContain("grant_creation");
+        expect(decision.allowed_tools).toContain("secret_ref_resolution");
+      }
+    });
+
+    it("Div5.QualificationsLibraryLearning allowed tools include quarantine and verification", () => {
+      const request: GrantRequest = {
+        schema_version: "1.0",
+        requested_by: "Div1.HCO",
+        target_division: "Div5.QualificationsLibraryLearning",
+        mission_id: BOS_T3_ISSUE,
+        paperclip_task_id: BOS_T3_ISSUE,
+        purpose: "Quarantine and verify incident containment",
+        requested_tools: ["quarantine", "verification", "scanning"],
+        requested_secrets: [],
+        estimated_cost: 15_000,
+        risk_level: "MEDIUM",
+        ttl_minutes: 60,
+        requested_at: new Date().toISOString(),
+      };
+
+      const decision = validateGrantRequest(request);
+
+      expect(decision.status).toBe("approved");
+      if (decision.status === "approved") {
+        expect(decision.allowed_tools).toContain("quarantine");
+        expect(decision.allowed_tools).toContain("verification");
+        expect(decision.allowed_tools).toContain("scanning");
+      }
+    });
+  });
+
+  // ── 5. Audit Trail and Packet Traceability ─────────────────────────────────
+
+  describe("Audit trail and packet traceability for BOS-T3", () => {
+    it("routing decision log has complete metadata for CHAOTIC routing", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      expect(log).toHaveLength(1);
+
+      const entry = log[0];
+      expect(entry.issueId).toBe(BOS_T3_ISSUE);
+      expect(entry.identifier).toBe(BOS_T3_IDENTIFIER);
+      expect(entry.missionId).toBe(BOS_T3_ISSUE);
+      expect(entry.signals).toBeDefined();
+      expect(entry.routingResult).toBeDefined();
+      expect(entry.packetDeliveries).toBeDefined();
+      expect(entry.twoPassRouting).toBeDefined();
+      expect(entry.routedAt).toBeDefined();
+    });
+
+    it("CHAOTIC decision has SELF_HEALING decision_type", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const log = getRoutingDecisionLog();
+      // The underlying decision engine classifies CHAOTIC as SELF_HEALING
+      // This is recorded in the DecisionDelegated via the decision engine
+      const decisionDelegated = log[0].twoPassRouting!.decisionDelegated;
+
+      // Verify CHAOTIC domain (SELF_HEALING decision type is internal to decision engine)
+      expect(decisionDelegated.cynefin_domain).toBe("CHAOTIC");
+      expect(decisionDelegated.recommended_mode).toBe("STABILIZE_FIRST");
+    });
+
+    it("all packets traceable via getPacketsForIssue (both passes)", async () => {
+      const event = makeBosT3Event();
+      await missionRouterIssueCreatedHandler(event);
+
+      const packets = getPacketsForIssue(BOS_T3_ISSUE);
+
+      // First pass: 1 work_assignment to Div7
+      // Second pass: 3 work_assignments (Div1, Div3, Div5) + 1 status_update to Div7
+      // + 1 decision_delegated from Div7 to Div1
+      expect(packets.length).toBeGreaterThanOrEqual(5);
+
+      // First-pass packet to Div7
+      const firstPassDiv7 = packets.find(
+        p => p.toDivision === "Div7.MissionControl" && p.packetType === "work_assignment"
+      );
+      expect(firstPassDiv7).toBeDefined();
+
+      // Second-pass packets
+      const secondPassDiv1 = packets.find(
+        p => p.toDivision === "Div1.HCO" && p.packetType === "work_assignment"
+      );
+      const secondPassDiv3 = packets.find(
+        p => p.toDivision === "Div3.Treasury" && p.packetType === "work_assignment"
+      );
+      const secondPassDiv5 = packets.find(
+        p => p.toDivision === "Div5.QualificationsLibraryLearning" && p.packetType === "work_assignment"
+      );
+      expect(secondPassDiv1).toBeDefined();
+      expect(secondPassDiv3).toBeDefined();
+      expect(secondPassDiv5).toBeDefined();
+    });
+
+    it("packet summary reflects first-pass routing to Div7", async () => {
+      await missionRouterIssueCreatedHandler(makeBosT3Event());
+
+      const summary = getRoutingPacketSummary();
+
+      // getRoutingPacketSummary only tracks first-pass deliveries
+      expect(summary.has("Div7.MissionControl")).toBe(true);
+
+      const div7Info = summary.get("Div7.MissionControl")!;
+      expect(div7Info.count).toBeGreaterThanOrEqual(1);
+      expect(div7Info.latestPacketId).toMatch(/^pkt_/);
+    });
+
+    it("decision_delegated packet present in Div1.HCO inbox (emitted between capture windows)", async () => {
+      await missionRouterIssueCreatedHandler(makeBosT3Event());
+
+      // The decision_delegated packet is emitted by delegateDecisionToDiv1() between
+      // the first-pass and second-pass capture windows, so it's in the inbox but NOT
+      // indexed by getPacketsForIssue. Verify directly from the inbox.
+      const div1Inbox = getDivisionInbox("Div1.HCO");
+      const delegatedPacket = div1Inbox.find(
+        p => p.packet_type === "decision_delegated" && p.from_division === "Div7.MissionControl"
+      );
+      expect(delegatedPacket).toBeDefined();
+      expect(delegatedPacket!.to_division).toBe("Div1.HCO");
+    });
+  });
+
+  // ── 6. Full E2E Integration: BOS-T3 CHAOTIC ───────────────────────────────
+
+  describe("Full E2E: BOS-T3 incident intake → CHAOTIC decision → incident flow", () => {
+    it("complete flow: issue create → Div7 CHAOTIC → DecisionDelegated → Div1+Div3+Div5", async () => {
+      const manager = createBosLightHookManager();
+      const metadataStore = new BosTaskMetadataStore();
+      const adapter = new InMemoryPaperclipAdapter();
+
+      // Step 1: Dispatch BOS-T3 through hook manager
+      const event = makeBosT3Event();
+      const hookLogs = await manager.dispatchEvent(event);
+
+      // Verify both hooks fired (logging + mission-router)
+      expect(hookLogs).toHaveLength(2);
+      const routerLog = hookLogs.find(l => l.handlerName === "bos-light-mission-router");
+      expect(routerLog).toBeDefined();
+      expect(routerLog!.result.handled).toBe(true);
+
+      // Step 2: Verify two-pass CHAOTIC routing
+      const decisionLog = getRoutingDecisionLog();
+      expect(decisionLog).toHaveLength(1);
+
+      const entry = decisionLog[0];
+      expect(entry.issueId).toBe(BOS_T3_ISSUE);
+      expect(entry.identifier).toBe(BOS_T3_IDENTIFIER);
+      expect(entry.twoPassRouting).toBeDefined();
+
+      // Step 3: Verify DecisionDelegated payload
+      const decisionDelegated = entry.twoPassRouting!.decisionDelegated;
+      expect(decisionDelegated.cynefin_domain).toBe("CHAOTIC");
+      expect(decisionDelegated.recommended_mode).toBe("STABILIZE_FIRST");
+      expect(decisionDelegated.routing_directive.routingRule).toBe("chaotic_incident_flow");
+      expect(decisionDelegated.routing_directive.targetDivisions).toHaveLength(3);
+      expect(decisionDelegated.escalation_level).toBe("critical");
+
+      // Step 4: Verify operational routing result
+      const opResult = entry.twoPassRouting!.operationalRoutingResult;
+      expect(isRoutingState(opResult)).toBe(true);
+      if (!isRoutingState(opResult)) throw new Error("Expected routing state");
+
+      expect(opResult.activated_divisions).toContain("Div1.HCO");
+      expect(opResult.activated_divisions).toContain("Div3.Treasury");
+      expect(opResult.activated_divisions).toContain("Div5.QualificationsLibraryLearning");
+      expect(opResult.status).toBe("ROUTED");
+
+      // Step 5: Verify incident-flow packet delivery
+      const div1Inbox = getDivisionInbox("Div1.HCO");
+      const div3Inbox = getDivisionInbox("Div3.Treasury");
+      const div5Inbox = getDivisionInbox("Div5.QualificationsLibraryLearning");
+
+      expect(div1Inbox.some(p => p.packet_type === "work_assignment")).toBe(true);
+      expect(div3Inbox.some(p => p.packet_type === "work_assignment")).toBe(true);
+      expect(div5Inbox.some(p => p.packet_type === "work_assignment")).toBe(true);
+
+      // Step 6: Verify DecisionDelegated packet from Div7 to Div1
+      const delegatedPacket = div1Inbox.find(
+        p => p.packet_type === "decision_delegated" && p.from_division === "Div7.MissionControl"
+      );
+      expect(delegatedPacket).toBeDefined();
+
+      // Step 7: Create metadata for BOS-T3 (emergency grant not required by routing directive)
+      const metadata = metadataStore.create({
+        issue_id: BOS_T3_ISSUE,
+        mission_id: BOS_T3_ISSUE,
+        title: "Critical production outage: cascading service failure emergency",
+        assigned_division: "Div1.HCO",
+        risk_level: "CRITICAL",
+        phase: "intake",
+      });
+
+      // Mirror metadata to Paperclip comment
+      const mirrorResult = await mirrorMetadataToComment(adapter, metadata);
+      expect(mirrorResult.success).toBe(true);
+      expect(mirrorResult.issue_id).toBe(BOS_T3_ISSUE);
+
+      // Step 8: Verify full state
+      expect(metadata.phase).toBe("intake"); // No grant attached (CHAOTIC emergency protocol)
+      expect(metadata.risk_level).toBe("CRITICAL");
+      expect(metadata.assigned_division).toBe("Div1.HCO");
+
+      // Step 9: Verify complete packet traceability
+      const allPackets = getPacketsForIssue(BOS_T3_ISSUE);
+      expect(allPackets.length).toBeGreaterThanOrEqual(5);
+
+      // First-pass Div7 assignment
+      const firstPassDiv7 = allPackets.find(
+        p => p.toDivision === "Div7.MissionControl" && p.packetType === "work_assignment"
+      );
+      expect(firstPassDiv7).toBeDefined();
+
+      // DecisionDelegated from Div7 to Div1 (emitted between capture windows; check inbox)
+      const decisionPacketInbox = div1Inbox.find(
+        p => p.packet_type === "decision_delegated" && p.from_division === "Div7.MissionControl"
+      );
+      expect(decisionPacketInbox).toBeDefined();
+
+      // Second-pass operational packets
+      const div1Work = allPackets.find(
+        p => p.toDivision === "Div1.HCO" && p.packetType === "work_assignment"
+      );
+      const div3Work = allPackets.find(
+        p => p.toDivision === "Div3.Treasury" && p.packetType === "work_assignment"
+      );
+      const div5Work = allPackets.find(
+        p => p.toDivision === "Div5.QualificationsLibraryLearning" && p.packetType === "work_assignment"
+      );
+      expect(div1Work).toBeDefined();
+      expect(div3Work).toBeDefined();
+      expect(div5Work).toBeDefined();
     });
   });
 });
