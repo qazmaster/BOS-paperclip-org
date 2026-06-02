@@ -1,7 +1,7 @@
 {
   "milestone": "M010",
   "slice": "S03",
-  "created_at": "2026-06-02T19:43:14.970Z",
+  "created_at": "2026-06-02T19:44:06.572Z",
   "schema_version": "M010-S03-agent-integration/v1",
   "agent_visibility": {
     "total_expected": 7,
