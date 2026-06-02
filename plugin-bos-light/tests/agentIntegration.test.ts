@@ -1,13 +1,20 @@
 /**
- * Integration tests for division-specific tool access boundaries.
+ * Integration tests for division-specific tool access boundaries and
+ * agent-to-hook issue routing flow.
  *
- * These tests exercise the wrapped dist/worker.js tools with multiple
- * divisions to verify cross-division allow/deny behavior end-to-end.
+ * These tests exercise:
+ * 1. The wrapped dist/worker.js tools with multiple divisions to verify
+ *    cross-division allow/deny behavior end-to-end.
+ * 2. The full issue routing flow via IssueLifecycleHookManager:
+ *    issue.created event -> MissionRouter -> division inbox packet delivery.
+ * 3. Two-pass routing through Div7 executive decision for strategic/chaotic issues.
+ * 4. Edge cases: unknown event types, empty titles, graceful fallbacks.
+ *
  * Unlike the unit tests in distWorkerTools.test.ts which test individual
  * tool happy paths and grant wrapper mechanics in isolation, these tests
  * create dedicated validators per division and systematically verify
  * every division's allowed and denied tool access against the registered
- * worker tools.
+ * worker tools, plus end-to-end routing integration.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
@@ -15,6 +22,15 @@ import {
   AgentActionValidator,
   InMemoryGrantLedger,
   createValidatedToolWrapper,
+  createBosLightHookManager,
+  IssueLifecycleHookManager,
+  getRoutingDecisionLog,
+  clearRoutingDecisionLog,
+  getRoutingPacketSummary,
+  getPacketsForIssue,
+  deriveMissionSignalsFromText,
+  inferDivisionsFromText,
+  requiresExecutiveDecision,
 } from "../dist/worker.js";
 
 // ---------------------------------------------------------------------------
@@ -654,5 +670,413 @@ describe("Division-specific tool access integration tests", () => {
         }
       });
     }
+  });
+});
+
+// =========================================================================
+// Issue Routing Flow Integration Tests (T04)
+// =========================================================================
+
+describe("Issue routing flow integration", () => {
+  let ctx: ReturnType<typeof createMockCtx>;
+  let hookManager: InstanceType<typeof IssueLifecycleHookManager>;
+
+  beforeEach(async () => {
+    clearRoutingDecisionLog();
+    ctx = createMockCtx();
+    await activate(ctx as any);
+    hookManager = (ctx as any)._hookManager;
+  });
+
+  // Helper to create issue.created events
+  function createIssueEvent(
+    issueId: string,
+    title: string,
+    description = "",
+    identifier = issueId
+  ) {
+    return {
+      eventType: "issue.created" as const,
+      eventId: `evt_${issueId}`,
+      occurredAt: new Date().toISOString(),
+      payload: {
+        issueId,
+        identifier,
+        title,
+        description,
+        status: "open",
+      },
+      actor: { type: "agent" as const, id: "test-agent" },
+    };
+  }
+
+  // -----------------------------------------------------------------------
+  // Full issue routing flow: event -> MissionRouter -> routing decision log
+  // -----------------------------------------------------------------------
+  describe("full issue routing flow", () => {
+    it("routes an issue.created event through MissionRouter and records routing decision", async () => {
+      const event = createIssueEvent(
+        "issue-001",
+        "Implement code feature for login page",
+        "Build the OAuth2 login flow"
+      );
+      const logs = await hookManager.dispatchEvent(event);
+
+      // MissionRouter handler should have fired
+      const routerLog = logs.find(
+        (l) => l.handlerName === "bos-light-mission-router"
+      );
+      expect(routerLog).toBeDefined();
+      expect(routerLog!.result.handled).toBe(true);
+      expect(routerLog!.result.message).toContain("MissionRouter routed");
+
+      // Routing decision log should have an entry
+      const decisionLog = getRoutingDecisionLog();
+      expect(decisionLog).toHaveLength(1);
+      expect(decisionLog[0].issueId).toBe("issue-001");
+      expect(decisionLog[0].signals).toBeDefined();
+      expect(decisionLog[0].signals.taskClass).toBe("technical");
+      expect(decisionLog[0].signals.requiresImplementation).toBe(true);
+    });
+
+    it("delivers packets to expected divisions for a technical issue", async () => {
+      const event = createIssueEvent(
+        "issue-002",
+        "Fix login bug and implement redirect",
+        "The login redirect is broken"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const packets = getPacketsForIssue("issue-002");
+      expect(packets.length).toBeGreaterThan(0);
+
+      // Technical keywords route to Div4.Production
+      const targetDivisions = packets.map((p) => p.toDivision);
+      expect(targetDivisions).toContain("Div4.Production");
+      expect(targetDivisions).not.toContain("Div1.HCO"); // excluded from operational
+      expect(targetDivisions).not.toContain("Div7.MissionControl"); // excluded from operational
+    });
+
+    it("records packet delivery records in the routing decision log entry", async () => {
+      const event = createIssueEvent(
+        "issue-003",
+        "Deploy new code feature to production"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const decisionLog = getRoutingDecisionLog();
+      expect(decisionLog).toHaveLength(1);
+      expect(decisionLog[0].packetDeliveries.length).toBeGreaterThan(0);
+
+      const delivery = decisionLog[0].packetDeliveries[0];
+      expect(delivery.packetId).toMatch(/^pkt_/);
+      expect(delivery.packetType).toBe("work_assignment");
+      expect(delivery.toDivision).toBeDefined();
+      expect(delivery.fromDivision).toBe("Div1.HCO");
+      expect(delivery.deliveredAt).toBeDefined();
+    });
+
+    it("logs both hook handlers invoked for issue.created event", async () => {
+      const event = createIssueEvent(
+        "issue-004",
+        "Build a test feature"
+      );
+      const logs = await hookManager.dispatchEvent(event);
+
+      // 2 handlers registered for issue.created:
+      // bos-light-log-created + bos-light-mission-router
+      const createdHandlers = logs.filter(
+        (l) => l.eventType === "issue.created"
+      );
+      expect(createdHandlers).toHaveLength(2);
+      const handlerNames = createdHandlers.map((l) => l.handlerName);
+      expect(handlerNames).toContain("bos-light-log-created");
+      expect(handlerNames).toContain("bos-light-mission-router");
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Two-pass routing: Div7 executive decision for strategic/chaotic issues
+  // -----------------------------------------------------------------------
+  describe("two-pass routing through Div7 executive decision", () => {
+    it("routes a critical incident through Div7 CHAOTIC domain with two-pass", async () => {
+      const event = createIssueEvent(
+        "issue-incident-001",
+        "Production outage: database crash emergency",
+        "The primary database is down"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const decisionLog = getRoutingDecisionLog();
+      expect(decisionLog).toHaveLength(1);
+
+      const entry = decisionLog[0];
+      // Two-pass routing should be present
+      expect(entry.twoPassRouting).toBeDefined();
+      expect(entry.twoPassRouting!.decisionDelegated.cynefin_domain).toBe("CHAOTIC");
+      expect(entry.twoPassRouting!.decisionDelegated.recommended_mode).toBe("act");
+
+      // First pass activated divisions should include Div7
+      expect(entry.routingResult.activated_divisions).toContain("Div7.MissionControl");
+
+      // Operational routing result should have activated divisions
+      const opResult = entry.twoPassRouting!.operationalRoutingResult;
+      expect(opResult.status).toBe("ROUTED");
+      expect(opResult.activated_divisions.length).toBeGreaterThan(0);
+      // CHAOTIC domain routes to Div1.HCO, Div3.Treasury, Div5
+      expect(opResult.activated_divisions).toContain("Div1.HCO");
+      expect(opResult.activated_divisions).toContain("Div3.Treasury");
+    });
+
+    it("routes a strategy/policy issue through Div7 COMPLICATED domain", async () => {
+      const event = createIssueEvent(
+        "issue-strategy-001",
+        "Policy strategy ambiguous experiment",
+        "We need a strategic direction for this experiment"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const decisionLog = getRoutingDecisionLog();
+      expect(decisionLog).toHaveLength(1);
+
+      const entry = decisionLog[0];
+      expect(entry.twoPassRouting).toBeDefined();
+      expect(entry.twoPassRouting!.decisionDelegated.cynefin_domain).toBe("COMPLICATED");
+      expect(entry.twoPassRouting!.decisionDelegated.recommended_mode).toBe("probe");
+
+      // COMPLICATED domain routes to Div2.MasterPlanner, Div4.Production, Div5
+      const opDivisions =
+        entry.twoPassRouting!.operationalRoutingResult.activated_divisions;
+      expect(opDivisions).toContain("Div2.MasterPlanner");
+      expect(opDivisions).toContain("Div4.Production");
+    });
+
+    it("delivers operational packets for two-pass routed issues", async () => {
+      const event = createIssueEvent(
+        "issue-incident-002",
+        "Emergency crash in production system"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const packets = getPacketsForIssue("issue-incident-002");
+      expect(packets.length).toBeGreaterThan(0);
+
+      // Two-pass should have both pre-decision and post-decision packets
+      const decisionLog = getRoutingDecisionLog();
+      const entry = decisionLog[0];
+      expect(entry.packetDeliveries.length).toBeGreaterThan(0); // pre-decision
+      expect(
+        entry.twoPassRouting!.operationalPacketDeliveries.length
+      ).toBeGreaterThan(0); // post-decision
+    });
+
+    it("getRoutingPacketSummary aggregates two-pass packets by division", async () => {
+      // Route an incident (CHAOTIC two-pass)
+      const event = createIssueEvent(
+        "issue-incident-003",
+        "Critical outage emergency crash"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const summary = getRoutingPacketSummary();
+      // CHAOTIC operational routing delivers to Div1, Div3, Div5
+      expect(summary.has("Div1.HCO")).toBe(true);
+      expect(summary.has("Div3.Treasury")).toBe(true);
+      expect(summary.has("Div5.QualificationsLibraryLearning")).toBe(true);
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Division inbox verification
+  // -----------------------------------------------------------------------
+  describe("division inbox packet delivery", () => {
+    it("routes a code feature to Div4.Production with correct packet structure", async () => {
+      const event = createIssueEvent(
+        "issue-code-001",
+        "Implement new code feature for dashboard",
+        "Build the dashboard widget component"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const packets = getPacketsForIssue("issue-code-001");
+      const div4Packets = packets.filter((p) => p.toDivision === "Div4.Production");
+      expect(div4Packets).toHaveLength(1);
+      expect(div4Packets[0].packetType).toBe("work_assignment");
+      expect(div4Packets[0].fromDivision).toBe("Div1.HCO");
+    });
+
+    it("routes a test/QA issue to Div5.QualificationsLibraryLearning", async () => {
+      const event = createIssueEvent(
+        "issue-qa-001",
+        "Security audit and quality review of auth module",
+        "Run security tests on the authentication module"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const packets = getPacketsForIssue("issue-qa-001");
+      const targetDivisions = packets.map((p) => p.toDivision);
+      expect(targetDivisions).toContain("Div5.QualificationsLibraryLearning");
+    });
+
+    it("routes a budget/cost issue to Div3.Treasury", async () => {
+      const event = createIssueEvent(
+        "issue-budget-001",
+        "Review budget allocation for Q3 grant"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const packets = getPacketsForIssue("issue-budget-001");
+      const targetDivisions = packets.map((p) => p.toDivision);
+      expect(targetDivisions).toContain("Div3.Treasury");
+    });
+
+    it("routes a planning issue to Div2.MasterPlanner", async () => {
+      const event = createIssueEvent(
+        "issue-plan-001",
+        "Backlog prioritization and roadmap planning"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const packets = getPacketsForIssue("issue-plan-001");
+      const targetDivisions = packets.map((p) => p.toDivision);
+      expect(targetDivisions).toContain("Div2.MasterPlanner");
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Edge cases
+  // -----------------------------------------------------------------------
+  describe("edge cases", () => {
+    it("unknown event type dispatches with no routing decision logged", async () => {
+      const event = {
+        eventType: "issue.unknown_type" as any,
+        eventId: "evt-unknown",
+        occurredAt: new Date().toISOString(),
+        payload: { issueId: "issue-unknown", title: "Test" },
+        actor: { type: "agent" as const, id: "test-agent" },
+      };
+      const logs = await hookManager.dispatchEvent(event);
+
+      // Should dispatch with (no handlers) result
+      expect(logs).toHaveLength(1);
+      expect(logs[0].result.handled).toBe(false);
+      expect(logs[0].result.message).toContain("No handlers registered");
+
+      // No routing decision logged
+      expect(getRoutingDecisionLog()).toHaveLength(0);
+    });
+
+    it("empty title falls back gracefully and still produces a routing entry", async () => {
+      const event = createIssueEvent("issue-empty", "", "");
+      await hookManager.dispatchEvent(event);
+
+      const decisionLog = getRoutingDecisionLog();
+      expect(decisionLog).toHaveLength(1);
+      // Empty text defaults taskClass to unknown
+      expect(decisionLog[0].signals.taskClass).toBe("unknown");
+      // Should still route to a default division (Div4.Production fallback)
+      expect(decisionLog[0].routingResult.activated_divisions.length).toBeGreaterThan(0);
+    });
+
+    it("empty description with keyword in title still routes correctly", async () => {
+      const event = createIssueEvent(
+        "issue-title-only",
+        "Fix production bug in payment module",
+        ""
+      );
+      await hookManager.dispatchEvent(event);
+
+      const decisionLog = getRoutingDecisionLog();
+      expect(decisionLog[0].signals.taskClass).toBe("technical");
+      const packets = getPacketsForIssue("issue-title-only");
+      expect(packets.some((p) => p.toDivision === "Div4.Production")).toBe(true);
+    });
+
+    it("multiple dispatches accumulate in the routing decision log", async () => {
+      await hookManager.dispatchEvent(
+        createIssueEvent("issue-multi-1", "Fix code bug")
+      );
+      await hookManager.dispatchEvent(
+        createIssueEvent("issue-multi-2", "Security audit review")
+      );
+      await hookManager.dispatchEvent(
+        createIssueEvent("issue-multi-3", "Budget cost allocation")
+      );
+
+      const decisionLog = getRoutingDecisionLog();
+      expect(decisionLog).toHaveLength(3);
+      expect(decisionLog[0].issueId).toBe("issue-multi-1");
+      expect(decisionLog[1].issueId).toBe("issue-multi-2");
+      expect(decisionLog[2].issueId).toBe("issue-multi-3");
+    });
+
+    it("clearRoutingDecisionLog resets the log between test runs", async () => {
+      await hookManager.dispatchEvent(
+        createIssueEvent("issue-clear-1", "Build code feature")
+      );
+      expect(getRoutingDecisionLog()).toHaveLength(1);
+
+      clearRoutingDecisionLog();
+      expect(getRoutingDecisionLog()).toHaveLength(0);
+    });
+
+    it("hook manager invocation log tracks event dispatch with handler name, result, and duration", async () => {
+      const event = createIssueEvent(
+        "issue-invlog-001",
+        "Implement code feature"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const invocationLog = hookManager.getInvocationLog();
+      expect(invocationLog.length).toBeGreaterThanOrEqual(2);
+
+      const routerInvocation = invocationLog.find(
+        (l) => l.handlerName === "bos-light-mission-router"
+      );
+      expect(routerInvocation).toBeDefined();
+      expect(routerInvocation!.eventType).toBe("issue.created");
+      expect(routerInvocation!.result.handled).toBe(true);
+      expect(routerInvocation!.result.durationMs).toBeGreaterThanOrEqual(0);
+      expect(routerInvocation!.dispatchedAt).toBeDefined();
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // MissionSignals derivation integration
+  // -----------------------------------------------------------------------
+  describe("MissionSignals derivation through routing", () => {
+    it("derives correct signals for a multi-keyword issue", async () => {
+      const event = createIssueEvent(
+        "issue-signals-001",
+        "Implement and test code feature for external API integration",
+        "Build code to integrate with external third-party webhook"
+      );
+      await hookManager.dispatchEvent(event);
+
+      const decisionLog = getRoutingDecisionLog();
+      const signals = decisionLog[0].signals;
+      expect(signals.taskClass).toBe("technical");
+      expect(signals.requiresImplementation).toBe(true);
+      expect(signals.requiresExternalData).toBe(true);
+    });
+
+    it("flags incident signals for outage keywords", () => {
+      const signals = deriveMissionSignalsFromText(
+        "Production outage emergency crash down"
+      );
+      expect(signals.incidentSignals).toBe(true);
+      expect(signals.taskClass).toBe("strategy");
+      expect(signals.riskLevel).toBe("CRITICAL");
+      expect(requiresExecutiveDecision(signals)).toBe(true);
+    });
+
+    it("infers Div4.Production for code/feature keywords", () => {
+      const divisions = inferDivisionsFromText(
+        "Implement code feature build deploy",
+        "MEDIUM"
+      );
+      expect(divisions).toContain("Div4.Production");
+      expect(divisions).toContain("Div1.HCO");
+    });
   });
 });
