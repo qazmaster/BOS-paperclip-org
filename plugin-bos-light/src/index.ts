@@ -33,3 +33,4 @@ export * from "./div5Quarantine";
 export * from "./div5PostProductionVerification";
 export * from "./div4Production";
 export * from "./issueLifecycleHooks";
+export * from "./agentActionValidator";

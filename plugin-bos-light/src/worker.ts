@@ -13,9 +13,11 @@ import { evalGateEvidence } from "./evalGateEvidence";
 import { createCircuitBreakerRecord, recordFailure, attachEscalationIssue } from "./circuitBreaker";
 import { circuitBreakerFlow } from "./circuitBreakerFlow";
 import { decide } from "./decision";
-import type { DecisionResult } from "./contracts";
+import type { DecisionResult, Division } from "./contracts";
 import { runSeededIssueBlueprintFlow } from "./issueBlueprintFlow";
 import { PAPERCLIP_RUNTIME_BOUNDARY_RULES } from "./runtimeCapabilities";
+import { AgentActionValidator, createValidatedToolWrapper } from "./agentActionValidator";
+import type { AgentActionRequest } from "./agentActionValidator";
 
 /*
   Draft worker skeleton.
@@ -141,15 +143,23 @@ export function runPikoDecide(params?: unknown): DecisionResult {
 export async function registerBosLightPlugin(ctx: any): Promise<void> {
   ctx.logger?.info?.("Registering BOS Light plugin draft");
 
+  // Initialize grant policy validator for agent action validation
+  const grantValidator = new AgentActionValidator();
+  const division: Division = ctx.division ?? "Div4.Production";
+  const missionId: string = ctx.missionId ?? "default";
+
+  // Create grant-validated wrapper factory
+  const wrapWithGrantPolicy = createValidatedToolWrapper(grantValidator, division, missionId);
+
   // Tool: piko:bpi-score
-  await registerOptionalTool(ctx, "piko:bpi-score", async (params: any) => calculateBPIScore(params));
+  await registerOptionalTool(ctx, "piko:bpi-score", wrapWithGrantPolicy("piko:bpi-score", async (params: any) => calculateBPIScore(params)));
 
   // Tool: piko:blueprint-gen
-  await registerOptionalTool(ctx, "piko:blueprint-gen", async (params: any) => generateBlueprintMarkdown(params));
+  await registerOptionalTool(ctx, "piko:blueprint-gen", wrapWithGrantPolicy("piko:blueprint-gen", async (params: any) => generateBlueprintMarkdown(params)));
 
   // Tool: piko:bpi-blueprint-artifact. This is draft wiring only: the host must
   // provide an adapter seam before any document/comment support is implied.
-  await registerOptionalTool(ctx, "piko:bpi-blueprint-artifact", async (params: any) => {
+  await registerOptionalTool(ctx, "piko:bpi-blueprint-artifact", wrapWithGrantPolicy("piko:bpi-blueprint-artifact", async (params: any) => {
     const input = toolParamsFrom(params);
     const adapter = adapterFrom(input, ctx);
     if (!adapter?.createIssueDocument || !adapter?.addIssueComment) {
@@ -168,37 +178,37 @@ export async function registerBosLightPlugin(ctx: any): Promise<void> {
         comments_native: "unvalidated"
       }
     } as any);
-  });
+  }));
 
   // Tool: piko:eval-gate
-  await registerOptionalTool(ctx, "piko:eval-gate", async (params: any) => runEvalGates(params));
+  await registerOptionalTool(ctx, "piko:eval-gate", wrapWithGrantPolicy("piko:eval-gate", async (params: any) => runEvalGates(params)));
 
   // Tool: piko:eval-gate-evidence. This composes the pure Eval Gate with
   // cache-overlay and Paperclip-visible evidence seams; absent adapter or
   // persistence support is reported in the returned envelope, not thrown.
-  await registerOptionalTool(ctx, "piko:eval-gate-evidence", async (params: any) => {
+  await registerOptionalTool(ctx, "piko:eval-gate-evidence", wrapWithGrantPolicy("piko:eval-gate-evidence", async (params: any) => {
     const input = toolParamsFrom(params);
     return evalGateEvidence({
       ...input,
       adapter: adapterFrom(input, ctx),
       persistence: persistenceFrom(input, ctx)
     } as any);
-  });
+  }));
 
   // Tool: piko:circuit-breaker-observe. Each invocation records one bounded
   // observation only; it does not start a background poller or claim live runtime
   // event support beyond the adapter/persistence diagnostics in the envelope.
-  await registerOptionalTool(ctx, "piko:circuit-breaker-observe", async (params: any) => {
+  await registerOptionalTool(ctx, "piko:circuit-breaker-observe", wrapWithGrantPolicy("piko:circuit-breaker-observe", async (params: any) => {
     const input = toolParamsFrom(params);
     return circuitBreakerFlow({
       ...input,
       adapter: adapterFrom(input, ctx),
       persistence: persistenceFrom(input, ctx)
     } as any);
-  });
+  }));
 
   // Tool: piko:decide
-  await registerOptionalTool(ctx, "piko:decide", async (params: any) => runPikoDecide(params));
+  await registerOptionalTool(ctx, "piko:decide", wrapWithGrantPolicy("piko:decide", async (params: any) => runPikoDecide(params)));
 
   // Data provider: Betting Table. Host data-provider hydration remains unvalidated;
   // this reads only the cache-overlay seam and returns diagnostics rather than
