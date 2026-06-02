@@ -16,6 +16,10 @@
  */
 
 import type { PaperclipDomainEvent } from "./pluginRegistration";
+import type { MissionEnvelope } from "./missionIntake";
+import type { Division, MissionRoutingState, MissionRouterUnauthorized, MissionSignals } from "./contracts";
+import { routeApprovedMission } from "./missionRouter";
+import { deriveMissionSignals } from "./missionSignals";
 
 // ─── Hook Event Shapes ───────────────────────────────────────────────────────
 
@@ -493,11 +497,186 @@ export function mapDomainEventToHookEvent(
   };
 }
 
+// ─── MissionRouter Issue Created Hook ────────────────────────────────────────
+
+/**
+ * Routing decision log entry for observability.
+ * Emitted whenever the MissionRouter hook processes an issue.created event.
+ */
+export interface RoutingDecisionLogEntry {
+  issueId: string;
+  identifier: string;
+  missionId: string;
+  signals: MissionSignals;
+  routingResult: MissionRoutingState | MissionRouterUnauthorized;
+  routedAt: string;
+}
+
+/** In-memory routing decision log for diagnostics. */
+const routingDecisionLog: RoutingDecisionLogEntry[] = [];
+const MAX_ROUTING_LOG_SIZE = 500;
+
+/** Get recent routing decision log entries. */
+export function getRoutingDecisionLog(limit?: number): RoutingDecisionLogEntry[] {
+  if (limit !== undefined) {
+    return routingDecisionLog.slice(-limit);
+  }
+  return [...routingDecisionLog];
+}
+
+/** Clear the routing decision log. */
+export function clearRoutingDecisionLog(): void {
+  routingDecisionLog.length = 0;
+}
+
+/**
+ * Convert an IssueCreatedPayload into a MissionEnvelope suitable for
+ * MissionRouter consumption.
+ *
+ * Derives risk_level and requested_divisions from issue metadata.
+ * Uses identifier prefix and keywords to infer division routing.
+ */
+export function issueCreatedToMissionEnvelope(
+  payload: IssueCreatedPayload
+): MissionEnvelope {
+  const text = `${payload.title} ${payload.description ?? ""}`.toLowerCase();
+  const identifier = payload.identifier;
+
+  // Infer risk level from priority and keywords
+  let riskLevel: MissionEnvelope["risk_level"] = "MEDIUM";
+  if (payload.priority === "urgent" || payload.priority === "critical") {
+    riskLevel = "CRITICAL";
+  } else if (payload.priority === "high") {
+    riskLevel = "HIGH";
+  } else if (payload.priority === "low") {
+    riskLevel = "LOW";
+  }
+
+  // Keyword-based risk escalation
+  if (/outage|incident|emergency|crash/.test(text)) {
+    riskLevel = "CRITICAL";
+  } else if (/deploy|production|customer/.test(text)) {
+    riskLevel = "HIGH";
+  } else if (/spike|prototype|experiment/.test(text)) {
+    riskLevel = "LOW";
+  }
+
+  // Infer requested divisions from keywords
+  const divisions: Division[] = ["Div1.HCO"];
+
+  if (/code|feature|implement|build|fix|bug|refactor|deploy/.test(text)) {
+    divisions.push("Div4.Production");
+  }
+  if (/test|qa|verify|audit|review|security|quality/.test(text)) {
+    divisions.push("Div5.QualificationsLibraryLearning");
+  }
+  if (/external|api|integration|third-party|partner|webhook/.test(text)) {
+    divisions.push("Div6.External");
+  }
+  if (/budget|cost|funding|resource|grant/.test(text)) {
+    divisions.push("Div3.Treasury");
+  }
+  if (/policy|strategy|strategic|ambiguous|experiment/.test(text)) {
+    divisions.push("Div7.MissionControl");
+  }
+  if (/plan|backlog|roadmap|prioritiz/.test(text)) {
+    divisions.push("Div2.MasterPlanner");
+  }
+
+  // Deduplicate
+  const uniqueDivisions = [...new Set(divisions)];
+
+  return {
+    schema_version: "1.0",
+    mission_id: payload.issueId,
+    title: payload.title,
+    description: payload.description ?? payload.title,
+    business_goal: `Issue ${identifier}: ${payload.title}`,
+    risk_level: riskLevel,
+    requested_divisions: uniqueDivisions,
+    status: "APPROVED",
+    created_at: payload.createdAt,
+    updated_at: payload.createdAt,
+  };
+}
+
+/**
+ * Hook handler that wires issue.created events to MissionRouter.
+ *
+ * On issue creation:
+ * 1. Converts issue payload to MissionEnvelope
+ * 2. Derives MissionSignals (deterministic keyword analysis)
+ * 3. Calls routeApprovedMission from Div1.HCO
+ * 4. Logs the routing decision for observability
+ *
+ * This is the entry point for live MissionRouter integration.
+ * Routing decisions are logged and can be inspected via getRoutingDecisionLog().
+ */
+export async function missionRouterIssueCreatedHandler(
+  event: IssueLifecycleHookEvent
+): Promise<HookHandlerResult> {
+  const startTime = Date.now();
+  const payload = event.payload as IssueCreatedPayload;
+
+  try {
+    // Step 1: Convert issue to mission envelope
+    const mission = issueCreatedToMissionEnvelope(payload);
+
+    // Step 2: Derive mission signals
+    const signals = deriveMissionSignals(mission);
+
+    // Step 3: Route via MissionRouter (caller is Div1.HCO)
+    const routingResult = routeApprovedMission("Div1.HCO", mission);
+
+    // Step 4: Log the routing decision
+    const logEntry: RoutingDecisionLogEntry = {
+      issueId: payload.issueId,
+      identifier: payload.identifier,
+      missionId: mission.mission_id,
+      signals,
+      routingResult,
+      routedAt: new Date().toISOString(),
+    };
+
+    routingDecisionLog.push(logEntry);
+    if (routingDecisionLog.length > MAX_ROUTING_LOG_SIZE) {
+      routingDecisionLog.splice(0, routingDecisionLog.length - MAX_ROUTING_LOG_SIZE);
+    }
+
+    const isAuthorized = "authorized" in routingResult && routingResult.authorized === false;
+
+    if (isAuthorized) {
+      return {
+        handled: true,
+        message: `MissionRouter rejected routing for ${payload.identifier}: unauthorized caller`,
+        durationMs: Date.now() - startTime,
+      };
+    }
+
+    const state = routingResult as MissionRoutingState;
+    return {
+      handled: true,
+      message: `MissionRouter routed ${payload.identifier} [${signals.taskClass}] → ${state.activated_divisions.join(", ")} (rule: ${state.routing_packet_id ? "routed" : "no-op"})`,
+      durationMs: Date.now() - startTime,
+    };
+  } catch (error) {
+    return {
+      handled: false,
+      message: `MissionRouter hook failed for ${payload.identifier}`,
+      durationMs: Date.now() - startTime,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
 // ─── Factory: Create Pre-wired Hook Manager ──────────────────────────────────
 
 /**
  * Create a pre-wired IssueLifecycleHookManager with the standard BOS Light
  * logging hooks registered for all lifecycle events.
+ *
+ * Also registers the MissionRouter issue.created hook so that issue creation
+ * triggers MissionSignals derivation and routing decisions.
  */
 export function createBosLightHookManager(
   maxLogSize?: number
@@ -511,6 +690,13 @@ export function createBosLightHookManager(
     "issue.assignment",
     "bos-light-log-assignment",
     logIssueAssignmentHandler
+  );
+
+  // Register MissionRouter integration hook for issue creation
+  manager.on(
+    "issue.created",
+    "bos-light-mission-router",
+    missionRouterIssueCreatedHandler
   );
 
   return manager;
