@@ -17,10 +17,11 @@
 
 import type { PaperclipDomainEvent } from "./pluginRegistration";
 import type { MissionEnvelope } from "./missionIntake";
-import type { Division, MissionRoutingState, MissionRouterUnauthorized, MissionSignals } from "./contracts";
-import { routeApprovedMission } from "./missionRouter";
+import type { Division, MissionRoutingState, MissionRouterUnauthorized, MissionSignals, DecisionDelegatedPayload } from "./contracts";
+import { routeApprovedMission, routeAfterDecision } from "./missionRouter";
 import { deriveMissionSignals } from "./missionSignals";
 import { getDivisionInbox } from "./divisionPacketRouter";
+import { decide, createDecisionDelegated, delegateDecisionToDiv1 } from "./decision";
 
 // ─── Hook Event Shapes ───────────────────────────────────────────────────────
 
@@ -516,6 +517,8 @@ export interface PacketDeliveryRecord {
  * Routing decision log entry for observability.
  * Emitted whenever the MissionRouter hook processes an issue.created event.
  * Includes packet delivery diagnostics for DivisionPacketRouter traceability.
+ * When two-pass routing occurs (Div7 executive decision), the second-pass
+ * routing result and DecisionDelegated payload are included.
  */
 export interface RoutingDecisionLogEntry {
   issueId: string;
@@ -525,6 +528,13 @@ export interface RoutingDecisionLogEntry {
   routingResult: MissionRoutingState | MissionRouterUnauthorized;
   packetDeliveries: PacketDeliveryRecord[];
   routedAt: string;
+  /** Present when Div7 executive decision triggered two-pass routing. */
+  twoPassRouting?: {
+    decisionDelegated: DecisionDelegatedPayload;
+    operationalRoutingResult: MissionRoutingState | MissionRouterUnauthorized;
+    operationalPacketDeliveries: PacketDeliveryRecord[];
+    completedAt: string;
+  };
 }
 
 /** In-memory routing decision log for diagnostics. */
@@ -550,14 +560,16 @@ export function clearRoutingDecisionLog(): void {
 
 /**
  * Get all packets delivered for a specific issue.
- * Uses the issue-to-packet index for O(1) lookup.
+ * Includes both first-pass and second-pass (DecisionDelegated) packets.
  */
 export function getPacketsForIssue(issueId: string): PacketDeliveryRecord[] {
-  const packetIds = issuePacketIndex.get(issueId) ?? [];
   const found: PacketDeliveryRecord[] = [];
   for (const entry of routingDecisionLog) {
     if (entry.issueId === issueId) {
       found.push(...entry.packetDeliveries);
+      if (entry.twoPassRouting) {
+        found.push(...entry.twoPassRouting.operationalPacketDeliveries);
+      }
     }
   }
   return found;
@@ -655,13 +667,117 @@ export function issueCreatedToMissionEnvelope(
 }
 
 /**
+ * Snapshot a set of division inboxes and return a diff of new packets after routing.
+ * Helper to avoid duplicating the snapshot-diff pattern.
+ */
+function captureNewPackets(
+  snapshotBefore: Map<Division, number>,
+  divisions: Iterable<Division>
+): PacketDeliveryRecord[] {
+  const deliveries: PacketDeliveryRecord[] = [];
+  for (const div of divisions) {
+    const beforeCount = snapshotBefore.get(div) ?? 0;
+    const afterInbox = getDivisionInbox(div);
+    for (let i = beforeCount; i < afterInbox.length; i++) {
+      const pkt = afterInbox[i];
+      deliveries.push({
+        packetId: pkt.packet_id,
+        packetType: pkt.packet_type,
+        toDivision: pkt.to_division,
+        fromDivision: pkt.from_division,
+        deliveredAt: pkt.timestamp,
+      });
+    }
+  }
+  return deliveries;
+}
+
+/**
+ * Execute two-pass routing: simulate Div7 executive decision, then route operationally.
+ *
+ * When the first-pass routes a mission to Div7 as requires_executive_decision,
+ * this function:
+ * 1. Constructs mission signals text for Div7's decide()
+ * 2. Creates a DecisionDelegated payload
+ * 3. Calls routeAfterDecision() for second-pass operational routing
+ * 4. Returns the DecisionDelegated payload, operational routing result, and packet deliveries
+ *
+ * This closes the DecisionDelegated flow loop at the issue lifecycle level.
+ */
+function executeDecisionDelegatedFlow(
+  mission: MissionEnvelope,
+  signals: MissionSignals
+): {
+  decisionDelegated: DecisionDelegatedPayload;
+  operationalRoutingResult: MissionRoutingState | MissionRouterUnauthorized;
+  operationalPacketDeliveries: PacketDeliveryRecord[];
+} {
+  // Build signal text for Div7's deterministic decision engine
+  const signalParts: string[] = [];
+  if (signals.incidentSignals) signalParts.push("incident outage emergency critical");
+  if (signals.policySignals) signalParts.push("strategy policy ambiguous experiment");
+  if (signals.ambiguityLevel === "high") signalParts.push("uncertain unknown");
+  if (signals.riskLevel === "CRITICAL") signalParts.push("critical runaway");
+  if (signalParts.length === 0) signalParts.push("strategic direction unclear");
+
+  // Div7 makes a decision
+  const decision = decide({
+    issue_id: mission.mission_id,
+    signals: signalParts,
+    confidence: signals.riskLevel === "CRITICAL" ? 0.9 : 0.7,
+  });
+
+  if (!decision.accepted) {
+    throw new Error(`Div7 decision rejected for mission ${mission.mission_id}`);
+  }
+
+  // Create DecisionDelegated payload
+  const decisionDelegated = createDecisionDelegated(decision);
+
+  // Also emit the DecisionDelegated packet from Div7 to Div1
+  delegateDecisionToDiv1(decision);
+
+  // Snapshot inboxes before second-pass routing
+  const allTargetDivisions = new Set<Division>([
+    ...decisionDelegated.routing_directive.targetDivisions,
+    "Div7.MissionControl",
+  ]);
+  const inboxSnapshotBefore = new Map<Division, number>();
+  for (const div of allTargetDivisions) {
+    inboxSnapshotBefore.set(div, getDivisionInbox(div).length);
+  }
+
+  // Second-pass: Div1 routes operationally based on DecisionDelegated
+  const operationalRoutingResult = routeAfterDecision(
+    "Div1.HCO",
+    mission.mission_id,
+    decisionDelegated
+  );
+
+  // Capture second-pass packet deliveries
+  const operationalPacketDeliveries = captureNewPackets(inboxSnapshotBefore, allTargetDivisions);
+
+  return {
+    decisionDelegated,
+    operationalRoutingResult,
+    operationalPacketDeliveries,
+  };
+}
+
+/**
  * Hook handler that wires issue.created events to MissionRouter.
  *
  * On issue creation:
  * 1. Converts issue payload to MissionEnvelope
  * 2. Derives MissionSignals (deterministic keyword analysis)
- * 3. Calls routeApprovedMission from Div1.HCO
- * 4. Logs the routing decision for observability
+ * 3. Calls routeApprovedMission from Div1.HCO (first pass)
+ * 4. If mission routes to Div7 (requires_executive_decision), triggers
+ *    DecisionDelegated flow for two-pass routing
+ * 5. Logs the routing decision for observability
+ *
+ * Two-pass routing:
+ * - First pass: Div1 routes to Div7 as requires_executive_decision
+ * - Second pass: Div7 decides, emits DecisionDelegated, Div1 routes operationally
  *
  * This is the entry point for live MissionRouter integration.
  * Routing decisions are logged and can be inspected via getRoutingDecisionLog().
@@ -679,40 +795,48 @@ export async function missionRouterIssueCreatedHandler(
     // Step 2: Derive mission signals
     const signals = deriveMissionSignals(mission);
 
-    // Step 3: Snapshot inbox state before routing to detect new packets
+    // Step 3: Snapshot inbox state before first-pass routing
     const inboxSnapshotBefore = new Map<Division, number>();
     for (const div of mission.requested_divisions) {
       inboxSnapshotBefore.set(div, getDivisionInbox(div).length);
     }
-    // Also snapshot Div7 inbox (always receives status_update)
     inboxSnapshotBefore.set("Div7.MissionControl", getDivisionInbox("Div7.MissionControl").length);
 
-    // Step 4: Route via MissionRouter (caller is Div1.HCO)
+    // Step 4: First-pass route via MissionRouter (caller is Div1.HCO)
     const routingResult = routeApprovedMission("Div1.HCO", mission);
 
-    // Step 5: Capture packet deliveries by diffing inbox state
-    const packetDeliveries: PacketDeliveryRecord[] = [];
-    const allDivisions = new Set<Division>([
+    // Step 5: Capture first-pass packet deliveries
+    const allFirstPassDivisions = new Set<Division>([
       ...mission.requested_divisions,
       "Div7.MissionControl",
     ]);
+    const packetDeliveries = captureNewPackets(inboxSnapshotBefore, allFirstPassDivisions);
 
-    for (const div of allDivisions) {
-      const beforeCount = inboxSnapshotBefore.get(div) ?? 0;
-      const afterInbox = getDivisionInbox(div);
-      for (let i = beforeCount; i < afterInbox.length; i++) {
-        const pkt = afterInbox[i];
-        packetDeliveries.push({
-          packetId: pkt.packet_id,
-          packetType: pkt.packet_type,
-          toDivision: pkt.to_division,
-          fromDivision: pkt.from_division,
-          deliveredAt: pkt.timestamp,
-        });
+    // Step 6: Check if first-pass routed to Div7 (two-pass routing needed)
+    let twoPassRouting: RoutingDecisionLogEntry["twoPassRouting"];
+
+    const isAuthorized = "authorized" in routingResult && routingResult.authorized === false;
+
+    if (!isAuthorized) {
+      const state = routingResult as MissionRoutingState;
+
+      if (
+        state.activated_divisions.length === 1 &&
+        state.activated_divisions[0] === "Div7.MissionControl" &&
+        state.excluded_divisions.includes("Div1.HCO")
+      ) {
+        // Two-pass routing: Div7 executive decision required
+        const flowResult = executeDecisionDelegatedFlow(mission, signals);
+        twoPassRouting = {
+          decisionDelegated: flowResult.decisionDelegated,
+          operationalRoutingResult: flowResult.operationalRoutingResult,
+          operationalPacketDeliveries: flowResult.operationalPacketDeliveries,
+          completedAt: new Date().toISOString(),
+        };
       }
     }
 
-    // Step 6: Log the routing decision with packet delivery diagnostics
+    // Step 7: Log the routing decision with packet delivery diagnostics
     const logEntry: RoutingDecisionLogEntry = {
       issueId: payload.issueId,
       identifier: payload.identifier,
@@ -721,6 +845,7 @@ export async function missionRouterIssueCreatedHandler(
       routingResult,
       packetDeliveries,
       routedAt: new Date().toISOString(),
+      twoPassRouting,
     };
 
     routingDecisionLog.push(logEntry);
@@ -728,12 +853,14 @@ export async function missionRouterIssueCreatedHandler(
       routingDecisionLog.splice(0, routingDecisionLog.length - MAX_ROUTING_LOG_SIZE);
     }
 
-    // Index packets by issueId for traceability
+    // Index packets by issueId for traceability (includes both passes)
     const existingIds = issuePacketIndex.get(payload.issueId) ?? [];
-    existingIds.push(...packetDeliveries.map(d => d.packetId));
+    const allPacketIds = [...packetDeliveries.map(d => d.packetId)];
+    if (twoPassRouting) {
+      allPacketIds.push(...twoPassRouting.operationalPacketDeliveries.map(d => d.packetId));
+    }
+    existingIds.push(...allPacketIds);
     issuePacketIndex.set(payload.issueId, existingIds);
-
-    const isAuthorized = "authorized" in routingResult && routingResult.authorized === false;
 
     if (isAuthorized) {
       return {
@@ -745,6 +872,18 @@ export async function missionRouterIssueCreatedHandler(
 
     const state = routingResult as MissionRoutingState;
     const packetCount = packetDeliveries.length;
+
+    if (twoPassRouting) {
+      const opState = twoPassRouting.operationalRoutingResult;
+      const opDivisions = "activated_divisions" in opState ? opState.activated_divisions.join(", ") : "none";
+      const opPacketCount = twoPassRouting.operationalPacketDeliveries.length;
+      return {
+        handled: true,
+        message: `MissionRouter routed ${payload.identifier} [${signals.taskClass}] → Div7 (executive decision) → ${opDivisions} (${packetCount} pre-decision + ${opPacketCount} post-decision packets, domain: ${twoPassRouting.decisionDelegated.cynefin_domain})`,
+        durationMs: Date.now() - startTime,
+      };
+    }
+
     const divisionNames = state.activated_divisions.join(", ");
     return {
       handled: true,

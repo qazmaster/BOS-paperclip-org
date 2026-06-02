@@ -821,3 +821,229 @@ describe("DivisionPacketRouter wiring to routing decisions", () => {
     expect(routerHandler!.result.message).toContain("packet");
   });
 });
+
+// ─── DecisionDelegated Flow (Two-Pass Routing) ─────────────────────────────
+
+describe("DecisionDelegated flow (two-pass routing)", () => {
+  beforeEach(() => {
+    clearPacketRouter();
+    clearRoutingDecisionLog();
+  });
+
+  it("triggers DecisionDelegated flow when mission routes to Div7", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-001",
+      identifier: "BOS-DD-1",
+      title: "Strategic direction unclear",
+      description: "Ambiguous policy decision needed",
+    });
+
+    const result = await missionRouterIssueCreatedHandler(event);
+
+    expect(result.handled).toBe(true);
+    // Message should indicate two-pass routing with domain info
+    expect(result.message).toContain("executive decision");
+    expect(result.message).toContain("domain:");
+  });
+
+  it("logs DecisionDelegated in routing decision entry", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-002",
+      identifier: "BOS-DD-2",
+      title: "Ambiguous experiment strategy needed",
+      description: "Uncertain hypothesis for new approach",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    expect(log).toHaveLength(1);
+    expect(log[0].twoPassRouting).toBeDefined();
+    expect(log[0].twoPassRouting!.decisionDelegated).toBeDefined();
+    expect(log[0].twoPassRouting!.operationalRoutingResult).toBeDefined();
+    expect(log[0].twoPassRouting!.operationalPacketDeliveries).toBeDefined();
+    expect(log[0].twoPassRouting!.completedAt).toBeDefined();
+  });
+
+  it("DecisionDelegated contains cynefin domain and routing directive", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-003",
+      identifier: "BOS-DD-3",
+      title: "Strategic architecture decision",
+      description: "Need safe-to-fail experiment for ambiguous requirements",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const delegated = log[0].twoPassRouting!.decisionDelegated;
+
+    expect(delegated.schema_version).toBe("1.0");
+    expect(delegated.cynefin_domain).toBeDefined();
+    expect(delegated.recommended_mode).toBeDefined();
+    expect(delegated.routing_directive).toBeDefined();
+    expect(delegated.routing_directive.targetDivisions.length).toBeGreaterThan(0);
+    expect(delegated.routing_directive.routingRule).toBeDefined();
+    expect(delegated.constraints).toBeDefined();
+    expect(delegated.escalation_level).toBeDefined();
+  });
+
+  it("operational routing activates divisions from DecisionDelegated", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-004",
+      identifier: "BOS-DD-4",
+      title: "Strategic policy direction needed",
+      description: "Ambiguous experiment with uncertain outcomes",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const opResult = log[0].twoPassRouting!.operationalRoutingResult as MissionRoutingState;
+
+    expect(opResult.status).toBe("ROUTED");
+    expect(opResult.activated_divisions.length).toBeGreaterThan(0);
+    // Should NOT include Div7 or Div1 in operational divisions
+    expect(opResult.activated_divisions).not.toContain("Div7.MissionControl");
+    expect(opResult.activated_divisions).not.toContain("Div1.HCO");
+  });
+
+  it("operational packets are delivered to target divisions", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-005",
+      identifier: "BOS-DD-5",
+      title: "Strategic direction uncertain",
+      description: "Need hypothesis testing for ambiguous approach",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const opPackets = log[0].twoPassRouting!.operationalPacketDeliveries;
+    expect(opPackets.length).toBeGreaterThan(0);
+
+    // Each operational packet should have correct metadata
+    for (const pkt of opPackets) {
+      expect(pkt.packetId).toMatch(/^pkt_/);
+      expect(pkt.packetType).toBeDefined();
+      expect(pkt.fromDivision).toBe("Div1.HCO");
+      expect(pkt.deliveredAt).toBeDefined();
+    }
+  });
+
+  it("CHAOTIC mission routes through two-pass with STABILIZE_FIRST mode", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-006",
+      identifier: "BOS-DD-6",
+      title: "Production outage critical",
+      description: "Emergency incident with runaway failure",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const delegated = log[0].twoPassRouting!.decisionDelegated;
+
+    expect(delegated.cynefin_domain).toBe("CHAOTIC");
+    expect(delegated.recommended_mode).toBe("STABILIZE_FIRST");
+    expect(delegated.escalation_level).toBe("critical");
+    expect(delegated.routing_directive.routingRule).toBe("chaotic_incident_flow");
+  });
+
+  it("COMPLEX mission routes through two-pass with SAFE_TO_FAIL_EXPERIMENT mode", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-007",
+      identifier: "BOS-DD-7",
+      title: "Unknown ambiguous experiment strategy",
+      description: "Hypothesis testing with uncertain outcomes",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const delegated = log[0].twoPassRouting!.decisionDelegated;
+
+    expect(delegated.cynefin_domain).toBe("COMPLEX");
+    expect(delegated.recommended_mode).toBe("SAFE_TO_FAIL_EXPERIMENT");
+    expect(delegated.routing_directive.routingRule).toBe("complex_safe_to_fail");
+  });
+
+  it("routine mission does NOT trigger two-pass routing", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-008",
+      identifier: "BOS-DD-8",
+      title: "Fix CSS bug",
+      description: "Simple layout fix",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    expect(log).toHaveLength(1);
+    expect(log[0].twoPassRouting).toBeUndefined();
+  });
+
+  it("two-pass routing indexes all packets for traceability", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-009",
+      identifier: "BOS-DD-9",
+      title: "Strategic direction unclear",
+      description: "Ambiguous policy decision needed",
+    });
+
+    await missionRouterIssueCreatedHandler(event);
+
+    const log = getRoutingDecisionLog();
+    const firstPassCount = log[0].packetDeliveries.length;
+    const secondPassCount = log[0].twoPassRouting!.operationalPacketDeliveries.length;
+
+    // Total packets should include both passes
+    const allPackets = getPacketsForIssue("issue-dd-009");
+    expect(allPackets.length).toBe(firstPassCount + secondPassCount);
+  });
+
+  it("two-pass handler message includes division names and domain", async () => {
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-010",
+      identifier: "BOS-DD-10",
+      title: "Strategic direction unclear",
+      description: "Ambiguous policy decision needed",
+    });
+
+    const result = await missionRouterIssueCreatedHandler(event);
+
+    expect(result.message).toContain("executive decision");
+    expect(result.message).toContain("domain:");
+    expect(result.message).toContain("pre-decision");
+    expect(result.message).toContain("post-decision");
+  });
+
+  it("e2e: full two-pass flow through hook manager", async () => {
+    const manager = createBosLightHookManager();
+
+    const event = makeCreatedEvent({
+      issueId: "issue-dd-e2e-001",
+      identifier: "BOS-DD-E2E-1",
+      title: "Strategic policy direction needed",
+      description: "Ambiguous strategy with uncertain outcomes",
+    });
+
+    const logs = await manager.dispatchEvent(event);
+    const routerLog = logs.find(l => l.handlerName === "bos-light-mission-router");
+    expect(routerLog!.result.handled).toBe(true);
+    expect(routerLog!.result.message).toContain("executive decision");
+
+    const decisionLog = getRoutingDecisionLog();
+    expect(decisionLog).toHaveLength(1);
+    expect(decisionLog[0].twoPassRouting).toBeDefined();
+
+    // First pass routes to Div7
+    const firstPassState = decisionLog[0].routingResult as MissionRoutingState;
+    expect(firstPassState.activated_divisions).toContain("Div7.MissionControl");
+
+    // Second pass routes to operational divisions
+    const secondPassState = decisionLog[0].twoPassRouting!.operationalRoutingResult as MissionRoutingState;
+    expect(secondPassState.activated_divisions.length).toBeGreaterThan(0);
+    expect(secondPassState.activated_divisions).not.toContain("Div7.MissionControl");
+  });
+});
