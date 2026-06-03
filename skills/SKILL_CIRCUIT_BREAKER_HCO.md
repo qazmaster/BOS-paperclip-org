@@ -1,62 +1,83 @@
-# Skill: Circuit Breaker HCO Control
-
-Status: canonical v1.4.1 protocol.
-Owner: Div1.HCO.
-Evidence providers: Div5.QualificationsLibraryLearning, Div4.Production and runtime surfaces.
+# SKILL_CIRCUIT_BREAKER_HCO
 
 ## Purpose
 
-Stop infinite retries and coordinate safe recovery when repeated gate, runtime, adapter or production failures occur.
+Move Circuit Breaker organizational ownership to Div1.HCO.
 
-## Triggers
+Paperclip remains runtime owner; BOS Light owns doctrine/evidence/route/control semantics only.
 
-Use this protocol when:
+## Owner
 
-- max attempts are reached;
-- an Eval Gate repeatedly fails;
-- production reports the same blocker more than once;
-- runtime events indicate open or half-open circuit state;
-- external IO or budget/access failure blocks progress;
-- correction routing loops without new evidence.
+Div1.HCO owns:
 
-## Inputs
+- Circuit Breaker control;
+- failure escalation;
+- correction routing;
+- operational pause/resume decision;
+- escalation issue/comment routing;
+- strategic escalation to Div7.
 
-- Failed work reference.
-- Failure count and max-attempt policy.
-- Gate results, logs, runtime evidence or blocker reports.
-- Current route and owner division.
-- Budget/access or external IO dependencies.
+## Producers of failure signals
 
-## Procedure
+- Div4.Production reports implementation/build/test failures.
+- Div5.QualificationsLibraryLearning reports blocking QA/security/integrity failures.
+- Div3.Treasury reports budget/access risk.
+- Div6.External reports unsafe external source risk.
+- Paperclip/runtime surfaces may report run failures if capability is validated.
 
-1. Confirm the failure state and evidence refs.
-2. Set circuit state: closed, open or half-open.
-3. Classify failure cause: deterministic input, permission/budget, external dependency, implementation defect, qualification failure, strategic ambiguity or unknown.
-4. Select exactly one next action:
-   - retry with changed hypothesis;
-   - reroute to a better owner;
-   - pause for missing grant/evidence;
-   - escalate to Div7 for policy/strategy;
-   - request human input.
-5. Record correction route and stop condition.
-6. Notify the current owner and affected downstream consumers.
-7. Move to half-open only when new evidence or remediation exists.
+## States
 
-## Outputs
+```text
+CLOSED
+HALF_OPEN
+OPEN
+```
 
-- CircuitBreakerHcoControl record.
-- Correction route.
-- Retry/reroute/pause/escalation note.
-- Review condition for closing or half-opening the circuit.
+## Flow
 
-## Guardrails
+```text
+Failure signal
+  -> Div1.HCO records observation
+  -> update CircuitBreakerRecord/evidence envelope
+  -> route correction or open breaker
 
-- Div1.HCO coordinates; it does not hide or erase failure evidence.
-- Div4.Production must not self-clear independent Div5 gate failures.
-- Retrying without a changed hypothesis is prohibited.
-- Budget/access failures must route to Div3.
-- Strategic or policy ambiguity must route to Div7.
+If threshold not reached:
+  -> route correction to Div2/Div4/Div5
+
+If threshold reached:
+  -> Circuit Breaker OPEN
+  -> create visible escalation artifact
+  -> request Div3 budget/access freeze if needed
+  -> escalate to Div7 if strategic/policy-level
+```
+
+## Important boundary
+
+Circuit Breaker is not a guaranteed runtime kill-switch unless Paperclip capability proof exists.
+
+Until live runtime proof exists, use:
+
+- explicit observations;
+- bounded polling;
+- activity/comment/manual fallback;
+- Paperclip-visible evidence envelopes.
+
+## Correct ownership
+
+- Div1 owns Circuit Breaker control.
+- Div4 reports production failures.
+- Div5 reports independent gate failures.
+- Div3 reports budget/access risks.
+- Div7 handles strategic interpretation.
+- Paperclip owns actual runtime execution.
+
+## Acceptance
+
+- Div4 is not Circuit Breaker owner.
+- Div1 owns breaker records and escalation routing.
+- OPEN state creates visible escalation artifact.
+- Strategic repeated failure can escalate to Div7.
 
 ## Failure behavior
 
-If evidence is incomplete, pause and request evidence instead of retrying. If the same fix fails three times, stop implementation and reset the model with a new diagnosis or escalation.
+If Circuit Breaker opens, block further execution and escalate to Div1.HCO. If HALF_OPEN probe fails, return to OPEN state. If human resolution is required, notify the designated owner.

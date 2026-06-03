@@ -15,7 +15,9 @@ Start with v1.4.1, not the older phase plans:
 4. `docs/BOS_Light_v1_4_1_Tool_Permission_Matrix.md` — active permission and tool-use boundaries.
 5. `docs/BOS_Light_v1_4_1_Data_Contracts.md` — documentation-level payload contracts for routing, external IO, quarantine, staffing, circuit breaker and budget/access.
 6. `docs/BOS_Light_v1_4_1_Acceptance_Tests_A12_A20.md` — added acceptance coverage beyond A1-A11.
-7. `skills/` — v1.4.1 operational protocols for HCO routing, external IO, knowledge quarantine, Div5 autoresearch, staffing/hats, circuit breaker and treasury access.
+7. `docs/BOS_Light_v1_4_2_R026_Agent_Boundary_Patch.md` — R026 patch: Div7 decisions must delegate to Div1.HCO for operational routing.
+8. `configs/` — v1.4.1/v1.4.2 routing modes, division map, and tool permission matrix.
+9. `skills/` — v1.4.2 operational protocols for HCO routing, external IO, knowledge quarantine, Div5 autoresearch, staffing/hats, circuit breaker and treasury access.
 
 Then read historical implementation and runtime material only through that lens.
 

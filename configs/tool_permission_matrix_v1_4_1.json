@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "p0_invariant": "Only Div6.External may interact with the external world.",
+  "permissions": {
+    "Div7.MissionControl": {
+      "external_io": false,
+      "web_search": false,
+      "external_api": false,
+      "client_vendor_contact": false,
+      "local_kb": "sanitized_only"
+    },
+    "Div1.HCO": {
+      "external_io": false,
+      "web_search": false,
+      "external_api": false,
+      "client_vendor_contact": false,
+      "local_kb": "sanitized_only"
+    },
+    "Div2.MasterPlanner": {
+      "external_io": false,
+      "web_search": false,
+      "external_api": false,
+      "client_vendor_contact": false,
+      "local_kb": "sanitized_only"
+    },
+    "Div3.Treasury": {
+      "external_io": false,
+      "web_search": false,
+      "external_api": "grant_only_to_Div6",
+      "client_vendor_contact": false,
+      "local_kb": "sanitized_only"
+    },
+    "Div4.Production": {
+      "external_io": false,
+      "web_search": false,
+      "external_api": false,
+      "client_vendor_contact": false,
+      "local_kb": "sanitized_only",
+      "local_repo_build": true
+    },
+    "Div5.QualificationsLibraryLearning": {
+      "external_io": false,
+      "web_search": false,
+      "external_api": false,
+      "client_vendor_contact": false,
+      "local_kb": true,
+      "quarantine": true
+    },
+    "Div6.External": {
+      "external_io": true,
+      "web_search": true,
+      "external_api": "with_Div3_grant",
+      "client_vendor_contact": "with_Div1_route",
+      "kb_write": false
+    }
+  }
+}

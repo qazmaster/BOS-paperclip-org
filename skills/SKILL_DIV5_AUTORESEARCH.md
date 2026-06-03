@@ -1,52 +1,95 @@
-# Skill: Div5 Autoresearch
-
-Status: canonical v1.4.1 protocol.
-Owner: Div5.QualificationsLibraryLearning.
+# SKILL_DIV5_AUTORESEARCH
 
 ## Purpose
 
-Answer internal knowledge requests from the local repo/library first, then initiate the external IO gateway only when local evidence is insufficient.
+Restore Div5 as statistics collector, evidence aggregator and self-learning/autoresearch center.
 
-## Triggers
+Div5 improves the organization by producing evidence and recommendations, not by silently making operational decisions.
 
-Use this protocol when Div1.HCO, Div2.MasterPlanner, Div4.Production, Div3.Treasury or Div7.MissionControl requests facts, prior decisions, reusable patterns, risk history or validation context.
+## Core principle
+
+```text
+Div5 learns and recommends.
+Div1 makes operational decisions.
+Div7 makes strategic decisions.
+```
 
 ## Inputs
 
-- Routed knowledge question.
-- Intended consumer and allowed use.
-- Relevant repo-local artifacts, Paperclip references or memory/library indexes.
-- Freshness requirement.
-- Risk class: low, medium, high or policy-sensitive.
+Div5 collects:
 
-## Procedure
+- QA results;
+- gate failures;
+- correction loops;
+- token burn observations;
+- cycle time;
+- blocked work;
+- repeated mistakes;
+- missing knowledge;
+- successful patterns;
+- agent performance evidence;
+- routing errors;
+- budget-related friction;
+- security/integrity warnings.
 
-1. Confirm the request was routed by Div1.HCO or is an approved Div5 qualification activity.
-2. Search local repo docs, decision records, requirements, runtime evidence and approved memory/library content.
-3. Classify the result:
-   - sufficient local answer;
-   - insufficient local answer with clear external question;
-   - conflicting local evidence;
-   - policy-sensitive uncertainty.
-4. For sufficient local answers, return a SanitizedKnowledgePacket with support refs.
-5. For local misses, write a local_miss_summary and quarantine criteria, then ask Div1.HCO to route through the External IO Gateway.
-6. For conflicting or policy-sensitive evidence, route to Div7 or human through Div1.HCO.
-7. After Div6 returns raw evidence, run Knowledge Quarantine before internal reuse.
+## Analysis
+
+Div5 should identify:
+
+- weak hats/instructions;
+- ambiguous blueprints;
+- routing errors;
+- underperforming agents;
+- overloaded posts;
+- missing KB entries;
+- missing eval gates;
+- recurring security patterns;
+- costly failure patterns;
+- external knowledge gaps.
 
 ## Outputs
 
-- Local sanitized knowledge packet.
-- Local miss summary and external IO request draft.
-- Conflict report.
-- Escalation request.
+Div5 emits:
 
-## Guardrails
+- Agent Improvement Report;
+- Hat Update Proposal;
+- Knowledge Base Update Proposal;
+- Eval Gate Update Proposal;
+- Routing Risk Signal;
+- Repeated Failure Pattern Report;
+- Missing Knowledge Report;
+- Performance Evidence Packet.
 
-- Div5 Autoresearch is not web/search. Raw external collection belongs to Div6 only.
-- Div5 must not bypass HCO routing for external requests.
-- Div5 must not claim freshness beyond its evidence.
-- Div5 must not approve KB/memory writes for unsanitized content.
+## Forbidden
+
+Div5 must not:
+
+- reassign agents directly;
+- change routing policy directly;
+- create agents;
+- approve budgets/access;
+- silently rewrite hats;
+- make strategic/policy decisions.
+
+## Decision routing
+
+| Div5 recommendation | Decision owner |
+|---|---|
+| update hat | Div1.HCO |
+| reduce load | Div1.HCO |
+| add parallel agent | Div1.HCO requests Div3 |
+| external service needed | Div1.HCO routes to Div6 and Div3 |
+| strategic org redesign | Div7.MissionControl |
+| update KB | Div5 may approve if evidence is sanitized |
+| update eval gate | Div1 operational approval; Div7 if policy-level |
+
+## Acceptance
+
+- Div5 emits evidence-bearing recommendations.
+- Div1 records operational decisions.
+- Div7 handles only strategic/policy changes.
+- No hidden self-modifying org behavior.
 
 ## Failure behavior
 
-If local evidence is stale, contradictory or absent, say so explicitly. Do not fabricate an answer and do not silently perform external IO.
+If research sources are unreliable or conflicting, flag uncertainty and route to Div1.HCO for review. If external API calls fail, use cached results if available or report the gap.
