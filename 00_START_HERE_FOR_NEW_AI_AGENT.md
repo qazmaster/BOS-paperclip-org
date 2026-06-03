@@ -123,8 +123,8 @@ Div4 builds, but does not decide the system.
 ### Test suite
 
 ```bash
-cd plugin-bos-light && npx vitest run    # 1250 tests, 52 files
-cd plugin-bos-light && npx tsc --noEmit  # TypeScript clean
+cd plugin-bos-light && npx vitest run    # 1424 tests, 63 files
+cd plugin-bos-light && npx tsc --noEmit  # TypeScript (pre-existing errors in test files)
 ```
 
 ### R026 v1.4.2 patch alignment

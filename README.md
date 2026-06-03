@@ -59,6 +59,15 @@ Historical but still useful:
 
 When v1.2/M002/legacy content conflicts with v1.4.1 ownership, permission or trust boundaries, use v1.4.1.
 
+## Quick start
+
+```bash
+npm install
+python3 scripts/validate_handoff.py   # verify handoff package integrity
+cd plugin-bos-light && npx vitest run  # 1424 tests, 63 files
+cd plugin-bos-light && npx tsc --noEmit
+```
+
 ## Validation order
 
 Before handing this package to another agent, run:
