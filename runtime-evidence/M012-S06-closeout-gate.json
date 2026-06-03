@@ -1,0 +1,137 @@
+{
+  "schema_version": "m012-s06-closeout-gate/v1",
+  "artifact_type": "s06-closeout-gate",
+  "phase": "M012-S06",
+  "generated_at": "2026-06-03T11:23:26.270Z",
+  "verdict": "fail",
+  "checks_total": 31,
+  "checks_passed": 30,
+  "checks_failed": 1,
+  "checks": [
+    {
+      "name": "auth-readback: file exists and is valid JSON",
+      "pass": true
+    },
+    {
+      "name": "auth-readback: schema_version matches",
+      "pass": true
+    },
+    {
+      "name": "auth-readback: passing is true",
+      "pass": true
+    },
+    {
+      "name": "auth-readback: company_visible is true",
+      "pass": true
+    },
+    {
+      "name": "auth-readback: issues_visible is true",
+      "pass": true
+    },
+    {
+      "name": "auth-readback: company_id matches canonical",
+      "pass": true
+    },
+    {
+      "name": "auth-readback: session_auth.success is true",
+      "pass": true
+    },
+    {
+      "name": "auth-readback: safety.read_only is true",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: file exists and is valid JSON",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: schema_version matches",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: passing is true",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: issue.id is non-null UUID",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: issue.identifier is BOS-3",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: deviation_note is present and non-empty",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: deviation_note mentions explicit user confirmation issue",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: issue_found is true",
+      "pass": true
+    },
+    {
+      "name": "mission-issue: safety.read_only is true",
+      "pass": true
+    },
+    {
+      "name": "req-update: file exists and is valid JSON",
+      "pass": true
+    },
+    {
+      "name": "req-update: schema_version matches",
+      "pass": true
+    },
+    {
+      "name": "req-update: changes array is non-empty",
+      "pass": true
+    },
+    {
+      "name": "req-update: validation_status is updated",
+      "pass": true
+    },
+    {
+      "name": "req-update: deviation_acknowledged is true",
+      "pass": true
+    },
+    {
+      "name": "req-update: changes reference R022",
+      "pass": true
+    },
+    {
+      "name": "outcomes: file exists",
+      "pass": true
+    },
+    {
+      "name": "outcomes: no forbidden phrases overstate R022 evidence",
+      "pass": true
+    },
+    {
+      "name": "outcomes: R022 row includes BOS-3 S06 evidence",
+      "pass": true
+    },
+    {
+      "name": "outcomes: R022 row includes honest deviation note",
+      "pass": true
+    },
+    {
+      "name": "outcomes: summary includes S06 evidence",
+      "pass": true
+    },
+    {
+      "name": "s05-closeout: validator script exists",
+      "pass": true
+    },
+    {
+      "name": "s05-closeout: runs without error (regression pass)",
+      "pass": true
+    },
+    {
+      "name": "secret-scan: no forbidden secret patterns in S06 artifacts",
+      "pass": false,
+      "detail": "Secret leaks found (4 matches):\n  - .gsd/milestones/M012-ihd2ez/slices/S06/tasks/T01-SUMMARY.md:25:password-literal\n  - .gsd/milestones/M012-ihd2ez/slices/S06/tasks/T01-SUMMARY.md:29:password-literal\n  - .gsd/milestones/M012-ihd2ez/slices/S06/tasks/T05-SUMMARY.md:27:password-literal\n  - .gsd/milestones/M012-ihd2ez/slices/S06/tasks/T05-SUMMARY.md:27:api-key-pcp-prefix"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": "m012-s06-requirement-update-evidence/v1",
+  "artifact_type": "requirement-update-evidence",
+  "phase": "M012-S06",
+  "generated_at": "2026-06-03T08:20:00.000Z",
+  "changes": [
+    {
+      "file": "runtime-evidence/M012-S04-requirement-outcomes.md",
+      "section": "R022 row (M012 Evidence column)",
+      "old_text": "S02 produced validated blocker evidence (auth-blocked, liveIssueId null, zero writes, no capability promotion); S03 proved local 7-division flow end-to-end",
+      "new_text": "S02 produced validated blocker evidence (auth-blocked, liveIssueId null, zero writes, no capability promotion); S03 proved local 7-division flow end-to-end; S06 confirmed BOS-3 exists as a live Paperclip issue via authenticated session readback but was created during S02 research without explicit user confirmation",
+      "rationale": "T02 verified BOS-3 exists as a live Paperclip issue via authenticated session-based readback. The R022 row must reflect this evidence honestly while noting the deviation that BOS-3 was created without explicit user confirmation."
+    },
+    {
+      "file": "runtime-evidence/M012-S04-requirement-outcomes.md",
+      "section": "R022 row (Rationale column)",
+      "old_text": "M012 demonstrated local flow and validated blocker state but did not create native issues or achieve full E2E through Paperclip GUI. Status remains active.",
+      "new_text": "M012 demonstrated local flow, validated blocker states, and verified BOS-3 exists live in Paperclip. However, BOS-3 creation lacked explicit user confirmation per the milestone contract, so full E2E through Paperclip GUI with human-confirmed issue lifecycle is not yet proven. Status remains active.",
+      "rationale": "Updated rationale to include S06 live readback evidence while preserving honest framing about the unconfirmed creation deviation."
+    },
+    {
+      "file": "runtime-evidence/M012-S04-requirement-outcomes.md",
+      "section": "Summary rationale line",
+      "old_text": "M012 proved local flow capabilities and validated blocker states, but did not produce live Paperclip runtime proof for any requirement. No requirement warranted promotion to validated.",
+      "new_text": "M012 proved local flow capabilities, validated blocker states, and verified BOS-3 exists as a live Paperclip issue via authenticated readback. However, BOS-3 was created without explicit user confirmation, and full E2E mission lifecycle through Paperclip GUI is not yet proven. No requirement warranted promotion to validated.",
+      "rationale": "Summary must reflect S06 evidence that Paperclip readback was achieved, while preserving honest framing about the unconfirmed creation."
+    },
+    {
+      "file": ".gsd/REQUIREMENTS.md",
+      "section": "R022 detailed section — new Notes field",
+      "old_text": "(no Notes field present)",
+      "new_text": "M012 S06 verified BOS-3 exists as a live Paperclip issue via authenticated session-based readback. However, BOS-3 was created during S02 research without explicit user confirmation as required by the milestone contract. Full E2E mission lifecycle through Paperclip GUI with human-confirmed issue lifecycle remains unproven.",
+      "rationale": "Added Notes field to R022 detailed section to record M012 S06 evidence and the unconfirmed creation deviation."
+    },
+    {
+      "file": ".gsd/REQUIREMENTS.md",
+      "section": "R022 table row (Validation/Notes column)",
+      "old_text": "unvalidated",
+      "new_text": "M012 S06: BOS-3 confirmed live via authenticated readback, but created without explicit user confirmation. Full E2E unproven.",
+      "rationale": "Table row notes column updated to include M012 S06 evidence with honest deviation framing."
+    }
+  ],
+  "validation_status": "updated",
+  "source_evidence": "runtime-evidence/M012-S06-mission-issue-evidence.json",
+  "deviation_acknowledged": true,
+  "deviation_details": "BOS-3 was created during S02 research as a side effect of testing the Paperclip issues API, without explicit user confirmation as required by the milestone success criteria."
+}

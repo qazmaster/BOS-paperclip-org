@@ -1,0 +1,81 @@
+{
+  "schema_version": "m012-s06-mission-issue-evidence/v1",
+  "artifact_type": "mission-issue-live-verification",
+  "auth_method": "session-based",
+  "phase": "M012-S06",
+  "generated_at": "2026-06-03T08:07:23.568Z",
+  "passing": true,
+  "issue_found": true,
+  "total_issues_count": 2,
+  "config": {
+    "base_url_origin": "https://paperclip.oysana.com",
+    "base_url_host": "paperclip.oysana.com",
+    "company_id": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "canonical_company_id": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "stale_sandbox_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "email_redacted": "kabidenov.a@gmail.com",
+    "target_issue_identifier": "BOS-3",
+    "dotenv_loaded": true,
+    "dotenv_known_keys_count": 7,
+    "duplicate_key_count": 1,
+    "duplicate_keys": [
+      {
+        "key": "PAPERCLIP_PASSWORD",
+        "occurrences": 2
+      }
+    ]
+  },
+  "session_auth": {
+    "success": true,
+    "status": 200,
+    "duration_ms": 1307,
+    "session_cookie_present": true,
+    "session_cookie_name": "__Secure-paperclip-default.session_token",
+    "body_status": null,
+    "body_message": null,
+    "error": null,
+    "error_message": null
+  },
+  "issues_fetch": {
+    "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/issues?limit=50",
+    "status": 200,
+    "ok": true,
+    "duration_ms": 1127,
+    "error": null
+  },
+  "issue": {
+    "id": "b9d9ab93-70ee-4562-b28c-0be62f18db60",
+    "identifier": "BOS-3",
+    "issueNumber": 3,
+    "title": "BOS Light Mission: Validate 7-Division Flow",
+    "description": "Bounded mission issue for M012 live Paperclip proof. Tests native issue creation via authenticated session.",
+    "status": "backlog",
+    "workMode": "standard",
+    "priority": "medium",
+    "companyId": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "projectId": null,
+    "goalId": "2635b835-e630-4bea-a1c6-cd105e782c71",
+    "originKind": "manual",
+    "createdByUserId": "[REDACTED_USER_ID]",
+    "assigneeAgentId": null,
+    "createdAt": "2026-06-03T07:16:17.333Z",
+    "updatedAt": "2026-06-03T07:16:17.333Z",
+    "lastActivityAt": "2026-06-03T07:16:17.344Z",
+    "startedAt": null,
+    "completedAt": null,
+    "route_used": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/issues?limit=50"
+  },
+  "safety": {
+    "read_only": true,
+    "http_methods_used": [
+      "POST (auth only)",
+      "GET"
+    ],
+    "external_mutations": 0,
+    "plaintext_secrets_requested_or_logged": false,
+    "secret_values_redacted": true,
+    "direct_db_mutation": false
+  },
+  "blocker_codes": [],
+  "deviation_note": "BOS-3 (identifier: BOS-3, title: \"BOS Light Mission: Validate 7-Division Flow\") was created during S02 research attempts as a side effect of testing the Paperclip issues API. It was NOT created with explicit user confirmation as required by the milestone success criteria. This task (T02) performs read-only verification of the existing issue and does NOT attempt any new issue creation or mutation. The issue exists in the canonical BOS Light company and is visible via authenticated session-based GET requests."
+}

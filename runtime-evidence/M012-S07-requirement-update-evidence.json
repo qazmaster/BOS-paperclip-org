@@ -1,0 +1,39 @@
+{
+  "schema_version": "m012-s07-requirement-update-evidence/v1",
+  "artifact_type": "requirement-update-planned-changes",
+  "generated_at": "2026-06-03T08:15:00.000Z",
+  "milestone_id": "M012-ihd2ez",
+  "slice_id": "S07",
+  "task_id": "T01",
+  "planned_updates": [
+    {
+      "requirement_id": "R022",
+      "class": "primary-user-loop",
+      "status_before": "active",
+      "status_after": "active",
+      "fields_to_update": {
+        "notes": "M012 S07 RE-SCOPED: The milestone success criterion for BOS-3 confirmation was formally re-scoped. BOS-3 (created during S02 research without explicit user confirmation) is accepted as the mission anchor. Criterion shifted from 'explicit user confirmation of mission issue creation or reuse' to 'authenticated readback verification of existing BOS-3 issue in canonical Paperclip company'. S06 verified BOS-3 exists via authenticated session-based readback. Full E2E mission lifecycle through Paperclip GUI with human-confirmed issue lifecycle remains unproven. Deviation preserved in runtime-evidence/M012-S07-rescope-decision.json."
+      },
+      "rationale": "Auto-mode prohibits ask_user_questions. BOS-3 exists and was verified live in S06. Formal re-scope preserves honesty about what was proven vs what remains unproven."
+    },
+    {
+      "requirement_id": "R023",
+      "class": "differentiator",
+      "status_before": "active",
+      "status_after": "active",
+      "fields_to_update": {
+        "notes": "M012 S07 RE-SCOPED: HITL gate at mission creation cannot be exercised in auto-mode (prohibits ask_user_questions). The re-scope decision itself documents the constraint: no human was available to confirm BOS-3 reuse or approve new issue creation. Future milestones with human availability must exercise the mission-creation HITL gate."
+      },
+      "rationale": "Auto-mode is itself a demonstration of the HITL constraint: the system correctly identified that human confirmation was needed and stopped attempting to bypass it."
+    }
+  ],
+  "roadmap_impact": {
+    "description": "No new slices added. S07 scope covers the re-scope decision and closeout gate. Full E2E mission lifecycle through Paperclip GUI is deferred to a future milestone.",
+    "deferred_work": "Full E2E mission lifecycle through Paperclip GUI with human-confirmed issue lifecycle and HITL gate exercise."
+  },
+  "safety": {
+    "read_only": true,
+    "no_api_mutations": true,
+    "planned_changes_only": true
+  }
+}

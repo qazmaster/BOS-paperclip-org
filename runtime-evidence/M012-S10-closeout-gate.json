@@ -1,0 +1,108 @@
+{
+  "schema_version": "m012-s10-closeout-gate/v1",
+  "artifact_type": "s10-closeout-gate",
+  "phase": "M012-S10",
+  "generated_at": "2026-06-03T11:53:42.033Z",
+  "verdict": "pass",
+  "checks_total": 24,
+  "checks_passed": 24,
+  "checks_failed": 0,
+  "checks": [
+    {
+      "name": "readiness: S08 validation-readiness JSON exists",
+      "pass": true
+    },
+    {
+      "name": "readiness: R017 listed with m012_status=descoped",
+      "pass": true
+    },
+    {
+      "name": "readiness: R019 listed with m012_status=descoped",
+      "pass": true
+    },
+    {
+      "name": "readiness: R017 status_change is descoped-from-m012",
+      "pass": true
+    },
+    {
+      "name": "readiness: R019 status_change is descoped-from-m012",
+      "pass": true
+    },
+    {
+      "name": "requirements-md: REQUIREMENTS.md exists",
+      "pass": true
+    },
+    {
+      "name": "requirements-md: R017 entry mentions M012 non-addressal",
+      "pass": true
+    },
+    {
+      "name": "requirements-md: R019 entry mentions M012 non-addressal",
+      "pass": true
+    },
+    {
+      "name": "requirements-md: R017 note mentions descoped from M012 milestone scope",
+      "pass": true
+    },
+    {
+      "name": "requirements-md: R019 note mentions descoped from M012 milestone scope",
+      "pass": true
+    },
+    {
+      "name": "coverage: S10 JSON exists",
+      "pass": true
+    },
+    {
+      "name": "coverage: S10 MD exists",
+      "pass": true
+    },
+    {
+      "name": "coverage: JSON has correct schema_version",
+      "pass": true
+    },
+    {
+      "name": "coverage: JSON has correct artifact_type",
+      "pass": true
+    },
+    {
+      "name": "coverage: JSON has correct phase",
+      "pass": true
+    },
+    {
+      "name": "coverage: JSON descoping_entries contains R017",
+      "pass": true
+    },
+    {
+      "name": "coverage: JSON descoping_entries contains R019",
+      "pass": true
+    },
+    {
+      "name": "coverage: JSON descoping_entries has correct count (2)",
+      "pass": true
+    },
+    {
+      "name": "coverage: JSON coverage_summary lists R017/R019 in descoped_ids",
+      "pass": true
+    },
+    {
+      "name": "coverage: JSON safety_attestation flags all true",
+      "pass": true
+    },
+    {
+      "name": "coverage: MD mentions R017 and R019",
+      "pass": true
+    },
+    {
+      "name": "coverage: MD mentions deferred",
+      "pass": true
+    },
+    {
+      "name": "secret-scan: no forbidden secret patterns in S10 artifacts",
+      "pass": true
+    },
+    {
+      "name": "secret-scan: no forbidden secret patterns in S10 slice directory",
+      "pass": true
+    }
+  ]
+}

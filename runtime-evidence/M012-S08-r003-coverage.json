@@ -1,0 +1,34 @@
+{
+  "schema_version": "m012-s08-r003-coverage/v1",
+  "requirement_id": "R003",
+  "requirement_text": "Decision artifacts must preserve Paperclip as system of record and avoid plugin-owned governance state.",
+  "requirement_ownership": {
+    "primary": "M003 S02",
+    "supporting": "M003 S03",
+    "status": "active"
+  },
+  "m012_decision_artifacts": [
+    {
+      "artifact": "D053",
+      "type": "gsd-decision",
+      "description": "M012 milestone-level governance decision recorded via gsd_decision_save"
+    },
+    {
+      "artifact": "runtime-evidence/M012-S07-rescope-decision.json",
+      "type": "structured-evidence",
+      "description": "Formal re-scope decision for BOS-3 explicit-confirmation milestone criterion due to auto-mode constraint"
+    }
+  ],
+  "assessment": "M012 decision artifacts are GSD-internal milestone governance (repo-local documentation). They do not create plugin-owned governance state. The M012-S07-rescope-decision.json documents a milestone governance decision about success criteria re-scoping, stored as local JSON evidence. D053 records a milestone governance decision in the GSD decisions register. Neither artifact mutates Paperclip native artifacts (issues, documents, comments, approvals), nor does BOS Light plugin code create or manage governance state from these artifacts. Paperclip remains the system of record for all operational state. The M012 milestone governance artifacts are purely repo-local documentation that preserves the Paperclip-ownership boundary.",
+  "coverage_verdict": "M012 advances R003 with honest coverage notes. M012 decision artifacts are repo-local milestone governance documentation that preserves Paperclip as system of record and does not create plugin-owned governance state. R003 ownership and status are unchanged — M003 S02/S03 remain the primary owners.",
+  "coverage_scope": "traceability-only",
+  "status_change": "none",
+  "ownership_change": "none",
+  "safety": {
+    "no_plugin_state_created": true,
+    "paperclip_remains_system_of_record": true,
+    "decision_artifacts_are_repo_local": true,
+    "no_native_artifact_mutation": true
+  },
+  "generated_at": "2026-06-03T09:30:00.000Z"
+}

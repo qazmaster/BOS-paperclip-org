@@ -1,0 +1,449 @@
+{
+  "schema_version": "m012-s01-canonical-paperclip-readback/v1",
+  "artifact_type": "canonical-live-readback",
+  "phase": "M012-S01",
+  "generated_at": "2026-06-03T03:48:38.461Z",
+  "selected_path": "supported_http_get_routes_only",
+  "passing": false,
+  "config": {
+    "base_url_origin": "https://paperclip.oysana.com",
+    "base_url_host": "paperclip.oysana.com",
+    "company_id": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "canonical_company_id": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "stale_sandbox_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "auth_present": true,
+    "auth_key_name": "PAPERCLIP_API_KEY",
+    "dotenv_loaded": true,
+    "dotenv_known_keys_count": 7
+  },
+  "safety": {
+    "read_only": true,
+    "http_methods_used": [
+      "GET"
+    ],
+    "external_mutations": 0,
+    "plaintext_secrets_requested_or_logged": false,
+    "secret_values_redacted": true,
+    "direct_db_mutation": false,
+    "stale_sandbox_rejected": false
+  },
+  "observations": {
+    "health_ok": true,
+    "company_visible": false,
+    "agents_visible": false,
+    "issues_visible": false,
+    "projects_visible": false,
+    "goals_visible": false,
+    "plugin_route_ok": false,
+    "piko_tools_observed": false
+  },
+  "normalized_entities": {
+    "company": null,
+    "agents": {
+      "available": false,
+      "count": null
+    },
+    "issues": {
+      "available": false,
+      "count": null
+    },
+    "projects": {
+      "available": false,
+      "count": null,
+      "name": "projects"
+    },
+    "goals": {
+      "available": false,
+      "count": null,
+      "name": "goals"
+    }
+  },
+  "blocker_codes": [
+    "paperclip_auth_unauthorized",
+    "paperclip_auth_forbidden",
+    "plugin_routes_not_found",
+    "tool_routes_not_found"
+  ],
+  "route_inventory": [
+    {
+      "route": "/api/health",
+      "status": 200,
+      "class": "ok",
+      "ok": true
+    },
+    {
+      "route": "/api/version",
+      "status": 404,
+      "class": "route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da",
+      "status": 401,
+      "class": "auth_unauthorized",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/agents",
+      "status": 401,
+      "class": "auth_unauthorized",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/issues?limit=50",
+      "status": 401,
+      "class": "auth_unauthorized",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/projects",
+      "status": 401,
+      "class": "auth_unauthorized",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/goals",
+      "status": 401,
+      "class": "auth_unauthorized",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light/status",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light/tools",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/plugins",
+      "status": 403,
+      "class": "auth_forbidden",
+      "ok": false
+    },
+    {
+      "route": "/api/plugins/bos-light",
+      "status": 403,
+      "class": "auth_forbidden",
+      "ok": false
+    },
+    {
+      "route": "/api/plugins/bos-light/status",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/plugins/bos-light/tools",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/tools",
+      "status": 404,
+      "class": "tool_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/tools/registry",
+      "status": 404,
+      "class": "tool_route_not_found",
+      "ok": false
+    }
+  ],
+  "routes": [
+    {
+      "route": "/api/health",
+      "method": "GET",
+      "ok": true,
+      "status": 200,
+      "class": "ok",
+      "duration_ms": 1182,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 135,
+        "json": true,
+        "keys": [
+          "status",
+          "deploymentMode",
+          "deploymentExposure",
+          "bootstrapStatus",
+          "bootstrapInviteActive"
+        ]
+      }
+    },
+    {
+      "route": "/api/version",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "route_not_found",
+      "duration_ms": 1102,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da",
+      "method": "GET",
+      "ok": false,
+      "status": 401,
+      "class": "auth_unauthorized",
+      "duration_ms": 362,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 24,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/agents",
+      "method": "GET",
+      "ok": false,
+      "status": 401,
+      "class": "auth_unauthorized",
+      "duration_ms": 357,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 24,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/issues?limit=50",
+      "method": "GET",
+      "ok": false,
+      "status": 401,
+      "class": "auth_unauthorized",
+      "duration_ms": 362,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 24,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/projects",
+      "method": "GET",
+      "ok": false,
+      "status": 401,
+      "class": "auth_unauthorized",
+      "duration_ms": 359,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 24,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/goals",
+      "method": "GET",
+      "ok": false,
+      "status": 401,
+      "class": "auth_unauthorized",
+      "duration_ms": 360,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 24,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "duration_ms": 357,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "duration_ms": 359,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light/status",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "duration_ms": 358,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light/tools",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "duration_ms": 361,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/plugins",
+      "method": "GET",
+      "ok": false,
+      "status": 403,
+      "class": "auth_forbidden",
+      "duration_ms": 358,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 33,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/plugins/bos-light",
+      "method": "GET",
+      "ok": false,
+      "status": 403,
+      "class": "auth_forbidden",
+      "duration_ms": 358,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 33,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/plugins/bos-light/status",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "duration_ms": 359,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/plugins/bos-light/tools",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "duration_ms": 359,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/tools",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "tool_route_not_found",
+      "duration_ms": 357,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    },
+    {
+      "route": "/api/tools/registry",
+      "method": "GET",
+      "ok": false,
+      "status": 404,
+      "class": "tool_route_not_found",
+      "duration_ms": 357,
+      "content_type": "application/json; charset=utf-8",
+      "body_summary": {
+        "bytes": 31,
+        "json": true,
+        "keys": [
+          "error"
+        ]
+      }
+    }
+  ]
+}

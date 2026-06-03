@@ -1,0 +1,104 @@
+{
+  "schema_version": "m012-s02-native-mission-issue/v1",
+  "confirmationStatus": "absent",
+  "mutationAttempted": false,
+  "mutationCount": 0,
+  "mutationReuseCount": 0,
+  "route": "POST /api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/issues",
+  "companyId": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+  "missionTitle": "First Real Mission Through Native Paperclip Flow",
+  "liveIssueId": null,
+  "readbackStatus": "not-applicable",
+  "readback": null,
+  "normalizedReadback": null,
+  "issueReadback": null,
+  "issueReadbackHash": null,
+  "blockerCodes": [
+    "paperclip_auth_unauthorized",
+    "paperclip_login_invalid_credentials",
+    "paperclip_registration_user_exists_with_different_password",
+    "missing_explicit_confirmation"
+  ],
+  "blockerReason": "T05 exhausted all auth resolution paths: (1) API key (pcp_boar prefix, 58 chars) returns 401 on all company routes with Bearer, X-API-Key, query param, Basic auth, cookie, and X-Auth-Token methods; (2) Browser-based email/password login returns INVALID_EMAIL_OR_PASSWORD; (3) Registration returns USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL confirming the account exists but with a different password than stored in .env; (4) No password reset or token refresh endpoints found; (5) POST /api/companies/{id}/issues with empty body bypasses auth middleware (returns 400 validation) but with valid body returns 401. Auth state cannot be resolved without new credentials from the user.",
+  "redactionFlags": {
+    "plaintext_secrets": false,
+    "secret_values_redacted": true
+  },
+  "safetyFlags": {
+    "no_plaintext_secrets": true,
+    "no_direct_db_mutation": true,
+    "no_external_mutations_unconfirmed": true,
+    "requires_explicit_confirmation": true
+  },
+  "unsupportedRoutes": [
+    "document.create",
+    "document.read",
+    "comment.create",
+    "comment.read"
+  ],
+  "gateReference": {
+    "sourceArtifact": "runtime-evidence/M011-S03-reconciled-capability-gate.json",
+    "requiredConfirmationId": "paperclip_mutation_yes",
+    "requiredConfirmationWording": "User must explicitly confirm the live Paperclip mutation target and bounded test mission.",
+    "canonicalCompany": "/BOS",
+    "companyId": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "mission": "First Real Mission Through Native Paperclip Flow"
+  },
+  "authProbe": {
+    "keyPresent": true,
+    "keyPrefix": "pcp_boar",
+    "keyLength": 58,
+    "healthEndpointStatus": 200,
+    "companyEndpointStatus": 401,
+    "issuesEndpointStatus": 401,
+    "authMethodsTested": [
+      "Bearer token",
+      "X-API-Key header",
+      "query parameter",
+      "Basic auth (email:password)",
+      "Cookie (apiKey=...)",
+      "X-Auth-Token header",
+      "token query parameter",
+      "key query parameter",
+      "Browser email/password login (POST /api/auth/sign-in/email)"
+    ],
+    "allMethodsReturned": 401,
+    "browserLoginResult": {
+      "endpoint": "POST /api/auth/sign-in/email",
+      "httpStatus": 401,
+      "errorCode": "INVALID_EMAIL_OR_PASSWORD",
+      "message": "Invalid email or password"
+    },
+    "registrationResult": {
+      "endpoint": "POST /api/auth/sign-up/email",
+      "httpStatus": 422,
+      "errorCode": "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+      "message": "User already exists. Use another email."
+    },
+    "passwordResetEndpoints": "not-found",
+    "tokenRefreshEndpoints": "not-found",
+    "probeTimestamp": "2026-06-03T04:35:00.000Z"
+  },
+  "generatedAt": "2026-06-03T04:35:00.000Z",
+  "generatedBy": "T05 automated subagent (autonomous mode)",
+  "autonomousMode": true,
+  "fallbackPath": true,
+  "fallbackReason": "T05 attempted all available auth resolution paths. API key returns 401 on all company routes. Browser login fails with INVALID_EMAIL_OR_PASSWORD. Registration fails because user already exists with different password. No password reset or token refresh endpoints found. Auth state cannot be resolved without new credentials from the user.",
+  "resolutionRequired": [
+    "Provide fresh Paperclip API key (replace PAPERCLIP_API_KEY in .env)",
+    "Or provide correct password for kabidenov.a@gmail.com (replace PAPERCLIP_PASSWORD in .env)",
+    "Or register with a different email address",
+    "Then obtain explicit user confirmation (paperclip_mutation_yes) before mutation"
+  ],
+  "t06Validation": {
+    "validatedAt": "2026-06-03T09:15:00.000Z",
+    "validatedBy": "T06 automated subagent (autonomous mode)",
+    "blockerStateConfirmed": true,
+    "authStillBroken": true,
+    "confirmationStillAbsent": true,
+    "noNewAuthPathsDiscovered": true,
+    "evidenceFilesValid": true,
+    "validationScriptsPassing": true,
+    "conclusion": "Blocker state from T05 is still valid. Auth cannot be resolved without new credentials from user. Confirmation is not available in autonomous mode. Mutation cannot be attempted."
+  }
+}

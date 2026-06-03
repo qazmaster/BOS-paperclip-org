@@ -1,0 +1,162 @@
+{
+  "schema_version": "m012-s04-final-reconciliation/v1",
+  "artifact_type": "m012-final-reconciliation",
+  "phase": "M012-S04",
+  "generated_at": "2026-06-03T14:30:00.000Z",
+  "inputs": [
+    "runtime-evidence/M011-S03-reconciled-capability-gate.json",
+    "runtime-evidence/M012-S01-cleanup-gate.json",
+    "runtime-evidence/M012-S01-canonical-paperclip-readback.json",
+    "runtime-evidence/M012-S02-artifact-route-probe.json",
+    "runtime-evidence/M012-S02-native-mission-issue.json",
+    "runtime-evidence/M012-S02-native-mission-preflight.json",
+    "runtime-evidence/M012-S03-local-seven-division-flow.json",
+    "runtime-evidence/M012-S03-artifact-mirror-status.json",
+    "runtime-evidence/M012-S03-verification-baseline.json"
+  ],
+  "capability_summary": {
+    "confirmed": [
+      "company.divisions_active",
+      "resource.secret_resolution",
+      "mission.lifecycle",
+      "artifact.issue_document_comment_native",
+      "git.local_hybrid_push"
+    ],
+    "local_only": [
+      "workflow.mission_intake",
+      "workflow.hitl_gates",
+      "workflow.branch_policy",
+      "workflow.qa_review"
+    ],
+    "fallback_only": [
+      "workflow.pr_merge_ci",
+      "plugin.host_registration",
+      "plugin.piko_tools",
+      "runtime.hermes_xiaomi_execution",
+      "runtime.gsdpi_execution"
+    ],
+    "blocked": [
+      "telegram.secret_delivery"
+    ]
+  },
+  "m012_evidence_summary": {
+    "S01": {
+      "title": "Cleanup and Canonical Readback",
+      "proved": [
+        "Stale sandbox BOS-2 identified and cleanup deferred (auth-blocked)",
+        "Canonical Paperclip readback attempted: health OK (200), all company routes return 401",
+        "Plugin routes return 404, tool routes not found",
+        "Cleanup cannot proceed without valid credentials"
+      ],
+      "did_not_prove": [
+        "Issue enumeration on canonical BOS-1",
+        "Stale sandbox cleanup",
+        "Fresh authenticated readback of any company resource"
+      ]
+    },
+    "S02": {
+      "title": "Artifact Route Probe and Native Mission",
+      "proved": [
+        "Artifact route probe health-positive (health endpoint returns 200)",
+        "Auth definitively broken: API key returns 401, browser login fails with INVALID_EMAIL_OR_PASSWORD, registration fails with USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+        "All 9 auth methods tested and all returned 401 on company routes",
+        "Native mission preflight passed: allowed routes identified, blocked surfaces cataloged, confirmation wording recorded",
+        "Native mission issue creation attempted but blocked by auth (401)",
+        "Document and comment routes confirmed unsupported (404/no observed route)"
+      ],
+      "did_not_prove": [
+        "Successful issue creation on Paperclip",
+        "Document or comment route availability",
+        "Plugin host registration",
+        "Piko tool availability",
+        "Any authenticated Paperclip operation"
+      ]
+    },
+    "S03": {
+      "title": "Local Seven-Division Flow and Verification Baseline",
+      "proved": [
+        "Local seven-division flow executes successfully (all 7 divisions complete)",
+        "Div7 mission framing emits DecisionDelegated to Div1",
+        "Div1 operational routing dispatches to Div2/Div3/Div4/Div5 in sequence",
+        "Div2 blueprint and BPI scoring works (score: 72)",
+        "Div3 grant policy results in allow-with-constraints for local-only capabilities",
+        "Div4 local production generates JSON and markdown artifacts",
+        "Div5 QA review passes with conditions (all 5 eval gates pass)",
+        "Artifact mirror status: repo-local-fallback mode (no native mirroring possible)",
+        "Verification baseline established: 114 scoped checks passing (55 + 1 + 58)",
+        "M012-specific contract tests pass (58 tests)",
+        "No Hermes/GSD-Pi/plugin runtime execution attempted",
+        "No live Paperclip mutation attempted"
+      ],
+      "did_not_prove": [
+        "Native Paperclip artifact mirroring",
+        "Hermes runtime execution",
+        "GSD-Pi runtime execution",
+        "Plugin runtime execution",
+        "GitHub PR/CI workflow"
+      ]
+    }
+  },
+  "blocker_inventory": [
+    {
+      "id": "auth.paperclip_unauthorized",
+      "surface": "All Paperclip company routes",
+      "status": "active",
+      "description": "API key returns 401 on all company routes. Browser login fails. Registration blocked. Auth cannot be resolved without new credentials.",
+      "resolution": "User must provide fresh Paperclip API key or correct password"
+    },
+    {
+      "id": "plugin.routes_not_found",
+      "surface": "plugin.host_registration, plugin.piko_tools",
+      "status": "active",
+      "description": "Plugin routes return 404 on all tested paths. Tool routes not found. No piko tools observed.",
+      "resolution": "Paperclip server must expose plugin and tool routes"
+    },
+    {
+      "id": "runtime.hermes_blockers",
+      "surface": "runtime.hermes_xiaomi_execution",
+      "status": "active",
+      "description": "Hermes runtime execution remains fallback-only with adapter/testEnvironment/auth blockers.",
+      "resolution": "Future runtime-execution-proof with adapter registry readback, passing testEnvironment, bounded run"
+    },
+    {
+      "id": "runtime.gsdpi_blockers",
+      "surface": "runtime.gsdpi_execution",
+      "status": "active",
+      "description": "gsdpi_local remains unregistered/execution-blocked. Local package readiness is not runtime promotion.",
+      "resolution": "Future runtime-execution-proof with registry readback, passing testEnvironment, BosAdapterResult"
+    },
+    {
+      "id": "workflow.github_unexercised",
+      "surface": "workflow.pr_merge_ci",
+      "status": "active",
+      "description": "Div6 PR/merge/CI gateway implemented but live GitHub API path unexercised. Requires GitHub token plus explicit external confirmation.",
+      "resolution": "Dedicated milestone with GitHub auth, explicit user yes, PR create/readback, CI trigger/watch"
+    },
+    {
+      "id": "telegram.secret_delivery",
+      "surface": "telegram.secret_delivery",
+      "status": "active",
+      "description": "Telegram group configured for external secret handoff. Sending credentials is external disclosure.",
+      "resolution": "Only with explicit user confirmation naming destination and payload class"
+    }
+  ],
+  "promotion_guard": [
+    "plugin.host_registration",
+    "plugin.piko_tools",
+    "runtime.hermes_xiaomi_execution",
+    "runtime.gsdpi_execution",
+    "workflow.pr_merge_ci",
+    "telegram.secret_delivery"
+  ],
+  "promotion_guard_rationale": {
+    "plugin.host_registration": "No M012 live proof exists. Plugin routes return 404. No independent readback of loaded plugin with version/build.",
+    "plugin.piko_tools": "No M012 live proof exists. Tool routes not found. No piko:* tools observed in any probe.",
+    "runtime.hermes_xiaomi_execution": "No M012 live proof exists. Hermes execution was not attempted. No adapter registry readback, no passing testEnvironment, no bounded run.",
+    "runtime.gsdpi_execution": "No M012 live proof exists. GSD-Pi execution was not attempted. No registry readback, no BosAdapterResult payload.",
+    "workflow.pr_merge_ci": "No M012 live proof exists. GitHub API path unexercised. No PR created, no CI triggered, no merge performed.",
+    "telegram.secret_delivery": "No M012 live proof exists. No Telegram message sent. External disclosure requires explicit user confirmation."
+  },
+  "validation_status": "pass",
+  "validation_details": "All promotion_guard items are absent from the confirmed array. No capability row has been promoted from fallback-only or local-only to confirmed without fresh independent proof. The M011-S03 baseline capability classification is respected."
+}

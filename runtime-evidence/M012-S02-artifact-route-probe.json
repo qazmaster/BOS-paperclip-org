@@ -1,0 +1,90 @@
+{
+  "schema_version": "m012-s02-artifact-route-probe/v1",
+  "generated_at": "2026-06-03T04:35:00.000Z",
+  "phase": "M012-S02",
+  "task": "T05-final-probe",
+  "description": "T05 final artifact route probe after exhausting all auth resolution paths. Auth is definitively broken: API key returns 401, browser login fails with INVALID_EMAIL_OR_PASSWORD, registration fails because user exists with different password. No confirmation scope exists for document/comment writes. Document and comment native routes remain unsupported. This report documents the final blocked state.",
+  "routes": [
+    {
+      "name": "issue.create",
+      "status": "blocked-auth-failed",
+      "reason": "issue.create requires valid Paperclip auth AND explicit user confirmation. T05 exhausted all auth resolution paths (API key, browser login, registration, password reset search). Auth returns 401 on all company routes. Mutation cannot be attempted.",
+      "historicalStatus": "confirmed",
+      "currentBlockers": ["paperclip_auth_unauthorized", "paperclip_login_invalid_credentials", "paperclip_registration_user_exists_with_different_password", "missing_explicit_confirmation"]
+    },
+    {
+      "name": "document.create",
+      "status": "unsupported-no-observed-route",
+      "reason": "document.create has never been independently observed as a working route in S02. Plugin routes are returning 404 and tool routes are not found. No confirmation scope was established for document writes. The route cannot be claimed as working.",
+      "historicalStatus": "historically-claimed-but-not-individually-verified",
+      "currentBlockers": ["plugin_routes_not_found", "tool_routes_not_found"]
+    },
+    {
+      "name": "comment.create",
+      "status": "unsupported-no-observed-route",
+      "reason": "comment.create has never been independently observed as a working route in S02. Plugin routes are returning 404 and tool routes are not found. No confirmation scope was established for comment writes. The route cannot be claimed as working.",
+      "historicalStatus": "historically-claimed-but-not-individually-verified",
+      "currentBlockers": ["plugin_routes_not_found", "tool_routes_not_found"]
+    },
+    {
+      "name": "issue.read",
+      "status": "auth-blocked",
+      "reason": "issue.read (listing/viewing issues) returns 401 Unauthorized. Auth key is present but not authorized for company routes.",
+      "historicalStatus": "auth-blocked-at-reprobe",
+      "currentBlockers": ["paperclip_auth_unauthorized"]
+    }
+  ],
+  "unsupportedRoutes": [
+    "document.create",
+    "comment.create",
+    "issue.read (auth-blocked)"
+  ],
+  "writeCount": 0,
+  "readbackStatus": "not-applicable",
+  "capabilityPromotionStatus": "none",
+  "blockerCodes": [
+    "paperclip_auth_unauthorized",
+    "paperclip_login_invalid_credentials",
+    "paperclip_registration_user_exists_with_different_password",
+    "missing_password_reset_or_token_refresh",
+    "missing_explicit_confirmation",
+    "plugin_routes_not_found",
+    "tool_routes_not_found"
+  ],
+  "fallbackReport": true,
+  "fallbackReason": "T05 exhausted all auth resolution paths. API key returns 401. Browser login fails. Registration blocked. No password reset available. Auth cannot be resolved without new credentials from user.",
+  "inputSource": "runtime-evidence/M011-S03-reconciled-capability-gate.json",
+  "authProbeSummary": {
+    "keyPresent": true,
+    "keyPrefix": "pcp_boar",
+    "keyLength": 58,
+    "healthEndpointStatus": 200,
+    "companyEndpointStatus": 401,
+    "allCompanyRoutesReturn": 401,
+    "authMethodsTestedCount": 9,
+    "browserLoginEndpoint": "POST /api/auth/sign-in/email",
+    "browserLoginResult": "INVALID_EMAIL_OR_PASSWORD",
+    "registrationEndpoint": "POST /api/auth/sign-up/email",
+    "registrationResult": "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+    "passwordResetAvailable": false,
+    "tokenRefreshAvailable": false,
+    "probeTimestamp": "2026-06-03T04:35:00.000Z"
+  },
+  "nextSteps": [
+    "User must provide fresh Paperclip API key or correct password for kabidenov.a@gmail.com",
+    "Or register with a different email address",
+    "Obtain explicit user confirmation for mutation scope (paperclip_mutation_yes)",
+    "Re-probe issue/document/comment routes with authenticated session",
+    "Promote routes individually only after observed readback proof"
+  ],
+  "t06Validation": {
+    "validatedAt": "2026-06-03T09:15:00.000Z",
+    "validatedBy": "T06 automated subagent (autonomous mode)",
+    "routeStatusesUnchanged": true,
+    "authBlockerConfirmed": true,
+    "unsupportedRoutesConfirmed": true,
+    "writeCountVerifiedZero": true,
+    "capabilityPromotionVerifiedNone": true,
+    "conclusion": "Artifact route probe from T05 is still accurate. All routes remain blocked or unsupported. No new auth paths discovered."
+  }
+}

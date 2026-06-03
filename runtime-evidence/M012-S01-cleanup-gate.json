@@ -1,0 +1,66 @@
+{
+  "schema_version": "m012-s01-cleanup-gate/v1",
+  "artifact_type": "cleanup-gate",
+  "phase": "M012-S01",
+  "generated_at": "2026-06-03T03:55:50.877Z",
+  "source_readback": {
+    "path": "runtime-evidence/M012-S01-canonical-paperclip-readback.json",
+    "generated_at": "2026-06-03T03:48:38.461Z",
+    "schema_version": "m012-s01-canonical-paperclip-readback/v1"
+  },
+  "classification": {
+    "bos1": {
+      "label": "BOS-1",
+      "description": "Canonical live BOS Light company",
+      "company_id": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+      "is_canonical": true,
+      "stale_sandbox_rejected": false,
+      "issues_available": false,
+      "issue_count": null,
+      "issue_ids": [],
+      "auth_blocked": true,
+      "blocker_codes": [
+        "paperclip_auth_unauthorized",
+        "paperclip_auth_forbidden"
+      ]
+    },
+    "bos2": {
+      "label": "BOS-2",
+      "description": "Stale sandbox test company (to be cleaned up)",
+      "company_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+      "is_stale": true,
+      "issues_available": false,
+      "issue_count": null,
+      "issue_ids": [],
+      "cleanup_status": "deferred",
+      "cleanup_reason": "Auth blocker prevents issue enumeration; cannot identify stale issues for cleanup",
+      "requires_live_mutation": false,
+      "mutation_confirmation": null
+    }
+  },
+  "cleanup_gate": {
+    "can_enumerate_issues": false,
+    "stale_issues_identified": false,
+    "stale_issue_ids": [],
+    "requires_live_mutation": false,
+    "explicit_confirmation_requested": false,
+    "explicit_confirmation_received": false,
+    "mutation_executed": false,
+    "mutation_count": 0,
+    "mutation_route_used": null,
+    "cleanup_status": "deferred",
+    "cleanup_deferral_reason": "Auth blocker (401) prevents issue enumeration on all company-scoped routes; cleanup cannot proceed without valid credentials"
+  },
+  "safety": {
+    "read_only": true,
+    "http_methods_used": [
+      "GET"
+    ],
+    "external_mutations": 0,
+    "direct_db_mutation": false,
+    "plugin_routes_used": false,
+    "plaintext_secrets_logged": false,
+    "stale_sandbox_used_as_target": false,
+    "confirmation_bypassed": false
+  }
+}

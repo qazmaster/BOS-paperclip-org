@@ -1,0 +1,192 @@
+{
+  "schema_version": "m012-s06-session-auth-readback/v1",
+  "artifact_type": "session-auth-live-readback",
+  "auth_method": "session-based",
+  "phase": "M012-S06",
+  "generated_at": "2026-06-03T08:02:32.572Z",
+  "passing": true,
+  "config": {
+    "base_url_origin": "https://paperclip.oysana.com",
+    "base_url_host": "paperclip.oysana.com",
+    "company_id": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "canonical_company_id": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "stale_sandbox_id": "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+    "email_redacted": "kabidenov.a@gmail.com",
+    "dotenv_loaded": true,
+    "dotenv_known_keys_count": 7,
+    "duplicate_key_count": 1,
+    "duplicate_keys": [
+      {
+        "key": "PAPERCLIP_PASSWORD",
+        "occurrences": 2
+      }
+    ]
+  },
+  "session_auth": {
+    "success": true,
+    "status": 200,
+    "duration_ms": 4117,
+    "session_cookie_present": true,
+    "session_cookie_name": "__Secure-paperclip-default.session_token",
+    "body_status": null,
+    "body_message": null,
+    "error": null,
+    "error_message": null
+  },
+  "safety": {
+    "read_only": true,
+    "http_methods_used": [
+      "POST (auth only)",
+      "GET"
+    ],
+    "external_mutations": 0,
+    "plaintext_secrets_requested_or_logged": false,
+    "secret_values_redacted": true,
+    "direct_db_mutation": false,
+    "stale_sandbox_rejected": false
+  },
+  "observations": {
+    "health_ok": true,
+    "company_visible": true,
+    "agents_visible": true,
+    "issues_visible": true,
+    "projects_visible": true,
+    "goals_visible": true,
+    "plugin_route_ok": true,
+    "tools_route_ok": false
+  },
+  "normalized_entities": {
+    "company": {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da",
+      "status": 200,
+      "available": true
+    },
+    "agents": {
+      "available": true,
+      "count": 8
+    },
+    "issues": {
+      "available": true,
+      "count": 2
+    },
+    "projects": {
+      "available": true,
+      "count": 1,
+      "name": "projects"
+    },
+    "goals": {
+      "available": true,
+      "count": 1,
+      "name": "goals"
+    }
+  },
+  "blocker_codes": [
+    "plugin_routes_not_found",
+    "tool_routes_not_found"
+  ],
+  "route_inventory": [
+    {
+      "route": "/api/health",
+      "status": 200,
+      "class": "ok",
+      "ok": true
+    },
+    {
+      "route": "/api/version",
+      "status": 404,
+      "class": "route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da",
+      "status": 200,
+      "class": "ok",
+      "ok": true
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/agents",
+      "status": 200,
+      "class": "ok",
+      "ok": true
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/issues?limit=50",
+      "status": 200,
+      "class": "ok",
+      "ok": true
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/projects",
+      "status": 200,
+      "class": "ok",
+      "ok": true
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/goals",
+      "status": 200,
+      "class": "ok",
+      "ok": true
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light/status",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/companies/9feb4c22-05b9-401e-ba67-0e866e3056da/plugins/bos-light/tools",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/plugins",
+      "status": 200,
+      "class": "ok",
+      "ok": true
+    },
+    {
+      "route": "/api/plugins/bos-light",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/plugins/bos-light/status",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/plugins/bos-light/tools",
+      "status": 404,
+      "class": "plugin_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/tools",
+      "status": 404,
+      "class": "tool_route_not_found",
+      "ok": false
+    },
+    {
+      "route": "/api/tools/registry",
+      "status": 404,
+      "class": "tool_route_not_found",
+      "ok": false
+    }
+  ],
+  "deviation_note": "The milestone success criteria require explicit user confirmation before creating the BOS-3 mission issue via POST /api/companies/{id}/issues. This script performs authenticated readback only (GET requests) and does NOT attempt issue creation or mutation. The mission issue creation path was blocked in S02 due to INVALID_EMAIL_OR_PASSWORD (first-value-wins .env parser chose the wrong password). With the corrected LAST-value-wins parser and session-based auth, authenticated readback is now proven. Issue creation remains pending explicit user confirmation per the milestone contract."
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": "m012-s07-closeout-gate/v1",
+  "artifact_type": "s07-closeout-gate",
+  "phase": "M012-S07",
+  "generated_at": "2026-06-03T11:23:26.294Z",
+  "verdict": "fail",
+  "checks_total": 27,
+  "checks_passed": 25,
+  "checks_failed": 2,
+  "checks": [
+    {
+      "name": "rescope-decision: file exists and is valid JSON",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: schema_version matches",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: decision_type is milestone-criterion-rescope",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: constraint field present",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: blocked_paths is non-empty array",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: selected_path is Path C",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: re_scoped_criterion is non-empty",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: canonical_company_id matches",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: issue_identifier is BOS-3",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: deviation_preserved is true",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: deviation_note present and non-empty",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: safety.read_only is true",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision: re_scoped_criterion mentions \"explicit user confirmation\"",
+      "pass": true
+    },
+    {
+      "name": "req-update: file exists and is valid JSON",
+      "pass": true
+    },
+    {
+      "name": "req-update: schema_version matches",
+      "pass": true
+    },
+    {
+      "name": "req-update: planned_updates is non-empty array",
+      "pass": true
+    },
+    {
+      "name": "req-update: planned_updates reference R022",
+      "pass": true
+    },
+    {
+      "name": "req-update: planned_updates reference R023",
+      "pass": true
+    },
+    {
+      "name": "req-update: safety.read_only is true",
+      "pass": true
+    },
+    {
+      "name": "req-update: safety.planned_changes_only is true",
+      "pass": true
+    },
+    {
+      "name": "req-update: milestone_id is M012-ihd2ez",
+      "pass": true
+    },
+    {
+      "name": "forbidden-phrases: no overclaiming phrases in S07 artifacts",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision.md: documents deviation honestly",
+      "pass": true
+    },
+    {
+      "name": "rescope-decision.md: documents what remains unproven",
+      "pass": true
+    },
+    {
+      "name": "s06-closeout: validator script exists",
+      "pass": true
+    },
+    {
+      "name": "s06-closeout: runs without error (regression pass)",
+      "pass": false,
+      "detail": "S06 closeout validator failed: \n=== 1. Session Auth Readback JSON ===\n  ✅ auth-readback: file exists and is valid JSON\n  ✅ auth-readback: schema_version matches\n  ✅ auth-readback: passing is true\n  ✅ auth-readback: company_visible is true\n  ✅ auth-readback: issues_visible is true\n  ✅ auth-readback: company_id matches canonical\n  ✅ auth-readback: session_auth.success is true\n  ✅ auth-readback: safety.read_only is true\n\n=== 2. Mission Issue Evidence JSON ===\n  ✅ mission-issue: file exists and is valid JSON\n  ✅ mission-issue: schema_version matches\n  ✅ mission-issue: passing is true\n  ✅ mission-issue: issue.id is non-null UUID\n  ✅ mission-issue: issue.identifier is BOS-3\n  ✅ mission-issue: deviation_note is present and non-empty\n  ✅ mission-issue: deviation_note mentions explicit user confirmation issue\n  ✅ mission-issue: issue_found is true\n  ✅ mission-issue: safety.read_only is true\n\n=== 3. Requirement Update Evidence JSON ===\n  ✅ req-update: file exists and is valid JSON\n  ✅ req-update: schema_version matches\n  ✅ req-update: changes array is non-empty\n  ✅ req-update: validation_status is updated\n  ✅ req-update: deviation_acknowledged is true\n  ✅ req-update: changes reference R022\n\n=== 4. Requirement Outcomes - Forbidden Phrases ===\n  ✅ outcomes: file exists\n  ✅ outcomes: no forbidden phrases overstate R022 evidence\n  ✅ outcomes: R022 row includes BOS-3 S06 evidence\n  ✅ outcomes: R022 row includes honest deviation note\n  ✅ outcomes: summary includes S06 evidence\n\n=== 5. S05 Closeout Validator (Regression) ===\n  ✅ s05-closeout: validator script exists\n  ✅ s05-closeout: runs without error (regression pass)\n\n=== 6. Secret Leak Scan ===\n\n=== S06 Closeout Gate Summary ===\n  ✅ auth-readback: file exists and is valid JSON\n  ✅ auth-readback: schema_version matches\n  ✅ auth-readback: passing is true\n  ✅ auth-readback: company_visible is true\n  ✅ auth-readback: issues_visible is true\n  ✅ auth-readback: company_id matches canonical\n  ✅ auth-readback: session_auth.success is true\n  ✅ auth-readback: safety.read_only is true\n  ✅ mission-issue: file exists and is valid JSON\n  ✅ mission-issue: schema_version matches\n  ✅ mission-issue: passing is true\n  ✅ mission-issue: issue.id is non-null UUID\n  ✅ mission-issue: issue.identifier is BOS-3\n  ✅ mission-issue: deviation_note is present and non-empty\n  ✅ mission-issue: deviation_note mentions explicit user confirmation issue\n  ✅ mission-issue: issue_found is true\n  ✅ mission-issue: safety.read_only is true\n  ✅ req-update: file exists and is valid JSON\n  ✅ req-update: schema_version matches\n  ✅ req-update: changes array is non-empty\n  ✅ req-update: validation_status is updated\n  ✅ req-update: deviation_acknowledged is true\n  ✅ req-update: changes reference R022\n  ✅ outcomes: file exists\n  ✅ outcomes: no forbidden phrases overstate R022 evidence\n  ✅ outcomes: R022 row includes BOS-3 S06 evidence\n  ✅ outcomes: R022 row includes honest deviation note\n  ✅ outcomes: summary includes S06 evidence\n  ✅ s05-closeout: validator script exists\n  ✅ s05-closeout: runs without error (regression pass)\n  ❌ secret-scan: no forbidden secret patterns in S06 artifacts\n\nGate written: runtime-evidence/M012-S06-closeout-gate.json\n\nSUITE_RESULT FAIL — S06 closeout gate: 30/31 checks passed\n  ❌ secret-scan: no forbidden secret patterns in S06 artifacts: Secret leaks found (4 matches):\n  - .gsd/milestones/M012-ihd2ez/slices/S06/tasks/T01-SUMMARY.md:25:password-literal\n  - .gsd/milestones/M012-ihd2ez/slices/S06/tasks/T01-SUMMARY.md:29:password-literal\n  - .gsd/milestones/M012-ihd2ez/slices/S06/tasks/T05-SUMMARY.md:27:password-literal\n  - .gsd/milestones/M012-ihd2ez/slices/S06/tasks/T05-SUMMARY.md:27:api-key-pcp-prefix\n"
+    },
+    {
+      "name": "secret-scan: no forbidden secret patterns in S07 artifacts",
+      "pass": false,
+      "detail": "Secret leaks found (1 matches):\n  - .gsd/milestones/M012-ihd2ez/slices/S07/tasks/T03-SUMMARY.md:40:password-literal"
+    }
+  ]
+}

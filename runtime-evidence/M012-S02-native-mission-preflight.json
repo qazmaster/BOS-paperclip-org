@@ -1,0 +1,174 @@
+{
+  "schema_version": "m012-s02-native-mission-preflight/v1",
+  "artifact_type": "native-mission-preflight",
+  "generated_at": "2026-06-03T03:57:00.000Z",
+  "source_gate": "runtime-evidence/M011-S03-reconciled-capability-gate.json",
+  "target": {
+    "companyId": "/BOS",
+    "companyName": "BOS (Business Operating System)",
+    "canonicalPath": "/BOS"
+  },
+  "missionTitle": "First Real Mission Through Native Paperclip Flow",
+  "missionPosture": "Use native Paperclip issue/document/comment mission artifacts after auth and explicit confirmation; do not rely on plugin host tools or runtime execution adapters.",
+  "safetyConstraints": [
+    {
+      "id": "m012_requires_explicit_confirmation_for_external_mutation",
+      "value": true,
+      "description": "All external mutations require explicit user confirmation immediately before the action."
+    },
+    {
+      "id": "no_plaintext_secrets",
+      "value": true,
+      "description": "No plaintext secrets requested or logged during this mission."
+    },
+    {
+      "id": "no_direct_db_mutation",
+      "value": true,
+      "description": "No direct database mutation permitted."
+    },
+    {
+      "id": "no_external_mutations_unconfirmed",
+      "value": true,
+      "description": "Zero external mutations without explicit user yes."
+    }
+  ],
+  "allowedRoutes": [
+    {
+      "id": "local.mission_frame_route_grant_qa",
+      "mode": "local-only",
+      "action": "Run BOS Light TypeScript mission framing, Div1 routing, Div3 grant policy, HITL artifact generation, branch policy, and QA review against local fixtures or generated artifacts.",
+      "constraints": [
+        "No external mutation",
+        "No raw secret output",
+        "Generated artifacts must record blockers when auth is absent"
+      ]
+    },
+    {
+      "id": "paperclip.readonly_health_probe",
+      "mode": "live-read-only",
+      "action": "Probe Paperclip health and supported GET routes for observation.",
+      "constraints": [
+        "GET only",
+        "No capability promotions from S02 alone",
+        "No secret persistence"
+      ]
+    },
+    {
+      "id": "paperclip.native_mission_artifacts",
+      "mode": "live-mutation-after-explicit-confirmation",
+      "action": "Create a bounded Paperclip mission issue plus document/comment artifacts through native supported routes.",
+      "constraints": [
+        "Requires Paperclip auth present",
+        "Requires explicit user yes immediately before mutation",
+        "Must use canonical /BOS company id",
+        "Must write live evidence readback artifact",
+        "Must not use plugin host tools"
+      ]
+    },
+    {
+      "id": "git.local_feature_branch",
+      "mode": "local-or-explicit-confirmation-for-push",
+      "action": "Use local git operations on feature/bos-{mission_id} branches; push only with explicit confirmation and branch policy evidence.",
+      "constraints": [
+        "No direct main/master push",
+        "No force push",
+        "External push requires explicit user confirmation"
+      ]
+    }
+  ],
+  "blockedSurfaces": [
+    {
+      "id": "plugin.host_registration",
+      "reason": "S02 observed no supported plugin route readback and S01 keeps plugin.host_registration fallback-only.",
+      "until": "Supported Paperclip host readback observes bos-light loaded plugin with version/build and no 404 blocker."
+    },
+    {
+      "id": "plugin.piko_tools",
+      "reason": "S02 observed no piko tools and S01 keeps plugin.piko_tools fallback-only.",
+      "until": "Tool registry readback observes piko:* tools and at least one invocation returns a supported result."
+    },
+    {
+      "id": "runtime.hermes_xiaomi_execution",
+      "reason": "Hermes runtime execution remains fallback-only with adapter/testEnvironment/auth blockers.",
+      "until": "Future runtime-execution-proof includes adapter registry readback, passing testEnvironment, exactly one bounded run, wakeCountDelta=1, and resultJson.bos."
+    },
+    {
+      "id": "runtime.gsdpi_execution",
+      "reason": "gsdpi_local remains unregistered/execution-blocked; local package readiness is not runtime promotion.",
+      "until": "Future runtime-execution-proof includes supported registry readback, passing testEnvironment, and BosAdapterResult payload."
+    },
+    {
+      "id": "workflow.pr_merge_ci_live",
+      "reason": "Div6 PR/merge/CI gateway is implemented but live GitHub API path remains unexercised and requires GitHub token plus explicit external confirmation.",
+      "until": "Dedicated milestone/slice with GitHub auth, explicit user yes, PR create/readback, CI trigger/watch, and QA approval evidence."
+    },
+    {
+      "id": "direct.main_push_or_force_push",
+      "reason": "Branch policy explicitly blocks direct main/master and force-push paths.",
+      "until": "Never for autonomous BOS Light flow; use feature branch plus PR/CI/human gate."
+    },
+    {
+      "id": "telegram.secret_delivery",
+      "reason": "Telegram group is configured for external secret handoff; sending credentials is external disclosure.",
+      "until": "Only with explicit user confirmation naming the destination and payload class; never print secret values."
+    }
+  ],
+  "confirmationWording": [
+    {
+      "id": "paperclip_mutation_yes",
+      "when": "Before creating or editing any live Paperclip mission issue/document/comment in M012.",
+      "wording": "User must explicitly confirm the live Paperclip mutation target and bounded test mission."
+    },
+    {
+      "id": "github_external_yes",
+      "when": "Before any git push, GitHub PR, workflow trigger, merge, approval, or external API mutation.",
+      "wording": "User must explicitly confirm the remote repo/branch/action immediately before the action."
+    },
+    {
+      "id": "secret_collection",
+      "when": "If Paperclip/GitHub auth is needed and absent.",
+      "wording": "Use secure_env_collect; never ask the user to paste secrets into chat or edit .env manually."
+    }
+  ],
+  "outOfScope": [
+    {
+      "surface": "Plugin routes (plugin.host_registration, plugin.piko_tools)",
+      "reason": "Plugin host readback and piko tool registry remain unobserved; fallback-only classification confirmed across S01 and S02."
+    },
+    {
+      "surface": "Hermes runtime execution",
+      "reason": "Hermes adapter/testEnvironment/auth blockers remain; runtime execution is fallback-only."
+    },
+    {
+      "surface": "GSD-Pi runtime execution",
+      "reason": "gsdpi_local is unregistered and execution-blocked; package readiness is not runtime promotion."
+    },
+    {
+      "surface": "GitHub PR/merge/CI",
+      "reason": "Live GitHub API path is unexercised and requires token plus explicit external confirmation gate not yet approved."
+    },
+    {
+      "surface": "Telegram secret delivery",
+      "reason": "Telegram group is for external secret handoff only with explicit user confirmation; never autonomous."
+    },
+    {
+      "surface": "Unsupported document/comment APIs",
+      "reason": "Only native Paperclip issue/document/comment routes proven in M011-S01 are in scope; any untested API surface is out of scope until separately validated."
+    }
+  ],
+  "currentBlockers": [
+    "missing_paperclip_auth",
+    "paperclip_auth_unauthorized",
+    "paperclip_auth_forbidden",
+    "plugin_routes_not_found",
+    "tool_routes_not_found"
+  ],
+  "proposedFlow": [
+    "Collect/verify Paperclip auth via secure_env_collect if absent.",
+    "Ask for explicit yes before live Paperclip mutation.",
+    "Create one bounded mission issue in canonical /BOS company through supported native route.",
+    "Run local Div7 mission framing, Div1 routing, Div3 grant policy, Div2 blueprint stub/artifact generation, Div4 local production task, and Div5 QA review as BOS Light code paths.",
+    "Mirror each step to native Paperclip document/comment artifacts with readback.",
+    "Stop before GitHub PR/merge/CI unless a later explicit external-action gate is approved."
+  ]
+}

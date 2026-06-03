@@ -1,0 +1,43 @@
+{
+  "schema_version": "m012-s05-coverage-remediation/v1",
+  "artifact_type": "coverage_remediation",
+  "phase": "M012-S05",
+  "coverage_entries": [
+    {
+      "requirement": "R009",
+      "description": "Eval Gate pass/warning/blocking-fail/incomplete guidance",
+      "status": "validated",
+      "validated_by": "M003 S03",
+      "m012_coverage_type": "local-only-corroboration",
+      "m012_evidence": "M012 S03 local flow exercises eval gate code path in local-only mode. Div5 QA ran 5 eval gates: safety (pass), completeness (pass), accuracy (pass), execution_mode (pass), blocker_recording (pass). All gates passed against local production artifacts.",
+      "m012_limitation": "This is corroboration, not live Paperclip proof. The eval gates ran against locally-generated artifacts, not live Paperclip mutation feedback. No live eval gate verdict was produced against actual Paperclip runtime behavior.",
+      "validation_status_unchanged": true,
+      "rationale": "Validated status from M003 is unchanged. M012 provides local-only corroboration that the eval gate code path executes correctly in local mode."
+    },
+    {
+      "requirement": "R010",
+      "description": "Circuit Breaker CLOSED/OPEN/HALF_OPEN states",
+      "status": "validated",
+      "validated_by": "M003 S03",
+      "m012_coverage_type": "local-only-corroboration",
+      "m012_evidence": "M012 S03 local flow records circuit_breaker_state: closed with reason no-prior-failures-on-this-mission in Div1.HCO routing output. The routing decision packet includes circuit_breaker_state and circuit_breaker_reason fields populated by local routing logic.",
+      "m012_limitation": "This is local-only state, not live Paperclip circuit breaker tracking. The circuit breaker was not triggered to OPEN or HALF_OPEN because no live external failures occurred. No actual circuit breaker tripping/recovery was exercised.",
+      "validation_status_unchanged": true,
+      "rationale": "Validated status from M003 is unchanged. M012 provides local-only corroboration that the circuit breaker state field is populated in the routing packet."
+    },
+    {
+      "requirement": "R014",
+      "description": "Div5 must quarantine, validate, and sanitize raw external evidence",
+      "status": "validated",
+      "validated_by": "M003 S01",
+      "m012_coverage_type": "local-only-partial",
+      "m012_evidence": "M012 S03 local flow processes local production artifacts in Div5 QA. Div5 reviewed production artifacts (JSON + markdown) for safety, correctness, and compliance. The qa_review phase includes guardrails: independent-qa-review, evidence-based-verdict, no-raw-external-evidence, eval-gate-policy-applied.",
+      "m012_limitation": "No raw external evidence was quarantined because no live Paperclip surfaces were accessed. The quarantine code path was not exercised with real external data. All artifacts reviewed by Div5 were locally-generated, not raw external evidence requiring quarantine.",
+      "validation_status_unchanged": true,
+      "rationale": "Validated status from M003 is unchanged. M012 provides local-only partial corroboration that Div5 QA review path executes, but the quarantine/sanitization path for raw external evidence was not exercised with real external data."
+    }
+  ],
+  "requirements_note": "R009, R010, and R014 were validated in M003 through fixture-tested evidence, plugin tests, typecheck, and runtime capability validators. M012 S03 local flow exercises relevant code paths in local-only mode. These are corroboration notes, not new validation proofs.",
+  "validated_at": "2026-06-03T10:50:00.000Z",
+  "validated_by": "M012-S05-T01 automated coverage remediation"
+}

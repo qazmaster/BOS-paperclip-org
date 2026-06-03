@@ -1,0 +1,26 @@
+{
+  "schema_version": "m012-s05-correction/v1",
+  "artifact_type": "requirement_outcomes_correction",
+  "phase": "M012-S05",
+  "corrected_outcomes": [
+    {
+      "requirement": "R022",
+      "original_claim": "S02 created native mission issue",
+      "corrected_evidence": "S02 produced validated blocker evidence: auth-blocked, liveIssueId null, zero writes, no capability promotion. Auth probe returned 401 on all company routes. Browser login returned INVALID_EMAIL_OR_PASSWORD. Registration confirmed account exists with different password. No mutation was attempted.",
+      "correction_rationale": "S02 did not create a native mission issue. The S02 native mission issue artifact confirms: confirmationStatus absent, mutationAttempted false, mutationCount 0, liveIssueId null. The blockerReason documents all auth paths exhausted without resolution. Claiming 'created native issue' contradicts the S02 evidence."
+    },
+    {
+      "requirement": "R022",
+      "original_claim_summary": "M012 proved local flow capabilities and created native issues",
+      "corrected_summary": "M012 proved local flow capabilities and validated blocker states",
+      "correction_rationale": "No native issues were created by M012. S02 confirmed auth-blocked state with zero mutations. The summary line must reflect validated blockers, not issue creation."
+    }
+  ],
+  "files_corrected": [
+    "runtime-evidence/M012-S04-requirement-outcomes.md",
+    ".gsd/milestones/M012-ihd2ez/slices/S04/S04-SUMMARY.md"
+  ],
+  "validation_status": "corrected",
+  "corrected_at": "2026-06-03T10:50:00.000Z",
+  "corrected_by": "M012-S05-T01 automated correction"
+}
