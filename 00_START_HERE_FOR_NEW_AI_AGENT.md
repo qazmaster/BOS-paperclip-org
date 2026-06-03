@@ -123,10 +123,38 @@ Div4 builds, but does not decide the system.
 ### Test suite
 
 ```bash
-cd plugin-bos-light && npx vitest run    # 618 tests, 39 files
+cd plugin-bos-light && npx vitest run    # 1250 tests, 52 files
 cd plugin-bos-light && npx tsc --noEmit  # TypeScript clean
 ```
 
 ### R026 v1.4.2 patch alignment
 
 Our implementation aligns 95%+ with the official v1.4.2 R026 Agent Boundary Update patch. See `HANDOFF_M008_COMPLETE.md` for detailed comparison table.
+
+## Current state (M001-M011 complete)
+
+All 11 milestones are complete. Read these handoffs for full context:
+
+- `HANDOFF_M008_COMPLETE.md` — Div7 delegation + Div1 routing refactor
+- `HANDOFF_M009_COMPLETE.md` — BOS Light Level 2 Plugin Activation (959 tests)
+- `HANDOFF_M010_COMPLETE.md` — Plugin integration testing (1250 tests)
+- `.gsd/milestones/M011/M011-SUMMARY.md` — Capability ledger reconciliation
+
+### What works
+
+- **Deterministic routing** across all 3 Cynefin domains (CLEAR/COMPLICATED/CHAOTIC)
+- **Two-pass architecture** with Div7 → Div1 delegation
+- **Grant policy enforcement** (auto-approve ≤100K, escalation for HIGH risk)
+- **Division isolation** (Div4 blocked from external tools, Div6-only external IO)
+- **Plugin tools** (6 tools registered, 1250 tests passing)
+- **7 division agents** operational on live Paperclip with Hermes + Xiaomi
+
+### What's blocked
+
+- **Paperclip plugin runtime** — post-V1 feature; tools run via agent execution flow only
+- **Live Paperclip mutations** — auth required; use secure_env_collect before M012
+- **GSD-Pi execution** — blocked; supported adapter returns Unknown adapter type
+
+### Next milestone: M012
+
+Plan M012 as "First Real Mission Through Native Paperclip Flow" using `runtime-evidence/M011-S03-reconciled-capability-gate.json`. Before any live Paperclip issue/document/comment mutation, collect Paperclip auth via secure_env_collect and ask for explicit confirmation of the bounded live action.

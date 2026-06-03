@@ -1,6 +1,6 @@
 {
   "artifact": "M010-S04-e2e-workflow",
-  "generated_at": "2026-06-02T19:57:48.257Z",
+  "generated_at": "2026-06-02T19:59:51.388Z",
   "test_file": "tests/e2eWorkflow.test.ts",
   "total_tests": 37,
   "passed": 37,
@@ -80,27 +80,5 @@
   ],
   "verification_command": "cd plugin-bos-light && npx vitest run tests/e2eWorkflow.test.ts",
   "verification_exit_code": 0,
-  "overall_verdict": "pass",
-  "full_regression": {
-    "command": "cd plugin-bos-light && npx vitest run",
-    "exit_code": 0,
-    "total_test_files": 52,
-    "total_tests": 1250,
-    "passed": 1250,
-    "failed": 0,
-    "duration_seconds": 9.80,
-    "verdict": "pass",
-    "tsc_no_emit": {
-      "command": "cd plugin-bos-light && npx tsc --noEmit",
-      "exit_code": 2,
-      "new_errors_introduced": 0,
-      "pre_existing_errors": true,
-      "error_categories": [
-        "TS6142: JSX not set for src/ui/sidebar.tsx and src/ui/settings.tsx",
-        "TS7016: Missing declaration for dist/worker.js in test files",
-        "TS7006/T2339: Implicit any and missing properties in test/fixture layer"
-      ],
-      "verdict": "pass (pre-existing only)"
-    }
-  }
+  "overall_verdict": "pass"
 }

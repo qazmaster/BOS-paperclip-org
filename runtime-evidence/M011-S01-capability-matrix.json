@@ -1,0 +1,781 @@
+{
+  "schema_version": "m011-s01-capability-matrix/v1",
+  "artifact_type": "capability-reconciliation-matrix",
+  "phase": "M011-S01",
+  "generated_at": "2026-06-03T00:25:52.991Z",
+  "safety": {
+    "read_only": true,
+    "plaintext_secrets_requested_or_logged": false,
+    "external_mutations": 0,
+    "direct_db_mutation": false
+  },
+  "status_enum": [
+    "confirmed",
+    "local-only",
+    "fallback-only",
+    "blocked",
+    "unknown"
+  ],
+  "status_counts": {
+    "confirmed": 5,
+    "local-only": 4,
+    "fallback-only": 5
+  },
+  "source_files": [
+    {
+      "path": "plugin-bos-light/src/missionIntake.ts",
+      "exists": true,
+      "sha256": "bb0969fee98a35b775387c2b8f7cef4d5eb157c463b0880be6a0eb627100bfd9",
+      "bytes": 10026
+    },
+    {
+      "path": "plugin-bos-light/src/missionRouter.ts",
+      "exists": true,
+      "sha256": "2e14e75f96c688caad0225e3a1c029463e40f08148c26641cce5a3cd64aa8e7f",
+      "bytes": 11277
+    },
+    {
+      "path": "plugin-bos-light/src/grantPolicy.ts",
+      "exists": true,
+      "sha256": "3f26bd1e173761668a16df8d37cbd3d861af2351c221a6839de3a94a77fb4ea3",
+      "bytes": 5930
+    },
+    {
+      "path": "plugin-bos-light/src/hitlGovernance.ts",
+      "exists": true,
+      "sha256": "1ef7f817215f66db480953d43d05896d7b5c7d6ef4995eca26d9a7b1e7b768b6",
+      "bytes": 11047
+    },
+    {
+      "path": "plugin-bos-light/src/externalIO.ts",
+      "exists": true,
+      "sha256": "2e1ada1c87ae439d8e48133ee8e59281ca8f6490aecb8e915afd05af92e1df61",
+      "bytes": 16748
+    },
+    {
+      "path": "plugin-bos-light/src/gitOperations.ts",
+      "exists": true,
+      "sha256": "f27f930f27ad57a78c0dc990d9ccc9dd0712127b6ad0b72017163bf8a2905af6",
+      "bytes": 8349
+    },
+    {
+      "path": "plugin-bos-light/src/qaReview.ts",
+      "exists": true,
+      "sha256": "1c95e12714f6cbf7cda3e84db21090aed88b47c45626e0d239f9bc584f188a01",
+      "bytes": 9084
+    },
+    {
+      "path": "plugin-bos-light/tests/missionIntake.test.ts",
+      "exists": true,
+      "sha256": "8d0d34fd53053e33a39862f25377c2932f356efa2010598cbe201a5997877674",
+      "bytes": 10029
+    },
+    {
+      "path": "plugin-bos-light/tests/hitlGovernance.test.ts",
+      "exists": true,
+      "sha256": "25f2dbf966a6d5ab15dfc96db294cfec83f58a96c2b72e73606f91f179319ba0",
+      "bytes": 9212
+    },
+    {
+      "path": "plugin-bos-light/tests/externalIO.test.ts",
+      "exists": true,
+      "sha256": "49a7ffaeded224e721df94b64beadd1ee0304dda0ec01d7e11eba6d3f6d5cb94",
+      "bytes": 17038
+    },
+    {
+      "path": "plugin-bos-light/tests/gitOperations.test.ts",
+      "exists": true,
+      "sha256": "5caf40b6e91124d33219663ae82ad6da25bd7da7742ee8254ddfdc83e4b8b9c1",
+      "bytes": 14088
+    },
+    {
+      "path": "plugin-bos-light/tests/qaReview.test.ts",
+      "exists": true,
+      "sha256": "791ad016ca0933109aa8b9fedcca988ad0fafb4c229aec93fea461082ee7ba79",
+      "bytes": 9682
+    },
+    {
+      "path": "plugin-bos-light/tests/e2eWorkflow.test.ts",
+      "exists": true,
+      "sha256": "669356f430f97e36dbd92b2a17b793cff8c9a601cab641a879bc0bfa9de04435",
+      "bytes": 34636
+    }
+  ],
+  "evidence_inventory": {
+    "company": {
+      "path": "runtime-evidence/M005-S02-company-template-runtime-probe-live.json",
+      "exists": true,
+      "passing": true,
+      "artifact_type": "runtime-execution-proof",
+      "promotions": [
+        "company.template_imported",
+        "company.divisions_active"
+      ],
+      "blocker_codes": [],
+      "generated_at": "2026-06-01T03:05:00Z"
+    },
+    "resources": {
+      "path": "runtime-evidence/M005-S03-resource-intake-runtime-probe-live.json",
+      "exists": true,
+      "passing": true,
+      "artifact_type": "runtime-execution-proof",
+      "promotions": [
+        "resource.credential_storage",
+        "resource.secret_resolution"
+      ],
+      "blocker_codes": [],
+      "generated_at": "2026-06-01T03:15:00Z"
+    },
+    "git": {
+      "path": "runtime-evidence/M005-S04-git-hybrid-runtime-probe-live.json",
+      "exists": true,
+      "passing": true,
+      "artifact_type": "runtime-execution-proof",
+      "promotions": [
+        "git.clone",
+        "git.branch",
+        "git.commit",
+        "git.push",
+        "hybrid.mirror"
+      ],
+      "blocker_codes": [],
+      "generated_at": "2026-06-01T03:10:00Z"
+    },
+    "mission": {
+      "path": "runtime-evidence/M005-S05-e2e-mission-runtime-probe-live.json",
+      "exists": true,
+      "passing": true,
+      "artifact_type": "runtime-execution-proof",
+      "promotions": [
+        "mission.create",
+        "mission.assign",
+        "mission.lifecycle"
+      ],
+      "blocker_codes": [],
+      "generated_at": "2026-06-01T03:20:00Z"
+    },
+    "governance": {
+      "path": "runtime-evidence/M005-S05-e2e-governance-probe.json",
+      "exists": true,
+      "passing": false,
+      "artifact_type": "fail-closed-blocker",
+      "promotions": [],
+      "blocker_codes": [
+        "missing_github_token",
+        "missing_paperclip_api_key"
+      ],
+      "generated_at": "2026-05-31T23:26:34.885851Z"
+    },
+    "plugin": {
+      "path": "runtime-evidence/M006-S01-plugin-live-registration.json",
+      "exists": true,
+      "passing": false,
+      "artifact_type": "fail-closed-blocker",
+      "promotions": [],
+      "blocker_codes": [
+        "extended_route_discovery_unsupported",
+        "piko_tools_not_observed_extended",
+        "plugin_health_endpoint_unsupported",
+        "plugin_install_all_blocked",
+        "plugin_install_endpoint_unsupported",
+        "plugin_install_failed",
+        "plugin_not_found_extended_discovery",
+        "plugin_not_loaded",
+        "tool_registry_extended_unsupported"
+      ],
+      "generated_at": "2026-06-01T06:48:50Z"
+    },
+    "runtimeInventory": {
+      "path": "runtime-evidence/M006-S00-runtime-capability-inventory.json",
+      "exists": true,
+      "passing": false,
+      "artifact_type": "fail-closed-blocker",
+      "promotions": [],
+      "blocker_codes": [
+        "comment_readback_failed",
+        "comment_readback_hash_missing",
+        "document_readback_failed",
+        "document_readback_hash_missing",
+        "issue_readback_failed",
+        "missing_auth",
+        "missing_base_url",
+        "missing_company_id",
+        "missing_secret_env",
+        "piko_tools_not_observed",
+        "plugin_not_found",
+        "runtime_version_build_missing",
+        "unexpected_comment_side_effect_count",
+        "unexpected_document_side_effect_count",
+        "unexpected_issue_side_effect_count"
+      ],
+      "generated_at": "2026-06-01T11:13:55Z"
+    },
+    "m010E2e": {
+      "path": "plugin-bos-light/runtime-evidence/M010-S04-e2e-workflow.json",
+      "exists": true,
+      "passing": false,
+      "artifact_type": null,
+      "promotions": [],
+      "blocker_codes": [],
+      "generated_at": "2026-06-02T19:59:51.388Z"
+    }
+  },
+  "capabilities": [
+    {
+      "key": "company.divisions_active",
+      "surface": "Paperclip /BOS company with seven BOS Light divisions",
+      "status": "confirmed",
+      "category": "live-runtime-proof",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S02-company-template-runtime-probe-live.json",
+          "exists": true,
+          "passing": true,
+          "artifact_type": "runtime-execution-proof",
+          "promotions": [
+            "company.template_imported",
+            "company.divisions_active"
+          ],
+          "blocker_codes": [],
+          "generated_at": "2026-06-01T03:05:00Z"
+        }
+      ],
+      "blockers": [],
+      "sources": [
+        "company-template/bos-company-template.json"
+      ],
+      "notes": "Canonical /BOS company evidence supersedes old missing-auth import-prep rows for division visibility only.",
+      "ledger": {
+        "ledger_key": "company_template.import_export",
+        "ledger_status": "unvalidated",
+        "evidence_source": "M005 S02 probe runtime-evidence/M005-S02-company-template-probe.json: fail-closed-blocker artifact, preflight_blocked due to missing_auth, divisions_missing_after_fallback; zero capability promotions; local_validation_status=success; template_schema_version=0.1-v1.4.1; 7 divisions expected, 0 present.",
+        "blocker_text": "M005 S02 blocked: missing_auth prevents all Paperclip API calls; divisions_missing_after_fallback means no direct-creation fallback succeeded. Cannot claim native company import/export support until live auth plus successful import or direct-creation readback confirms 7 v1.4.1 divisions.",
+        "proof_command": "python3 scripts/validate_m005_s02_company_template_probe.py --evidence runtime-evidence/M005-S02-company-template-probe.json --allow-blocker"
+      }
+    },
+    {
+      "key": "resource.secret_resolution",
+      "surface": "Paperclip secrets API credential storage and resolution",
+      "status": "confirmed",
+      "category": "live-runtime-proof",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S03-resource-intake-runtime-probe-live.json",
+          "exists": true,
+          "passing": true,
+          "artifact_type": "runtime-execution-proof",
+          "promotions": [
+            "resource.credential_storage",
+            "resource.secret_resolution"
+          ],
+          "blocker_codes": [],
+          "generated_at": "2026-06-01T03:15:00Z"
+        }
+      ],
+      "blockers": [],
+      "sources": [
+        "plugin-bos-light/src/grantPolicy.ts"
+      ],
+      "notes": "Confirms secrets API/storage readback, not permission to disclose or transmit secrets externally.",
+      "ledger": null
+    },
+    {
+      "key": "mission.lifecycle",
+      "surface": "Native Paperclip mission issue create, assign, lifecycle",
+      "status": "confirmed",
+      "category": "live-runtime-proof",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S05-e2e-mission-runtime-probe-live.json",
+          "exists": true,
+          "passing": true,
+          "artifact_type": "runtime-execution-proof",
+          "promotions": [
+            "mission.create",
+            "mission.assign",
+            "mission.lifecycle"
+          ],
+          "blocker_codes": [],
+          "generated_at": "2026-06-01T03:20:00Z"
+        }
+      ],
+      "blockers": [],
+      "sources": [
+        "plugin-bos-light/src/missionIntake.ts",
+        "plugin-bos-light/src/missionRouter.ts"
+      ],
+      "notes": "Confirms native issue lifecycle mission path, not plugin-host tool invocation.",
+      "ledger": {
+        "ledger_key": "issues.native",
+        "ledger_status": "confirmed",
+        "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue create/readback, issue ref e7ede16c-6535-41ef-bd44-3f9d24980caf, readback status 200, and sha256 391e92efd9d78c673e1abd821e01b22fe29eed9056a25d69b7f5249007c102ce. M006 S00 regression smoke re-confirms: issue create/readback OK, issue ref e02de4e1-9fe8-4df8-b39a-2230b646c71e, readback status 200, sha256 616b9ced858464b0cb106af1e6b344b3caf03f1b86102842819b84b8471e2ff7.",
+        "blocker_text": "",
+        "proof_command": "python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final (verifies runtime version/build, readbacks.issue.ok, side_effect_counts.issues_created=1, no core/DB/secret violations, and zero Hermes/GSD-Pi/approval side effects)."
+      }
+    },
+    {
+      "key": "artifact.issue_document_comment_native",
+      "surface": "Native Paperclip issue, document, and comment artifact surfaces",
+      "status": "confirmed",
+      "category": "live-runtime-proof",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M006-S00-runtime-capability-inventory.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "comment_readback_failed",
+            "comment_readback_hash_missing",
+            "document_readback_failed",
+            "document_readback_hash_missing",
+            "issue_readback_failed",
+            "missing_auth",
+            "missing_base_url",
+            "missing_company_id",
+            "missing_secret_env",
+            "piko_tools_not_observed",
+            "plugin_not_found",
+            "runtime_version_build_missing",
+            "unexpected_comment_side_effect_count",
+            "unexpected_document_side_effect_count",
+            "unexpected_issue_side_effect_count"
+          ],
+          "generated_at": "2026-06-01T11:13:55Z"
+        },
+        {
+          "path": "runtime-evidence/M006-S01-plugin-live-registration.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "extended_route_discovery_unsupported",
+            "piko_tools_not_observed_extended",
+            "plugin_health_endpoint_unsupported",
+            "plugin_install_all_blocked",
+            "plugin_install_endpoint_unsupported",
+            "plugin_install_failed",
+            "plugin_not_found_extended_discovery",
+            "plugin_not_loaded",
+            "tool_registry_extended_unsupported"
+          ],
+          "generated_at": "2026-06-01T06:48:50Z"
+        }
+      ],
+      "blockers": [],
+      "sources": [
+        "runtime-evidence/M006-S01-plugin-live-registration.json",
+        "plugin-bos-light/capabilities.paperclip-runtime.json"
+      ],
+      "notes": "Confirmed by prior native readback evidence; current S02 reprobe will refresh auth-dependent visibility.",
+      "ledger": {
+        "ledger_key": "documents.native",
+        "ledger_status": "confirmed",
+        "evidence_source": "S04 live Paperclip sandbox run runtime-evidence/M002-S04-live-artifact-flow.json records runtime version 0.3.1, build health.version:0.3.1, one supported native issue document create/readback, document ref 7595fd85-80e5-41a4-96c7-01cb3c2de588, readback status 200, and sha256 a9a25242499c29048662f4ca340c81e3088d6016f17cc53bc6da2d23e3d04663 containing BPI, Blueprint, Betting Table, Eval Gate, and Circuit Breaker text. M006 S00 regression smoke re-confirms: document create/readback OK, document ref 7b588916-1f46-4fd9-a44a-f23363479b70, readback status 200, sha256 eac173c1eff8cf6f9fd18f4cd8cd34bcbb51bbdbf19afc5fca3ad921c3f6c586.",
+        "blocker_text": "",
+        "proof_command": "python3 scripts/validate_s04_live_artifact_flow.py --evidence runtime-evidence/M002-S04-live-artifact-flow.json --phase final (verifies runtime version/build, readbacks.document.ok, side_effect_counts.documents_created=1, artifact family snippets, no core/DB/secret violations, and zero Hermes/GSD-Pi/approval side effects)."
+      }
+    },
+    {
+      "key": "git.local_hybrid_push",
+      "surface": "Local git clone, branch, commit, push with artifact mirror posture",
+      "status": "confirmed",
+      "category": "live-runtime-proof",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S04-git-hybrid-runtime-probe-live.json",
+          "exists": true,
+          "passing": true,
+          "artifact_type": "runtime-execution-proof",
+          "promotions": [
+            "git.clone",
+            "git.branch",
+            "git.commit",
+            "git.push",
+            "hybrid.mirror"
+          ],
+          "blocker_codes": [],
+          "generated_at": "2026-06-01T03:10:00Z"
+        }
+      ],
+      "blockers": [],
+      "sources": [
+        "plugin-bos-light/src/gitOperations.ts"
+      ],
+      "notes": "Confirms local git/SSH push path, not GitHub API PR/merge/CI operations.",
+      "ledger": {
+        "ledger_key": "git.local_cli",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S04 probe runtime-evidence/M005-S04-git-hybrid-probe.json: fail-closed-blocker artifact, git_binary_check.available=true, git_ls_remote skipped due to missing_aipay_git_url and missing_git_credentials; bounded ls-remote not attempted; zero capability promotions.",
+        "blocker_text": "M005 S04 blocked: missing_aipay_git_url and missing_git_credentials prevent authenticated git ls-remote probe. Cannot claim git remote access until live credentials are available. Git binary is present and responsive.",
+        "proof_command": "python3 scripts/validate_m005_s04_git_hybrid_probe.py --evidence runtime-evidence/M005-S04-git-hybrid-probe.json --allow-blocker"
+      }
+    },
+    {
+      "key": "workflow.mission_intake",
+      "surface": "Div7 mission framing and approval artifact creation",
+      "status": "local-only",
+      "category": "implemented-and-tested",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S05-e2e-governance-probe.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "missing_github_token",
+            "missing_paperclip_api_key"
+          ],
+          "generated_at": "2026-05-31T23:26:34.885851Z"
+        }
+      ],
+      "blockers": [
+        "missing_github_token",
+        "missing_paperclip_api_key"
+      ],
+      "sources": [
+        "plugin-bos-light/src/missionIntake.ts",
+        "plugin-bos-light/tests/missionIntake.test.ts"
+      ],
+      "notes": "Implemented and locally smoke-tested; live artifact mirroring remains blocked in governance proof when Paperclip auth is absent.",
+      "ledger": {
+        "ledger_key": "workflow.mission_intake",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: mission_intake_smoke.ok=true via simulated adapter; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+        "blocker_text": "M005 S05 blocked: missing Paperclip auth prevents live artifact creation for human approval requests. Mission intake logic is validated locally (18 vitest tests pass) but live approval gate is unexercised.",
+        "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker"
+      }
+    },
+    {
+      "key": "workflow.hitl_gates",
+      "surface": "Resource, batch, deploy, and human gate artifacts",
+      "status": "local-only",
+      "category": "implemented-and-tested",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S05-e2e-governance-probe.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "missing_github_token",
+            "missing_paperclip_api_key"
+          ],
+          "generated_at": "2026-05-31T23:26:34.885851Z"
+        }
+      ],
+      "blockers": [
+        "missing_github_token",
+        "missing_paperclip_api_key"
+      ],
+      "sources": [
+        "plugin-bos-light/src/hitlGovernance.ts",
+        "plugin-bos-light/tests/hitlGovernance.test.ts"
+      ],
+      "notes": "Gate creation and timeout/decision logic are implemented; live human polling and artifact mirroring need auth proof.",
+      "ledger": {
+        "ledger_key": "workflow.hitl_gates",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: hitl_gates_smoke.ok=true via simulated adapter; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+        "blocker_text": "M005 S05 blocked: missing Paperclip auth prevents live artifact creation for HITL gates. Gate logic is validated locally (18 vitest tests pass) but live human decision polling is unexercised.",
+        "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker"
+      }
+    },
+    {
+      "key": "workflow.branch_policy",
+      "surface": "Branch policy blocks direct main/master and force push",
+      "status": "local-only",
+      "category": "implemented-and-tested",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S05-e2e-governance-probe.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "missing_github_token",
+            "missing_paperclip_api_key"
+          ],
+          "generated_at": "2026-05-31T23:26:34.885851Z"
+        }
+      ],
+      "blockers": [
+        "missing_github_token",
+        "missing_paperclip_api_key"
+      ],
+      "sources": [
+        "plugin-bos-light/src/hitlGovernance.ts",
+        "plugin-bos-light/src/gitOperations.ts"
+      ],
+      "notes": "Smoke proof shows policy decisions; live git push enforcement beyond prior git proof remains a future integrated run.",
+      "ledger": {
+        "ledger_key": "workflow.branch_policy",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: branch_policy_smoke.ok=true via simulated enforcement; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+        "blocker_text": "M005 S05 blocked: branch policy logic is validated locally (tests pass) but live git push enforcement requires authenticated git remote access.",
+        "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker"
+      }
+    },
+    {
+      "key": "workflow.qa_review",
+      "surface": "Div5 QA review, diff hash, security scan, eval gate",
+      "status": "local-only",
+      "category": "implemented-and-tested",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S05-e2e-governance-probe.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "missing_github_token",
+            "missing_paperclip_api_key"
+          ],
+          "generated_at": "2026-05-31T23:26:34.885851Z"
+        },
+        {
+          "path": "plugin-bos-light/runtime-evidence/M010-S04-e2e-workflow.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": null,
+          "promotions": [],
+          "blocker_codes": [],
+          "generated_at": "2026-06-02T19:59:51.388Z"
+        }
+      ],
+      "blockers": [
+        "missing_github_token",
+        "missing_paperclip_api_key"
+      ],
+      "sources": [
+        "plugin-bos-light/src/qaReview.ts",
+        "plugin-bos-light/tests/qaReview.test.ts"
+      ],
+      "notes": "Local QA logic is covered and M010 E2E passes; live Paperclip artifact mirroring remains auth-dependent.",
+      "ledger": {
+        "ledger_key": "workflow.qa_review",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: qa_review_smoke.ok=true via simulated diff review; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+        "blocker_text": "M005 S05 blocked: QA review logic is validated locally (21 vitest tests pass) but live artifact mirroring requires Paperclip auth.",
+        "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker"
+      }
+    },
+    {
+      "key": "workflow.pr_merge_ci",
+      "surface": "Div6 GitHub PR create, approve, merge, workflow trigger/watch",
+      "status": "fallback-only",
+      "category": "implemented-but-live-blocked",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S05-e2e-governance-probe.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "missing_github_token",
+            "missing_paperclip_api_key"
+          ],
+          "generated_at": "2026-05-31T23:26:34.885851Z"
+        }
+      ],
+      "blockers": [
+        "missing_github_token",
+        "missing_paperclip_api_key"
+      ],
+      "sources": [
+        "plugin-bos-light/src/externalIO.ts",
+        "plugin-bos-light/tests/externalIO.test.ts"
+      ],
+      "notes": "Implemented via gh CLI and GitHub HTTP adapter, but live PR/merge/CI is unexercised without GitHub token and explicit external-service confirmation.",
+      "ledger": {
+        "ledger_key": "workflow.pr_merge",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S05 probe runtime-evidence/M005-S05-e2e-governance-probe.json: div6_pr_smoke.ok=true via simulated GitHub API; artifact_type=fail-closed-blocker because GITHUB_TOKEN and PAPERCLIP_API_KEY are missing.",
+        "blocker_text": "M005 S05 blocked: missing GITHUB_TOKEN prevents authenticated GitHub API access. ExternalIO logic is validated locally (28 vitest tests pass) but live PR/merge/CI operations are unexercised.",
+        "proof_command": "python3 scripts/validate_m005_s05_e2e_governance_probe.py --evidence runtime-evidence/M005-S05-e2e-governance-probe.json --allow-blocker"
+      }
+    },
+    {
+      "key": "plugin.host_registration",
+      "surface": "BOS Light loaded as Paperclip plugin and observable through supported host readback",
+      "status": "fallback-only",
+      "category": "host-surface-blocked",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M006-S01-plugin-live-registration.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "extended_route_discovery_unsupported",
+            "piko_tools_not_observed_extended",
+            "plugin_health_endpoint_unsupported",
+            "plugin_install_all_blocked",
+            "plugin_install_endpoint_unsupported",
+            "plugin_install_failed",
+            "plugin_not_found_extended_discovery",
+            "plugin_not_loaded",
+            "tool_registry_extended_unsupported"
+          ],
+          "generated_at": "2026-06-01T06:48:50Z"
+        }
+      ],
+      "blockers": [
+        "extended_route_discovery_unsupported",
+        "piko_tools_not_observed_extended",
+        "plugin_health_endpoint_unsupported",
+        "plugin_install_all_blocked",
+        "plugin_install_endpoint_unsupported",
+        "plugin_install_failed",
+        "plugin_not_found_extended_discovery",
+        "plugin_not_loaded",
+        "tool_registry_extended_unsupported"
+      ],
+      "sources": [
+        "plugin-bos-light/manifest.paperclip-plugin.json",
+        "plugin-bos-light/src/worker.ts"
+      ],
+      "notes": "Do not promote from local manifest or optional chaining; route discovery returned unsupported/404 in existing live proof.",
+      "ledger": {
+        "ledger_key": "plugin.runtime.registration",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested plugin key bos-light but observed no live plugin registration keys and no readback proof because live Paperclip base URL/API key inputs were absent. M006 S01 live probe runtime-evidence/M006-S01-plugin-live-registration.json (2026-06-01) probed 13 extended plugin routes and found all returning HTTP 404 with blocker codes extended_route_discovery_unsupported, plugin_install_all_blocked, plugin_install_endpoint_unsupported, plugin_not_found_extended_discovery. company-template/bos-company-template.json contains no plugin-related fields.",
+        "blocker_text": "Do not ship BOS Light as a loaded Paperclip plugin until S05-style or S01-style evidence records runtime version/build and plugin registration readback for bos-light. S01 blocker codes: extended_route_discovery_unsupported, plugin_install_all_blocked, plugin_install_endpoint_unsupported, plugin_not_found_extended_discovery.",
+        "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only plugin_registration evidence; confirmation requires live route readback proof for bos-light plugin load. M006 S01 validator: python3 scripts/validate_m006_s01_plugin_live_registration.py --evidence runtime-evidence/M006-S01-plugin-live-registration.json --allow-blocker"
+      }
+    },
+    {
+      "key": "plugin.piko_tools",
+      "surface": "piko:* tool registration and invocation through Paperclip host",
+      "status": "fallback-only",
+      "category": "host-surface-blocked",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M006-S01-plugin-live-registration.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "extended_route_discovery_unsupported",
+            "piko_tools_not_observed_extended",
+            "plugin_health_endpoint_unsupported",
+            "plugin_install_all_blocked",
+            "plugin_install_endpoint_unsupported",
+            "plugin_install_failed",
+            "plugin_not_found_extended_discovery",
+            "plugin_not_loaded",
+            "tool_registry_extended_unsupported"
+          ],
+          "generated_at": "2026-06-01T06:48:50Z"
+        }
+      ],
+      "blockers": [
+        "extended_route_discovery_unsupported",
+        "piko_tools_not_observed_extended",
+        "plugin_health_endpoint_unsupported",
+        "plugin_install_all_blocked",
+        "plugin_install_endpoint_unsupported",
+        "plugin_install_failed",
+        "plugin_not_found_extended_discovery",
+        "plugin_not_loaded",
+        "tool_registry_extended_unsupported"
+      ],
+      "sources": [
+        "plugin-bos-light/src/worker.ts",
+        "plugin-bos-light/manifest.paperclip-plugin.json"
+      ],
+      "notes": "No piko tool readback or invocation result is present; local TypeScript functions remain callable directly only.",
+      "ledger": {
+        "ledger_key": "registration.tools",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S01 S05-style probe runtime-evidence/M005-S01-plugin-ui-surface-probe.json requested piko:* tools but observed registered_tool_keys=[] and readback_proof=null because live Paperclip base URL/API key inputs were absent. M006 S01 live probe runtime-evidence/M006-S01-plugin-live-registration.json (2026-06-01) probed 4 extended tool registry routes and found all returning HTTP 404 with blocker codes tool_registry_extended_unsupported, piko_tools_not_observed_extended. Zero piko:* tools observed.",
+        "blocker_text": "Do not present piko:* tools or GSD-Pi/Div4 quality automation as host-available until S05-style or S01-style registration and invocation readbacks pass. S01 blocker codes: tool_registry_extended_unsupported, piko_tools_not_observed_extended.",
+        "proof_command": "python3 scripts/validate_s05_plugin_ui_surface_probe.py --evidence runtime-evidence/M005-S01-plugin-ui-surface-probe.json --phase final validates fallback-only tools evidence; confirmation requires registered piko:* tool readback plus at least one successful piko invocation result. M006 S01 validator: python3 scripts/validate_m006_s01_plugin_live_registration.py --evidence runtime-evidence/M006-S01-plugin-live-registration.json --allow-blocker"
+      }
+    },
+    {
+      "key": "runtime.hermes_xiaomi_execution",
+      "surface": "Hermes Xiaomi model runtime execution as Paperclip-owned agent run",
+      "status": "fallback-only",
+      "category": "runtime-execution-blocked",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "adapter_registry_auth_denied",
+            "missing_auth",
+            "missing_xiaomi_api_key",
+            "missing_xiaomi_base_url",
+            "test_environment_auth_denied"
+          ],
+          "generated_at": "2026-05-31T18:52:36.520324Z"
+        }
+      ],
+      "blockers": [
+        "adapter_registry_auth_denied",
+        "missing_auth",
+        "missing_xiaomi_api_key",
+        "missing_xiaomi_base_url",
+        "test_environment_auth_denied"
+      ],
+      "sources": [
+        "plugin-bos-light/capabilities.paperclip-runtime.json"
+      ],
+      "notes": "Requires supported adapter registry readback, passing testEnvironment, exactly one bounded run, wakeCountDelta=1, and resultJson.bos before promotion.",
+      "ledger": {
+        "ledger_key": "hermes.execution.xiaomi",
+        "ledger_status": "fallback-only",
+        "evidence_source": "M005 S01 Hermes Xiaomi probe runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json recorded adapterType hermes_local with provider xiaomi and model mimo-v2.5-pro, but preflight failed with blocker codes adapter_registry_auth_denied, missing_auth, missing_xiaomi_api_key, missing_xiaomi_base_url, test_environment_auth_denied; bounded_runtime_invocations=0; no resultJson.bos or wakeCountDelta produced.",
+        "blocker_text": "Cannot promote Hermes Xiaomi execution to confirmed until adapter registry auth succeeds, testEnvironment passes, at least one bounded runtime invocation produces resultJson.bos, and wakeCountDelta=1 with runtime version/build readback.",
+        "proof_command": "python3 scripts/validate_m005_s01_hermes_xiaomi_probe.py --evidence runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe.json --allow-blocker (validates fail-closed-blocker artifact schema, no_core_modification, safety policies, and precise blocker codes)."
+      }
+    },
+    {
+      "key": "runtime.gsdpi_execution",
+      "surface": "GSD-Pi local adapter execution with BosAdapterResult",
+      "status": "fallback-only",
+      "category": "runtime-execution-blocked",
+      "evidence": [
+        {
+          "path": "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+          "exists": true,
+          "passing": false,
+          "artifact_type": "fail-closed-blocker",
+          "promotions": [],
+          "blocker_codes": [
+            "adapter_registry_unavailable",
+            "health_unavailable",
+            "missing_auth",
+            "test_environment_not_passing"
+          ],
+          "generated_at": "2026-05-30T06:40:28.183418Z"
+        }
+      ],
+      "blockers": [
+        "adapter_registry_unavailable",
+        "health_unavailable",
+        "missing_auth",
+        "test_environment_not_passing"
+      ],
+      "sources": [
+        "adapters/gsdpi-local/src/index.ts",
+        "plugin-bos-light/capabilities.paperclip-runtime.json"
+      ],
+      "notes": "Memory and evidence say gsdpi_local remains unregistered; local package readiness is not runtime capability promotion.",
+      "ledger": null
+    }
+  ]
+}
