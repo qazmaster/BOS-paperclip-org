@@ -10,15 +10,15 @@ Build **BOS Light for Paperclip**: a Paperclip-native organizational intelligenc
 
 ## Current canonical doctrine
 
-The active doctrine is the **BOS Light v1.4.1 package**. Read it first:
+The active doctrine is the **BOS Light v1.4.2 R026 package**. Read it first:
 
-1. `docs/BOS_Light_v1_4_1_CANONICAL_ORG.md`
-2. `docs/BOS_Light_v1_4_1_Function_Migration_Matrix.md`
-3. `docs/BOS_Light_v1_4_1_Tool_Permission_Matrix.md`
-4. `docs/BOS_Light_v1_4_1_Data_Contracts.md`
-5. `docs/BOS_Light_v1_4_1_Acceptance_Tests_A12_A20.md`
+1. `docs/BOS_Light_v1_4_1_CANONICAL_ORG.md` — active org model
+2. `docs/BOS_Light_v1_4_2_R026_Agent_Boundary_Patch.md` — Div7→Div1 delegation
+3. `docs/BOS_Light_v1_4_1_Tool_Permission_Matrix.md` — tool boundaries
+4. `docs/BOS_Light_v1_4_1_Data_Contracts.md` — payload contracts
+5. `configs/routing_modes_v1_4_2.json` — routing modes
 
-Then read the v1.4.1 protocols in `skills/`:
+Then read the v1.4.2 protocols in `skills/`:
 
 - `skills/SKILL_HCO_ROUTING_CONTROL.md`
 - `skills/SKILL_EXTERNAL_IO_GATEWAY.md`
@@ -50,6 +50,10 @@ Do **not** port BOS Chimera 4.1 as a full kernel. Paperclip already provides the
 - Div5.QualificationsLibraryLearning owns independent qualification, quarantine, sanitized knowledge and memory/KB approval.
 - Div6.External is the only external-world/DMZ division.
 
+## R026 invariant
+
+Div7 decisions are not terminal operational routes. Every non-policy-only Div7 decision MUST emit DecisionDelegated to Div1.HCO. Div1.HCO MUST perform all operational routing after Div7 decision.
+
 ## The most important constraints
 
 1. No BOS Kernel.
@@ -60,101 +64,40 @@ Do **not** port BOS Chimera 4.1 as a full kernel. Paperclip already provides the
 6. External IO routes through Div5 local check, Div3 when paid/credentialed, Div6 collection, then Div5 quarantine.
 7. Plugin runtime assumptions must be validated against current Paperclip before implementation.
 
-## M005 live runtime proof
-
-M005 proved all core integration surfaces against live Paperclip:
-
-- **S01** Hermes Xiaomi execution — `runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe-live*.json`
-- **S02** Company template (7 divisions) — `runtime-evidence/M005-S02-company-template-runtime-probe-live.json`
-- **S03** Resource intake / secrets — `runtime-evidence/M005-S03-resource-intake-runtime-probe-live.json`
-- **S04** Git hybrid operations — `runtime-evidence/M005-S04-git-hybrid-runtime-probe-live.json`
-- **S05** E2E mission creation — `runtime-evidence/M005-S05-e2e-mission-runtime-probe-live.json`
-
-Read `BOS_M005_DEVELOPMENT_HANDOFF.md` for full results, deferred items, and next priorities.
-
-## Historical context to read after v1.4.1
-
-- `docs/01_CONTEXT_AND_DECISION.md`
-- `docs/03_IMPLEMENTATION_PLAN_V1_2.md`
-- `docs/04_DATA_CONTRACTS.md`
-- `docs/06_ACCEPTANCE_TESTS.md`
-- `docs/07_RISKS_AND_SPIKES.md`
-- `BOS_M002_DEVELOPMENT_HANDOFF.md` — M002 runtime validation context
-- `BOS_M004_DEVELOPMENT_HANDOFF.md` — M004 state and blockers (superseded by M005)
-- `HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md`
-- `agents/README.md`
-- `plugin-bos-light/README.md`
-
-Treat these files as historical implementation/runtime background wherever they conflict with v1.4.1.
-
-## Validation before handoff
-
-Run:
+## Validation
 
 ```bash
+npm install
 python3 scripts/validate_handoff.py
-```
-
-A passing validator means the root entrypoints, baseline handoff files, v1.4.1 doctrine/skill package, and manifest hashes are present and current. It does **not** prove live Paperclip runtime compatibility.
-
-## M008 architecture update (Div7 delegation + Div1 routing)
-
-M008 fixed the critical architecture gap where Div7 could become a terminal handler for technical work. Read `HANDOFF_M008_COMPLETE.md` for full details.
-
-### Key changes
-
-- **Two-pass routing**: Pre-decision on MissionSignals (deterministic, no LLM), post-decision on Cynefin domain from DecisionDelegated packet.
-- **Div7 → Div1 delegation**: Every non-policy-only Div7 decision emits DecisionDelegated to Div1.HCO. Div7 cannot self-execute technical work.
-- **Division authority clarification**: Div7=regime controller, Div1=operational authority, Div3=capability gatekeeper, Div4=production executor, Div5=QA/verification, Div6=external gateway.
-- **Grant policy**: Div3 issues BudgetGrant/AccessGrant only in response to Div1 requests. Routine grants deterministic. External-world access Div6-only.
-- **Div4 protocol**: Blockers raised to Div1 only. QA handoff through Div1 to Div5. No direct cross-division communication.
-
-### Key invariants
-
-```
-No route → no grant.
-No budget → no access.
-No access → no execution.
-No Div6 route → no external-world capability.
-Div7 decision → DecisionDelegated → Div1 routing (not terminal).
-Div4 builds, but does not decide the system.
-```
-
-### Test suite
-
-```bash
 cd plugin-bos-light && npx vitest run    # 1424 tests, 63 files
-cd plugin-bos-light && npx tsc --noEmit  # TypeScript (pre-existing errors in test files)
 ```
 
-### R026 v1.4.2 patch alignment
+## Milestone history
 
-Our implementation aligns 95%+ with the official v1.4.2 R026 Agent Boundary Update patch. See `HANDOFF_M008_COMPLETE.md` for detailed comparison table.
+All 11 milestones complete. Read handoffs in `docs/handoffs/`:
 
-## Current state (M001-M011 complete)
+- `docs/handoffs/HANDOFF_M008_COMPLETE.md` — Div7 delegation + Div1 routing refactor
+- `docs/handoffs/HANDOFF_M009_COMPLETE.md` — BOS Light Level 2 Plugin Activation
+- `docs/handoffs/HANDOFF_M010_COMPLETE.md` — Plugin integration testing
+- `docs/handoffs/HANDOFF_M011_COMPLETE.md` — Capability ledger reconciliation
 
-All 11 milestones are complete. Read these handoffs for full context:
+Historical docs (v1.2 baseline, M002-M005) are in `docs/archive/`.
 
-- `HANDOFF_M008_COMPLETE.md` — Div7 delegation + Div1 routing refactor
-- `HANDOFF_M009_COMPLETE.md` — BOS Light Level 2 Plugin Activation (959 tests)
-- `HANDOFF_M010_COMPLETE.md` — Plugin integration testing (1250 tests)
-- `.gsd/milestones/M011/M011-SUMMARY.md` — Capability ledger reconciliation
+## What works
 
-### What works
+- Deterministic routing across all 3 Cynefin domains
+- Two-pass architecture with Div7 → Div1 delegation
+- Grant policy enforcement (auto-approve ≤100K, escalation for HIGH risk)
+- Division isolation (Div4 blocked from external tools, Div6-only external IO)
+- Plugin tools (6 tools registered, 1424 tests passing)
+- 7 division agents operational on live Paperclip with Hermes + Xiaomi
 
-- **Deterministic routing** across all 3 Cynefin domains (CLEAR/COMPLICATED/CHAOTIC)
-- **Two-pass architecture** with Div7 → Div1 delegation
-- **Grant policy enforcement** (auto-approve ≤100K, escalation for HIGH risk)
-- **Division isolation** (Div4 blocked from external tools, Div6-only external IO)
-- **Plugin tools** (6 tools registered, 1250 tests passing)
-- **7 division agents** operational on live Paperclip with Hermes + Xiaomi
+## What's blocked
 
-### What's blocked
+- Paperclip plugin runtime — post-V1 feature; tools run via agent execution flow only
+- Live Paperclip mutations — auth required; use secure_env_collect before M012
+- GSD-Pi execution — blocked; supported adapter returns Unknown adapter type
 
-- **Paperclip plugin runtime** — post-V1 feature; tools run via agent execution flow only
-- **Live Paperclip mutations** — auth required; use secure_env_collect before M012
-- **GSD-Pi execution** — blocked; supported adapter returns Unknown adapter type
+## Next milestone: M012
 
-### Next milestone: M012
-
-Plan M012 as "First Real Mission Through Native Paperclip Flow" using `runtime-evidence/M011-S03-reconciled-capability-gate.json`. Before any live Paperclip issue/document/comment mutation, collect Paperclip auth via secure_env_collect and ask for explicit confirmation of the bounded live action.
+Plan M012 as "First Real Mission Through Native Paperclip Flow". Before any live Paperclip mutation, collect auth via secure_env_collect and ask for explicit confirmation.
