@@ -79,6 +79,12 @@ function classifyGhError(exitCode: number | null, stderr: string): ExternalIOEvi
   return "none";
 }
 
+/**
+ * Check if GITHUB_TOKEN is available.
+ *
+ * Environment Variables:
+ *   GITHUB_TOKEN (str): GitHub personal access token for PR/issue operations.
+ */
 export function hasGitHubToken(): boolean {
   return Boolean(process.env.GITHUB_TOKEN);
 }
