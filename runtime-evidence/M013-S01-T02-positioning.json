@@ -1,0 +1,283 @@
+{
+  "task": "T02",
+  "slice": "S01",
+  "milestone": "M013",
+  "title": "aipay.kz Competitive Positioning Analysis",
+  "analysisDate": "2026-06-04T05:53:02.433304",
+  "aipayProfile": {
+    "name": "AiPay (aipay.kz)",
+    "type": "Payment Automation Layer / Kaspi Pay Middleware",
+    "website": "https://www.aipay.kz/en",
+    "targetMarket": "SMBs in Kazakhstan (Instagram shops, services, beauty, restaurants, medical centers) processing 50+ daily orders with manual Kaspi Pay reconciliation pain",
+    "productOffering": [
+      "Invoice creation by phone number (Kaspi Pay integration)",
+      "24/7 automated payment verification",
+      "REST API + Webhooks for CRM/bot integration",
+      "Order matching (amount/identifier/comment)",
+      "Owner dashboard with filters and reports",
+      "Auto-receipts and fiscalization (optional)",
+      "Telegram/WhatsApp bot demo"
+    ],
+    "pricing": "25,000₸/terminal/month (3-month minimum), unlimited transactions, 7-day free trial",
+    "integrations": [
+      "Altegio",
+      "Stiker.ai",
+      "PulseAI",
+      "Custom CRMs",
+      "1C",
+      "Telegram bots"
+    ],
+    "keyDifferentiators": [
+      "Kaspi Pay verification automation (eliminates screenshot checking)",
+      "API-first approach with developer documentation",
+      "Quick setup (1 hour claimed, 1 day for API integration)",
+      "Low barrier: no card required for trial, WhatsApp support",
+      "Niche focus on social commerce SMBs (Instagram shops)"
+    ]
+  },
+  "competitiveMatrix": {
+    "description": "How aipay.kz positions against each T01 competitor",
+    "competitors": [
+      {
+        "competitor": "Kaspi.kz",
+        "relationship": "Platform dependency / upstream",
+        "competitivenessLevel": "low_direct_high_existential",
+        "analysis": "aipay.kz is built ON Kaspi Pay — not competing with Kaspi but adding a verification/automation layer. Kaspi's 14.5M MAU super app is the platform aipay.kz depends on. However, Kaspi could build equivalent verification automation into its merchant app, making aipay.kz redundant. Kaspi's merchant super app (Kaspi Pay) already has basic invoice features. aipay.kz survives by serving the long-tail SMB use case Kaspi doesn't optimize for.",
+        "threatDirection": "upstream_platform_risk",
+        "threatSeverity": 8,
+        "evidence": "Kaspi's 75 transactions/month/active user shows deep engagement. Their merchant acquiring already supports QR and basic invoicing. The risk is Kaspi adding better merchant automation tools directly."
+      },
+      {
+        "competitor": "Halyk Bank",
+        "relationship": "adjacent_indirect",
+        "competitivenessLevel": "low",
+        "analysis": "Halyk competes at the banking/acquiring layer, not the automation layer. Their 8.3M MAU super app and B2B client base (459K) could eventually include merchant automation features, but their focus is institutional banking, not SMB workflow automation. aipay.kz and Halyk operate in different layers of the stack.",
+        "threatDirection": "adjacent",
+        "threatSeverity": 3,
+        "evidence": "Halyk's 22.6% payments volume growth (9M 2025) shows scale but their digital transformation targets mortgage/lending, not merchant verification workflows."
+      },
+      {
+        "competitor": "Freedom Pay",
+        "relationship": "most_direct_competitor",
+        "competitivenessLevel": "high",
+        "analysis": "Freedom Pay is the closest structural competitor — both serve merchants with payment infrastructure. But Freedom Pay targets larger online businesses with full-stack acquiring (gateway + issuing + loyalty), while aipay.kz targets SMBs doing Kaspi Pay reconciliation. Freedom Pay's API-first approach and developer docs overlap with aipay.kz's positioning. If Freedom Pay adds Kaspi Pay verification automation to their stack, aipay.kz loses its core value proposition for larger merchants.",
+        "threatDirection": "direct_competitor",
+        "threatSeverity": 7,
+        "evidence": "Freedom Pay offers card payment processing, invoicing, recurring payments, Apple/Google/Samsung Pay, and full acquiring infrastructure. Their 6M+ customer ecosystem in Freedom Holding and Central Asian regional presence give them distribution advantage."
+      },
+      {
+        "competitor": "Bank CenterCredit (BCC)",
+        "relationship": "adjacent_potential",
+        "competitivenessLevel": "low_medium",
+        "analysis": "BCC's Ant Group partnership for SuperApp development could include merchant automation features, but this is 1-2 years out. BCC is in transformation mode, not competing in the merchant automation niche today. Their Digital Tenge wallet for business shows awareness of merchant digital tools but execution is early-stage.",
+        "threatDirection": "future_adjacent",
+        "threatSeverity": 4,
+        "evidence": "Ant Group partnership (March 2024) + Tuum core banking modernization signals future capability but no merchant automation product exists today."
+      },
+      {
+        "competitor": "Eurasian Bank",
+        "relationship": "non_competitive",
+        "competitivenessLevel": "none",
+        "analysis": "Eurasian Bank operates in traditional retail banking with expat focus. No merchant automation capability. No overlap with aipay.kz's target market or product offering.",
+        "threatDirection": "none",
+        "threatSeverity": 1,
+        "evidence": "Trilingual app targeting expats and small businesses with basic banking — no payment automation or Kaspi integration."
+      },
+      {
+        "competitor": "Digital Tenge (CBDC)",
+        "relationship": "infrastructure_layer",
+        "competitivenessLevel": "low_indirect_high_structural",
+        "analysis": "Digital Tenge is infrastructure, not a direct competitor. But programmable money + government budget integration (starting 2026) could reduce the need for third-party payment verification if transactions become self-verifying via smart contracts. aipay.kz must plan for Digital Tenge integration to stay relevant. This is the highest long-term structural risk.",
+        "threatDirection": "infrastructure_disruption",
+        "threatSeverity": 6,
+        "evidence": "Full-scale phased rollout 2026. Government budgets transitioning to Digital Tenge. Programmable money could make manual verification layers unnecessary for government-adjacent transactions."
+      }
+    ]
+  },
+  "positioningQuadrant": {
+    "description": "Where aipay.kz sits in the competitive landscape",
+    "axes": {
+      "x_axis": "Market breadth (niche ↔ broad)",
+      "y_axis": "Value chain depth (automation layer ↔ full stack)"
+    },
+    "position": {
+      "aipay_kz": {
+        "x": "niche",
+        "y": "automation_layer"
+      },
+      "kaspi": {
+        "x": "broad",
+        "y": "full_stack"
+      },
+      "halyk": {
+        "x": "broad",
+        "y": "full_stack"
+      },
+      "freedom_pay": {
+        "x": "mid_broad",
+        "y": "mid_stack"
+      },
+      "bcc": {
+        "x": "broad",
+        "y": "full_stack"
+      },
+      "eurasian": {
+        "x": "mid_niche",
+        "y": "partial_stack"
+      },
+      "digital_tenge": {
+        "x": "universal",
+        "y": "infrastructure"
+      }
+    },
+    "insight": "aipay.kz occupies a narrow but defensible niche: Kaspi Pay verification automation for SMBs. This is too small for Kaspi/Halyk to prioritize but too Kaspi-dependent for Freedom Pay to target. The risk is market compression if Kaspi adds native verification automation."
+  },
+  "valuePropositionGaps": [
+    {
+      "gap": "Single-platform dependency",
+      "description": "aipay.kz only automates Kaspi Pay. Businesses using multiple payment methods (card acquiring, bank transfers, cash) need separate solutions.",
+      "severity": "high",
+      "mitigation": "Expand to multi-acquirer support or accept the Kaspi-only niche as strategic focus."
+    },
+    {
+      "gap": "No card acquiring capability",
+      "description": "Cannot process Visa/Mastercard transactions. Businesses wanting to offer card payments alongside Kaspi need a second provider (likely Freedom Pay or bank acquiring).",
+      "severity": "medium",
+      "mitigation": "Partner with Freedom Pay or bank acquiring to offer unified reconciliation."
+    },
+    {
+      "gap": "No marketplace/listing integration",
+      "description": "Unlike Kaspi Marketplace, aipay.kz doesn't help businesses list products or reach customers. Pure payment verification layer.",
+      "severity": "low",
+      "mitigation": "Stay focused on verification automation — marketplace is a different business."
+    },
+    {
+      "gap": "Limited cross-border capability",
+      "description": "No cross-border payment support. With Alipay+ integration happening through Kaspi directly, aipay.kz misses the international payment automation opportunity.",
+      "severity": "medium",
+      "mitigation": "Add cross-border invoice automation for businesses serving international customers."
+    },
+    {
+      "gap": "No Digital Tenge integration",
+      "description": "Missing from the Digital Tenge ecosystem. As government budgets transition to programmable money, aipay.kz won't be positioned for public-sector adjacent payments.",
+      "severity": "medium",
+      "mitigation": "Begin Digital Tenge API integration research now; position for early-mover advantage."
+    }
+  ],
+  "underservedNiches": [
+    {
+      "niche": "Instagram/Social Commerce SMBs",
+      "currentSolution": "Manual screenshot checking, spreadsheets",
+      "aipayFit": "high",
+      "marketSize": "Large — social commerce is growing rapidly in KZ, especially beauty, fashion, food delivery",
+      "whyUnderserved": "Kaspi doesn't optimize for social-commerce workflow (manual order matching, delivery coordination). Traditional banks ignore this segment."
+    },
+    {
+      "niche": "Service businesses with recurring payments",
+      "currentSolution": "Manual invoicing, WhatsApp reminders",
+      "aipayFit": "high",
+      "marketSize": "Medium — salons, clinics, fitness, education",
+      "whyUnderserved": "Subscription/recurring payment automation is primitive in KZ. Kaspi Pay doesn't offer subscription billing natively."
+    },
+    {
+      "niche": "Micro-merchants scaling past manual processes",
+      "currentSolution": "Kaspi Pay merchant app (basic)",
+      "aipayFit": "high",
+      "marketSize": "Large — hundreds of thousands of small merchants",
+      "whyUnderserved": "The 50+ orders/day threshold where manual reconciliation breaks is exactly where Kaspi's basic merchant tools stop being sufficient."
+    },
+    {
+      "niche": "Multi-channel sellers (Telegram bots + Instagram + website)",
+      "currentSolution": "Separate tools per channel, manual aggregation",
+      "aipayFit": "medium",
+      "marketSize": "Medium — businesses selling across multiple digital channels",
+      "whyUnderserved": "No unified payment verification across channels. Each platform requires separate reconciliation."
+    }
+  ],
+  "competitiveThreatsRanked": [
+    {
+      "rank": 1,
+      "threat": "Kaspi native verification automation",
+      "probability": "medium_high",
+      "timeframe": "12-24 months",
+      "impact": "existential",
+      "description": "Kaspi adds payment verification, invoice automation, and webhook notifications directly to Kaspi Pay merchant app. This eliminates aipay.kz's core value proposition.",
+      "mitigation": "Build deep integration moats (CRM/bot ecosystem), expand to multi-platform support, add value-added services (analytics, fiscal receipts) that Kaspi won't prioritize."
+    },
+    {
+      "rank": 2,
+      "threat": "Freedom Pay merchant automation expansion",
+      "probability": "medium",
+      "timeframe": "12-18 months",
+      "impact": "high",
+      "description": "Freedom Pay adds Kaspi Pay verification to their full-stack acquiring platform, targeting larger merchants aipay.kz could upsell to.",
+      "mitigation": "Focus on SMB niche where Freedom Pay's enterprise pricing doesn't compete. Build switching costs through integrations."
+    },
+    {
+      "rank": 3,
+      "threat": "Digital Tenge programmable money",
+      "probability": "medium",
+      "timeframe": "24-36 months",
+      "impact": "structural",
+      "description": "Programmable Digital Tenge transactions self-verify via smart contracts, reducing need for third-party verification layers in government-adjacent sectors.",
+      "mitigation": "Integrate with Digital Tenge early. Position as the verification layer for non-programmable transactions."
+    },
+    {
+      "rank": 4,
+      "threat": "BCC/Ant Group SuperApp merchant tools",
+      "probability": "low_medium",
+      "timeframe": "18-36 months",
+      "impact": "medium",
+      "description": "Ant Group's experience building Alipay merchant tools in China could produce a competing merchant automation platform through BCC's SuperApp.",
+      "mitigation": "Monitor BCC/Ant Group progress. Diversify beyond Kaspi dependency before this materializes."
+    },
+    {
+      "rank": 5,
+      "threat": "Regulatory/compliance tightening",
+      "probability": "low",
+      "timeframe": "12-24 months",
+      "impact": "medium",
+      "description": "NBK could mandate standardized merchant verification or require specific certifications for payment intermediaries.",
+      "mitigation": "Engage with NBK Open Banking initiative. Ensure compliance readiness."
+    }
+  ],
+  "actionableInsights": [
+    {
+      "insight": "Deepen Kaspi Pay integration moats before Kaspi builds native automation",
+      "action": "Build integrations with 10+ CRMs, bots, and business tools (Altegio, 1C, Telegram bots). The more integrations, the harder to replace aipay.kz even if Kaspi adds basic verification.",
+      "priority": "critical",
+      "timeframe": "0-6 months"
+    },
+    {
+      "insight": "Expand to multi-platform payment verification (not just Kaspi)",
+      "action": "Add Freedom Pay, Halyk, and bank transfer verification. Become the universal payment reconciliation layer, not just Kaspi automation.",
+      "priority": "high",
+      "timeframe": "6-12 months"
+    },
+    {
+      "insight": "Capture the recurring payment niche before Kaspi does",
+      "action": "Build subscription billing, automated reminders, and recurring invoice features for service businesses (salons, clinics, fitness). Kaspi Pay doesn't offer this natively.",
+      "priority": "high",
+      "timeframe": "3-9 months"
+    },
+    {
+      "insight": "Begin Digital Tenge integration research",
+      "action": "Monitor Digital Tenge API developments. Position aipay.kz as the first verification layer to support programmable money transactions when APIs become available.",
+      "priority": "medium",
+      "timeframe": "6-18 months"
+    },
+    {
+      "insight": "Build analytics/reporting as a retention tool",
+      "action": "Add payment analytics, trend reporting, and business insights that Kaspi's basic merchant app doesn't provide. This creates value beyond verification and increases switching costs.",
+      "priority": "medium",
+      "timeframe": "3-12 months"
+    }
+  ],
+  "sources": [
+    "https://www.aipay.kz/en",
+    "T01 competitor research (runtime-evidence/M013-S01-T01-competitors.json)",
+    "Kaspi.kz investor relations (ir.kaspi.kz)",
+    "Freedom Pay (freedompay.kz)",
+    "National Payment Corporation of Kazakhstan (npck.kz)"
+  ]
+}
