@@ -127,7 +127,7 @@
     {
       "id": "DEBT-008",
       "title": "Scripts directory cluttered with milestone-specific artifacts",
-      "description": "scripts/ directory contains ~30 one-off validation and probe scripts from prior milestones (M011, M012). These are milestone-specific artifacts, not reusable tooling. They mix JS, Python, and shell scripts with no organization.",
+      "description": "scripts/ directory contains ~119 one-off validation and probe scripts from prior milestones (M011, M012). These are milestone-specific artifacts, not reusable tooling. They mix JS, Python, and shell scripts with no organization.",
       "files": [
         "scripts/"
       ],
@@ -185,7 +185,7 @@
     {
       "id": "DEBT-012",
       "title": "GITHUB_TOKEN accessed directly from process.env without validation",
-      "description": "externalIO.ts:89 reads process.env.GITHUB_TOKEN directly via hasGitHubToken(). While the secretResolver.ts has proper secret resolution with redaction, externalIO.ts bypasses it and reads the environment directly. This creates two different secret access patterns in the codebase.",
+      "description": "externalIO.ts:89 reads process.env.GITHUB_TOKEN directly via hasGitHubToken(), and line 234 falls back to direct env access when no secretRef is configured. While externalIO.ts does use secretResolver for configured refs (lines 226, 376), the fallback paths bypass it. This creates two different secret access patterns in the codebase.",
       "files": [
         "plugin-bos-light/src/externalIO.ts:89",
         "plugin-bos-light/src/secretResolver.ts"
