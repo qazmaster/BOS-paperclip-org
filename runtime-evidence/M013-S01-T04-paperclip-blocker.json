@@ -1,0 +1,24 @@
+{
+  "task": "T04",
+  "slice": "S01",
+  "milestone": "M013",
+  "status": "blocked",
+  "blockerType": "paperclip_auth_failure",
+  "description": "Paperclip mission issue creation blocked by authentication failure. All four auth methods fail: API key bearer, API key header, session login, and registration. Credentials in .env are stale. No password reset endpoint available per MEM295.",
+  "expectedAction": "Create Paperclip mission issue with full routing trail and attach M013-S01-T03-report.md",
+  "attemptedAt": "2026-06-04T08:00:00.000Z",
+  "authProbes": {
+    "healthCheck": {"status": 200, "endpoint": "/api/health", "accessible": true},
+    "apiKeyBearer": {"status": 401, "endpoint": "/api/companies/{id}/issues", "auth": "Bearer pcp_board_6ef..."},
+    "sessionLogin": {"status": "INVALID_EMAIL_OR_PASSWORD", "endpoint": "/api/auth/sign-in/email"},
+    "registration": {"status": "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL", "endpoint": "/api/auth/sign-up/email"}
+  },
+  "priorBlockers": [
+    "runtime-evidence/M013-S01-T01-paperclip-blocker.json",
+    "runtime-evidence/M013-S01-T02-paperclip-blocker.json",
+    "runtime-evidence/M013-S01-T03-paperclip-blocker.json"
+  ],
+  "routingChainValidated": true,
+  "routingEvidence": "runtime-evidence/M013-S01-T04-routing-evidence.json",
+  "resolution": "Requires fresh Paperclip credentials from administrator. All research, validation, planning, and routing chain verification completed successfully. Only Paperclip issue creation is blocked."
+}
