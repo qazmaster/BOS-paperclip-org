@@ -14,10 +14,42 @@
     "lowRoiItems": 2,
     "criticalPath": "DEBT-003 → DEBT-002 → DEBT-005 → DEBT-006 → DEBT-001 → DEBT-012",
     "recommendedSprintAllocation": {
-      "sprint1": { "hours": 1.5, "items": ["DEBT-003", "DEBT-004", "DEBT-009"], "focus": "Foundation fixes — module resolution, CI accuracy, dependency hygiene" },
-      "sprint2": { "hours": 6, "items": ["DEBT-002", "DEBT-006", "DEBT-005"], "focus": "Quality gates — linting, coverage, type checking" },
-      "sprint3": { "hours": 6, "items": ["DEBT-001", "DEBT-010", "DEBT-012"], "focus": "Runtime safety — type casts, config flexibility, secret hygiene" },
-      "sprint4": { "hours": 27.5, "items": ["DEBT-007", "DEBT-008", "DEBT-011"], "focus": "Architecture — modular exports, scripts cleanup, test coverage" }
+      "sprint1": {
+        "hours": 1.5,
+        "items": [
+          "DEBT-003",
+          "DEBT-004",
+          "DEBT-009"
+        ],
+        "focus": "Foundation fixes — module resolution, CI accuracy, dependency hygiene"
+      },
+      "sprint2": {
+        "hours": 6,
+        "items": [
+          "DEBT-002",
+          "DEBT-006",
+          "DEBT-005"
+        ],
+        "focus": "Quality gates — linting, coverage, type checking"
+      },
+      "sprint3": {
+        "hours": 6,
+        "items": [
+          "DEBT-001",
+          "DEBT-010",
+          "DEBT-012"
+        ],
+        "focus": "Runtime safety — type casts, config flexibility, secret hygiene"
+      },
+      "sprint4": {
+        "hours": 27.5,
+        "items": [
+          "DEBT-007",
+          "DEBT-008",
+          "DEBT-011"
+        ],
+        "focus": "Architecture — modular exports, scripts cleanup, test coverage"
+      }
     }
   },
   "costBenefitMatrix": [
@@ -28,7 +60,7 @@
       "effortHours": 0.5,
       "impactScore": 9,
       "riskScore": 8,
-      "roi": 18.0,
+      "roi": 18,
       "rationale": "Sub-hour fix that eliminates module resolution ambiguity across the entire codebase. Highest ROI item."
     },
     {
@@ -38,7 +70,7 @@
       "effortHours": 0.5,
       "impactScore": 7,
       "riskScore": 6,
-      "roi": 14.0,
+      "roi": 14,
       "rationale": "Sub-hour fix that eliminates false CI failures. Prevents developer habituation to ignoring test red."
     },
     {
@@ -48,21 +80,11 @@
       "effortHours": 0.5,
       "impactScore": 5,
       "riskScore": 4,
-      "roi": 10.0,
+      "roi": 10,
       "rationale": "Sub-hour fix. Unblocks production dependency auditing and correct deployment installs."
     },
     {
       "rank": 4,
-      "id": "DEBT-002",
-      "title": "No linting or formatting tool configured",
-      "effortHours": 3,
-      "impactScore": 8,
-      "riskScore": 7,
-      "roi": 2.67,
-      "rationale": "Medium effort but high impact. Establishes automated quality gates. Reduces review burden. Blocks style drift."
-    },
-    {
-      "rank": 5,
       "id": "DEBT-005",
       "title": "Adapters directory excluded from type checking",
       "effortHours": 1.5,
@@ -72,37 +94,27 @@
       "rationale": "Quick win that catches type errors in the GSD-Pi adapter bridge. Critical for automation reliability."
     },
     {
-      "rank": 6,
+      "rank": 5,
       "id": "DEBT-006",
       "title": "Minimal vitest configuration",
       "effortHours": 1.5,
       "impactScore": 6,
       "riskScore": 5,
-      "roi": 4.0,
+      "roi": 4,
       "rationale": "Medium effort. Adds coverage thresholds and timeout configuration. Makes regression risk visible."
     },
     {
-      "rank": 7,
-      "id": "DEBT-001",
-      "title": "Unsafe as any casts in worker IPC",
-      "effortHours": 3,
-      "impactScore": 7,
-      "riskScore": 6,
-      "roi": 2.33,
-      "rationale": "Medium effort. Eliminates 3 type safety gaps in the plugin entry point. Prevents runtime shape mismatches."
-    },
-    {
-      "rank": 8,
+      "rank": 6,
       "id": "DEBT-012",
       "title": "GITHUB_TOKEN accessed without validation",
       "effortHours": 1.5,
       "impactScore": 6,
       "riskScore": 7,
-      "roi": 4.0,
+      "roi": 4,
       "rationale": "Quick-medium effort. Unifies secret access pattern. Enables future vault integration. Reduces audit surface."
     },
     {
-      "rank": 9,
+      "rank": 7,
       "id": "DEBT-010",
       "title": "Hardcoded circuit breaker polling config",
       "effortHours": 1.5,
@@ -112,27 +124,37 @@
       "rationale": "Medium effort. Enables environment-specific tuning. Reduces wasted polling in dev, improves recovery in prod."
     },
     {
+      "rank": 8,
+      "id": "DEBT-002",
+      "title": "No linting or formatting tool configured",
+      "effortHours": 3,
+      "impactScore": 8,
+      "riskScore": 7,
+      "roi": 2.67,
+      "rationale": "Medium effort but high impact. Establishes automated quality gates. Reduces review burden. Blocks style drift."
+    },
+    {
+      "rank": 9,
+      "id": "DEBT-001",
+      "title": "Unsafe as any casts in worker IPC",
+      "effortHours": 3,
+      "impactScore": 7,
+      "riskScore": 6,
+      "roi": 2.33,
+      "rationale": "Medium effort. Eliminates 3 type safety gaps in the plugin entry point. Prevents runtime shape mismatches."
+    },
+    {
       "rank": 10,
       "id": "DEBT-008",
       "title": "Scripts directory cluttered with artifacts",
       "effortHours": 1.5,
       "impactScore": 3,
       "riskScore": 2,
-      "roi": 2.0,
+      "roi": 2,
       "rationale": "Low effort but low impact. Improves contributor onboarding. Non-blocking for functionality."
     },
     {
       "rank": 11,
-      "id": "DEBT-011",
-      "title": "7 source files have no test coverage",
-      "effortHours": 20,
-      "impactScore": 8,
-      "riskScore": 7,
-      "roi": 0.4,
-      "rationale": "Highest effort item. High impact but low ROI due to volume. worker.ts and issueBlueprintFlow.ts are highest-priority targets."
-    },
-    {
-      "rank": 12,
       "id": "DEBT-007",
       "title": "Flat barrel index.ts re-exports 38 modules",
       "effortHours": 6,
@@ -140,6 +162,16 @@
       "riskScore": 2,
       "roi": 0.5,
       "rationale": "Medium-high effort, low impact. Module boundaries are a future concern. No current consumer pain."
+    },
+    {
+      "rank": 12,
+      "id": "DEBT-011",
+      "title": "7 source files have no test coverage",
+      "effortHours": 20,
+      "impactScore": 8,
+      "riskScore": 7,
+      "roi": 0.4,
+      "rationale": "Highest effort item. High impact but low ROI due to volume. worker.ts and issueBlueprintFlow.ts are highest-priority targets."
     }
   ],
   "debtItems": [
@@ -154,7 +186,12 @@
         "security": "None directly."
       },
       "businessRiskIfNotFixed": "Scripts that use import/export will fail when run directly. New contributors hit module errors. Build pipeline depends on esbuild handling the mismatch silently.",
-      "dependencies": { "blocks": ["DEBT-002"], "blockedBy": [] },
+      "dependencies": {
+        "blocks": [
+          "DEBT-002"
+        ],
+        "blockedBy": []
+      },
       "fixOrder": 1
     },
     {
@@ -168,7 +205,12 @@
         "security": "None directly."
       },
       "businessRiskIfNotFixed": "Developers learn to ignore CI failures. Real regressions get masked by the known empty suite. CI becomes a rubber stamp.",
-      "dependencies": { "blocks": ["DEBT-006"], "blockedBy": [] },
+      "dependencies": {
+        "blocks": [
+          "DEBT-006"
+        ],
+        "blockedBy": []
+      },
       "fixOrder": 2
     },
     {
@@ -182,7 +224,10 @@
         "security": "npm audit --production scans react for vulnerabilities."
       },
       "businessRiskIfNotFixed": "Production deployments that use --omit=dev will miss React. Security audits miss runtime dependency vulnerabilities.",
-      "dependencies": { "blocks": [], "blockedBy": [] },
+      "dependencies": {
+        "blocks": [],
+        "blockedBy": []
+      },
       "fixOrder": 3
     },
     {
@@ -196,7 +241,14 @@
         "security": "Lint rules can catch security anti-patterns."
       },
       "businessRiskIfNotFixed": "Code style drifts. Review burden grows linearly with contributors. Common bugs slip through.",
-      "dependencies": { "blocks": ["DEBT-006"], "blockedBy": ["DEBT-003"] },
+      "dependencies": {
+        "blocks": [
+          "DEBT-006"
+        ],
+        "blockedBy": [
+          "DEBT-003"
+        ]
+      },
       "fixOrder": 4
     },
     {
@@ -210,7 +262,14 @@
         "security": "None directly."
       },
       "businessRiskIfNotFixed": "Type errors in the adapter bridge go undetected. Runtime failures in Paperclip automation. Debugging requires reproducing live failures.",
-      "dependencies": { "blocks": ["DEBT-006"], "blockedBy": ["DEBT-002"] },
+      "dependencies": {
+        "blocks": [
+          "DEBT-006"
+        ],
+        "blockedBy": [
+          "DEBT-002"
+        ]
+      },
       "fixOrder": 5
     },
     {
@@ -224,7 +283,14 @@
         "security": "Coverage metrics reveal untested security-sensitive code paths."
       },
       "businessRiskIfNotFixed": "No coverage enforcement means test coverage degrades silently. Flaky tests block CI without retry. Test behavior changes across vitest versions.",
-      "dependencies": { "blocks": [], "blockedBy": ["DEBT-002", "DEBT-004", "DEBT-005"] },
+      "dependencies": {
+        "blocks": [],
+        "blockedBy": [
+          "DEBT-002",
+          "DEBT-004",
+          "DEBT-005"
+        ]
+      },
       "fixOrder": 6
     },
     {
@@ -238,7 +304,12 @@
         "security": "None directly."
       },
       "businessRiskIfNotFixed": "If Paperclip's tool registration API changes, the plugin fails at runtime with opaque errors. Debugging requires live reproduction.",
-      "dependencies": { "blocks": ["DEBT-012"], "blockedBy": [] },
+      "dependencies": {
+        "blocks": [
+          "DEBT-012"
+        ],
+        "blockedBy": []
+      },
       "fixOrder": 7
     },
     {
@@ -252,7 +323,12 @@
         "security": "Unified secret resolution enables centralized rotation, access logging, and vault migration."
       },
       "businessRiskIfNotFixed": "Two secret access patterns coexist. Future vault integration requires touching externalIO.ts. Audit cannot determine which code paths access secrets.",
-      "dependencies": { "blocks": [], "blockedBy": ["DEBT-001"] },
+      "dependencies": {
+        "blocks": [],
+        "blockedBy": [
+          "DEBT-001"
+        ]
+      },
       "fixOrder": 8
     },
     {
@@ -266,7 +342,10 @@
         "security": "None directly."
       },
       "businessRiskIfNotFixed": "Dev environments waste resources on 30s polling. Production cannot tune recovery speed. All environments share one config.",
-      "dependencies": { "blocks": [], "blockedBy": [] },
+      "dependencies": {
+        "blocks": [],
+        "blockedBy": []
+      },
       "fixOrder": 9
     },
     {
@@ -280,7 +359,10 @@
         "security": "Reduces attack surface by removing unused executable scripts."
       },
       "businessRiskIfNotFixed": "scripts/ grows indefinitely. New contributors waste time sorting through one-off artifacts. No cleanup policy.",
-      "dependencies": { "blocks": [], "blockedBy": [] },
+      "dependencies": {
+        "blocks": [],
+        "blockedBy": []
+      },
       "fixOrder": 10
     },
     {
@@ -294,7 +376,12 @@
         "security": "Security-sensitive code paths (secret handling, external IO) are verified."
       },
       "businessRiskIfNotFixed": "Worker.ts breakage kills the entire plugin. issueBlueprintFlow.ts bugs affect core business logic. Refactoring is high-risk.",
-      "dependencies": { "blocks": [], "blockedBy": ["DEBT-006"] },
+      "dependencies": {
+        "blocks": [],
+        "blockedBy": [
+          "DEBT-006"
+        ]
+      },
       "fixOrder": 11
     },
     {
@@ -308,38 +395,101 @@
         "security": "None directly."
       },
       "businessRiskIfNotFixed": "No current pain. Future concern as codebase grows. All internal APIs are public by default.",
-      "dependencies": { "blocks": [], "blockedBy": [] },
+      "dependencies": {
+        "blocks": [],
+        "blockedBy": []
+      },
       "fixOrder": 12
     }
   ],
   "dependencyGraph": {
-    "criticalPath": ["DEBT-003", "DEBT-002", "DEBT-005", "DEBT-006", "DEBT-001", "DEBT-012"],
-    "independentItems": ["DEBT-004", "DEBT-009", "DEBT-010", "DEBT-008", "DEBT-007"],
+    "criticalPath": [
+      "DEBT-003",
+      "DEBT-002",
+      "DEBT-005",
+      "DEBT-006",
+      "DEBT-001",
+      "DEBT-012"
+    ],
+    "independentItems": [
+      "DEBT-004",
+      "DEBT-009",
+      "DEBT-010",
+      "DEBT-008",
+      "DEBT-007"
+    ],
     "parallelizable": [
-      { "sprint": 1, "items": ["DEBT-003", "DEBT-004", "DEBT-009"], "note": "All independent, can be done in parallel" },
-      { "sprint": 2, "items": ["DEBT-002", "DEBT-005"], "note": "DEBT-005 depends on DEBT-002 being done first" },
-      { "sprint": 3, "items": ["DEBT-001", "DEBT-010", "DEBT-012"], "note": "DEBT-012 depends on DEBT-001; DEBT-010 is independent" },
-      { "sprint": 4, "items": ["DEBT-007", "DEBT-008", "DEBT-011"], "note": "All independent, DEBT-011 needs DEBT-006 from sprint 2" }
+      {
+        "sprint": 1,
+        "items": [
+          "DEBT-003",
+          "DEBT-004",
+          "DEBT-009"
+        ],
+        "note": "All independent, can be done in parallel"
+      },
+      {
+        "sprint": 2,
+        "items": [
+          "DEBT-002",
+          "DEBT-005"
+        ],
+        "note": "DEBT-005 depends on DEBT-002 being done first"
+      },
+      {
+        "sprint": 3,
+        "items": [
+          "DEBT-001",
+          "DEBT-010",
+          "DEBT-012"
+        ],
+        "note": "DEBT-012 depends on DEBT-001; DEBT-010 is independent"
+      },
+      {
+        "sprint": 4,
+        "items": [
+          "DEBT-007",
+          "DEBT-008",
+          "DEBT-011"
+        ],
+        "note": "All independent, DEBT-011 needs DEBT-006 from sprint 2"
+      }
     ]
   },
   "riskAdjustedPriority": {
     "fixNow": {
-      "items": ["DEBT-003", "DEBT-004", "DEBT-009"],
+      "items": [
+        "DEBT-003",
+        "DEBT-004",
+        "DEBT-009"
+      ],
       "totalHours": 1.5,
       "rationale": "Sub-2-hour fixes that eliminate foundation-level problems. Zero risk, high reward."
     },
     "fixThisSprint": {
-      "items": ["DEBT-002", "DEBT-005", "DEBT-006"],
+      "items": [
+        "DEBT-002",
+        "DEBT-005",
+        "DEBT-006"
+      ],
       "totalHours": 6,
       "rationale": "Quality gates that prevent regression accumulation. High impact on developer velocity."
     },
     "fixNextSprint": {
-      "items": ["DEBT-001", "DEBT-012", "DEBT-010"],
+      "items": [
+        "DEBT-001",
+        "DEBT-012",
+        "DEBT-010"
+      ],
       "totalHours": 6,
       "rationale": "Runtime safety improvements. Medium urgency but high reliability impact."
     },
     "backlog": {
-      "items": ["DEBT-011", "DEBT-007", "DEBT-008"],
+      "items": [
+        "DEBT-011",
+        "DEBT-007",
+        "DEBT-008"
+      ],
       "totalHours": 27.5,
       "rationale": "High-effort items with lower ROI. DEBT-011 is the biggest investment; DEBT-007 is low priority."
     }
