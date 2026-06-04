@@ -1,0 +1,279 @@
+{
+  "task": "T01",
+  "slice": "S01",
+  "milestone": "M013",
+  "title": "Kazakhstan Payments Market Competitor Research",
+  "researchDate": "2026-06-04",
+  "marketOverview": {
+    "digitalPaymentsAdoption": "89% of payments are digital (up from 7% in 2014)",
+    "onlineBankingUsers": "23.1 million active online banking users (4.6x growth from 2019 to 2023)",
+    "cashlessTransactions": "98% of transactions are non-cash as of 2025",
+    "fintechStartups": "200+ fintech startups (4x growth from 2018 to 2024)",
+    "registeredPaymentSystems": 15,
+    "source": "National Bank of Kazakhstan, NPCK, RISE Research Fintech Kazakhstan 2024 report"
+  },
+  "competitors": [
+    {
+      "id": 1,
+      "name": "Kaspi.kz",
+      "type": "Super App / Fintech / Marketplace",
+      "website": "https://kaspi.kz",
+      "investorRelations": "https://ir.kaspi.kz",
+      "ticker": "NASDAQ: KSPI",
+      "targetMarket": "Mass market consumers and merchants in Kazakhstan, expanding to Turkiye, Uzbekistan, Azerbaijan, Ukraine",
+      "productOffering": [
+        "Kaspi Super App (payments, marketplace, fintech, government services)",
+        "Kaspi Pay (P2P transfers, QR payments, merchant acquiring)",
+        "Kaspi Marketplace (e-commerce platform)",
+        "Kaspi Bank (deposits, loans, credit cards)",
+        "Government services integration (Digital Government)"
+      ],
+      "keyMetrics": {
+        "monthlyActiveUsers": "14.5 million (Kazakhstan)",
+        "monthlyTransactionsPerActiveConsumer": 75,
+        "marketPenetration": "75%+ of adults in Kazakhstan",
+        "paymentsTPVGrowth_YoY": "23% (Q1 2025)",
+        "paymentsRevenueGrowth_YoY": "16% (Q1 2025)",
+        "revenueGrowth_YoY": "21% (Q1 2025)",
+        "netIncomeGrowth_YoY": "16% (Q1 2025)",
+        "fy2024_netIncomeGrowth": "25% YoY",
+        "fy2024_revenueGrowth": "32% YoY"
+      },
+      "fundingStatus": "Publicly traded on NASDAQ since 2024. Acquired 65.41% of Hepsiburada (Turkiye) for $1.13B in early 2025.",
+      "keyDifferentiators": [
+        "Dominant super app with unmatched daily engagement (75 transactions/month/user)",
+        "Integrated payments + marketplace + fintech ecosystem",
+        "Deep government services integration",
+        "Cross-border expansion strategy (100M user ambition)",
+        "QR payment interoperability with Alipay+"
+      ],
+      "marketPosition": "Dominant market leader. Kaspi is the de facto digital payments platform in Kazakhstan with near-universal adoption.",
+      "sources": [
+        "https://ir.kaspi.kz/media/1Q_2025_Results_.pdf",
+        "https://ir.kaspi.kz/media/4Q__FY_2025_Financial_Results.pdf",
+        "https://matrixbcg.com/blogs/competitors/kaspi",
+        "https://videttecapitalresearch.substack.com/p/kaspikz-deep-dive-and-valuation-kspi"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Halyk Bank",
+      "type": "Traditional Bank / Digital Super App",
+      "website": "https://halykbank.com",
+      "targetMarket": "Mass market retail and corporate banking, expanding digital lifestyle services",
+      "productOffering": [
+        "Halyk Super App (B2C financial, lifestyle, payment solutions)",
+        "Onlinebank (B2B full-range financial services)",
+        "QR code payments via UnionPay (first in Central Asia)",
+        "Digital mortgage and lending products",
+        "Card issuing and merchant acquiring"
+      ],
+      "keyMetrics": {
+        "totalAssets_KZT": "18,548.4 billion (as of Dec 31, 2024)",
+        "activeRetailClients": "11.3 million",
+        "b2bActiveClients": "459,000",
+        "superApp_MAU": "8.3 million (Q3 2025)",
+        "paymentsVolumeGrowth_9M2025": "+22.6% YoY (KZT 14.1 trillion)",
+        "paymentsCountGrowth_9M2025": "+28.7% YoY (324.4 million transactions)",
+        "creditRatings": {
+          "fitch": "BBB- (stable)",
+          "sp": "BBB- (stable)",
+          "moodys": "Baa1 (stable)"
+        }
+      },
+      "fundingStatus": "Publicly traded. Largest bank in Kazakhstan by assets. Founded 1923.",
+      "keyDifferentiators": [
+        "Largest bank in Kazakhstan by assets",
+        "Highest credit ratings among private KZ banks without foreign participation",
+        "First Central Asian bank to launch UnionPay QR payments",
+        "Significant B2B client base (459K active)",
+        "Legacy trust and institutional strength"
+      ],
+      "marketPosition": "Second-largest player by digital reach. Strongest institutional trust. Competing with Kaspi on super app features while leveraging banking license advantages.",
+      "sources": [
+        "https://halykbank.com",
+        "https://matrixbcg.com/blogs/competitors/halykbank",
+        "https://www.globalbankingandfinance.com/kazakhstans-and-halyk-banks-digital-renaissance-bridging-tradition-and-technology"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Freedom Pay (freedompay.kz)",
+      "type": "Payment Service Provider / Acquiring",
+      "website": "https://freedompay.kz",
+      "parentCompany": "Freedom Holding Corp. (NASDAQ: FRHC)",
+      "founder": "Timur Turlov",
+      "targetMarket": "Online businesses, merchants, and banks in Kazakhstan, Kyrgyzstan, Uzbekistan",
+      "productOffering": [
+        "Card payment processing for online businesses",
+        "Payment interface forms and checkout",
+        "Invoicing and recurring/regular payments",
+        "Split payments",
+        "Apple Pay, Google Pay, Samsung Pay integration",
+        "Online fiscalization",
+        "Payment gateway for banks",
+        "Acquiring infrastructure",
+        "Card issuing and co-branding",
+        "Loyalty programs",
+        "Mobile balance payments"
+      ],
+      "keyMetrics": {
+        "parentCompany_customers": "6+ million (Freedom Holding ecosystem)",
+        "parentCompany_countries": "20+ countries",
+        "geographicPresence": ["Kazakhstan", "Kyrgyzstan", "Uzbekistan"]
+      },
+      "fundingStatus": "Part of Freedom Holding Corp. (NASDAQ: FRHC), a publicly traded diversified financial services company. Parent company has $1.13B+ in annual revenue.",
+      "keyDifferentiators": [
+        "Part of broader Freedom ecosystem (brokerage, banking, insurance, lifestyle)",
+        "International payment provider with Central Asian regional presence",
+        "Strong developer documentation and API-first approach",
+        "Full-stack payment infrastructure (gateway, acquiring, issuing)",
+        "Cross-border commerce capability (KZ-China via UnionPay partnership)"
+      ],
+      "marketPosition": "Leading independent payment gateway in Central Asia. Positioned as the merchant-facing payment infrastructure layer, competing indirectly with Kaspi by enabling businesses to accept payments independently.",
+      "sources": [
+        "https://freedompay.kz/en",
+        "https://www.freedomholdingcorp.com/about/timur-turlov",
+        "https://en.wikipedia.org/wiki/Timur_Turlov",
+        "https://ir.freedomholdingcorp.com/press-releases/detail/84/freedom-bank-and-unionpay-business-forge-partnership-to"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Bank CenterCredit (BCC)",
+      "type": "Traditional Bank / Digital Transformation",
+      "website": "https://bcc.kz",
+      "targetMarket": "Retail and corporate banking, digital-first customers",
+      "productOffering": [
+        "BCC mobile banking app",
+        "Digital Tenge wallet for business",
+        "UnionPay card transfers (first in KZ to launch)",
+        "WeChat Pay QR payments acceptance",
+        "Money transfers (international and domestic)",
+        "Super App in development with Ant Group Digital"
+      ],
+      "keyMetrics": {
+        "status": "One of Kazakhstan's oldest and largest banks",
+        "ebdrd_loan_2024": "US$60 million EBRD facility secured in 2024",
+        "digitalTransformation": "Partnered with Tuum for core banking modernization"
+      },
+      "fundingStatus": "Established bank, backed by EBRD ($60M loan in 2024). Strategic partnership with Ant Group Digital Technologies (March 2024) for SuperApp development.",
+      "keyDifferentiators": [
+        "Strategic partnership with Ant Group Digital Technologies for SuperApp",
+        "Using Tuum core banking platform for digital transformation",
+        "First in Kazakhstan to launch UnionPay card transfers",
+        "Early adopter of Digital Tenge for business wallets",
+        "WeChat Pay integration for Chinese tourist/trade payments"
+      ],
+      "marketPosition": "Aggressive digital challenger. Ant Group partnership positions BCC as a potential Kaspi competitor with Chinese fintech backing. Currently in transformation phase.",
+      "sources": [
+        "https://bcc.kz/en",
+        "https://ibsintelligence.com/ibsi-news/ant-group-digital-bank-centercredit-launch-superapp-in-kazakhstan",
+        "https://tuum.com/news/tuum-powers-bank-centercredits-digital-transformation",
+        "https://www.ebrd.com/home/news-and-events/news/2024/ebrd-lends-us-60-million-to-kazakhstans-bank-centercredit.html"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Eurasian Bank",
+      "type": "Traditional Bank / Digital Banking",
+      "website": "https://eubank.kz",
+      "targetMarket": "Retail banking customers, expats, and small businesses in Kazakhstan",
+      "productOffering": [
+        "Mobile banking app (trilingual: Kazakh, Russian, English)",
+        "Digital account opening",
+        "Card products and transfers",
+        "Lending and deposits",
+        "FX services"
+      ],
+      "keyMetrics": {
+        "mobileAppLaunch": "Launched trilingual mobile banking app",
+        "languages": ["Kazakh", "Russian", "English"]
+      },
+      "fundingStatus": "Established commercial bank in Kazakhstan. No major external funding rounds reported.",
+      "keyDifferentiators": [
+        "Trilingual mobile app (Kazakh, Russian, English) - targeting expat market",
+        "Simplified digital onboarding",
+        "FX-focused services",
+        "Mid-market positioning between mega-banks and fintech startups"
+      ],
+      "marketPosition": "Mid-tier digital banking competitor. Focused on serving the expat and multilingual community in Kazakhstan. Smaller scale than Kaspi or Halyk but actively digitizing.",
+      "sources": [
+        "https://eubank.kz/en",
+        "https://www.fintechfutures.com/digital-banking/kazakh-eurasian-bank-unveils-mobile-banking"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Digital Tenge (CBDC)",
+      "type": "Central Bank Digital Currency / Infrastructure",
+      "website": "https://npck.kz",
+      "operator": "National Bank of Kazakhstan (NBK) / National Payment Corporation of Kazakhstan (NPCK)",
+      "targetMarket": "All participants in Kazakhstan's financial system (government, banks, businesses, consumers)",
+      "productOffering": [
+        "Token-based CBDC (third form of national currency)",
+        "Programmable money for government budgets",
+        "Smart contract-enabled payments",
+        "Cross-border payment capabilities",
+        "Offline payment capability",
+        "Integration with existing bank apps"
+      ],
+      "keyMetrics": {
+        "status": "Full-scale phased rollout beginning 2026",
+        "governmentBudgetTransition": "All government budgets transitioning to Digital Tenge starting 2026",
+        "recognition": "Won Currency Research award for 'Leadership in Digital Currencies Adoption' (2024)",
+        "imfAssessment": "Most advanced CBDC implementation after two pilot programs (IMF, 2024)"
+      },
+      "fundingStatus": "Government-backed initiative. No external funding needed.",
+      "keyDifferentiators": [
+        "Only CBDC in Central Asia at production scale",
+        "Programmable money - funds can only be spent on designated purposes",
+        "Government mandate for budget integration",
+        "Token-level programmability for smart contracts",
+        "Designed to complement (not replace) existing payment systems"
+      ],
+      "marketPosition": "Infrastructure layer that will reshape the entire payments ecosystem. Not a direct competitor to aipay.kz but a critical platform that any new payment service must integrate with. Sets the rules of the game.",
+      "sources": [
+        "https://npck.kz/en/digital-tenge-white-paper-2025",
+        "https://astanatimes.com/2025/04/digital-tenge-is-no-panacea-says-kazakhstans-top-fintech-official",
+        "https://astanatimes.com/2025/10/how-digital-tenge-could-start-changing-life-in-kazakhstan-next-year"
+      ]
+    }
+  ],
+  "marketMap": {
+    "dominantPlayers": ["Kaspi.kz"],
+    "strongChallengers": ["Halyk Bank", "Freedom Pay"],
+    "digitalTransformers": ["Bank CenterCredit (BCC)"],
+    "midTierPlayers": ["Eurasian Bank"],
+    "infrastructureLayer": ["Digital Tenge (CBDC)", "National Payment Corporation (NPCK)", "Open Banking Initiative"],
+    "paymentSystems": ["Visa", "Mastercard", "Zolotaya Korona", "UnionPay"],
+    "ecosystem": {
+      "regulator": "National Bank of Kazakhstan (NBK)",
+      "openBanking": "Open API initiative led by NBK Chief Digital Officer Binur Zhalenov",
+      "marketSize": "89% digital payments adoption, 98% cashless transactions, 200+ fintech startups"
+    }
+  },
+  "strategicImplications": {
+    "barriersToEntry": [
+      "Kaspi's near-monopoly on daily consumer engagement (75 transactions/month/user)",
+      "Network effects from 14.5M MAU super app ecosystem",
+      "Regulatory complexity and NBK oversight",
+      "Digital Tenge integration requirements",
+      "Need for local banking partnerships"
+    ],
+    "opportunities": [
+      "Open Banking API initiative creating new integration points",
+      "Digital Tenge programmable money enabling new use cases",
+      "Cross-border payment gaps (KZ-China, KZ-Central Asia)",
+      "B2B payment infrastructure still fragmented",
+      "Niche segments underserved by Kaspi (specific verticals, SME tools)",
+      "Ant Group/BCC partnership proving Chinese fintech entry is possible"
+    ],
+    "threats": [
+      "Kaspi's expansion into every adjacent vertical",
+      "Halyk Bank's institutional trust and scale",
+      "Freedom Holding's ecosystem breadth",
+      "Digital Tenge potentially commoditizing basic payment rails"
+    ]
+  }
+}
