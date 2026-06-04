@@ -1,0 +1,15 @@
+{
+  "task": "T03",
+  "slice": "S01",
+  "milestone": "M013",
+  "status": "blocked",
+  "blockerType": "paperclip_auth_failure",
+  "description": "Paperclip document attachment blocked by authentication failure. Same blocker as T01 and T02. Cannot create Paperclip document with report attachment.",
+  "expectedAction": "Create Paperclip document with M013-S01-T03-report.md as attachment",
+  "attemptedAt": "2026-06-04T07:00:00.000Z",
+  "priorBlockers": [
+    "runtime-evidence/M013-S01-T01-paperclip-blocker.json",
+    "runtime-evidence/M013-S01-T02-paperclip-blocker.json"
+  ],
+  "resolution": "Requires Paperclip authentication fix before document attachment can proceed"
+}
