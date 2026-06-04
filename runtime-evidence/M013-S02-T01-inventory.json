@@ -1,0 +1,204 @@
+{
+  "task": "T01",
+  "slice": "S02",
+  "milestone": "M013",
+  "generatedAt": "2026-06-04T06:50:00Z",
+  "project": "BOS_Chimera_Paperclip_Handoff",
+  "codebaseStats": {
+    "sourceFiles": 54,
+    "sourceLines": 15345,
+    "testFiles": 63,
+    "testLines": 26754,
+    "testToSourceLineRatio": "1.74:1",
+    "totalTestCases": 1424,
+    "testPassRate": "63/64 suites (1 empty suite failure)"
+  },
+  "languages": [
+    {
+      "language": "TypeScript",
+      "primary": true,
+      "target": "ES2022",
+      "moduleSystem": "ESNext/Bundler",
+      "strict": true,
+      "sourceRef": "tsconfig.json:3-4"
+    },
+    {
+      "language": "TSX/React",
+      "primary": false,
+      "files": ["plugin-bos-light/src/ui/settings.tsx", "plugin-bos-light/src/ui/sidebar.tsx", "plugin-bos-light/widgets/BettingTableWidget.tsx"],
+      "reactVersion": "19.2.7"
+    },
+    {
+      "language": "JavaScript (Node scripts)",
+      "primary": false,
+      "files": "scripts/*.js",
+      "note": "Validation and probe scripts, not part of main build"
+    },
+    {
+      "language": "Python (utility scripts)",
+      "primary": false,
+      "files": "scripts/*.py",
+      "note": "Validation and demo scripts"
+    }
+  ],
+  "frameworks": [
+    {
+      "name": "React",
+      "version": "19.2.7",
+      "usage": "UI components (settings, sidebar, widget)",
+      "sourceRef": "package.json:devDependencies"
+    },
+    {
+      "name": "Vitest",
+      "version": "2.1.9",
+      "usage": "Test runner",
+      "sourceRef": "package.json:devDependencies, plugin-bos-light/vitest.config.ts"
+    },
+    {
+      "name": "esbuild",
+      "version": "0.28.0",
+      "usage": "Bundler (no build script in package.json)",
+      "sourceRef": "package.json:devDependencies"
+    }
+  ],
+  "dependencies": {
+    "direct": {
+      "devDependencies": {
+        "@types/react": "^19.2.16 (resolved: 19.2.16)",
+        "esbuild": "^0.28.0 (resolved: 0.28.0)",
+        "react": "^19.2.7 (resolved: 19.2.7)",
+        "vitest": "^2.1.9 (resolved: 2.1.9)"
+      },
+      "productionDependencies": "NONE",
+      "note": "All deps are devDependencies. No runtime dependency declaration."
+    },
+    "transitiveCount": "Minimal (esbuild platform binaries + vitest + react internals)"
+  },
+  "projectStructure": {
+    "root": "BOS_Chimera_Paperclip_Handoff/",
+    "layout": "monorepo-style with plugin-bos-light as primary package, adapters/ as secondary, agents/ as documentation/config",
+    "directories": {
+      "plugin-bos-light/": "Main plugin code: src/, tests/, dist/, widgets/, runtime-evidence/",
+      "plugin-bos-light/src/": "44 TS/TSX source files, ~15K lines. Barrel index.ts re-exports 38 modules.",
+      "plugin-bos-light/tests/": "63 test files, ~27K lines, 1424 test cases.",
+      "plugin-bos-light/dist/": "Built artifacts (manifest.js, worker.js, ui/index.js)",
+      "adapters/gsdpi-local/": "Server adapter for GSD-Pi local execution. Separate tsconfig.",
+      "agents/": "Div1-Div7 division definitions (config/docs, not executable code)",
+      "configs/": "Routing modes, tool permission matrix, division map JSON configs",
+      "scripts/": "~30 JS/Python validation and probe scripts from prior milestones",
+      "docs/": "Archive, handoffs, audit reports",
+      "workflows/": "Workflow definitions",
+      "skills/": "Skill definitions"
+    }
+  },
+  "structuralObservations": [
+    {
+      "id": 1,
+      "category": "configuration",
+      "severity": "high",
+      "observation": "No linting or formatting tool configured. No ESLint, Prettier, or Biome in package.json or lockfile. Zero code style enforcement.",
+      "file": "package.json",
+      "line": "1-13",
+      "impact": "Code style drift across contributors; no automated quality gate before commit."
+    },
+    {
+      "id": 2,
+      "category": "configuration",
+      "severity": "high",
+      "observation": "No 'type': 'module' in package.json despite ESNext module target in tsconfig. Package defaults to CommonJS resolution, creating potential module resolution mismatches.",
+      "file": "package.json",
+      "line": "1-13",
+      "impact": "Import/export behavior may differ between tsconfig expectations and Node runtime."
+    },
+    {
+      "id": 3,
+      "category": "type-safety",
+      "severity": "medium",
+      "observation": "3 'as any' type casts in worker.ts bypass TypeScript strict mode checks. All in IPC message handlers.",
+      "file": "plugin-bos-light/src/worker.ts",
+      "line": "180,195,207",
+      "impact": "Runtime type errors possible in worker message handling. Undermines strict mode benefits."
+    },
+    {
+      "id": 4,
+      "category": "build",
+      "severity": "medium",
+      "observation": "esbuild is a devDependency but no build script exists in package.json. Build process is undocumented/external.",
+      "file": "package.json",
+      "line": "devDependencies",
+      "impact": "New contributors cannot build the project from package.json alone. Build reproducibility at risk."
+    },
+    {
+      "id": 5,
+      "category": "test-infrastructure",
+      "severity": "medium",
+      "observation": "Adapter test (adapters/gsdpi-local/tests/execute.test.ts) uses node:test but vitest picks it up as empty suite, causing 1 suite failure. vitest.config.ts has no include/exclude to scope test discovery.",
+      "file": "plugin-bos-light/vitest.config.ts",
+      "line": "1-6",
+      "impact": "False test failure in CI. Adapter tests need separate runner or vitest config scoping."
+    },
+    {
+      "id": 6,
+      "category": "configuration",
+      "severity": "medium",
+      "observation": "tsconfig.json only includes plugin-bos-light/src and tests. Adapters directory is excluded from type checking.",
+      "file": "tsconfig.json",
+      "line": "8",
+      "impact": "Type errors in adapters/gsdpi-local go undetected by tsc."
+    },
+    {
+      "id": 7,
+      "category": "architecture",
+      "severity": "low",
+      "observation": "Barrel index.ts re-exports 38 modules. All public API surface is flat - no namespacing or tiered exports.",
+      "file": "plugin-bos-light/src/index.ts",
+      "line": "1-39",
+      "impact": "Import tree shaking may be less effective. Harder to enforce module boundaries."
+    },
+    {
+      "id": 8,
+      "category": "build",
+      "severity": "medium",
+      "observation": "dist/ directory contains committed build artifacts (manifest.js 5KB, worker.js 38KB). These are stale relative to source and should be gitignored or generated in CI.",
+      "file": "plugin-bos-light/dist/",
+      "line": "N/A",
+      "impact": "Stale dist can cause runtime bugs if deployed directly. Repo bloat from generated files."
+    },
+    {
+      "id": 9,
+      "category": "configuration",
+      "severity": "low",
+      "observation": "No coverage reporting configured. vitest.config.ts has no coverage provider or thresholds.",
+      "file": "plugin-bos-light/vitest.config.ts",
+      "line": "1-6",
+      "impact": "Cannot measure or enforce test coverage. Regression risk invisible."
+    },
+    {
+      "id": 10,
+      "category": "dependencies",
+      "severity": "low",
+      "observation": "All 4 dependencies are devDependencies with zero production dependencies declared. React is listed as devDep despite being a runtime UI dependency.",
+      "file": "package.json",
+      "line": "2-7",
+      "impact": "No production dependency audit possible. Deployment may miss runtime deps."
+    },
+    {
+      "id": 11,
+      "category": "architecture",
+      "severity": "medium",
+      "observation": "Scripts directory has ~30 one-off validation/probe scripts from prior milestones (M011, M012). These are milestone-specific artifacts, not reusable tooling.",
+      "file": "scripts/",
+      "line": "N/A",
+      "impact": "Scripts directory is cluttered with milestone-specific artifacts. No cleanup or archival policy."
+    },
+    {
+      "id": 12,
+      "category": "test-infrastructure",
+      "severity": "low",
+      "observation": "vitest.config.ts sets pool: 'forks' (process isolation) but no other configuration. Default timeout, retries, and reporters are all implicit.",
+      "file": "plugin-bos-light/vitest.config.ts",
+      "line": "4",
+      "impact": "Test behavior depends on vitest defaults which may change across versions."
+    }
+  ]
+}
