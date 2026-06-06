@@ -1,0 +1,32 @@
+{
+  "task": "T05",
+  "slice": "S02",
+  "milestone": "M013",
+  "generatedAt": "2026-06-04T07:50:23.816Z",
+  "paperclip": {
+    "baseUrl": "https://paperclip.oysana.com",
+    "companyId": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "issueId": "119d615e-898e-443a-b738-0f4b887c77b7",
+    "issueTitle": "M013-S02: Tech Debt Audit of aipay.kz Codebase",
+    "issueCreated": true,
+    "div5CommentAdded": true,
+    "routingCommentAdded": true,
+    "readbackIds": [
+      {
+        "type": "issue",
+        "id": "119d615e-898e-443a-b738-0f4b887c77b7"
+      },
+      {
+        "type": "comment",
+        "id": "731ab488-e136-4a61-add4-551a5a9fc659",
+        "role": "div5-verification"
+      },
+      {
+        "type": "comment",
+        "id": "cc322951-1127-45d1-93b2-bb1a849a3023",
+        "role": "routing-trail"
+      }
+    ],
+    "readbackVerified": true
+  }
+}
