@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T01",
+  "unitId": "M004-osbua3/S07/T01",
+  "timestamp": 1780228520389,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "test -s .gsd/milestones/M004-osbua3/M004-osbua3-CONTEXT.md && test -s .gsd/milestones/M004-osbua3/M004-osbua3-ASSESSMENT.md && test -s .gsd/milestones/M004-osbua3/slices/S07/S07-ASSESSMENT.md && test -s .gsd/milestones/M004-osbua3/M004-osbua3-ROADMAP.md && python3 -m json.tool runtime-evidence/M004-S07-restored-artifact-inventory.json",
+      "exitCode": 0,
+      "durationMs": 46,
+      "verdict": "pass"
+    }
+  ]
+}

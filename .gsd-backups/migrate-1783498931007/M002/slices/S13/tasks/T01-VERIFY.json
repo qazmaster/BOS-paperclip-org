@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T01",
+  "unitId": "M002/S13/T01",
+  "timestamp": 1780126032931,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 -m unittest scripts/test_validate_s13_requirement_coverage.py && python3 scripts/validate_s13_requirement_coverage.py --phase ledger --ledger runtime-evidence/M002-S13-requirement-coverage.json",
+      "exitCode": 0,
+      "durationMs": 180,
+      "verdict": "pass"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T03",
+  "unitId": "M002/S13/T03",
+  "timestamp": 1780126598690,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 -m unittest scripts/test_validate_s13_requirement_coverage.py scripts/test_run_m002_regression_closure.py && python3 scripts/validate_s13_requirement_coverage.py --phase final --ledger runtime-evidence/M002-S13-requirement-coverage.json --write-audit runtime-evidence/M002-S13-validation-closeout.json && python3 scripts/run_m002_regression_closure.py --output runtime-evidence/M002-S06-regression-closure.json",
+      "exitCode": 0,
+      "durationMs": 3147,
+      "verdict": "pass"
+    }
+  ]
+}

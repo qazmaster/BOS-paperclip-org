@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "taskId": "T03",
+  "sliceId": "S02",
+  "milestoneId": "M002",
+  "question": "How should S02 proceed after the single T03 Hermes agent run failed with /paperclip/.hermes/cron permission denied?",
+  "options": [
+    {
+      "id": "A",
+      "label": "Fix sandbox permissions and rerun",
+      "tradeoffs": "Repair ownership/permissions for /paperclip/.hermes through supported sandbox administration, then re-run one new T03 smoke attempt with the same secret-ref pattern. This is the shortest path to passing S02 but requires accepting a second wake/run because the first live attempt already failed."
+    },
+    {
+      "id": "B",
+      "label": "Replan S02 blocker task",
+      "tradeoffs": "Add a remediation task before T03 to make Hermes home writable and prove that diagnostic surface. This preserves the one-run contract for the next smoke attempt but delays S02 completion."
+    },
+    {
+      "id": "C",
+      "label": "Keep fail-closed only",
+      "tradeoffs": "Do not rerun Hermes; keep S02 blocked with current evidence. This is safest operationally but leaves R011 unvalidated and prevents downstream slices from relying on Hermes agent execution."
+    }
+  ],
+  "recommendation": "B",
+  "recommendationRationale": "The current plan assumed T02 environment readiness was sufficient, but T03 exposed a separate runtime filesystem invariant. A small remediation task preserves the proof boundary and avoids silently normalizing multiple smoke retries.",
+  "continueWithDefault": false,
+  "createdAt": "2026-05-29T00:52:00.937Z"
+}

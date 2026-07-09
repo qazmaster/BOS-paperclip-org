@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T04",
+  "unitId": "M001-bo1jcm/S06/T04",
+  "timestamp": 1779950485417,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 scripts/run_a1_a10_demo.py && python3 scripts/test_validate_company_template.py && npm --prefix plugin-bos-light test && npm --prefix plugin-bos-light run typecheck && python3 scripts/test_validate_runtime_capabilities.py && python3 scripts/validate_runtime_capabilities.py && python3 scripts/validate_a1_a10_demo_docs.py",
+      "exitCode": 0,
+      "durationMs": 4254,
+      "verdict": "pass"
+    }
+  ]
+}

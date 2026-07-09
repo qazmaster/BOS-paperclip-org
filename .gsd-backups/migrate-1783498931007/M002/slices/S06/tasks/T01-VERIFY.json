@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T01",
+  "unitId": "M002/S06/T01",
+  "timestamp": 1780057556647,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 -m unittest scripts/test_validate_m002_closeout.py && python3 scripts/validate_m002_closeout.py --phase preflight",
+      "exitCode": 0,
+      "durationMs": 215,
+      "verdict": "pass"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T01",
+  "unitId": "M004-osbua3/S06/T01",
+  "timestamp": 1780224904055,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 -m json.tool runtime-evidence/M004-S06-requirement-coverage.json",
+      "exitCode": 0,
+      "durationMs": 74,
+      "verdict": "pass"
+    }
+  ]
+}
