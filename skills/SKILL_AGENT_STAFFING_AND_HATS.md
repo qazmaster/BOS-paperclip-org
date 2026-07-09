@@ -1,56 +1,105 @@
-# Skill: Agent Staffing and Hats
-
-Status: canonical v1.4.1 protocol.
-Owner: Div1.HCO.
+# SKILL_AGENT_STAFFING_AND_HATS
 
 ## Purpose
 
-Manage operational staffing, hats, job descriptions, workload balancing and parallel-agent requests without bypassing budget/access controls or quality evidence.
+Define Div1.HCO ownership of posts, hats, job descriptions, workload control and staffing requests.
 
-## Triggers
+## Owner
 
-Use this protocol when:
+Div1.HCO owns:
 
-- a division is overloaded;
-- repeated failures suggest underperformance or missing capability;
-- work can be safely parallelized;
-- a new hat/post/job description is proposed;
-- an external specialist or service may be needed;
-- routing queues or circuit-breaker data show sustained bottlenecks.
+- posts;
+- hat profiles;
+- job descriptions;
+- agent assignment to posts;
+- role changes;
+- workload monitoring;
+- capacity monitoring;
+- underperformance detection;
+- parallel-agent requests;
+- agent replacement/reassignment;
+- external service/agent sourcing requests.
 
 ## Inputs
 
-- Workload evidence, queue state or issue references.
-- Div5 quality/performance evidence when available.
-- Div4 blocker reports when implementation is affected.
-- Div3 budget/access feasibility if staffing adds cost, tools or credentials.
-- Proposed hat/post scope and permissions.
+Div1 uses:
 
-## Procedure
+- Div5 performance evidence;
+- Div4 blocker/failure reports;
+- Div3 budget/capacity signals;
+- Paperclip task load;
+- Cycle metrics;
+- Correction loop counts;
+- Gate failure rates;
+- Agent availability;
+- Mission priority from Div7.
 
-1. Div1.HCO classifies the staffing trigger: overload, underperformance, missing-capability, parallelization or external-specialist.
-2. Gather evidence from Div5, Div4, runtime status or Paperclip issue history.
-3. Define the proposed hat/post with responsibilities, allowed tools, forbidden tools and review condition.
-4. If the change needs budget, credentials, paid tools or extra capacity, route to Div3.Treasury for feasibility.
-5. If the change needs external sourcing, route through the External IO Gateway.
-6. Record the assignment or denial in a visible artifact.
-7. Set a review condition and revocation condition.
+## Staffing flow
 
-## Outputs
+```text
+Div5 detects repeated failure / poor quality / missing skill / overload evidence
+  -> sends evidence to Div1.HCO
 
-- StaffingHatRequest.
-- Hat/post description.
-- Div3 budget/access decision when needed.
-- Assignment, denial or escalation record.
+Div1 reviews:
+  - is the agent overloaded?
+  - is the hat unclear?
+  - was routing wrong?
+  - is access/tooling missing?
+  - is parallel capacity needed?
+  - is an external service/agent needed?
 
-## Guardrails
+If budget/access/resources needed:
+  -> Div1 requests Div3.Treasury
 
-- HCO owns staffing flow but cannot mint budget or wildcard permissions.
-- Staffing changes must not hide unreviewed external agents inside internal work.
-- External specialists are external IO and must pass through Div6 and Div5 quarantine.
-- Underperformance decisions must cite evidence, not vibes.
-- New hats must reduce operational load, not add bureaucracy.
+If external service/agent needed:
+  -> Div1 routes through Div6.External
+
+If hat/profile update needed:
+  -> Div1 updates or approves hat change
+
+If strategic org redesign needed:
+  -> Div1 escalates to Div7.MissionControl
+
+Div5 later verifies whether the change improved performance.
+```
+
+## Hat profile minimum sections
+
+Every AGENTS.md / hat profile must include:
+
+- Role;
+- Valuable Final Product / ЦКП;
+- Owns;
+- Does Not Own;
+- Inputs;
+- Outputs;
+- Allowed Tools;
+- Forbidden Tools;
+- Routing Rules;
+- Escalation Rules;
+- Paperclip Runtime Boundary;
+- Security Invariants;
+- Acceptance Checks.
+
+## Decision authority
+
+Div1 can approve operational hat updates.
+
+Div7 must approve strategic/org redesign.
+
+Div3 must approve funding/resource grants.
+
+Div6 must source external services/agents.
+
+Div5 verifies evidence and improvement results.
+
+## Acceptance
+
+- Div1 can detect overload.
+- Div1 can request Div3 budget for parallel agent.
+- Div1 can route external sourcing to Div6.
+- Div5 provides evidence but does not make the staffing decision.
 
 ## Failure behavior
 
-If evidence is insufficient, create a time-boxed observation request or escalate. If budget/access is denied, revise scope or pause. If a proposed hat crosses external IO or secret boundaries, require Div3 and Div5 controls before assignment.
+If no qualified agent is available for a role, escalate to Div1.HCO for staffing decision. If agent is overloaded, route to another qualified agent or queue the work.

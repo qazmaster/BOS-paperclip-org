@@ -88,6 +88,16 @@ function classifyGitError(exitCode: number | null, stderr: string): GitCommandEv
   return "none";
 }
 
+/**
+ * Build git auth environment.
+ *
+ * Environment Variables (checked in order):
+ *   GIT_SSH_KEY (str): Path to SSH key. Uses SSH auth.
+ *   GITHUB_TOKEN (str): GitHub personal access token. Uses HTTPS auth.
+ *   GITLAB_TOKEN (str): GitLab personal access token. Uses HTTPS auth.
+ *
+ * Priority: resolvedToken > GIT_SSH_KEY > GITHUB_TOKEN > GITLAB_TOKEN
+ */
 function buildAuthEnv(resolvedToken?: string): NodeJS.ProcessEnv {
   const env: NodeJS.ProcessEnv = { ...process.env };
   if (process.env.GIT_SSH_KEY) {

@@ -1,4 +1,15 @@
 #!/usr/bin/env node
+/**
+ * M011 S02 Paperclip Readonly Reprobe
+ *
+ * Environment Variables:
+ *   PAPERCLIP_API_KEY (str): Primary auth token. Required for live probes.
+ *   PAPERCLIP_TOKEN (str): Alias for PAPERCLIP_API_KEY.
+ *   PAPERCLIP_AUTH_TOKEN (str): Alias for PAPERCLIP_API_KEY.
+ *   PAPERCLIP_BASE_URL (str): Paperclip instance URL. Default: https://paperclip.oysana.com
+n *   PAPERCLIP_URL (str): Alias for PAPERCLIP_BASE_URL.
+ *   PAPERCLIP_COMPANY_ID (str): Company ID. Default: 43c74adb-b194-44d1-8f8e-ba142544bb9d
+ */
 const fs = require('fs');
 const path = require('path');
 

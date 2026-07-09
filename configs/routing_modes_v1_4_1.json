@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "route_modes": [
+    "AUTO_ROUTED",
+    "DIV1_REVIEW_REQUIRED",
+    "DIV3_BUDGET_REQUIRED",
+    "DIV5_KNOWLEDGE_REQUIRED",
+    "DIV6_EXTERNAL_REQUIRED",
+    "DIV7_STRATEGIC_ESCALATION"
+  ],
+  "auto_route_conditions": [
+    "division is clear",
+    "task type maps cleanly to routing table",
+    "budget/access is available or unnecessary",
+    "risk is low",
+    "no active Circuit Breaker",
+    "target agent load is below threshold",
+    "no conflicting owner",
+    "no external IO required",
+    "no strategic ambiguity"
+  ],
+  "exception_conditions": [
+    "low route confidence",
+    "multiple possible owners",
+    "raw external content present",
+    "external IO requested",
+    "budget/access missing",
+    "target overloaded",
+    "repeated failure",
+    "Circuit Breaker HALF_OPEN or OPEN",
+    "strategic ambiguity"
+  ]
+}

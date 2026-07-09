@@ -934,6 +934,11 @@ export class PluginRegistrationClient {
 
 /**
  * Create a plugin registration client for the live Paperclip instance.
+ *
+ * Environment Variables:
+ *   PAPERCLIP_BASE_URL (str): Paperclip instance URL. Default: https://paperclip.oysana.com
+ *   PAPERCLIP_API_KEY (str): Paperclip API key for auth.
+ *   PAPERCLIP_COMPANY_ID (str): Company ID for registration.
  */
 export function createRegistrationClient(
   baseUrl?: string,

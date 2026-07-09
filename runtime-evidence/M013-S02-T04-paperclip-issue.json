@@ -1,0 +1,47 @@
+{
+  "task": "T04",
+  "slice": "S02",
+  "milestone": "M013",
+  "generatedAt": "2026-06-04T08:30:00Z",
+  "paperclip": {
+    "baseUrl": "https://paperclip.oysana.com",
+    "companyId": "9feb4c22-05b9-401e-ba67-0e866e3056da",
+    "authAttempted": true,
+    "authMethods": [
+      {
+        "method": "session-based (POST /api/auth/sign-in/email)",
+        "result": "401 INVALID_EMAIL_OR_PASSWORD",
+        "email": "kabidenov.a@gmail.com"
+      },
+      {
+        "method": "api-key (Bearer pcp_board_...)",
+        "result": "401 Unauthorized"
+      }
+    ],
+    "issueCreated": false,
+    "div5CommentAdded": false,
+    "routingCommentAdded": false,
+    "failureReason": "Stale Paperclip credentials in .env. Neither email/password nor API key are valid.",
+    "remediation": "Refresh PAPERCLIP_EMAIL, PAPERCLIP_PASSWORD, and PAPERCLIP_API_KEY in .env, then re-run scripts/m013_s02_create_tech_debt_issue.js"
+  },
+  "reportDelivered": {
+    "path": "runtime-evidence/M013-S02-T04-report.md",
+    "bytes": 12249,
+    "sections": [
+      "Executive Summary",
+      "Codebase Overview",
+      "Debt Register (12 items)",
+      "Cost-Benefit Matrix",
+      "Remediation Roadmap (4 sprints)",
+      "Dependency Graph",
+      "Div5 Verification Summary"
+    ]
+  },
+  "div5Verification": {
+    "itemsVerified": 12,
+    "itemsPassed": 12,
+    "itemsFailed": 0,
+    "method": "Direct source code inspection (grep, cat, file existence)",
+    "verdict": "PASS — All debt items are real, accurately described, cite correct file:line references"
+  }
+}

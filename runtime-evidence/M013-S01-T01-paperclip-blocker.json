@@ -1,0 +1,25 @@
+{
+  "task": "T01",
+  "slice": "S01",
+  "milestone": "M013",
+  "paperclipIssueCreation": "blocked",
+  "blockerCodes": [
+    "paperclip_auth_unauthorized",
+    "paperclip_login_failed"
+  ],
+  "blockerReason": "Paperclip credentials stored in .env return 401 Unauthorized on all company routes. Login endpoint returns empty response. API key (Bearer and X-API-Key) returns Unauthorized. This matches M012 S02 blocker evidence. Paperclip issue creation deferred until credentials are refreshed.",
+  "authProbe": {
+    "healthEndpointStatus": 200,
+    "companyEndpointStatus": 401,
+    "loginAttempt": "failed (empty response)",
+    "apiKeyAuth": "401 Unauthorized",
+    "testedCompanyIds": [
+      "9feb4c22-05b9-401e-ba67-0e866e3056da",
+      "43c74adb-b194-44d1-8f8e-ba142544bb9d"
+    ]
+  },
+  "competitorResearchCompleted": true,
+  "competitorsProfiled": 6,
+  "outputFile": "runtime-evidence/M013-S01-T01-competitors.json",
+  "generatedAt": "2026-06-04T00:00:00.000Z"
+}

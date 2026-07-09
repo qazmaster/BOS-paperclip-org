@@ -1,59 +1,81 @@
-# Skill: Treasury Budget Access
-
-Status: canonical v1.4.1 protocol.
-Owner: Div3.Treasury.
+# SKILL_TREASURY_BUDGET_ACCESS
 
 ## Purpose
 
-Evaluate budget, capacity, secret, credential and access requests without exposing secrets or allowing wildcard permissions.
+Define Div3.Treasury ownership over budget, access, permissions, resources and capacity.
 
-## Triggers
+## Owner
 
-Use this protocol when work needs:
+Div3.Treasury owns:
 
-- token, model, compute or external-service budget;
-- paid API/service access;
-- credentials, secrets or scoped permissions;
-- additional agent capacity;
-- budget anomaly review;
-- grant, denial or human escalation.
+- budget;
+- token limits;
+- cost limits;
+- compute/resource allocation;
+- access grants;
+- permission grants;
+- secret/tool access policy;
+- capacity funding;
+- parallel-agent funding;
+- external service funding.
 
 ## Inputs
 
-- Request routed by Div1.HCO.
-- Purpose and expected outcome.
-- Tool/service/access class.
-- Estimated cost or capacity impact.
-- Required secret scope, never the plaintext secret.
-- Duration, expiration or review condition.
-- Risk notes from Div5 when applicable.
+Div3 receives requests from Div1.HCO:
 
-## Procedure
-
-1. Verify the request came through Div1.HCO.
-2. Confirm requester division and tool/service class.
-3. Check budget/capacity fit and policy constraints.
-4. Define the narrowest usable scope.
-5. Decide grant, deny or needs-human.
-6. Record budget/access decision without plaintext secrets.
-7. Return the decision to Div1.HCO for dispatch.
-8. For paid/credentialed external IO, grant only to the Div6.External route and require Div5 quarantine on output.
+- task budget feasibility;
+- access/tool grant;
+- model/tool spend limit;
+- external API/service access;
+- parallel agent budget;
+- external service/vendor spend;
+- capacity increase.
 
 ## Outputs
 
-- BudgetAccessDecision.
-- Scoped ToolGrant when approved.
-- Denial reason or human-escalation note.
-- Revocation and review condition.
+Div3 emits:
+
+- budget grant/refusal;
+- access grant/refusal;
+- resource grant/refusal;
+- spend warning;
+- capacity warning;
+- funding decision.
+
+## External IO relation
+
+Div3 does not interact with external world.
+
+Div3 may grant Div6.External permission/budget to interact with external APIs, vendors, services, clients or external agents.
 
 ## Guardrails
 
-- Div3 grants permissions but does not perform external IO.
-- Div3 must not expose plaintext secrets in prompts, markdown, logs or evidence.
+- No plaintext secrets in agent instructions.
 - No wildcard permissions.
-- No implicit grants when data is missing.
-- Budget hard-stops and Paperclip-native governance must not be bypassed.
+- Grants must be task/post scoped where possible.
+- External API/service access must be granted only to Div6.
+- Production repo/tool access must match Div4 post and task.
+- Budget/cost approvals must be visible in Paperclip-native artifacts when possible.
+
+## Routing
+
+```text
+Div1 request -> Div3 decision -> Div1 route/dispatch
+```
+
+For external IO:
+
+```text
+Div1 -> Div3 grant -> Div6 executes external interaction -> Div5 validates evidence
+```
+
+## Acceptance
+
+- Div6 external API use requires Div3 grant.
+- Parallel agents require Div3 funding.
+- Div3 does not browse/search/contact vendors directly.
+- Budget/access evidence is available to Div5 gate checks.
 
 ## Failure behavior
 
-Deny or escalate when cost, scope, requester identity, secret handling or policy fit is unclear. Do not create a temporary workaround that bypasses Div1.HCO, Div5 quarantine or Paperclip governance.
+If grant request exceeds budget limits, escalate to Div1.HCO or Div7.MissionControl. If external access is requested by non-Div6 division, deny and route through Div6.External. If TTL exceeds maximum, deny with explanation.

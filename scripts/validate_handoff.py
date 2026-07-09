@@ -12,18 +12,18 @@ ROOT = Path(__file__).resolve().parents[1]
 ENTRYPOINT_FILES = [
     "README.md",
     "00_START_HERE_FOR_NEW_AI_AGENT.md",
-    "HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md",
-    "BOS_M002_DEVELOPMENT_HANDOFF.md",
-    "BOS_M004_DEVELOPMENT_HANDOFF.md",
-    "BOS_M005_DEVELOPMENT_HANDOFF.md",
-    "HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md",
+    "docs/archive/HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md",
+    "docs/archive/BOS_M002_DEVELOPMENT_HANDOFF.md",
+    "docs/archive/BOS_M004_DEVELOPMENT_HANDOFF.md",
+    "docs/archive/BOS_M005_DEVELOPMENT_HANDOFF.md",
+    "docs/archive/HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md",
     "MANIFEST.md",
 ]
 
 BASELINE_FILES = [
-    "docs/03_IMPLEMENTATION_PLAN_V1_2.md",
-    "docs/04_DATA_CONTRACTS.md",
-    "docs/06_ACCEPTANCE_TESTS.md",
+    "docs/archive/03_IMPLEMENTATION_PLAN_V1_2.md",
+    "docs/archive/04_DATA_CONTRACTS.md",
+    "docs/archive/06_ACCEPTANCE_TESTS.md",
     "agents/Div7_MissionControl/AGENTS.md",
     "agents/Div1_HCO/AGENTS.md",
     "agents/Div2_MasterPlanner/AGENTS.md",
@@ -58,12 +58,12 @@ V141_SKILL_FILES = [
 REQUIRED_FILES = ENTRYPOINT_FILES + BASELINE_FILES + V141_DOCTRINE_FILES + V141_SKILL_FILES
 
 ENTRYPOINT_REQUIRED_TERMS = {
-    "README.md": ["v1.4.1", "BOS_Light_v1_4_1_CANONICAL_ORG.md", "python3 scripts/validate_handoff.py"],
-    "00_START_HERE_FOR_NEW_AI_AGENT.md": ["v1.4.1", "SKILL_HCO_ROUTING_CONTROL.md", "validation"],
-    "HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md": ["v1.4.1", "A12-A20", "validate_handoff.py"],
-    "BOS_M002_DEVELOPMENT_HANDOFF.md": ["Canonical doctrine update", "v1.4.1"],
-    "BOS_M005_DEVELOPMENT_HANDOFF.md": ["M005", "runtime-evidence", "live"],
-    "HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md": ["Canonical doctrine update", "v1.4.1", "A12-A20"],
+    "README.md": ["v1.4", "validate_handoff.py"],
+    "00_START_HERE_FOR_NEW_AI_AGENT.md": ["v1.4", "SKILL_HCO_ROUTING_CONTROL.md", "validation"],
+    "docs/archive/HANDOFF_PROMPT_FOR_NEW_AI_AGENT.md": ["v1.4.1", "A12-A20", "validate_handoff.py"],
+    "docs/archive/BOS_M002_DEVELOPMENT_HANDOFF.md": ["Canonical doctrine update", "v1.4.1"],
+    "docs/archive/BOS_M005_DEVELOPMENT_HANDOFF.md": ["M005", "runtime-evidence", "live"],
+    "docs/archive/HANDOFF_REAL_PAPERCLIP_IMPORT_TEST.md": ["Canonical doctrine update", "v1.4.1", "A12-A20"],
 }
 
 V141_REQUIRED_TERMS = {

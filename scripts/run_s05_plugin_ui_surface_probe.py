@@ -6,6 +6,18 @@ manifest and runtime capability matrix, optionally uses Paperclip sandbox
 environment variables, probes a fixed small route set, and writes one canonical
 S05 artifact. It never treats local registration intent, optional chaining, or
 S04 issue/document/comment proof as plugin/UI support.
+
+Environment Variables:
+    PAPERCLIP_BASE_URL (str): Paperclip instance URL. Required.
+    PAPERCLIP_API_KEY (str): Paperclip API key for auth. Required.
+    PAPERCLIP_COMPANY_ID (str): Company ID. Falls back to PAPERCLIP_SANDBOX_COMPANY_ID.
+    PAPERCLIP_ISSUE_ID (str): Issue ID for probes. Falls back to PAPERCLIP_SANDBOX_ISSUE_ID.
+    PAPERCLIP_PLUGIN_KEY (str): Plugin key. Falls back to manifest value.
+    PAPERCLIP_AUTH_HEADER (str): Auth header name. Default: "Authorization".
+    PAPERCLIP_API_KEY_ENV (str): Env var name for API key. Default: "PAPERCLIP_API_KEY".
+    PAPERCLIP_TIMEOUT_SECONDS (float): Request timeout. Default: 30.
+    PAPERCLIP_SANDBOX_COMPANY_ID (str): Fallback company ID.
+    PAPERCLIP_SANDBOX_ISSUE_ID (str): Fallback issue ID.
 """
 
 from __future__ import annotations

@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "deprecated_mapping": [
+    "Div1.Executive",
+    "Div3.Production",
+    "Div4.Operations",
+    "Div5.Qualifications",
+    "Div6.Resources",
+    "Div7.Strategy"
+  ],
+  "canonical_divisions": {
+    "Div7.MissionControl": {
+      "order": 7,
+      "zone": "internal",
+      "primary_owner": "human mission intake, strategy, policy-level decisions"
+    },
+    "Div1.HCO": {
+      "order": 1,
+      "zone": "internal",
+      "primary_owner": "communication, routing control, escalation, Circuit Breaker, hats/staffing"
+    },
+    "Div2.MasterPlanner": {
+      "order": 2,
+      "zone": "internal",
+      "primary_owner": "shaping, BPI, Product Blueprints, Betting Table candidates"
+    },
+    "Div3.Treasury": {
+      "order": 3,
+      "zone": "internal",
+      "primary_owner": "budget, access, permissions, resources, capacity"
+    },
+    "Div4.Production": {
+      "order": 4,
+      "zone": "internal",
+      "primary_owner": "build, implementation, delivery, local QA"
+    },
+    "Div5.QualificationsLibraryLearning": {
+      "order": 5,
+      "zone": "internal",
+      "primary_owner": "independent QA, knowledge base, statistics, autoresearch"
+    },
+    "Div6.External": {
+      "order": 6,
+      "zone": "dmz",
+      "primary_owner": "external world interactions"
+    }
+  }
+}

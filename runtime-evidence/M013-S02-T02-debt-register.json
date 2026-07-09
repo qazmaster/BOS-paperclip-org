@@ -1,0 +1,222 @@
+{
+  "task": "T02",
+  "slice": "S02",
+  "milestone": "M013",
+  "generatedAt": "2026-06-04T07:30:00Z",
+  "project": "BOS_Chimera_Paperclip_Handoff",
+  "methodology": "Code-level analysis of plugin-bos-light source, tests, and configuration. Each item cites specific file:line references from the codebase.",
+  "summary": {
+    "totalItems": 12,
+    "byCategory": {
+      "type-safety": 1,
+      "configuration": 3,
+      "testing": 3,
+      "architecture": 2,
+      "dependency": 1,
+      "performance": 1,
+      "security": 1
+    },
+    "bySeverity": {
+      "critical": 0,
+      "high": 3,
+      "medium": 6,
+      "low": 3
+    },
+    "effortEstimate": {
+      "quickWins": "5 items (< 2 hours each)",
+      "mediumEffort": "5 items (2-8 hours each)",
+      "significantEffort": "2 items (1-3 days each)"
+    }
+  },
+  "debtItems": [
+    {
+      "id": "DEBT-001",
+      "title": "Unsafe `as any` casts in worker IPC handlers",
+      "description": "Three `as any` type casts in worker.ts bypass TypeScript strict mode for IPC message handler return values. The casts suppress type checking on objects passed to Paperclip's registerOptionalTool/registerOptionalDataProvider APIs, meaning runtime shape mismatches will not be caught at compile time.",
+      "files": [
+        "plugin-bos-light/src/worker.ts:180",
+        "plugin-bos-light/src/worker.ts:195",
+        "plugin-bos-light/src/worker.ts:207"
+      ],
+      "category": "type-safety",
+      "severity": "medium",
+      "blastRadius": "Runtime type errors in worker message handling. If Paperclip's tool registration API changes its expected shape, the plugin will fail at runtime rather than compile time. Undermines the benefit of strict: true in tsconfig.",
+      "remediation": "Define proper return type interfaces for each tool handler and remove `as any` casts. Use satisfies or explicit type annotations.",
+      "effort": "2-4 hours"
+    },
+    {
+      "id": "DEBT-002",
+      "title": "No linting or formatting tool configured",
+      "description": "package.json has no ESLint, Prettier, Biome, or any code style enforcement tool. Zero automated quality gates exist before commit. The codebase has 54 source files and 63 test files with no style consistency enforcement.",
+      "files": [
+        "package.json:1-13"
+      ],
+      "category": "configuration",
+      "severity": "high",
+      "blastRadius": "Code style drift across contributors. No pre-commit quality gate. Review burden increases as team grows. Inconsistent formatting makes diffs noisier.",
+      "remediation": "Add ESLint + Prettier (or Biome for faster runs) with a shared config. Add a pre-commit hook via husky/lint-staged.",
+      "effort": "2-4 hours"
+    },
+    {
+      "id": "DEBT-003",
+      "title": "Missing `type: module` in package.json",
+      "description": "tsconfig.json targets ESNext modules (module: ES2022, moduleResolution: bundler) but package.json lacks `\"type\": \"module\"`. The package defaults to CommonJS resolution in Node.js, creating a mismatch between TypeScript's expectations and the runtime's module system.",
+      "files": [
+        "package.json:1-13",
+        "tsconfig.json:3-4"
+      ],
+      "category": "configuration",
+      "severity": "high",
+      "blastRadius": "Import/export behavior may differ between tsconfig expectations and Node runtime. Scripts in scripts/ directory that use import/export syntax will fail if run directly with Node without transpilation.",
+      "remediation": "Add `\"type\": \"module\"` to package.json, or ensure all Node-runnable scripts use .mjs extension or are transpiled before execution.",
+      "effort": "< 1 hour"
+    },
+    {
+      "id": "DEBT-004",
+      "title": "Adapter tests use wrong test runner causing false CI failures",
+      "description": "adapters/gsdpi-local/tests/execute.test.ts uses node:test but vitest discovers it as a test file. Since it has no vitest-compatible test cases, vitest reports an empty suite failure (63/64 suites pass, 1 empty). vitest.config.ts has no include/exclude to scope test discovery.",
+      "files": [
+        "adapters/gsdpi-local/tests/execute.test.ts",
+        "plugin-bos-light/vitest.config.ts:1-6"
+      ],
+      "category": "testing",
+      "severity": "medium",
+      "blastRadius": "False test failure in CI. Developers learn to ignore test failures, which masks real regressions. The adapter directory is also excluded from tsconfig, so its tests are doubly invisible.",
+      "remediation": "Add exclude pattern to vitest.config.ts: `exclude: ['adapters/**']`. Or migrate adapter tests to vitest for consistency.",
+      "effort": "< 1 hour"
+    },
+    {
+      "id": "DEBT-005",
+      "title": "Adapters directory excluded from TypeScript type checking",
+      "description": "tsconfig.json only includes plugin-bos-light/src and tests. The adapters/gsdpi-local/ directory is completely excluded from tsc, meaning type errors in the GSD-Pi local adapter go undetected.",
+      "files": [
+        "tsconfig.json:8"
+      ],
+      "category": "configuration",
+      "severity": "medium",
+      "blastRadius": "Type errors in adapters/gsdpi-local compile silently. The adapter is the bridge to GSD-Pi execution, so type mismatches here could cause runtime failures in production automation.",
+      "remediation": "Add adapters/ to tsconfig include, or create a separate tsconfig for adapters with project references.",
+      "effort": "1-2 hours"
+    },
+    {
+      "id": "DEBT-006",
+      "title": "Minimal vitest configuration with no coverage, timeouts, or retries",
+      "description": "vitest.config.ts sets only pool: 'forks'. No include/exclude patterns, no coverage provider, no coverage thresholds, no explicit timeout, no retry configuration. All behavior depends on vitest defaults which may change across versions.",
+      "files": [
+        "plugin-bos-light/vitest.config.ts:1-6"
+      ],
+      "category": "testing",
+      "severity": "medium",
+      "blastRadius": "Cannot measure or enforce test coverage. Regression risk is invisible. Test timeout behavior is implicit and may differ across CI environments. No retry means flaky tests block CI.",
+      "remediation": "Add coverage provider (v8 or istanbul), coverage thresholds, explicit timeout, and include/exclude patterns.",
+      "effort": "1-2 hours"
+    },
+    {
+      "id": "DEBT-007",
+      "title": "Flat barrel index.ts re-exports 38 modules with no namespacing",
+      "description": "plugin-bos-light/src/index.ts re-exports all 38 modules via `export * from`. No namespacing, no tiered exports, no module boundary enforcement. All public API is flat.",
+      "files": [
+        "plugin-bos-light/src/index.ts:1-39"
+      ],
+      "category": "architecture",
+      "severity": "low",
+      "blastRadius": "Import tree shaking may be less effective (bundler must analyze all re-exports). Harder to enforce module boundaries. Any consumer can import anything from any module, making it difficult to evolve internal APIs without breaking changes.",
+      "remediation": "Group exports into namespaces (e.g., export * as contracts from './contracts') or create tiered export files (public.ts, internal.ts).",
+      "effort": "4-8 hours"
+    },
+    {
+      "id": "DEBT-008",
+      "title": "Scripts directory cluttered with milestone-specific artifacts",
+      "description": "scripts/ directory contains ~119 one-off validation and probe scripts from prior milestones (M011, M012). These are milestone-specific artifacts, not reusable tooling. They mix JS, Python, and shell scripts with no organization.",
+      "files": [
+        "scripts/"
+      ],
+      "category": "architecture",
+      "severity": "low",
+      "blastRadius": "New contributors cannot distinguish reusable scripts from one-off artifacts. Scripts may be run incorrectly or on wrong environments. No cleanup or archival policy means the directory grows indefinitely.",
+      "remediation": "Archive milestone-specific scripts to docs/archive/ or a milestone-specific directory. Keep only reusable scripts in scripts/.",
+      "effort": "1-2 hours"
+    },
+    {
+      "id": "DEBT-009",
+      "title": "All dependencies declared as devDependencies including runtime deps",
+      "description": "package.json lists all 4 dependencies under devDependencies with zero production dependencies. React (19.2.7) is a runtime UI dependency but is listed as devDep. This means no production dependency audit is possible.",
+      "files": [
+        "package.json:2-7"
+      ],
+      "category": "dependency",
+      "severity": "low",
+      "blastRadius": "npm audit --production finds nothing. Deployment tooling that only installs production deps will miss React. No distinction between build-time and runtime dependencies.",
+      "remediation": "Move react to dependencies. Keep esbuild, vitest, and @types/react in devDependencies.",
+      "effort": "< 1 hour"
+    },
+    {
+      "id": "DEBT-010",
+      "title": "Hardcoded circuit breaker polling configuration",
+      "description": "circuitBreaker.ts defines POLLING_CONFIG with hardcoded values: 30s interval, 5s jitter, 10 attempts before backoff, 60 max retries. These values are not configurable per environment or deployment.",
+      "files": [
+        "plugin-bos-light/src/circuitBreaker.ts:8-9"
+      ],
+      "category": "performance",
+      "severity": "medium",
+      "blastRadius": "Cannot tune polling behavior for different environments (dev vs staging vs production). High-frequency polling in dev wastes resources; low-frequency in production delays circuit recovery detection.",
+      "remediation": "Accept polling config as constructor parameter with defaults. Allow environment variable overrides.",
+      "effort": "1-2 hours"
+    },
+    {
+      "id": "DEBT-011",
+      "title": "7 source files have no matching test coverage",
+      "description": "Source files without matching test files: contracts.ts, index.ts, issueBlueprintFlow.ts, paperclipAdapter.ts, paperclipTaskPort.ts, runtimeCapabilities.ts, worker.ts. While some may be tested indirectly, worker.ts (the plugin entry point) has no dedicated test file.",
+      "files": [
+        "plugin-bos-light/src/contracts.ts",
+        "plugin-bos-light/src/index.ts",
+        "plugin-bos-light/src/issueBlueprintFlow.ts",
+        "plugin-bos-light/src/paperclipAdapter.ts",
+        "plugin-bos-light/src/paperclipTaskPort.ts",
+        "plugin-bos-light/src/runtimeCapabilities.ts",
+        "plugin-bos-light/src/worker.ts"
+      ],
+      "category": "testing",
+      "severity": "medium",
+      "blastRadius": "Regression risk in untested modules. worker.ts is the plugin entry point - if tool registration logic breaks, the entire plugin fails. issueBlueprintFlow.ts is a core business flow with no direct tests.",
+      "remediation": "Add integration tests for worker.ts (mock Paperclip ctx, verify tool registration). Add unit tests for issueBlueprintFlow.ts. Other files may be covered indirectly.",
+      "effort": "1-3 days"
+    },
+    {
+      "id": "DEBT-012",
+      "title": "GITHUB_TOKEN accessed directly from process.env without validation",
+      "description": "externalIO.ts:89 reads process.env.GITHUB_TOKEN directly via hasGitHubToken(), and line 234 falls back to direct env access when no secretRef is configured. While externalIO.ts does use secretResolver for configured refs (lines 226, 376), the fallback paths bypass it. This creates two different secret access patterns in the codebase.",
+      "files": [
+        "plugin-bos-light/src/externalIO.ts:89",
+        "plugin-bos-light/src/secretResolver.ts"
+      ],
+      "category": "security",
+      "severity": "medium",
+      "blastRadius": "Inconsistent secret access patterns. If secret resolution logic changes (e.g., adding vault support), externalIO.ts will not benefit. Direct env access also makes it harder to audit which code paths access secrets.",
+      "remediation": "Route GITHUB_TOKEN access through secretResolver.ts. Use resolveSecretRef({ type: 'inline_env', env_key: 'GITHUB_TOKEN' }).",
+      "effort": "1-2 hours"
+    }
+  ],
+  "remediationRoadmap": {
+    "sprint1_quickWins": {
+      "duration": "1 day",
+      "items": ["DEBT-003", "DEBT-004", "DEBT-009"],
+      "impact": "Fix module resolution, eliminate false CI failures, correct dependency declarations"
+    },
+    "sprint2_qualityGates": {
+      "duration": "2-3 days",
+      "items": ["DEBT-002", "DEBT-006", "DEBT-005"],
+      "impact": "Add linting, coverage, and type checking for adapters"
+    },
+    "sprint3_typeSafety": {
+      "duration": "2-3 days",
+      "items": ["DEBT-001", "DEBT-010", "DEBT-012"],
+      "impact": "Remove unsafe casts, make polling configurable, unify secret access"
+    },
+    "sprint4_architecture": {
+      "duration": "3-5 days",
+      "items": ["DEBT-007", "DEBT-008", "DEBT-011"],
+      "impact": "Modularize exports, clean up scripts, add missing test coverage"
+    }
+  }
+}
