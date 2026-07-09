@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T04",
+  "unitId": "M006/S00/T04",
+  "timestamp": 1780295131831,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 scripts/validate_runtime_capabilities.py",
+      "exitCode": 0,
+      "durationMs": 75,
+      "verdict": "pass"
+    }
+  ]
+}

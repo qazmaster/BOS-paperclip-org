@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T03",
+  "unitId": "M005/S03/T03",
+  "timestamp": 1780257065124,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 -m unittest scripts/test_validate_m005_s03_resource_intake_probe.py -v",
+      "exitCode": 0,
+      "durationMs": 95,
+      "verdict": "pass"
+    }
+  ]
+}

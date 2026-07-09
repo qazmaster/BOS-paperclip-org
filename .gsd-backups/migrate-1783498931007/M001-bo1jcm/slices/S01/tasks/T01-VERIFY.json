@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T01",
+  "unitId": "M001-bo1jcm/S01/T01",
+  "timestamp": 1779936402322,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 scripts/validate_company_template.py",
+      "exitCode": 0,
+      "durationMs": 64,
+      "verdict": "pass"
+    }
+  ]
+}

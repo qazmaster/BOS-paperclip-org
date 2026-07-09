@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T01",
+  "unitId": "M005/S01/T01",
+  "timestamp": 1780253267218,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 -m py_compile scripts/run_m005_s01_hermes_xiaomi_probe.py && python3 -m py_compile scripts/validate_m005_s01_hermes_xiaomi_probe.py && python3 -m py_compile scripts/test_validate_m005_s01_hermes_xiaomi_probe.py",
+      "exitCode": 0,
+      "durationMs": 135,
+      "verdict": "pass"
+    }
+  ]
+}

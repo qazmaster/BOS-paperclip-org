@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T03",
+  "unitId": "M003/S03/T03",
+  "timestamp": 1780201359604,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "npm --prefix plugin-bos-light test -- tests/majorFlowDecision.test.ts tests/decisionArtifact.test.ts tests/evalGateEvidence.test.ts tests/circuitBreakerFlow.test.ts",
+      "exitCode": 0,
+      "durationMs": 919,
+      "verdict": "pass"
+    },
+    {
+      "command": "npm --prefix plugin-bos-light run typecheck",
+      "exitCode": 0,
+      "durationMs": 1553,
+      "verdict": "pass"
+    },
+    {
+      "command": "npm --prefix plugin-bos-light test",
+      "exitCode": 0,
+      "durationMs": 1302,
+      "verdict": "pass"
+    },
+    {
+      "command": "python3 scripts/validate_runtime_capabilities.py",
+      "exitCode": 0,
+      "durationMs": 69,
+      "verdict": "pass"
+    }
+  ]
+}

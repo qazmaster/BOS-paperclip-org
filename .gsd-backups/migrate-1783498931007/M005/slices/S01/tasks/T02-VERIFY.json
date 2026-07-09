@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T02",
+  "unitId": "M005/S01/T02",
+  "timestamp": 1780253373019,
+  "passed": true,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "python3 scripts/run_s05_plugin_ui_surface_probe.py --output runtime-evidence/M005-S01-plugin-ui-surface-probe.json && test -f runtime-evidence/M005-S01-plugin-ui-surface-probe.json",
+      "exitCode": 0,
+      "durationMs": 85,
+      "verdict": "pass"
+    }
+  ]
+}
