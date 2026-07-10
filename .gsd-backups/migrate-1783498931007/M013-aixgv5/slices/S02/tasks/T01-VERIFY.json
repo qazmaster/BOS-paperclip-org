@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "taskId": "T01",
-  "unitId": "M013-aixgv5/S02/T01",
-  "timestamp": 1780538511757,
-  "passed": true,
-  "discoverySource": "task-plan-prose",
-  "checks": []
-}

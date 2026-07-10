@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "taskId": "T03",
-  "unitId": "M009/S03/T03",
-  "timestamp": 1780400485922,
-  "passed": true,
-  "discoverySource": "task-plan-prose",
-  "checks": []
-}
