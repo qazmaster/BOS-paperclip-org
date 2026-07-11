@@ -1,0 +1,584 @@
+{
+  "$schema": "gsd/m014-s01-runtime-truth-map-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S01",
+  "task": "T02",
+  "purpose": "Machine-readable classification of authoritative doctrine, runtime identities, capability surfaces, proof gaps, governance risks, and VPS forensic targets for M014-a9jj46 / S01. All canonical-company claims are provisional until fresh authenticated readback.",
+  "generated": "2026-07-11",
+  "generated_by": "GSD auto-mode executor (T02)",
+  "input_inventory": "runtime-evidence/M014-S01-source-inventory.md",
+  "freshness_posture": {
+    "policy": "snapshot",
+    "as_of": "2026-07-11",
+    "must_reprobe_after": "2026-07-11T00:00:00Z",
+    "trigger_conditions": [
+      "any new doctrine patch after v1.4.2",
+      "any new runtime evidence past the 2026-06-04 failure window",
+      "any mutation of `runtime-evidence/` files cited below",
+      "any new GSD memory entry tagged Paperclip-runtime-stability"
+    ],
+    "rule_reference": "R3 + R4 in .gsd/KNOWLEDGE.md"
+  },
+
+  "doctrine": {
+    "baseline": {
+      "id": "bos-light-v1.4.1",
+      "status": "authoritative",
+      "sources": [
+        "docs/BOS_Light_v1_4_1_CANONICAL_ORG.md",
+        "docs/BOS_Light_v1_4_1_Function_Migration_Matrix.md",
+        "docs/BOS_Light_v1_4_1_Tool_Permission_Matrix.md",
+        "docs/BOS_Light_v1_4_1_Data_Contracts.md",
+        "docs/BOS_Light_v1_4_1_Acceptance_Tests_A12_A20.md",
+        "../BOS_Light_v1_4_1_Handoff/BOS_Light_v1_4_1_Handoff/README.md",
+        "../BOS_Light_v1_4_1_Handoff/BOS_Light_v1_4_1_Handoff/docs/",
+        "../BOS_Light_v1_4_1_Handoff/BOS_Light_v1_4_1_Handoff/agents/",
+        "../BOS_Light_v1_4_1_Handoff/BOS_Light_v1_4_1_Handoff/skills/",
+        "../BOS_Light_v1_4_1_Handoff/BOS_Light_v1_4_1_Handoff/configs/"
+      ],
+      "core_one_liner": "Paperclip gives the rails.  BOS Light gives the doctrine.",
+      "non_negotiable_rule_count": 10
+    },
+    "patches": [
+      {
+        "id": "R026-boundary",
+        "version": "v1.4.2",
+        "status": "authoritative",
+        "invariant": "Div7 decision output is not an operational terminal route. Every non-policy-only Div7 decision MUST emit DecisionDelegated to Div1.HCO. Div1.HCO MUST perform all operational routing after Div7 decision.",
+        "packet_shape": "emitDivisionPacket({ from: 'Div7.MissionControl', to: 'Div1.HCO', type: 'DecisionDelegated', payload: {...} })",
+        "canonical_flow": "Human -> Div7 -> DecisionDelegated -> Div1.HCO -> Div2 / Div3 / Div4 / Div5 / Div6 -> Div1.HCO monitor -> Div7 (next decision)",
+        "boundary_test_count": 8,
+        "sources": [
+          "docs/BOS_Light_v1_4_2_R026_Agent_Boundary_Patch.md",
+          "../BOS_Light_v1_4_2_R026_Agent_Boundary_Update/BOS_Light_v1_4_2_R026_Agent_Boundary_Update/README.md"
+        ]
+      }
+    ],
+    "authoritative_path": "Div7.MissionControl -> DecisionDelegated -> Div1.HCO -> Div2..Div6 -> Div1.HCO -> Div7 (next decision cycle)",
+    "rejects": [
+      "any Div7 terminal operational route",
+      "Div2/Div3/Div4/Div5/Div6 accepting direct operational asks from Div7 outside Div1 routing",
+      "any agent codebase that bypasses DecisionDelegated emission"
+    ]
+  },
+
+  "runtime_identity_claims": {
+    "policy": "all canonical-company claims are provisional until fresh authenticated readback",
+    "rule_reference": "MEM071 + R3 + assumption 1 of T01 inventory",
+    "companies": [
+      {
+        "candidate_id": "43c74adb-…",
+        "company_label": "/BOS",
+        "last_authoritative_epoch": "M002 (~2026-04 to 2026-05)",
+        "evidence_files": [
+          "runtime-evidence/bos-v141-agent-creation.json",
+          "scripts/create_bos_v141_agents.py"
+        ],
+        "classification": "stale-m002-epoch",
+        "promotion_state": "fallback-only",
+        "fresh_readback_required": true,
+        "notes": "Was canonical in M002 human-validation window per MEM071; superseded in M012/M013 windows."
+      },
+      {
+        "candidate_id": "1a194762-…",
+        "company_label": "/BOSA",
+        "last_authoritative_epoch": "runtime-gate (~2026-05)",
+        "evidence_files": [
+          "docs/handoffs/HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md"
+        ],
+        "classification": "historical-runtime-gate",
+        "promotion_state": "fallback-only",
+        "fresh_readback_required": true,
+        "notes": "Historical runtime-gate company; not the agent creation target."
+      },
+      {
+        "candidate_id": "9feb4c22-…",
+        "company_label": "/BOS (M012 canonical)",
+        "last_authoritative_epoch": "M012/M013 (~2026-06)",
+        "evidence_files": [
+          "runtime-evidence/M012-S06-mission-issue-evidence.json",
+          "runtime-evidence/M012-S07-rescope-decision.json",
+          "runtime-evidence/M012-S06-session-auth-readback.json",
+          "scripts/m012_s01_canonical_paperclip_readback.js",
+          "scripts/m013_s02_create_tech_debt_issue.js"
+        ],
+        "classification": "stale-m012-epoch",
+        "promotion_state": "fallback-only",
+        "fresh_readback_required": true,
+        "notes": "Was canonical default in M012 promotion per HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md; became stale mid-M013; S03 must remove as script fallback."
+      }
+    ],
+    "additional_stale_ids_r3": [
+      "7595fd85-…",
+      "7eede16c-…",
+      "8233ea7b-…"
+    ],
+    "r3_rule": "Re-verify company / issue / agent UUIDs via Postgres before any API call or script. Stale IDs found 2026-07-08: 9feb4c22-…, 43c74adb-…, 1a194762-…, 7595fd85-…, 7eede16c-…, 8233ea7b-… were all dead."
+  },
+
+  "auth_status": {
+    "default_mode": "session-based via POST /api/auth/sign-in/email",
+    "session_cookie": "__Secure-paperclip-default.session_token",
+    "auth_modes": [
+      {
+        "mode": "session-cookie",
+        "status": "confirmed",
+        "evidence": "MEM295 + MEM336 + runtime-evidence/M012-S06-session-auth-readback.json"
+      },
+      {
+        "mode": "api-key-bearer (PAPERCLIP_API_KEY)",
+        "status": "rejected",
+        "evidence": "MEM295: API key returns 401 in the current build",
+        "promotion_state": "blocked"
+      },
+      {
+        "mode": "public-sign-up",
+        "status": "forbidden",
+        "evidence": "R2 in .gsd/KNOWLEDGE.md; nginx lockdown at paperclip.oysana.com",
+        "promotion_state": "forbidden"
+      },
+      {
+        "mode": "password-reset",
+        "status": "not-applicable",
+        "evidence": "MEM295: no password reset endpoint"
+      }
+    ],
+    "live_quirks": [
+      "Origin header required for POST /api/auth/sign-in/email (else 403)",
+      "session-cookie URL decoding required",
+      "Board-access required for issue list GET",
+      "DELETE returns 500 with cookie-auth",
+      "Board keys revoked as of 2026-07-08 M014 lockdown",
+      "Registration open but accounts cannot be re-registered"
+    ],
+    "memory_ids": ["MEM295", "MEM336", "MEM288"]
+  },
+
+  "runtime_surfaces": {
+    "promotable_via_native_evidence_only": [
+      "issue",
+      "document",
+      "comment"
+    ],
+    "policy": "Only bounded live Paperclip issue/document/comment create+readback evidence may promote native artifact surfaces. Same evidence must NOT confirm approvals, plugin registration, UI/data/action/tool, state, activity, events, Hermes execution, or GSD-Pi execution.",
+    "memory_ids": ["MEM054", "MEM058", "MEM056", "MEM049"],
+    "surfaces": [
+      {
+        "name": "issue",
+        "scope": "create + readback",
+        "route": "/api/issues/:id (non-company-scoped)",
+        "status": "bounded-promotable",
+        "promotion_state": "confirmed-surface",
+        "evidence_epoch": "M002-S04 / M012-S06 / M013-S02",
+        "notes": "Company-scoped variants return 404 (MEM324)."
+      },
+      {
+        "name": "document",
+        "scope": "create + readback",
+        "status": "bounded-promotable",
+        "promotion_state": "confirmed-surface",
+        "evidence_epoch": "M002-S04",
+        "notes": "Same evidence rule as issue."
+      },
+      {
+        "name": "comment",
+        "scope": "create + readback",
+        "route": "/api/issues/:id/comments",
+        "status": "bounded-promotable",
+        "promotion_state": "confirmed-surface",
+        "evidence_epoch": "M002-S04",
+        "notes": "Non-company-scoped route."
+      },
+      {
+        "name": "approval",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "blocked",
+        "notes": "MEM054/MEM058: native approval evidence never promoted."
+      },
+      {
+        "name": "plugin-registration",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "blocked",
+        "evidence": "plugin-bos-light/manifest.paperclip-plugin.json self-flagged as draft requested-capability manifest only; M002-S05 plugin-ui-surface-probe.json",
+        "notes": "manifest carries 12 capabilities_requested + 3 tabs + 7 piko tools. Not runtime authority."
+      },
+      {
+        "name": "ui-surface",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "blocked",
+        "evidence": "M002-S05-plugin-ui-surface-probe.json",
+        "notes": "Tab/UI surfaces unproven."
+      },
+      {
+        "name": "data-surface",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "blocked"
+      },
+      {
+        "name": "action-surface",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "blocked"
+      },
+      {
+        "name": "tool-surface",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "blocked"
+      },
+      {
+        "name": "state-event-activity",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "blocked",
+        "notes": "MEM054/MEM058 explicitly forbid reuse of issue/document/comment evidence."
+      },
+      {
+        "name": "Hermes execution",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "fail-closed",
+        "evidence": [
+          "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+          "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe-live-proof.json"
+        ],
+        "notes": "M005 S01 evidence had passing=true but resultJson={}; Hermes xiaomi remains fallback-only (R4 + MEM046 + MEM049 + MEM058).",
+        "promotion_requires": [
+          "live terminal run status (exit 0)",
+          "resultJson.bos readback with non-empty payload",
+          "explicit adapter identity validation"
+        ]
+      },
+      {
+        "name": "GSD-Pi execution",
+        "scope": "any",
+        "status": "do-not-promote",
+        "promotion_state": "fail-closed",
+        "evidence": [
+          "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+          "MEM046"
+        ],
+        "notes": "gsdpi_local is not registered in Paperclip registry; supported readback returns 'Unknown adapter type: gsdpi_local'.",
+        "promotion_requires": [
+          "registry readback confirming gsdpi_local",
+          "passing testEnvironment",
+          "BosAdapterResult execution proof"
+        ]
+      }
+    ]
+  },
+
+  "health_endpoint_policy": {
+    "endpoint": "/api/health",
+    "promotion_state": "not-runtime-proof",
+    "rule": "/api/health is NOT a runtime persistence proof. Health alone does not prove company, agent, auth, or plugin state.",
+    "memory_ids": ["MEM046", "MEM071"],
+    "rationale": "HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md named this as one of the explicit 'do not' rules; S04 persistence canary must use Paperclip-native markers, not just /api/health."
+  },
+
+  "failure_window_evidence": {
+    "window": "2026-06-03T08:00:00Z through 2026-06-04T09:00:00Z",
+    "filter_command": "docker events --since '2026-06-03T08:00:00' --until '2026-06-04T09:00:00' --filter container=paperclip_sandbox-paperclip-1",
+    "key_artifacts": [
+      {
+        "file": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe-live-proof.json",
+        "recorded_epoch": "2026-06-01T02:33Z",
+        "schema": "runtime-execution-proof",
+        "classification": "Hermes-fallback-only",
+        "limits": "resultJson={} — no resultJson.bos readback; Hermes promotion remains blocked.",
+        "use_in_truth_map": "establishes why Hermes = fail-closed"
+      },
+      {
+        "file": "runtime-evidence/M012-S06-mission-issue-evidence.json",
+        "recorded_epoch": "2026-06-03T08:07Z",
+        "schema": "mission-issue-live-verification",
+        "classification": "bounded-issue-surface",
+        "limits": "session auth succeeded; BOS-3 read back on 9feb4c22-…; deviation_note records BOS-3 created without explicit user confirmation.",
+        "use_in_truth_map": "anchors the governance-rail breach"
+      },
+      {
+        "file": "runtime-evidence/M012-S07-rescope-decision.json",
+        "recorded_epoch": "2026-06-03T08:15Z",
+        "schema": "milestone-criterion-rescope",
+        "classification": "governance-rescope-record",
+        "limits": "formally re-scopes criterion to readback-only; does not restore explicit user confirmation.",
+        "use_in_truth_map": "establishes why S03 preflight contract is mandatory"
+      },
+      {
+        "file": "runtime-evidence/M013-S02-T04-paperclip-issue.json",
+        "recorded_epoch": "2026-06-04T08:30Z",
+        "schema": "paperclip-blocker",
+        "classification": "auth-bl-401",
+        "limits": "session auth 401, API-key auth 401, issue create false; demands .env refresh before any further read.",
+        "use_in_truth_map": "anchors the auth-credential drift"
+      }
+    ]
+  },
+
+  "m002_fail_closed_anchors": {
+    "policy": "M002 S12 runtime-execution-proof files are the formal anchor for Hermes/GSD-Pi = fail-closed classification. Combined with M005-S01-hermes-xiaomi-runtime-probe-live-proof.json, they are why MEM046/MEM049/MEM058/MEM139 keep Hermes/GSD-Pi at fail-closed.",
+    "files": [
+      "runtime-evidence/M002-S02-hermes-environment.json",
+      "runtime-evidence/M002-S02-hermes-smoke.json",
+      "runtime-evidence/M002-S03-gsdpi-environment.json",
+      "runtime-evidence/M002-S03-gsdpi-registration.json",
+      "runtime-evidence/M002-S03-gsdpi-smoke.json",
+      "runtime-evidence/M002-S04-live-artifact-flow.json",
+      "runtime-evidence/M002-S05-plugin-ui-surface-probe.json",
+      "runtime-evidence/M002-S06-regression-closure.json",
+      "runtime-evidence/M002-S07-agent-discovery-readonly.json",
+      "runtime-evidence/M002-S07-agent-mutation-approval-packet.json",
+      "runtime-evidence/M002-S07-agent-template-map.json",
+      "runtime-evidence/M002-S07-agent-visibility.json",
+      "runtime-evidence/M002-S08-adapter-registration-evidence.json",
+      "runtime-evidence/M002-S08-execution-path-decision-packet.json",
+      "runtime-evidence/M002-S08-hermes-cli-environment-remediation.json",
+      "runtime-evidence/M002-S08-provider-adapter-feasibility.json",
+      "runtime-evidence/M002-S08-runtime-execution-smoke.json",
+      "runtime-evidence/M002-S09-reconciliation-audit.json",
+      "runtime-evidence/M002-S09-s08-artifact-reconstruction.json",
+      "runtime-evidence/M002-S10-gsdpi-runtime-execution-proof.json",
+      "runtime-evidence/M002-S10-hermes-runtime-execution-proof.json",
+      "runtime-evidence/M002-S10-requirement-scope-resolution.json",
+      "runtime-evidence/M002-S10-runtime-execution-closeout.json",
+      "runtime-evidence/M002-S11-validation-artifact-repair.json",
+      "runtime-evidence/M002-S12-gsdpi-runtime-execution-proof.json",
+      "runtime-evidence/M002-S12-hermes-runtime-execution-proof.json",
+      "runtime-evidence/M002-S12-rescope-approval.json",
+      "runtime-evidence/M002-S12-runtime-proof-or-rescope.json",
+      "runtime-evidence/M002-S12-validation-closeout.json",
+      "runtime-evidence/M002-S13-requirement-coverage.json",
+      "runtime-evidence/M002-S13-validation-closeout.json"
+    ]
+  },
+
+  "scripts_to_harden": [
+    {
+      "script": "scripts/create_bos_v141_agents.py",
+      "hardcoded_company_id": "43c74adb-…",
+      "epoch": "v1.4.1 creation era",
+      "risk_class": "mutation-capable",
+      "hardening_target": "S03 preflight contract + PAPERCLIP_COMPANY_ID env lockfile + reject when company id is missing/stale"
+    },
+    {
+      "script": "scripts/m012_s01_canonical_paperclip_readback.js",
+      "hardcoded_company_id": "9feb4c22-…",
+      "epoch": "M012 era",
+      "risk_class": "mixed-read-cleanup",
+      "hardening_target": "S03 lockfile contract; remove the implicit 43c→9feb replacement as authoritative default"
+    },
+    {
+      "script": "scripts/m013_s02_create_tech_debt_issue.js",
+      "hardcoded_company_id": "9feb4c22-…",
+      "epoch": "M013 era",
+      "risk_class": "mutation-capable",
+      "hardening_target": "S03 preflight contract; refuse fallback to 9feb on missing PAPERCLIP_COMPANY_ID"
+    }
+  ],
+
+  "governance_risks": [
+    {
+      "id": "GR-001",
+      "title": "Live mutation governance already failed once",
+      "evidence": "runtime-evidence/M012-S07-rescope-decision.json: BOS-3 created without explicit user confirmation.",
+      "rule": "S03 must require explicit human confirmation for every POST/PUT/PATCH/DELETE before execution.",
+      "memory_ids": ["MEM053", "MEM054"]
+    },
+    {
+      "id": "GR-002",
+      "title": "Public sign-up is a documented footgun",
+      "evidence": "R2 + nginx lockdown at paperclip.oysana.com (`location ^/api/auth/sign-up { allow 127.0.0.1/::1; deny all; }`).",
+      "rule": "Never call POST /api/auth/sign-up against the public host for recon; use SSH tunnel to 127.0.0.1:3131 instead.",
+      "memory_ids": []
+    },
+    {
+      "id": "GR-003",
+      "title": "External credential disclosure",
+      "evidence": "MEM053: Telegram delivery group TELEGRAM_CHAT_ID=-1003930272893; TELEGRAM_BOT_TOKEN in local .env.",
+      "rule": "Treat any Telegram payload as external-secret disclosure and require explicit user confirmation before sending credentials.",
+      "memory_ids": ["MEM053"]
+    },
+    {
+      "id": "GR-004",
+      "title": "Stale ID routinely outlives its entity",
+      "evidence": "R3: 6 dead UUIDs as of 2026-07-08.",
+      "rule": "Re-verify company/issue/agent UUIDs via Postgres before any API call or script.",
+      "memory_ids": []
+    },
+    {
+      "id": "GR-005",
+      "title": "Capability row snapshot is not state",
+      "evidence": "R4: hermes.execution.xiaomi was fallback-only after M002/M005 probes yet 04e4d2b6 heartbeat succeeded 2026-06-05.",
+      "rule": "Re-probe live execution before relying on a row marked fallback-only or blocker.",
+      "memory_ids": ["MEM139"]
+    }
+  ],
+
+  "proof_gaps": [
+    {
+      "id": "PG-001",
+      "title": "No fresh authenticated company readback post 2026-06-04",
+      "blocking": true,
+      "opens_after_S01": ["S02", "S03", "S04", "S05"]
+    },
+    {
+      "id": "PG-002",
+      "title": "resultJson.bos for Hermes xiaomi missing",
+      "blocking": true,
+      "opens_after_S01": ["S05"]
+    },
+    {
+      "id": "PG-003",
+      "title": "gsdpi_local registry entry not present in Paperclip",
+      "blocking": true,
+      "opens_after_S01": ["S05"]
+    },
+    {
+      "id": "PG-004",
+      "title": "Plugin/piko/UI/data/action/tool runtime proof absent",
+      "blocking": true,
+      "opens_after_S01": ["S05"]
+    },
+    {
+      "id": "PG-005",
+      "title": "Persistence canary not yet implemented",
+      "blocking": false,
+      "opens_after_S01": ["S04"]
+    },
+    {
+      "id": "PG-006",
+      "title": "Runtime lockfile / preflight contract not yet defined",
+      "blocking": false,
+      "opens_after_S01": ["S03"]
+    },
+    {
+      "id": "PG-007",
+      "title": "VPS forensic commands not yet executed",
+      "blocking": false,
+      "opens_after_S01": ["S02"]
+    }
+  ],
+
+  "vps_targets": {
+    "vps_ip": "87.99.146.178",
+    "sandbox_path": "/opt/paperclip-sandbox",
+    "compose_project": "paperclip_sandbox",
+    "container_name": "paperclip_sandbox-paperclip-1",
+    "container_binding": "127.0.0.1:3131->3100/tcp on VPS only",
+    "public_ingress": "https://paperclip.oysana.com",
+    "browser_tunnel": "local 127.0.0.1:3131 <-SSH-> VPS 127.0.0.1:3131",
+    "base_compose": "/opt/paperclip-sandbox/docker/docker-compose.quickstart.yml",
+    "override_compose": "/opt/paperclip-sandbox/docker-compose.sandbox-override.yml",
+    "auth_override_env": "BETTER_AUTH_TRUSTED_ORIGINS=http://127.0.0.1:3131",
+    "admin_email_redacted": true,
+    "admin_password_location": "/root/paperclip-sandbox-admin.env (do not print or commit)",
+    "safe_restart_command": "cd /opt/paperclip-sandbox/docker && docker compose -p paperclip_sandbox --env-file /opt/paperclip-sandbox/.env.sandbox -f docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml up -d --no-build paperclip",
+    "forbidden_commands": [
+      "docker compose down -v",
+      "docker volume prune",
+      "docker system prune",
+      "docker rm",
+      "docker volume rm"
+    ],
+    "forbidden_command_rule": "Forbidden on VPS unless explicitly approved for destructive recovery (HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md).",
+    "failure_window_events_filter": "docker events --since '2026-06-03T08:00:00' --until '2026-06-04T09:00:00' --filter container=paperclip_sandbox-paperclip-1",
+    "read_only_commands_acceptable": [
+      "docker inspect <container>",
+      "docker stats --no-stream <container>",
+      "docker logs <container>",
+      "journalctl -u docker --since ...",
+      "ls /opt/paperclip-sandbox/data/...",
+      "ss -tlnp | grep 3131",
+      "docker compose -p paperclip_sandbox --env-file /opt/paperclip-sandbox/.env.sandbox -f docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml ps"
+    ]
+  },
+
+  "downstream_handoff": {
+    "S01_T03_validator": {
+      "files_to_create": ["scripts/validate_m014_s01_truth_map.js"],
+      "validator_classes": [
+        "doctrine_fields",
+        "runtime_identity_provisional",
+        "stale_id_must_appear",
+        "hermes_promotion_requires",
+        "gsdpi_promotion_requires",
+        "bounded_promotable_surfaces",
+        "blocked_surfaces",
+        "governance_gates",
+        "health_endpoint_not_proof",
+        "vps_targets_present",
+        "scripts_to_harden_present"
+      ]
+    },
+    "S02_VPS_forensics": {
+      "scope": "read-only",
+      "uses": ["vps_targets.read_only_commands_acceptable", "vps_targets.failure_window_events_filter"]
+    },
+    "S03_lockfile_script_hardening": {
+      "uses": ["doctrine.baseline", "scripts_to_harden", "governance_risks[GR-001,GR-002,GR-004]"]
+    },
+    "S04_persistence_canary": {
+      "uses": ["health_endpoint_policy.rule", "vps_targets.safe_restart_command"]
+    },
+    "S05_bounded_e2e": {
+      "uses": [
+        "doctrine.baseline",
+        "doctrine.patches[R026-boundary]",
+        "runtime_surfaces.surfaces[issue,document,comment]",
+        "runtime_surfaces.surfaces[Hermes execution,GSD-Pi execution]",
+        "governance_risks"
+      ],
+      "required_evidence": [
+        "live terminal run status",
+        "resultJson.bos readback",
+        "native Paperclip artifact readback"
+      ]
+    }
+  },
+
+  "memorandum_provenance": {
+    "rules": {
+      "R1": "gsd_checkpoint_db after slice/milestone close",
+      "R2": "no public sign-up recon",
+      "R3": "re-verify UUIDs",
+      "R4": "fallback-only rows are snapshots",
+      "R5": "stress-test scope overlap check",
+      "R6": "phantom milestones are not part of real workflow"
+    },
+    "memory_ids": ["MEM046", "MEM049", "MEM053", "MEM054", "MEM056", "MEM058", "MEM071", "MEM133", "MEM139", "MEM288", "MEM295", "MEM324", "MEM325", "MEM336"],
+    "source": ".gsd/KNOWLEDGE.md and GSD memory store"
+  },
+
+  "canonical_decision_posture": {
+    "verdict": "Go on a stability gate milestone; Do not on auto-mode or live E2E.",
+    "option_selected": "B (full stability gate) — five-slice contract S01..S05",
+    "anti_goals": [
+      "no Docker wipe claim",
+      "no plugin/piko/GSD-Pi/Hermes E2E promotion",
+      "no secret disclosure",
+      "no broker Telegram/external creds without explicit confirmation"
+    ],
+    "source": ".gsd/workflows/spikes/260607-1-start-a-gsd-milestone-for-paperclip-runt/RECOMMENDATION.md"
+  },
+
+  "no_promotion_ledger": {
+    "policy": "Maintain a no-promotion ledger across docs, JSON manifests, validator wording, evidence artifacts (MEM139).",
+    "keys": [
+      "runtime_surfaces.surfaces[Hermes execution].promotion_state",
+      "runtime_surfaces.surfaces[GSD-Pi execution].promotion_state",
+      "runtime_surfaces.surfaces[approval].promotion_state",
+      "runtime_surfaces.surfaces[plugin-registration].promotion_state",
+      "runtime_surfaces.surfaces[ui-surface].promotion_state",
+      "runtime_surfaces.surfaces[data-surface].promotion_state",
+      "runtime_surfaces.surfaces[action-surface].promotion_state",
+      "runtime_surfaces.surfaces[tool-surface].promotion_state",
+      "runtime_surfaces.surfaces[state-event-activity].promotion_state",
+      "auth_status.auth_modes[public-sign-up].promotion_state",
+      "health_endpoint_policy.promotion_state"
+    ]
+  }
+}
