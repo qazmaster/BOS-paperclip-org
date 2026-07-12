@@ -4,17 +4,29 @@
  *
  * Authenticates to Paperclip via session-based auth, creates an issue
  * with the tech debt report summary, and adds Div5 verification comment.
+ *
+ * Hardening (M014-a9jj46/S03/T03): the script MUST run the
+ * paperclip-preflight contract (scripts/lib/paperclip-preflight.js) before
+ * any POST/PUT/PATCH/DELETE. The legacy `CANONICAL_COMPANY_ID` hardcoded
+ * stale UUID has been removed; callers MUST supply --company-id (a
+ * freshly readback-verified UUID) AND set PAPERCLIP_COMPANY_ID_OVERRIDE=allow
+ * while the lockfile's canonical_company_id remains null.
  */
 
 const fs = require('fs');
 const path = require('path');
+const { runPreflight } = require('./lib/paperclip-preflight');
 
 const ROOT = path.resolve(__dirname, '..');
 const REPORT_PATH = path.join(ROOT, 'runtime-evidence', 'M013-S02-T04-report.md');
 const OUT_JSON = path.join(ROOT, 'runtime-evidence', 'M013-S02-T04-paperclip-issue.json');
 const OUT_MD = path.join(ROOT, 'runtime-evidence', 'M013-S02-T04-paperclip-routing.md');
 const DEFAULT_BASE_URL = 'https://paperclip.oysana.com';
-const CANONICAL_COMPANY_ID = '9feb4c22-05b9-401e-ba67-0e866e3056da';
+// NOTE: The legacy `CANONICAL_COMPANY_ID = '9feb4c22-...'` constant was
+// removed in T03 because that UUID is in the stale_company_ids.ids ledger
+// (R3) and must NEVER be used as a mutation default. Callers must pass
+// --company-id with a freshly readback-verified UUID.
+const PREFLIGHT_CONFIRMATION_REASON = 'm013_s02_create_tech_debt_issue: write M013-S02 tech debt mission issue + verification routing comments';
 
 function loadDotenv() {
   const p = path.join(ROOT, '.env');
@@ -110,7 +122,63 @@ async function addComment(baseUrl, companyId, issueId, auth, body) {
   return res.json();
 }
 
+/**
+ * Parse a minimal `--key=value` CLI surface. This script historically had
+ * no CLI args; post-T03 we add `--company-id` as the only required
+ * argument (the legacy hardcoded constant was removed).
+ */
+function parseCliArgs(argv) {
+  const opts = { companyId: null };
+  for (let i = 2; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === '--company-id') opts.companyId = argv[++i];
+    else if (arg === '--help' || arg === '-h') {
+      process.stdout.write(
+        'Usage: node scripts/m013_s02_create_tech_debt_issue.js --company-id UUID\n' +
+        '\n' +
+        'Required:\n' +
+        '  --company-id UUID    A freshly readback-verified Paperclip company UUID.\n' +
+        '                        MUST NOT match paperclip-runtime.lock.json stale_company_ids.ids.\n' +
+        '                        Must be passed alongside PAPERCLIP_COMPANY_ID_OVERRIDE=allow\n' +
+        '                        while the lockfile\'s canonical_company_id is null.\n' +
+        '\n' +
+        'Env (read by preflight):\n' +
+        '  PAPERCLIP_EMAIL              session-cookie username (required)\n' +
+        '  PAPERCLIP_PASSWORD           session-cookie password (required)\n' +
+        '  PAPERCLIP_COMPANY_ID_OVERRIDE   set to "allow" when supplying --company-id\n' +
+        '  PAPERCLIP_API_KEY            MUST NOT be set (rejected by V-PF-04)\n'
+      );
+      process.exit(0);
+    } else {
+      process.stderr.write(`Unknown argument: ${arg}\n`);
+      process.exit(64);
+    }
+    if (opts.companyId === undefined) {
+      process.stderr.write('--company-id requires a value\n');
+      process.exit(64);
+    }
+  }
+  return opts;
+}
+
+/**
+ * Run the preflight contract and refuse to proceed when it blocks.
+ * The preflight gates every POST/PUT/PATCH/DELETE the script will issue
+ * (issue create, two comment creates). Returns the parsed preflight
+ * envelope so callers can include it in evidence; never throws on block.
+ */
+async function gateMutation(companyId) {
+  const result = await runPreflight({
+    explicitCompanyId: companyId,
+    confirmation: { explicit: true, reason: PREFLIGHT_CONFIRMATION_REASON },
+    bypassHealthProbe: true,
+    bypassVisibilityProbe: true
+  });
+  return result;
+}
+
 async function main() {
+  const cliArgs = parseCliArgs(process.argv);
   const env = loadDotenv();
   const baseUrl = (env.PAPERCLIP_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, '');
   const email = env.PAPERCLIP_EMAIL;
@@ -120,6 +188,24 @@ async function main() {
     console.error('Missing PAPERCLIP_EMAIL or PAPERCLIP_PASSWORD in .env');
     process.exit(1);
   }
+  if (!cliArgs.companyId) {
+    console.error(
+      'Missing --company-id. The legacy hardcoded CANONICAL_COMPANY_ID has been removed ' +
+      '(it was a stale UUID per R3). Pass a freshly readback-verified UUID.'
+    );
+    process.exit(64);
+  }
+
+  // T03 hardening: run the preflight contract BEFORE any POST/PUT/PATCH/DELETE.
+  console.log('Running paperclip-preflight (M014-a9jj46/S03/T02 contract)...');
+  const preflight = await gateMutation(cliArgs.companyId);
+  if (!preflight.pass) {
+    const codes = (preflight.blockers || []).map((b) => b.code || 'unknown').join(',');
+    console.error(`Preflight BLOCKED mutation. Codes: ${codes}`);
+    console.error(JSON.stringify(preflight, null, 2));
+    process.exit(2);
+  }
+  console.log(`Preflight PASSED for company_id=${preflight.diagnostics.company_id || '<unknown>'}.`);
 
   // Read report
   const report = fs.readFileSync(REPORT_PATH, 'utf8');
@@ -168,7 +254,7 @@ Complete technical debt audit of the BOS Light codebase (plugin-bos-light). Iden
   console.log(`Authenticated successfully (${auth.type}).`);
 
   console.log('Creating mission issue...');
-  const issue = await createIssue(baseUrl, CANONICAL_COMPANY_ID, auth,
+  const issue = await createIssue(baseUrl, cliArgs.companyId, auth,
     'M013-S02: Tech Debt Audit of aipay.kz Codebase', issueBody);
 
   const issueId = issue.id || issue.issue_id || issue.identifier;
@@ -205,7 +291,7 @@ All 12 debt items verified against live source code:
 
   if (issueId) {
     console.log('Adding Div5 verification comment...');
-    const comment = await addComment(baseUrl, CANONICAL_COMPANY_ID, issueId, auth, div5Comment);
+    const comment = await addComment(baseUrl, cliArgs.companyId, issueId, auth, div5Comment);
     console.log(`Comment added: ${JSON.stringify(comment, null, 2)}`);
 
     // Add routing comment
@@ -225,7 +311,7 @@ All 12 debt items verified against live source code:
 *Routed through BOS Division Framework | M013-S02 | GSD Auto-Mode*`;
 
     console.log('Adding routing comment...');
-    const routingResult = await addComment(baseUrl, CANONICAL_COMPANY_ID, issueId, auth, routingComment);
+    const routingResult = await addComment(baseUrl, cliArgs.companyId, issueId, auth, routingComment);
     console.log(`Routing comment added: ${JSON.stringify(routingResult, null, 2)}`);
   }
 
@@ -237,12 +323,19 @@ All 12 debt items verified against live source code:
     generatedAt: new Date().toISOString(),
     paperclip: {
       baseUrl,
-      companyId: CANONICAL_COMPANY_ID,
+      companyId: cliArgs.companyId,
       issueId: issueId || null,
       issueTitle: 'M013-S02: Tech Debt Audit of aipay.kz Codebase',
       issueCreated: Boolean(issueId),
       div5CommentAdded: Boolean(issueId),
       routingCommentAdded: Boolean(issueId),
+      preflight: {
+        pass: preflight.pass,
+        companyIdPrefix: preflight.diagnostics.company_id || null,
+        companyIdSource: preflight.diagnostics.company_id_source || null,
+        confirmationReason: PREFLIGHT_CONFIRMATION_REASON,
+        blockedCodes: []
+      }
     },
     rawResponse: issue,
   };

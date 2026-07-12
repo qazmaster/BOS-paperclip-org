@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 import urllib.error
@@ -35,6 +36,24 @@ DEFAULT_TIMEOUT_SECONDS = 20.0
 MAX_RESPONSE_BYTES = 256 * 1024
 MAX_DIAGNOSTIC_TEXT = 1200
 ARTIFACT_FAMILIES = ("BPI", "Blueprint", "Betting Table", "Eval Gate", "Circuit Breaker")
+
+# M014-a9jj46/S03/T03 hardening: the S04 live artifact flow MUST run the
+# paperclip-preflight contract (scripts/cli_paperclip_preflight.js) before
+# any POST/PUT/PATCH/DELETE. The legacy --auth-token-env=PAPERCLIP_API_KEY
+# default is preserved for diagnostic read-only paths; the preflight
+# contract rejects PAPERCLIP_API_KEY (V-PF-04), so any future mutation
+# caller must run with session-cookie credentials.
+CLI_WRAPPER_RELATIVE_PATH = "scripts/cli_paperclip_preflight.js"
+CLI_WRAPPER_TIMEOUT_SECONDS = 30
+PREFLIGHT_CONFIRMATION_REASON = (
+    "run_s04_live_artifact_flow: bounded live BOS artifact-flow sandbox "
+    "(one issue POST, one document PUT, one comment POST, plus readbacks) "
+    "for runtime-evidence promotion"
+)
+# Preflight V-PF-04 explicitly forbids these tokens for mutations; strip
+# them from the subprocess env so the preflight contract evaluates against
+# the operator's intended session-cookie posture.
+PREFLIGHT_REJECTED_ENV_TOKENS = ("PAPERCLIP_API_KEY",)
 
 SECRET_KEY_RE = re.compile(
     r"(?:secret|token|password|passwd|api[_-]?key|credential|private[_-]?key|authorization|bearer|cookie)",
@@ -594,6 +613,164 @@ def write_evidence(root: Path, output: Path, evidence: Mapping[str, Any]) -> Pat
     return target
 
 
+# ---------------------------------------------------------------------------
+# M014-a9jj46/S03/T03 preflight gate
+# ---------------------------------------------------------------------------
+
+
+def _build_subprocess_env() -> dict[str, str]:
+    """Build subprocess env, stripping V-PF-04 rejected tokens."""
+    return {
+        k: v for k, v in os.environ.items() if k not in PREFLIGHT_REJECTED_ENV_TOKENS
+    }
+
+
+def run_preflight(args: argparse.Namespace) -> dict[str, Any]:
+    """Invoke scripts/cli_paperclip_preflight.js and parse the JSON envelope.
+
+    Returns a normalized envelope with `pass`, `blockers`, `diagnostics`,
+    and `exit_code`. Never raises on a blocked preflight — only propagates
+    subprocess/parse errors that prevent the gate from running at all.
+    """
+    cmd = [
+        "node",
+        CLI_WRAPPER_RELATIVE_PATH,
+        "--confirmation-reason",
+        PREFLIGHT_CONFIRMATION_REASON,
+        # The S04 flow already runs its own /api/health + /api/version
+        # probes; bypass preflight's network probes to avoid double-work
+        # and surface a meaningful health-decode in the script's evidence.
+        "--bypass-health-probe",
+        "--bypass-visibility-probe",
+    ]
+    if args.company_id:
+        cmd += ["--explicit-company-id", args.company_id]
+    try:
+        proc = subprocess.run(
+            cmd,
+            cwd=str(ROOT),
+            env=_build_subprocess_env(),
+            capture_output=True,
+            text=True,
+            timeout=CLI_WRAPPER_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return {
+            "pass": False,
+            "blockers": [
+                {
+                    "code": "V-PF-CLI-TIMEOUT",
+                    "kind": "schema",
+                    "where": CLI_WRAPPER_RELATIVE_PATH,
+                    "message": (
+                        f"preflight runner timed out after {CLI_WRAPPER_TIMEOUT_SECONDS}s"
+                    ),
+                    "evidence": {"timeout_seconds": CLI_WRAPPER_TIMEOUT_SECONDS},
+                    "remediation": (
+                        "Investigate why scripts/cli_paperclip_preflight.js did not "
+                        "respond. Treat as a hard block: do NOT proceed with mutation."
+                    ),
+                }
+            ],
+            "diagnostics": {"runner": "timeout"},
+            "exit_code": -1,
+        }
+    except FileNotFoundError as exc:
+        return {
+            "pass": False,
+            "blockers": [
+                {
+                    "code": "V-PF-CLI-MISSING",
+                    "kind": "schema",
+                    "where": CLI_WRAPPER_RELATIVE_PATH,
+                    "message": "preflight runner binary not found on PATH",
+                    "evidence": {"error": str(exc)},
+                    "remediation": (
+                        "Install node and ensure scripts/cli_paperclip_preflight.js "
+                        "is executable. Treat as a hard block."
+                    ),
+                }
+            ],
+            "diagnostics": {"runner": "missing"},
+            "exit_code": -1,
+        }
+
+    stdout = (proc.stdout or "").strip()
+    parsed: dict[str, Any] | None = None
+    if stdout:
+        try:
+            parsed = json.loads(stdout)
+        except json.JSONDecodeError:
+            parsed = None
+    if parsed is None:
+        return {
+            "pass": False,
+            "blockers": [
+                {
+                    "code": "V-PF-CLI-PARSE",
+                    "kind": "schema",
+                    "where": CLI_WRAPPER_RELATIVE_PATH,
+                    "message": "preflight runner emitted non-JSON output",
+                    "evidence": {
+                        "stdout_head": stdout[:400] if stdout else None,
+                        "exit_code": proc.returncode,
+                    },
+                    "remediation": (
+                        "Inspect the preflight runner; it MUST emit a JSON envelope. "
+                        "Treat the unparseable output as a hard block."
+                    ),
+                }
+            ],
+            "diagnostics": {"runner": "parse_failed", "exit_code": proc.returncode},
+            "exit_code": proc.returncode,
+        }
+    return {
+        "pass": bool(parsed.get("pass")),
+        "blockers": parsed.get("blockers") or [],
+        "diagnostics": parsed.get("diagnostics") or {},
+        "exit_code": proc.returncode,
+        "raw_envelope": parsed,
+    }
+
+
+def build_preflight_blocker_evidence(
+    args: argparse.Namespace, preflight: dict[str, Any]
+) -> dict[str, Any]:
+    """Build a fail-closed evidence with structured preflight blockers.
+
+    Preserves the M002/S04 schema_version, artifact_type, inputs, and
+    invariants so downstream validators that key on schema_version still
+    classify the artifact. The preflight envelope is layered into the
+    `preflight` key with structured blockers and diagnostics.
+    """
+    evidence = _base_evidence(args)
+    evidence["artifact_type"] = BLOCKER_ARTIFACT_TYPE
+    preflight_blockers = preflight.get("blockers") or []
+    preflight_codes = [
+        str(b.get("code"))
+        for b in preflight_blockers
+        if isinstance(b, dict) and b.get("code")
+    ]
+    evidence["blocker_reason"] = "preflight_blocked"
+    evidence["blocker_codes"] = preflight_codes
+    evidence["preflight"] = {
+        "pass": False,
+        "blockers": preflight_blockers,
+        "diagnostics": preflight.get("diagnostics") or {},
+        "exit_code": preflight.get("exit_code"),
+    }
+    evidence["diagnostics"].append(
+        _diagnostic(
+            "preflight.gate",
+            {"status": preflight.get("exit_code")},
+            False,
+            f"paperclip-preflight blocked mutation; codes: {','.join(preflight_codes)}",
+        )
+    )
+    return _redact_value("evidence", evidence)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run S04 live BOS Light artifact flow and write canonical redacted evidence.")
     parser.add_argument("--base-url", required=True, help="Paperclip base URL, e.g. http://127.0.0.1:3000.")
@@ -614,6 +791,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if not args.run_label:
         args.run_label = f"s04-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
+
+    # T03 hardening: paperclip-preflight contract gates the script's
+    # first HTTP call. When preflight blocks, write a fail-closed-blocker
+    # evidence with structured preflight blockers (no HTTP call is made).
+    preflight = run_preflight(args)
+    if not preflight.get("pass"):
+        evidence = build_preflight_blocker_evidence(args, preflight)
+        target = write_evidence(ROOT, args.output, evidence)
+        print(
+            f"S04 live artifact flow preflight BLOCKED; "
+            f"fail-closed evidence written: {target}",
+            file=sys.stderr,
+        )
+        return 2
+
     headers = _headers_from_env(args.auth_token_env, args.auth_header_name)
     client = HttpClient(args.base_url, headers, args.timeout, args.origin)
     try:
