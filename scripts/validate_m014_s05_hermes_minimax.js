@@ -170,6 +170,14 @@ const MINIMAX_DIRECT_PROOF_JSON = path.resolve(
   PROJECT_ROOT,
   'runtime-evidence/M014-S05-minimax-direct-proof.json'
 );
+const PAPERCLIP_HERMES_PROOF_JSON = path.resolve(
+  PROJECT_ROOT,
+  'runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json'
+);
+const PAPERCLIP_ROLLOUT_JSON = path.resolve(
+  PROJECT_ROOT,
+  'runtime-evidence/M014-S05-hermes-minimax-rollout.json'
+);
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -286,6 +294,45 @@ const REQUIRED_PRE_DIRECT_CLEANUP_NAMES = [
   'verify_no_xiaomi_session_active',
   'verify_minimax_secret_refs_resolvable',
   'verify_clean_session_startup',
+];
+
+// T04 (final phase) constants
+const REQUIRED_FINAL_PHASE_VERDICT_ENUM = [
+  'PLAN_READY_LIVE_EXECUTION_DEFERRED',
+  'PASS',
+  'FAIL_PAPERCLIP_ADAPTER_CONFIG_INVALID',
+  'FAIL_HERMES_LOCAL_NOT_CLEAN_SESSION',
+  'FAIL_XIAOMI_ENDPOINT_REUSE',
+  'FAIL_CREDENTIAL_LEAK',
+  'FAIL_TERMINAL_NONZERO_EXIT',
+  'FAIL_RESULTJSON_SCHEMA_INVALID',
+  'BLOCKED_NO_OPERATOR_CONFIRMATION',
+  'ROLLBACK_DECLARED',
+];
+
+const REQUIRED_ROLLOUT_VERDICT_ENUM = [
+  'PLAN_READY_LIVE_EXECUTION_DEFERRED',
+  'ROLLOUT',
+  'ROLLBACK_DECLARED',
+  'BLOCKED_NO_OPERATOR_CONFIRMATION',
+];
+
+const REQUIRED_PRE_ADAPTER_CLEANUP_NAMES = [
+  'verify_xiaomi_session_terminated',
+  'verify_paperclip_adapter_config_pre_mutation_readback',
+  'verify_paperclip_restart_clean_not_in_place_switch',
+];
+
+const REQUIRED_PAPERCLIP_PROFILE_KEYS = [
+  'provider',
+  'model',
+  'timeoutSec',
+  'graceSec',
+  'endpoint_class',
+  'api_key_secret_ref',
+  'base_url_secret_ref',
+  'structured_output_schema',
+  'session_id_format_expected',
 ];
 
 // ---------------------------------------------------------------------------
@@ -1192,6 +1239,279 @@ function validateMinimaxDirectProof(parsed, providerContractParsed, baselinePars
 }
 
 // ---------------------------------------------------------------------------
+// Loaders (T04)
+// ---------------------------------------------------------------------------
+
+function loadPaperclipHermesProofOrFail(proofPath = PAPERCLIP_HERMES_PROOF_JSON) {
+  if (!fs.existsSync(proofPath)) {
+    throw new Error(`Paperclip hermes_minimax proof file not found: ${proofPath}`);
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(proofPath, 'utf8');
+  } catch (err) {
+    throw new Error(`Paperclip hermes_minimax proof file unreadable: ${proofPath} (${err.message})`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`Paperclip hermes_minimax proof file is not valid JSON: ${proofPath} (${err.message})`);
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error(`Paperclip hermes_minimax proof file must be a JSON object: ${proofPath}`);
+  }
+  return { raw, parsed };
+}
+
+function loadPaperclipHermesRolloutOrFail(rolloutPath = PAPERCLIP_ROLLOUT_JSON) {
+  if (!fs.existsSync(rolloutPath)) {
+    throw new Error(`Paperclip hermes_minimax rollout file not found: ${rolloutPath}`);
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(rolloutPath, 'utf8');
+  } catch (err) {
+    throw new Error(`Paperclip hermes_minimax rollout file unreadable: ${rolloutPath} (${err.message})`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`Paperclip hermes_minimax rollout file is not valid JSON: ${rolloutPath} (${err.message})`);
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error(`Paperclip hermes_minimax rollout file must be a JSON object: ${rolloutPath}`);
+  }
+  return { raw, parsed };
+}
+
+// ---------------------------------------------------------------------------
+// Paperclip hermes_minimax proof validator (T04) -- checks V-HM-AD-01 .. V-HM-AD-11
+// ---------------------------------------------------------------------------
+
+function validatePaperclipHermesProof(parsed, providerContractParsed, directProofParsed, baselineParsed) {
+  const checks = [];
+  const blockers = [];
+
+  // V-HM-AD-01
+  checks.push({ id: 'V-HM-AD-01', verdict: 'pass', note: 'paperclip-hermes-minimax-proof.json file exists' });
+
+  // V-HM-AD-02
+  checks.push({ id: 'V-HM-AD-02', verdict: 'pass', note: 'paperclip-hermes-minimax-proof.json parses as JSON object' });
+
+  // V-HM-AD-03
+  const phaseVerdict = parsed.phase_verdict;
+  if (REQUIRED_FINAL_PHASE_VERDICT_ENUM.includes(phaseVerdict)) {
+    checks.push({ id: 'V-HM-AD-03', verdict: 'pass', note: `phase_verdict admissible: ${phaseVerdict}` });
+  } else {
+    blockers.push(`phase_verdict not in enum_lock: ${phaseVerdict}`);
+    checks.push({ id: 'V-HM-AD-03', verdict: 'fail', note: `phase_verdict not in enum_lock: ${phaseVerdict}` });
+  }
+
+  // V-HM-AD-04
+  const liveStatus = parsed.live_execution_status;
+  if (REQUIRED_LIVE_EXECUTION_STATUS_ENUM.includes(liveStatus)) {
+    checks.push({ id: 'V-HM-AD-04', verdict: 'pass', note: `live_execution_status admissible: ${liveStatus}` });
+  } else {
+    blockers.push(`live_execution_status not in enum_lock: ${liveStatus}`);
+    checks.push({ id: 'V-HM-AD-04', verdict: 'fail', note: `live_execution_status not in enum_lock: ${liveStatus}` });
+  }
+
+  // V-HM-AD-05
+  if (parsed.fresh_readback_required === true) {
+    checks.push({ id: 'V-HM-AD-05', verdict: 'pass', note: 'fresh_readback_required asserted' });
+  } else {
+    blockers.push('fresh_readback_required missing or false');
+    checks.push({ id: 'V-HM-AD-05', verdict: 'fail', note: 'fresh_readback_required must be true' });
+  }
+
+  // V-HM-AD-06: adapter_profile_target.profile_shape correctness
+  const profile = parsed.adapter_profile_target && parsed.adapter_profile_target.profile_shape;
+  if (
+    profile &&
+    profile.provider === MINIMAX_CANONICAL_PROVIDER_NAME &&
+    profile.model === MINIMAX_CANONICAL_MODEL_SPELLING &&
+    profile.endpoint_class === MINIMAX_CANONICAL_ENDPOINT_MODE &&
+    profile.api_key_secret_ref === MINIMAX_AUTH_SECRET_REF &&
+    profile.base_url_secret_ref === MINIMAX_ENDPOINT_SECRET_REF
+  ) {
+    checks.push({ id: 'V-HM-AD-06', verdict: 'pass', note: 'adapter profile shape matches canonicals' });
+  } else {
+    const detail = profile
+      ? JSON.stringify({ provider: profile.provider, model: profile.model, endpoint_class: profile.endpoint_class })
+      : 'profile_shape missing';
+    blockers.push(`adapter profile shape drift: ${detail}`);
+    checks.push({ id: 'V-HM-AD-06', verdict: 'fail', note: `adapter profile shape drift: ${detail}` });
+  }
+
+  // V-HM-AD-07: profile has all required keys
+  if (profile) {
+    const missingKeys = REQUIRED_PAPERCLIP_PROFILE_KEYS.filter((k) => !(k in profile));
+    if (missingKeys.length === 0) {
+      checks.push({ id: 'V-HM-AD-07', verdict: 'pass', note: `adapter profile has all ${REQUIRED_PAPERCLIP_PROFILE_KEYS.length} required keys` });
+    } else {
+      blockers.push(`adapter profile missing keys: ${missingKeys.join(', ')}`);
+      checks.push({ id: 'V-HM-AD-07', verdict: 'fail', note: `adapter profile missing keys: ${missingKeys.join(', ')}` });
+    }
+  } else {
+    blockers.push('adapter profile missing');
+    checks.push({ id: 'V-HM-AD-07', verdict: 'fail', note: 'adapter profile missing (cannot evaluate keys)' });
+  }
+
+  // V-HM-AD-08: bounded_test_agent_target.agent_kind == 'bounded-test-agent'
+  const bounded = parsed.bounded_test_agent_target;
+  if (bounded && bounded.agent_kind === 'bounded-test-agent') {
+    checks.push({ id: 'V-HM-AD-08', verdict: 'pass', note: 'bounded test-agent scope confirmed (one agent only)' });
+  } else {
+    blockers.push('bounded_test_agent_target.agent_kind must be "bounded-test-agent"');
+    checks.push({ id: 'V-HM-AD-08', verdict: 'fail', note: 'bounded test-agent scope missing or wrong kind' });
+  }
+
+  // V-HM-AD-09: pre_adapter_cleanup_results covers 3 PAC-* checks
+  const pacChecks = parsed.pre_adapter_cleanup_results && parsed.pre_adapter_cleanup_results.results;
+  if (Array.isArray(pacChecks)) {
+    const names = new Set(pacChecks.map((c) => c.name));
+    const missingPac = REQUIRED_PRE_ADAPTER_CLEANUP_NAMES.filter((n) => !names.has(n));
+    if (pacChecks.length === 3 && missingPac.length === 0) {
+      checks.push({ id: 'V-HM-AD-09', verdict: 'pass', note: 'all 3 pre-adapter cleanup dimensions covered' });
+    } else {
+      blockers.push(`pre-adapter cleanup gap: count=${pacChecks.length}, missing=${missingPac.join(',')}`);
+      checks.push({ id: 'V-HM-AD-09', verdict: 'fail', note: `pre-adapter cleanup gap: count=${pacChecks.length}, missing=${missingPac.join(',')}` });
+    }
+  } else {
+    blockers.push('pre_adapter_cleanup_results.results missing or not array');
+    checks.push({ id: 'V-HM-AD-09', verdict: 'fail', note: 'pre_adapter_cleanup_results.results missing or not array' });
+  }
+
+  // V-HM-AD-10: proof inherited_constraints carry all 6 LFP-* IDs
+  const proofInherited = parsed.inherited_constraints_remain_in_force && parsed.inherited_constraints_remain_in_force.inherited_constraints;
+  if (Array.isArray(proofInherited)) {
+    const ids = new Set(proofInherited.map((c) => c.id));
+    const missingInherited = REQUIRED_INHERITED_CONSTRAINT_IDS.filter((id) => !ids.has(id));
+    if (missingInherited.length === 0 && proofInherited.length === REQUIRED_INHERITED_CONSTRAINT_IDS.length) {
+      checks.push({ id: 'V-HM-AD-10', verdict: 'pass', note: 'all 6 LFP-* inherited constraints preserved in paperclip adapter proof' });
+    } else {
+      blockers.push(`proof inherited constraint drift: ${missingInherited.join(', ')}`);
+      checks.push({ id: 'V-HM-AD-10', verdict: 'fail', note: `proof inherited constraint drift: ${missingInherited.join(', ')}` });
+    }
+  } else {
+    blockers.push('inherited_constraints_remain_in_force.inherited_constraints missing or not array');
+    checks.push({ id: 'V-HM-AD-10', verdict: 'fail', note: 'inherited_constraints_remain_in_force.inherited_constraints missing or not array' });
+  }
+
+  // V-HM-AD-11: prerequisite_state_for_T04.gate_satisfied is false (auto-mode deferred)
+  const prereqState = parsed.prerequisite_artifacts_audit;
+  if (prereqState && prereqState.all_prerequisites_satisfied_for_live_execution === false) {
+    checks.push({ id: 'V-HM-AD-11', verdict: 'pass', note: 'all_prerequisites_satisfied_for_live_execution=false (auto-mode deferred honestly)' });
+  } else {
+    blockers.push('prerequisite_artifacts_audit.all_prerequisites_satisfied_for_live_execution must be false in auto-mode');
+    checks.push({ id: 'V-HM-AD-11', verdict: 'fail', note: 'all_prerequisites_satisfied_for_live_execution must be false (auto-mode deferred)' });
+  }
+
+  return {
+    verdict: blockers.length === 0 ? 'pass' : 'fail',
+    blockers,
+    checks,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Paperclip hermes_minimax rollout verdict validator (T04) -- checks V-HM-AD-12 .. V-HM-AD-21
+// ---------------------------------------------------------------------------
+
+function validatePaperclipHermesRollout(parsed, paperclipProofParsed, providerContractParsed, directProofParsed, baselineParsed) {
+  const checks = [];
+  const blockers = [];
+
+  // V-HM-AD-12
+  checks.push({ id: 'V-HM-AD-12', verdict: 'pass', note: 'hermes-minimax-rollout.json file exists' });
+
+  // V-HM-AD-13
+  checks.push({ id: 'V-HM-AD-13', verdict: 'pass', note: 'hermes-minimax-rollout.json parses as JSON object' });
+
+  // V-HM-AD-14: rollout_verdict admissible
+  const rolloutVerdict = parsed.rollout_verdict;
+  if (REQUIRED_ROLLOUT_VERDICT_ENUM.includes(rolloutVerdict)) {
+    checks.push({ id: 'V-HM-AD-14', verdict: 'pass', note: `rollout_verdict admissible: ${rolloutVerdict}` });
+  } else {
+    blockers.push(`rollout_verdict not in enum_lock: ${rolloutVerdict}`);
+    checks.push({ id: 'V-HM-AD-14', verdict: 'fail', note: `rollout_verdict not in enum_lock: ${rolloutVerdict}` });
+  }
+
+  // V-HM-AD-15: live_execution_status admissible
+  const liveStatus = parsed.live_execution_status;
+  if (REQUIRED_LIVE_EXECUTION_STATUS_ENUM.includes(liveStatus)) {
+    checks.push({ id: 'V-HM-AD-15', verdict: 'pass', note: `live_execution_status admissible: ${liveStatus}` });
+  } else {
+    blockers.push(`live_execution_status not in enum_lock: ${liveStatus}`);
+    checks.push({ id: 'V-HM-AD-15', verdict: 'fail', note: `live_execution_status not in enum_lock: ${liveStatus}` });
+  }
+
+  // V-HM-AD-16: rollout_pre_conditions count = 4
+  const rpc = parsed.rollout_pre_conditions;
+  if (rpc && rpc.conditions_count === 4 && Array.isArray(rpc.conditions) && rpc.conditions.length === 4) {
+    checks.push({ id: 'V-HM-AD-16', verdict: 'pass', note: 'rollout_pre_conditions covers all 4 RPC-* conditions' });
+  } else {
+    blockers.push(`rollout_pre_conditions count drift: count=${rpc && rpc.conditions_count}, len=${rpc && rpc.conditions && rpc.conditions.length}`);
+    checks.push({ id: 'V-HM-AD-16', verdict: 'fail', note: `rollout_pre_conditions count drift` });
+  }
+
+  // V-HM-AD-17: rollback_pre_conditions count = 6
+  const rbc = parsed.rollback_pre_conditions;
+  if (rbc && rbc.triggers_count === 6 && Array.isArray(rbc.triggers) && rbc.triggers.length === 6) {
+    checks.push({ id: 'V-HM-AD-17', verdict: 'pass', note: 'rollback_pre_conditions covers all 6 RBC-* triggers' });
+  } else {
+    blockers.push(`rollback_pre_conditions count drift: count=${rbc && rbc.triggers_count}, len=${rbc && rbc.triggers && rbc.triggers.length}`);
+    checks.push({ id: 'V-HM-AD-17', verdict: 'fail', note: `rollback_pre_conditions count drift` });
+  }
+
+  // V-HM-AD-18: full_fleet_rollout_gate.out_of_scope_for_T04 === true
+  const ffr = parsed.full_fleet_rollout_gate;
+  if (ffr && ffr.out_of_scope_for_T04 === true && ffr.pre_conditions_count === 5) {
+    checks.push({ id: 'V-HM-AD-18', verdict: 'pass', note: 'full-fleet rollout correctly gated (out_of_scope=true, FFR-01..05 enumerated)' });
+  } else {
+    blockers.push(`full_fleet_rollout_gate drift: out_of_scope=${ffr && ffr.out_of_scope_for_T04}, count=${ffr && ffr.pre_conditions_count}`);
+    checks.push({ id: 'V-HM-AD-18', verdict: 'fail', note: 'full_fleet_rollout_gate drift' });
+  }
+
+  // V-HM-AD-19: rollout_decision_rule has source_pointer to paperclip adapter proof artifact
+  const rule = parsed.rollout_decision_rule;
+  if (rule && typeof rule.source_pointer === 'string' && rule.source_pointer.includes('M014-S05-paperclip-hermes-minimax-proof.json')) {
+    checks.push({ id: 'V-HM-AD-19', verdict: 'pass', note: 'rollout_decision_rule.source_pointer cites paperclip adapter proof' });
+  } else {
+    blockers.push('rollout_decision_rule.source_pointer must reference M014-S05-paperclip-hermes-minimax-proof.json');
+    checks.push({ id: 'V-HM-AD-19', verdict: 'fail', note: 'rollout_decision_rule.source_pointer missing or wrong artifact' });
+  }
+
+  // V-HM-AD-20: redaction leak scan across both T04 artifacts
+  const combinedProofRollout = JSON.stringify(paperclipProofParsed) + '\n' + JSON.stringify(parsed);
+  const hitsProofRollout = scanCredentialLeaks(combinedProofRollout);
+  if (hitsProofRollout.length === 0) {
+    checks.push({ id: 'V-HM-AD-20', verdict: 'pass', note: 'paperclip adapter proof + rollout no credential value leak' });
+  } else {
+    blockers.push(`credential leak(s): ${hitsProofRollout.map((h) => h.redacted).join(', ')}`);
+    checks.push({ id: 'V-HM-AD-20', verdict: 'fail', note: `credential leak(s): ${hitsProofRollout.map((h) => h.redacted).join(', ')}` });
+  }
+
+  // V-HM-AD-21: no unapproved UUID literal across both T04 artifacts
+  const matchesProofRollout = combinedProofRollout.match(UUID_RE) || [];
+  const unexpectedProofRollout = matchesProofRollout.filter((u) => !APPROVED_UUID_8CHAR_PREFIXES.has(uuidPrefix(u)));
+  if (unexpectedProofRollout.length === 0) {
+    checks.push({ id: 'V-HM-AD-21', verdict: 'pass', note: 'paperclip adapter proof + rollout no unapproved UUID literal' });
+  } else {
+    blockers.push(`unexpected UUID literal(s): ${unexpectedProofRollout.map(redactUuidsInString).join(', ')}`);
+    checks.push({ id: 'V-HM-AD-21', verdict: 'fail', note: `unexpected UUID literal(s): ${unexpectedProofRollout.map(redactUuidsInString).join(', ')}` });
+  }
+
+  return {
+    verdict: blockers.length === 0 ? 'pass' : 'fail',
+    blockers,
+    checks,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // CLI
 // ---------------------------------------------------------------------------
 
@@ -1209,15 +1529,9 @@ function cli() {
     process.exit(2);
   }
 
-  // The --phase final placeholder (T04) remains fail-closed. --phase direct
-  // (T03) now loads + validates the provider-contract + direct-proof artifacts.
-  if (phase === 'final') {
-    process.stderr.write(
-      `FAIL: --phase final is reserved for T04 (not implemented yet).\n` +
-      `Run the S05 T04 task to produce the corresponding artifact, then re-run with --phase final.\n`
-    );
-    process.exit(1);
-  }
+  // --phase final (T04): implemented below via the else-if branch. The old
+  // fail-closed placeholder has been removed; the dispatch loads both T04
+  // artifacts and runs validatePaperclipHermesProof + validatePaperclipHermesRollout.
 
   // Both baseline and upgraded phases need the baseline + diff artifacts
   // loaded and validated first (upstream-truth invariants must hold through
@@ -1277,6 +1591,33 @@ function cli() {
     additionalArtifacts = [
       path.relative(PROJECT_ROOT, MINIMAX_PROVIDER_CONTRACT_JSON),
       path.relative(PROJECT_ROOT, MINIMAX_DIRECT_PROOF_JSON),
+    ];
+  } else if (phase === 'final') {
+    // --phase final (T04): validate Paperclip adapter proof + rollout verdict
+    // depends on provider-contract + direct-proof being valid (already validated
+    // upstream -- but we still need their parsed objects for cross-checks)
+    let providerContractParsed;
+    let directProofParsed;
+    let paperclipProofParsed;
+    let paperclipRolloutParsed;
+    try {
+      providerContractParsed = loadMinimaxProviderContractOrFail().parsed;
+      directProofParsed = loadMinimaxDirectProofOrFail().parsed;
+      paperclipProofParsed = loadPaperclipHermesProofOrFail().parsed;
+      paperclipRolloutParsed = loadPaperclipHermesRolloutOrFail().parsed;
+    } catch (err) {
+      process.stderr.write(`FAIL: ${err.message}\n`);
+      process.exit(2);
+    }
+    const paperclipProofResult = validatePaperclipHermesProof(paperclipProofParsed, providerContractParsed, directProofParsed, parsed);
+    const paperclipRolloutResult = validatePaperclipHermesRollout(paperclipRolloutParsed, paperclipProofParsed, providerContractParsed, directProofParsed, parsed);
+    allChecks = allChecks.concat(paperclipProofResult.checks, paperclipRolloutResult.checks);
+    allBlockers = allBlockers.concat(paperclipProofResult.blockers, paperclipRolloutResult.blockers);
+    additionalArtifacts = [
+      path.relative(PROJECT_ROOT, MINIMAX_PROVIDER_CONTRACT_JSON),
+      path.relative(PROJECT_ROOT, MINIMAX_DIRECT_PROOF_JSON),
+      path.relative(PROJECT_ROOT, PAPERCLIP_HERMES_PROOF_JSON),
+      path.relative(PROJECT_ROOT, PAPERCLIP_ROLLOUT_JSON),
     ];
   }
   const summary = {
@@ -1791,6 +2132,192 @@ describe('M014-S05 MiniMax direct proof validator', () => {
 });
 
 
+describe('M014-S05 Paperclip Hermes MiniMax adapter proof + rollout validator', () => {
+  let baselineParsed;
+  let providerContractParsed;
+  let directProofParsed;
+  let paperclipProofParsed;
+  let paperclipRolloutParsed;
+
+  before(() => {
+    baselineParsed = loadBaselineOrFail().parsed;
+    providerContractParsed = loadMinimaxProviderContractOrFail().parsed;
+    directProofParsed = loadMinimaxDirectProofOrFail().parsed;
+    paperclipProofParsed = loadPaperclipHermesProofOrFail().parsed;
+    paperclipRolloutParsed = loadPaperclipHermesRolloutOrFail().parsed;
+  });
+
+  // V-HM-AD-01
+  it('paperclip-hermes-minimax-proof.json file exists', () => {
+    assert.ok(fs.existsSync(PAPERCLIP_HERMES_PROOF_JSON), `missing ${PAPERCLIP_HERMES_PROOF_JSON}`);
+  });
+
+  // V-HM-AD-02
+  it('paperclip-hermes-minimax-proof.json parses as JSON object', () => {
+    assert.equal(typeof paperclipProofParsed, 'object');
+    assert.ok(paperclipProofParsed !== null);
+    assert.ok(!Array.isArray(paperclipProofParsed));
+  });
+
+  // V-HM-AD-03
+  it('paperclip adapter proof phase_verdict is in its enum_lock', () => {
+    const enumLock = paperclipProofParsed.phase_verdict_enum_lock || [];
+    assert.ok(
+      enumLock.includes(paperclipProofParsed.phase_verdict),
+      `phase_verdict ${paperclipProofParsed.phase_verdict} not in enum_lock`
+    );
+  });
+
+  // V-HM-AD-04
+  it('paperclip adapter proof live_execution_status is in its enum_lock', () => {
+    const enumLock = paperclipProofParsed.live_execution_status_enum_lock || [];
+    assert.ok(
+      enumLock.includes(paperclipProofParsed.live_execution_status),
+      `live_execution_status ${paperclipProofParsed.live_execution_status} not in enum_lock`
+    );
+  });
+
+  // V-HM-AD-05
+  it('paperclip adapter proof fresh_readback_required === true', () => {
+    assert.equal(paperclipProofParsed.fresh_readback_required, true);
+  });
+
+  // V-HM-AD-06
+  it('adapter_profile_target.profile_shape matches canonical provider/model/endpoint/secret_refs', () => {
+    const p = paperclipProofParsed.adapter_profile_target.profile_shape;
+    assert.equal(p.provider, MINIMAX_CANONICAL_PROVIDER_NAME);
+    assert.equal(p.model, MINIMAX_CANONICAL_MODEL_SPELLING);
+    assert.equal(p.endpoint_class, MINIMAX_CANONICAL_ENDPOINT_MODE);
+    assert.equal(p.api_key_secret_ref, MINIMAX_AUTH_SECRET_REF);
+    assert.equal(p.base_url_secret_ref, MINIMAX_ENDPOINT_SECRET_REF);
+  });
+
+  // V-HM-AD-07
+  it('adapter profile has all required keys', () => {
+    const p = paperclipProofParsed.adapter_profile_target.profile_shape;
+    for (const required of REQUIRED_PAPERCLIP_PROFILE_KEYS) {
+      assert.ok(required in p, `missing required profile key: ${required}`);
+    }
+  });
+
+  // V-HM-AD-08
+  it('bounded_test_agent_target.agent_kind === "bounded-test-agent"', () => {
+    assert.equal(paperclipProofParsed.bounded_test_agent_target.agent_kind, 'bounded-test-agent');
+  });
+
+  // V-HM-AD-09
+  it('pre_adapter_cleanup_results covers all 3 PAC-* checks', () => {
+    const checks = paperclipProofParsed.pre_adapter_cleanup_results.results;
+    assert.equal(checks.length, 3);
+    const names = new Set(checks.map((c) => c.name));
+    for (const required of REQUIRED_PRE_ADAPTER_CLEANUP_NAMES) {
+      assert.ok(names.has(required), `missing pre-adapter cleanup check: ${required}`);
+    }
+  });
+
+  // V-HM-AD-10
+  it('paperclip adapter proof inherited_constraints_remain_in_force carries all 6 LFP-* IDs', () => {
+    const ids = new Set(
+      paperclipProofParsed.inherited_constraints_remain_in_force.inherited_constraints.map((c) => c.id)
+    );
+    for (const required of REQUIRED_INHERITED_CONSTRAINT_IDS) {
+      assert.ok(ids.has(required), `missing inherited constraint: ${required}`);
+    }
+  });
+
+  // V-HM-AD-11
+  it('prerequisite_artifacts_audit.all_prerequisites_satisfied_for_live_execution === false (auto-mode deferred)', () => {
+    assert.equal(
+      paperclipProofParsed.prerequisite_artifacts_audit.all_prerequisites_satisfied_for_live_execution,
+      false
+    );
+  });
+
+  // V-HM-AD-12
+  it('hermes-minimax-rollout.json file exists', () => {
+    assert.ok(fs.existsSync(PAPERCLIP_ROLLOUT_JSON), `missing ${PAPERCLIP_ROLLOUT_JSON}`);
+  });
+
+  // V-HM-AD-13
+  it('hermes-minimax-rollout.json parses as JSON object', () => {
+    assert.equal(typeof paperclipRolloutParsed, 'object');
+    assert.ok(paperclipRolloutParsed !== null);
+    assert.ok(!Array.isArray(paperclipRolloutParsed));
+  });
+
+  // V-HM-AD-14
+  it('rollout_verdict is in its enum_lock', () => {
+    const enumLock = paperclipRolloutParsed.rollout_verdict_enum_lock || [];
+    assert.ok(
+      enumLock.includes(paperclipRolloutParsed.rollout_verdict),
+      `rollout_verdict ${paperclipRolloutParsed.rollout_verdict} not in enum_lock`
+    );
+  });
+
+  // V-HM-AD-15
+  it('rollout.json live_execution_status is in its enum_lock', () => {
+    const enumLock = paperclipRolloutParsed.live_execution_status_enum_lock || [];
+    assert.ok(
+      enumLock.includes(paperclipRolloutParsed.live_execution_status),
+      `live_execution_status ${paperclipRolloutParsed.live_execution_status} not in enum_lock`
+    );
+  });
+
+  // V-HM-AD-16
+  it('rollout_pre_conditions covers all 4 RPC-* conditions', () => {
+    const rpc = paperclipRolloutParsed.rollout_pre_conditions;
+    assert.equal(rpc.conditions_count, 4);
+    assert.equal(rpc.conditions.length, 4);
+  });
+
+  // V-HM-AD-17
+  it('rollback_pre_conditions covers all 6 RBC-* triggers', () => {
+    const rbc = paperclipRolloutParsed.rollback_pre_conditions;
+    assert.equal(rbc.triggers_count, 6);
+    assert.equal(rbc.triggers.length, 6);
+  });
+
+  // V-HM-AD-18
+  it('full_fleet_rollout_gate.out_of_scope_for_T04 === true with 5 FFR-* pre-conditions', () => {
+    const ffr = paperclipRolloutParsed.full_fleet_rollout_gate;
+    assert.equal(ffr.out_of_scope_for_T04, true);
+    assert.equal(ffr.pre_conditions_count, 5);
+    assert.equal(ffr.pre_conditions.length, 5);
+  });
+
+  // V-HM-AD-19
+  it('rollout_decision_rule.source_pointer references paperclip adapter proof artifact', () => {
+    const rule = paperclipRolloutParsed.rollout_decision_rule;
+    assert.ok(
+      rule.source_pointer.includes('M014-S05-paperclip-hermes-minimax-proof.json'),
+      `rollout_decision_rule.source_pointer must reference M014-S05-paperclip-hermes-minimax-proof.json`
+    );
+  });
+
+  // V-HM-AD-20
+  it('no credential value leaks across paperclip adapter proof + rollout', () => {
+    const combined = JSON.stringify(paperclipProofParsed) + '\n' + JSON.stringify(paperclipRolloutParsed);
+    const hits = scanCredentialLeaks(combined);
+    assert.equal(
+      hits.length,
+      0,
+      `credential leak(s): ${hits.map((h) => h.redacted).join(', ')}`
+    );
+  });
+
+  // V-HM-AD-21
+  it('no unapproved UUID literal across paperclip adapter proof + rollout', () => {
+    const combined = JSON.stringify(paperclipProofParsed) + '\n' + JSON.stringify(paperclipRolloutParsed);
+    const matches = combined.match(UUID_RE) || [];
+    const unexpected = matches.filter((u) => !APPROVED_UUID_8CHAR_PREFIXES.has(uuidPrefix(u)));
+    assert.equal(
+      unexpected.length,
+      0,
+      `unexpected UUID literal(s): ${unexpected.map(redactUuidsInString).join(', ')}`
+    );
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Auto-run CLI when invoked directly, but NOT when invoked under node --test
 // (the test runner spawns this file as its own entry, so require.main === module
@@ -1839,4 +2366,14 @@ module.exports = {
   UPGRADE_EVIDENCE_JSON,
   MINIMAX_PROVIDER_CONTRACT_JSON,
   MINIMAX_DIRECT_PROOF_JSON,
+  PAPERCLIP_HERMES_PROOF_JSON,
+  PAPERCLIP_ROLLOUT_JSON,
+  validatePaperclipHermesProof,
+  validatePaperclipHermesRollout,
+  loadPaperclipHermesProofOrFail,
+  loadPaperclipHermesRolloutOrFail,
+  REQUIRED_FINAL_PHASE_VERDICT_ENUM,
+  REQUIRED_ROLLOUT_VERDICT_ENUM,
+  REQUIRED_PRE_ADAPTER_CLEANUP_NAMES,
+  REQUIRED_PAPERCLIP_PROFILE_KEYS,
 };
