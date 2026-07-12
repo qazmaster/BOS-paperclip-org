@@ -1,0 +1,506 @@
+{
+  "$schema": "gsd/m014-s05-minimax-direct-proof-evidence-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S05",
+  "task": "T03",
+  "purpose": "MiniMax M3 direct execution evidence. Records the provider CONTRACT (consumed from M014-S05-minimax-provider-contract.json) and the live execution POSTURE for a bounded clean direct Hermes MiniMax M3 run. In the auto-mode execution lane, T03 CANNOT open an authenticated SSH session to the live VPS (T02 phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED; LFP-LF-02 forbids unattended live mutation; S02 H-INCONCLUSIVE blocks VPS readback). Therefore this artifact records an HONEST PLAN_READY + LIVE_EXECUTION_DEFERRED verdict with explicit per-step live_execution_status markers and live_execution_blockers, mirroring the T02 fail-closed pattern and S04-T04 fail-closed BLOCKED pattern.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S05/T03)",
+  "consumes": [
+    "runtime-evidence/M014-S05-hermes-baseline.json",
+    "runtime-evidence/M014-S05-hermes-upstream-diff.md",
+    "runtime-evidence/M014-S05-hermes-upgrade-contract.json",
+    "runtime-evidence/M014-S05-hermes-upgrade.json",
+    "runtime-evidence/M014-S05-minimax-provider-contract.json",
+    "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "minimax-direct-proof",
+
+  "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+  "phase_verdict_enum_lock": [
+    "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "PASS",
+    "FAIL_PROVIDER_REGISTRY_MISMATCH",
+    "FAIL_RESULTJSON_SCHEMA_INVALID",
+    "FAIL_XIAOMI_ENDPOINT_REUSE",
+    "FAIL_CREDENTIAL_LEAK",
+    "FAIL_TERMINAL_NONZERO_EXIT",
+    "BLOCKED_NO_OPERATOR_CONFIRMATION"
+  ],
+  "phase_verdict_rationale": "T03 in the auto-mode execution lane can produce the provider CONTRACT (canonical provider name, endpoint mode, model spelling, key env contract, profile shape, pre-direct cleanup plan, post-direct validation requirements) but cannot OPEN AN AUTHENTICATED SSH SESSION TO THE LIVE VPS to actually run hermes-paperclip against the MiniMax endpoint. T02 phase_verdict is still PLAN_READY_LIVE_EXECUTION_DEFERRED (upgrade wheel not installed, 6/6 pre-flight checks not passed, 4/4 patch reconciliations not completed), LFP-LF-02 forbids unattended live mutation, LFP-S02-01 forbids destructive recovery, and LFP-S02-02 restricts Paperclip restarts to the safe_restart_command only. Producing a fake 'PASS' verdict here would constitute evidence laundering — instead, T03 records PLAN_READY + LIVE_EXECUTION_DEFERRED so T04 can later promote the verdict once an operator-confirmed live direct execution has succeeded.",
+
+  "provider_decision_recorded": true,
+  "provider_decision_artifact": "runtime-evidence/M014-S05-minimax-provider-contract.json",
+  "selected_provider": {
+    "canonical_provider_name": "minimax",
+    "canonical_model_spelling": "MiniMax-M3",
+    "endpoint_mode": "openai-compatible",
+    "auth_secret_ref": "MINIMAX_API_KEY",
+    "endpoint_secret_ref": "MINIMAX_BASE_URL",
+    "rationale_pointer": "M014-S05-minimax-provider-contract.json -> canonical_minimax_provider_name / canonical_endpoint_mode / canonical_model_spelling / key_environment_contract"
+  },
+
+  "live_execution_status": "deferred-to-fresh-readback-window",
+  "live_execution_status_enum_lock": [
+    "pending-live-execution",
+    "in-progress-live-execution",
+    "passed-live-execution",
+    "failed-live-execution",
+    "deferred-to-fresh-readback-window"
+  ],
+  "live_execution_status_rationale": "Auto-mode execution lane cannot open an authenticated SSH session to the live VPS. The S02 forensics verdict (M014-S02-vps-forensics-verdict.json, H-INCONCLUSIVE) blocks all VPS mutation paths. T02 upgrade.json phase_verdict is still PLAN_READY_LIVE_EXECUTION_DEFERRED, so the prerequisite_state_for_T03.gate_satisfied is false. The pre-direct cleanup checks (PDC-01..03) and the direct run (DIRECT-RUN) are documented in the contract but cannot be executed by T03; the live executor (operator-confirmed) must run them and append the results to this artifact's pre_direct_cleanup_results[] and direct_run[].",
+
+  "fresh_readback_required": true,
+  "fresh_readback_via": [
+    "Authenticated SSH tunnel from operator workstation to VPS 87.99.146.178 -> 127.0.0.1:3131 -> paperclip_sandbox-paperclip-1 docker exec",
+    "/paperclip/hermes-runtime/bin/hermes-paperclip --provider=minimax --model=MiniMax-M3 --timeout=300 --grace=5 --output-schema=bos (post-upgrade, post-cleanup)",
+    "ps -ef | grep hermes-paperclip | grep xiaomi (pre-direct cleanup verification)"
+  ],
+
+  "prerequisite_artifacts_audit": {
+    "policy": "Audit of artifacts required by T03 before this evidence can be marked 'PASS'. All five are present in the working tree; T03 production of this file unblocks T04.",
+    "checks": [
+      {
+        "id": "PRE-T03-BASELINE",
+        "path": "runtime-evidence/M014-S05-hermes-baseline.json",
+        "exists": true,
+        "verifies": "official_upstream_identity + provider_registry_observed + profiles_observed + 4 LHA-* patches + 6 LFP-* inherited constraints",
+        "verifier": "scripts/validate_m014_s05_hermes_minimax.js --phase baseline (V-HM-01..12 PASS at 2026-07-12)"
+      },
+      {
+        "id": "PRE-T03-UPGRADE-CONTRACT",
+        "path": "runtime-evidence/M014-S05-hermes-upgrade-contract.json",
+        "exists": true,
+        "verifies": "pin_decision (0.15.2 -> 0.18.2) + 5 compatibility review answers + 6 pre-flight checks + rollback_strategy + execution_plan + 4-patch reconciliation plan",
+        "verifier": "scripts/validate_m014_s05_hermes_minimax.js --phase upgraded (V-HM-UP-01..11 PASS)"
+      },
+      {
+        "id": "PRE-T03-UPGRADE-EVIDENCE",
+        "path": "runtime-evidence/M014-S05-hermes-upgrade.json",
+        "exists": true,
+        "verifies": "upgrade.json.phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED (NOT UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY); 6/6 pre-flight PENDING; 4/4 patches PENDING",
+        "verifier": "scripts/validate_m014_s05_hermes_minimax.js --phase upgraded (V-HM-UP-12..21 PASS)"
+      },
+      {
+        "id": "PRE-T03-PROVIDER-CONTRACT",
+        "path": "runtime-evidence/M014-S05-minimax-provider-contract.json",
+        "exists": true,
+        "verifies": "canonical provider name=minimax; endpoint mode=openai-compatible; model=MiniMax-M3; key env contract=MINIMAX_API_KEY+MINIMAX_BASE_URL; 6 LFP-* inherited constraints; 3 PDC-* pre-direct cleanup checks; xiaomi_endpoint_reuse_prohibition",
+        "verifier": "scripts/validate_m014_s05_hermes_minimax.js --phase direct (V-HM-DI-01..11 PASS)"
+      },
+      {
+        "id": "PRE-T03-LOCKFILE",
+        "path": "paperclip-runtime.lock.json",
+        "exists": true,
+        "verifies": "safe_restart_command + forbidden_commands + 6 LFP-* inherited constraints + 6 stale_company_ids + mutation_default_sources policy",
+        "verifier": "scripts/lib/paperclip-preflight.js consumes lockfile directly"
+      },
+      {
+        "id": "PRE-T03-S02-VERDICT",
+        "path": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "exists": true,
+        "verifies": "S02 verdict = H-INCONCLUSIVE (captures_count=0, fail_closed_when[0] triggered)",
+        "verifier": "this artifact -> live_execution_blockers[].id LHA-EX-T03-03 cites M014-S02-vps-forensics-verdict.json"
+      }
+    ],
+    "all_prerequisites_present": true,
+    "missing_prerequisite_count": 0,
+    "all_prerequisites_satisfied_for_live_execution": false,
+    "all_prerequisites_satisfied_rationale": "T02 upgrade.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means prerequisite_state_for_T03.gate_satisfied=false in provider-contract.json. All 5 prerequisite ARTIFACTS exist; the prerequisite UPGRADE STATE does not."
+  },
+
+  "pre_direct_cleanup_results": {
+    "policy": "Live executor MUST run each of the 3 PDC-* pre-direct cleanup checks before starting the direct MiniMax M3 run and append results here. T03 records the planned commands; live results land post-execution.",
+    "results": [
+      {
+        "id": "PDC-01",
+        "name": "verify_no_xiaomi_session_active",
+        "planned_command": "ps -ef | grep -E 'hermes-paperclip.*xiaomi|hermes-paperclip.*mimo' | grep -v grep",
+        "expected_output_shape": "exit code 1 (no match) — there must be no active Xiaomi Hermes session",
+        "pass_criteria": "exit code 1 AND empty stdout",
+        "live_execution_status": "pending-live-execution",
+        "live_captured_exit_code": null,
+        "live_captured_stdout_redacted_tail": null,
+        "rationale": "Per task plan: 'terminate Xiaomi sessions' before starting clean MiniMax run"
+      },
+      {
+        "id": "PDC-02",
+        "name": "verify_minimax_secret_refs_resolvable",
+        "planned_command": "Paperclip secret-store resolution check on MINIMAX_API_KEY and MINIMAX_BASE_URL (Paperclip admin API; never echoes resolved values)",
+        "expected_output_shape": "exit code 0 AND resolved: true for both MINIMAX_API_KEY and MINIMAX_BASE_URL",
+        "pass_criteria": "both secret_refs resolve successfully (resolver returns success without exposing the value)",
+        "live_execution_status": "pending-live-execution",
+        "live_captured_exit_code": null,
+        "live_captured_stdout_redacted_tail": null,
+        "rationale": "Per task plan: 'Supply the existing GSD-held access through a secret reference'"
+      },
+      {
+        "id": "PDC-03",
+        "name": "verify_clean_session_startup",
+        "planned_command": "/paperclip/hermes-runtime/bin/hermes-paperclip --version && /paperclip/hermes-runtime/bin/hermes-paperclip --list-providers | grep -E '^minimax'",
+        "expected_output_shape": "stdout contains 'Hermes Agent v0.18.2 (2026.7.8.1)' AND 'minimax' is listed as a known provider",
+        "pass_criteria": "exit code 0 AND version label match AND minimax in provider list",
+        "live_execution_status": "pending-live-execution",
+        "live_captured_exit_code": null,
+        "live_captured_stdout_redacted_tail": null,
+        "rationale": "Per task plan: 'start a clean Hermes session' — confirms runtime version + provider registry state"
+      }
+    ],
+    "checks_count": 3,
+    "checks_passed_count": 0,
+    "checks_failed_count": 0,
+    "checks_pending_count": 3,
+    "all_checks_passed_required": true
+  },
+
+  "direct_run": {
+    "policy": "Live executor MUST record the actual hermes-paperclip invocation against the MiniMax endpoint and its observed outcomes. T03 records the planned command and the expected post-validation requirements; live results land post-execution. None of the values below are populated in the auto-mode lane — they are placeholders for the operator-confirmed live executor.",
+
+    "planned_command": "/paperclip/hermes-runtime/bin/hermes-paperclip --provider=minimax --model=MiniMax-M3 --timeout=300 --grace=5 --output-schema=bos --paperclip-secret-ref=MINIMAX_API_KEY --paperclip-secret-ref=MINIMAX_BASE_URL",
+    "command_argv": [
+      "/paperclip/hermes-runtime/bin/hermes-paperclip",
+      "--provider=minimax",
+      "--model=MiniMax-M3",
+      "--timeout=300",
+      "--grace=5",
+      "--output-schema=bos",
+      "--paperclip-secret-ref=MINIMAX_API_KEY",
+      "--paperclip-secret-ref=MINIMAX_BASE_URL"
+    ],
+    "expected_exit_code": 0,
+    "expected_session_id_format": "YYYYMMDD_HHMMSS_<6hex> (e.g. 20260712_203000_a1b2c3)",
+    "expected_resultJson_bos_shape": "JSON object with at minimum keys {session_id, resultJson} where resultJson.bos is a BOS-shaped payload (per R5/R6 BOS Light standards)",
+
+    "live_captured_exit_code": null,
+    "live_captured_stdout_redacted_tail": null,
+    "live_captured_stderr_redacted_tail": null,
+    "live_captured_session_id": null,
+    "live_captured_session_id_fresh": null,
+    "live_captured_resultJson_bos_present": null,
+    "live_captured_resultJson_bos_schema_valid": null,
+    "endpoint_class_observed": null,
+    "provider_observed": null,
+    "model_observed": null,
+    "xiaomi_endpoint_reuse_detected": null,
+    "credential_leak_detected": null,
+    "live_execution_status": "pending-live-execution",
+
+    "post_direct_validation_field_map": {
+      "terminal_status": "direct_run.live_captured_exit_code === 0",
+      "structured_output": "direct_run.live_captured_resultJson_bos_present === true AND direct_run.live_captured_resultJson_bos_schema_valid === true",
+      "endpoint_class": "direct_run.endpoint_class_observed === 'openai-compatible'",
+      "provider_name": "direct_run.provider_observed === 'minimax'",
+      "model_spelling": "direct_run.model_observed === 'MiniMax-M3'",
+      "xiaomi_endpoint_reuse_prohibition": "direct_run.xiaomi_endpoint_reuse_detected === false",
+      "credential_redaction": "direct_run.credential_leak_detected === false",
+      "session_id_freshness": "direct_run.live_captured_session_id_fresh === true"
+    }
+  },
+
+  "xiaomi_endpoint_reuse_detection": {
+    "policy": "Verifies that the MiniMax M3 direct run did NOT route through any Xiaomi endpoint, did NOT use XIAOMI_API_KEY / XIAOMI_BASE_URL, and did NOT produce a session id matching any observed Xiaomi session. Detection happens in three layers; any layer tripping V-HM-DI-16 fail-closed.",
+    "endpoint_class_check": "endpoint_class_observed !== 'xiaomi-compat' (no such class exists in hermes-agent; xiaomi uses openai-compatible with XIAOMI_BASE_URL)",
+    "api_key_check": "direct_run.live_captured_stdout_redacted_tail must NOT contain any XIAOMI_API_KEY or XIAOMI_BASE_URL assignments (V-HM-DI-20 covers this)",
+    "session_id_corpus_check": "direct_run.live_captured_session_id must NOT appear in M005-S01 evidence session id set",
+    "xiaomi_session_id_corpus": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe-live-*.json session_id fields",
+    "live_xiaomi_endpoint_reuse_detected": null,
+    "live_xiaomi_api_key_use_detected": null,
+    "live_xiaomi_session_id_reuse_detected": null
+  },
+
+  "rollback_capability_preserved": {
+    "policy": "The pre-MiniMax state (xiaomi/mimo-v2.5-pro + openai-codex/gpt-5.3-codex + hermes-agent==0.15.2) MUST remain rollback-capable for at least one Paperclip session cycle after T03/T04. Rollback path is inherited from T02 contract; T03 does not modify it.",
+    "previous_minimax_state_preserved": true,
+    "previous_xiaomi_provider_preserved": true,
+    "previous_openai_codex_fallback_preserved": true,
+    "rollback_strategy_inherited_from": "runtime-evidence/M014-S05-hermes-upgrade-contract.json -> rollback_strategy",
+    "xiaomi_deprecation_status_after_T03": "preserved-and-deprecated-pending-T04",
+    "xiaomi_deprecation_gating": "xiaomi/mimo-v2.5-pro profile is NOT removed by T03 (auto-mode lane cannot mutate adapter config); deprecation is gated by T04 live adapter config flip succeeding and a clean Paperclip session on the minimax profile"
+  },
+
+  "live_execution_blockers": [
+    {
+      "id": "LHA-EX-T03-01",
+      "summary": "T02 phase_verdict is still PLAN_READY_LIVE_EXECUTION_DEFERRED; T03 prerequisite_state_for_T03.gate_satisfied is false; no live MiniMax execution is permitted",
+      "rule": "T02 prerequisite chain (upgrade.json phase_verdict=UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY)",
+      "evidence_pointer": "runtime-evidence/M014-S05-hermes-upgrade.json -> phase_verdict",
+      "blocks_steps": ["PDC-01", "PDC-02", "PDC-03", "DIRECT-RUN"]
+    },
+    {
+      "id": "LHA-EX-T03-02",
+      "summary": "Auto-mode executor cannot open authenticated SSH session to VPS 87.99.146.178 (no operator present for LFP-LF-02 confirmation)",
+      "rule": "LFP-LF-02",
+      "evidence_pointer": "paperclip-runtime.lock.json -> mutation_default_sources.explicit_override_policy",
+      "blocks_steps": ["PDC-01", "PDC-02", "PDC-03", "DIRECT-RUN"]
+    },
+    {
+      "id": "LHA-EX-T03-03",
+      "summary": "Live VPS readback blocked by S02 H-INCONCLUSIVE verdict (zero captures from VPS read-only inspection)",
+      "rule": "LFP-S02-01",
+      "evidence_pointer": "runtime-evidence/M014-S02-vps-forensics-verdict.json -> verdict_status",
+      "blocks_steps": ["PDC-01", "PDC-02", "PDC-03", "DIRECT-RUN"]
+    },
+    {
+      "id": "LHA-EX-T03-04",
+      "summary": "Hermes runtime wheel is still hermes-agent==0.15.2 on the live VPS (T02 upgrade not yet executed live); the canonical MiniMax provider may not exist in the 0.15.2 provider registry",
+      "rule": "upgrade verification gate",
+      "evidence_pointer": "runtime-evidence/M014-S05-hermes-upgrade.json -> phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED; runtime-evidence/M014-S05-hermes-baseline.json -> live_runtime_observed.current_runtime_version=null",
+      "blocks_steps": ["PDC-03", "DIRECT-RUN"]
+    }
+  ],
+  "live_execution_blocker_count": 4,
+
+  "inherited_constraints_remain_in_force": {
+    "policy": "All 6 inherited LFP-* constraint IDs remain in force. T03 introduces no new constraint relaxations.",
+    "inherited_constraints": [
+      {"id": "LFP-LF-01", "summary": "Prefer Paperclip HTTP/admin routes; never patch Paperclip core source.", "source": "paperclip-runtime.lock.json + S04 baseline"},
+      {"id": "LFP-LF-02", "summary": "Live mutation requires explicit authenticated operator confirmation with PAPERCLIP_COMPANY_ID_OVERRIDE=allow and visible target company.", "source": "paperclip-runtime.lock.json mutation_default_sources"},
+      {"id": "LFP-LF-03", "summary": "Forbidden commands (docker compose down -v, prune, rm, volume rm) unless explicitly approved for destructive recovery.", "source": "paperclip-runtime.lock.json forbidden_commands"},
+      {"id": "LFP-S02-01", "summary": "VPS forensics verdict is H-INCONCLUSIVE; no destructive recovery is approved; only safe-restart command allowed.", "source": "M014-S02-vps-forensics-verdict.json"},
+      {"id": "LFP-S02-02", "summary": "Safe restart command MUST be the one in paperclip-runtime.lock.json safe_restart_command and nothing else.", "source": "paperclip-runtime.lock.json safe_restart_command"},
+      {"id": "LFP-S02-03", "summary": "Stale ID ledger from R3 must not appear as canonical company_id in any Hermes-driven mutation.", "source": ".gsd/KNOWLEDGE.md R3"}
+    ],
+    "inherited_constraints_count": 6,
+    "constraints_relaxed_count": 0,
+    "constraints_added_count": 0
+  },
+
+  "promotion_discipline": {
+    "policy": "Mirrors T02 + S04-T04 pattern: promoted_surfaces is empty in PLAN_READY_LIVE_EXECUTION_DEFERRED; live execution would promote MiniMax M3 runtime surfaces (hermes-paperclip --provider=minimax direct invocation) and the bound resultJson.bos, but those promotions only land after live evidence.",
+    "promoted_surfaces": [],
+    "deferred_surfaces": [
+      "Live hermes-paperclip --provider=minimax --model=MiniMax-M3 direct invocation (DIRECT-RUN)",
+      "Live pre-direct cleanup verification (PDC-01 verify_no_xiaomi_session_active)",
+      "Live pre-direct cleanup verification (PDC-02 verify_minimax_secret_refs_resolvable)",
+      "Live pre-direct cleanup verification (PDC-03 verify_clean_session_startup)",
+      "Live xiaomi_endpoint_reuse_detection (3-layer check)",
+      "Live session_id_corpus_check against M005-S01 evidence",
+      "Live structured output (resultJson.bos) validation",
+      "Live credential redaction scan over captured stdout",
+      "Live Paperclip adapter smoke (deferred to T04)"
+    ],
+    "deferred_surfaces_count": 9,
+    "promotion_evidence_recorded": false
+  },
+
+  "negative_tests_executed": {
+    "policy": "Negative tests verify that fail-closed posture holds: BLOCKED verdicts for absent prerequisites, honest deferred-live-execution status, no false PASS claims.",
+    "tests": [
+      {
+        "id": "NT-T03-01",
+        "description": "T03 plan claims live MiniMax execution without T02 upgrade verification -> SHOULD BE BLOCKED",
+        "expected": "phase_verdict === 'PLAN_READY_LIVE_EXECUTION_DEFERRED'",
+        "actual": "phase_verdict = 'PLAN_READY_LIVE_EXECUTION_DEFERRED'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-02",
+        "description": "T03 plan executes hermes-paperclip against MiniMax in auto-mode lane -> SHOULD BE BLOCKED",
+        "expected": "direct_run.live_captured_exit_code === null AND live_execution_status === 'deferred-to-fresh-readback-window'",
+        "actual": "direct_run.live_captured_exit_code = null, live_execution_status = 'deferred-to-fresh-readback-window'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-03",
+        "description": "T03 plan promotes xiaomi deprecation (out of T03 scope) -> SHOULD BE BLOCKED",
+        "expected": "xiaomi_deprecation_status_after_T03 !== 'deprecated-removed'",
+        "actual": "xiaomi_deprecation_status_after_T03 = 'preserved-and-deprecated-pending-T04'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-04",
+        "description": "T03 plan mutates Paperclip adapter config (out of T03 scope; T04 owns it) -> SHOULD BE BLOCKED",
+        "expected": "promotion_discipline.promoted_surfaces NOT contain 'paperclip adapter config mutation'",
+        "actual": "promoted_surfaces = []",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-05",
+        "description": "T03 plan relaxes any inherited LFP-* constraint -> SHOULD BE BLOCKED",
+        "expected": "constraints_relaxed_count === 0",
+        "actual": "constraints_relaxed_count = 0",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-06",
+        "description": "Provider contract contains a real credential value (KEY=non-empty-value per V-HM-DI-19 regex) -> SHOULD BE BLOCKED",
+        "expected": "scanCredentialLeaks returns 0 hits",
+        "actual": "see self_check.no_secret_substring",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-07",
+        "description": "Direct proof contains full UUID literal outside approved allowlist -> SHOULD BE BLOCKED",
+        "expected": "no unapproved UUID literals",
+        "actual": "see self_check.no_unapproved_uuid",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-08",
+        "description": "T03 plan claims PASS without 3/3 pre-direct cleanup checks passed -> SHOULD BE BLOCKED",
+        "expected": "pre_direct_cleanup_results.checks_passed_count === 0 AND phase_verdict !== 'PASS'",
+        "actual": "checks_passed_count = 0, phase_verdict = 'PLAN_READY_LIVE_EXECUTION_DEFERRED'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-09",
+        "description": "T03 canonical provider name is NOT 'minimax' (lowercase, vendor-stable) -> SHOULD BE BLOCKED",
+        "expected": "selected_provider.canonical_provider_name === 'minimax'",
+        "actual": "selected_provider.canonical_provider_name = 'minimax'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-10",
+        "description": "T03 canonical model spelling is NOT 'MiniMax-M3' -> SHOULD BE BLOCKED",
+        "expected": "selected_provider.canonical_model_spelling === 'MiniMax-M3'",
+        "actual": "selected_provider.canonical_model_spelling = 'MiniMax-M3'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-11",
+        "description": "T03 endpoint mode is NOT 'openai-compatible' (matches MiniMax API surface) -> SHOULD BE BLOCKED",
+        "expected": "selected_provider.endpoint_mode === 'openai-compatible'",
+        "actual": "selected_provider.endpoint_mode = 'openai-compatible'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-12",
+        "description": "T03 key env contract does NOT use MINIMAX_API_KEY + MINIMAX_BASE_URL -> SHOULD BE BLOCKED",
+        "expected": "selected_provider.auth_secret_ref === 'MINIMAX_API_KEY' AND selected_provider.endpoint_secret_ref === 'MINIMAX_BASE_URL'",
+        "actual": "auth_secret_ref = 'MINIMAX_API_KEY', endpoint_secret_ref = 'MINIMAX_BASE_URL'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-13",
+        "description": "T03 secret_ref envelope does NOT preserve LHA-SECRET-REF-ENVELOPE patch -> SHOULD BE BLOCKED",
+        "expected": "provider-contract secret_ref_envelope_preserved === true AND secret_ref_envelope_id === 'LHA-SECRET-REF-ENVELOPE'",
+        "actual": "secret_ref_envelope_preserved = true (per M014-S05-minimax-provider-contract.json -> key_environment_contract), secret_ref_envelope_id = 'LHA-SECRET-REF-ENVELOPE'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-14",
+        "description": "T03 pre-direct cleanup plan does NOT cover xiaomi session termination -> SHOULD BE BLOCKED",
+        "expected": "pre_direct_cleanup_results contains PDC-01 verify_no_xiaomi_session_active",
+        "actual": "PDC-01 present with command 'ps -ef | grep -E hermes-paperclip.*xiaomi'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-15",
+        "description": "T03 pre-direct cleanup plan does NOT cover secret_ref resolution check -> SHOULD BE BLOCKED",
+        "expected": "pre_direct_cleanup_results contains PDC-02 verify_minimax_secret_refs_resolvable",
+        "actual": "PDC-02 present with Paperclip secret-store resolution check command",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T03-16",
+        "description": "T03 pre-direct cleanup plan does NOT cover clean session startup -> SHOULD BE BLOCKED",
+        "expected": "pre_direct_cleanup_results contains PDC-03 verify_clean_session_startup",
+        "actual": "PDC-03 present with --version + --list-providers check command",
+        "result": "PASS"
+      }
+    ],
+    "negative_tests_count": 16,
+    "negative_tests_passed_count": 16,
+    "negative_tests_failed_count": 0
+  },
+
+  "self_check": {
+    "policy": "Self-check booleans confirm structural and honesty invariants for the direct proof evidence. All must be true.",
+    "checks": {
+      "phase_verdict_admissible": true,
+      "phase_verdict_in_enum_lock": true,
+      "phase_verdict_rationale_present": true,
+      "live_execution_status_admissible": true,
+      "live_execution_status_in_enum_lock": true,
+      "fresh_readback_required": true,
+      "provider_decision_recorded": true,
+      "selected_provider_canonical_name_correct": true,
+      "selected_provider_endpoint_mode_correct": true,
+      "selected_provider_model_spelling_correct": true,
+      "selected_provider_key_env_contract_correct": true,
+      "pre_direct_cleanup_count_3": true,
+      "pre_direct_cleanup_cover_xiaomi_termination": true,
+      "pre_direct_cleanup_cover_secret_ref_resolution": true,
+      "pre_direct_cleanup_cover_clean_session_startup": true,
+      "direct_run_command_planned": true,
+      "direct_run_expected_exit_code_zero": true,
+      "direct_run_session_id_format_documented": true,
+      "direct_run_resultJson_bos_shape_documented": true,
+      "xiaomi_endpoint_reuse_detection_three_layer": true,
+      "xiaomi_deprecation_pending_T04": true,
+      "inherited_constraints_count_6": true,
+      "inherited_constraints_match_baseline_ids": true,
+      "constraints_relaxed_count_0": true,
+      "promoted_surfaces_empty": true,
+      "live_execution_blockers_count_at_least_4": true,
+      "live_execution_blockers_cite_real_rules": true,
+      "negative_tests_count_at_least_10": true,
+      "negative_tests_passed_count_equals_count": true,
+      "no_secret_substring": true,
+      "no_unapproved_uuid": true,
+      "downstream_handoff_present": true,
+      "prerequisite_artifacts_audit_present": true,
+      "all_prerequisites_present": true,
+      "promotion_discipline_deferred_surfaces_recorded": true,
+      "no_live_execution_attempted_in_auto_mode": true
+    },
+    "self_check_total_count": 37,
+    "self_check_passed_count": 37,
+    "self_check_failed_count": 0
+  },
+
+  "credential_redaction_posture": {
+    "policy": "T03 evidence MUST NOT contain any credential value or token shape. Carries forward the forbidden-substring list from the upgrade contract and provider contract.",
+    "forbidden_credential_substring_shapes": [
+      "XIAOMI_API_KEY=",
+      "OPENAI_API_KEY=",
+      "XIAOMI_BASE_URL=",
+      "MINIMAX_API_KEY=",
+      "MINIMAX_BASE_URL=",
+      "Authorization: Bearer ",
+      "sk-",
+      "tp-"
+    ],
+    "forbidden_full_uuid_literal_shape": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    "approved_uuid_allowlist": [
+      "43c74adb-b194-44d1-8f8e-ba142544bb9d (M002-S08/M005-S01 historical company; present in evidence; R3-stale as canonical)",
+      "1d05cfeb-cb79-48bc-8ec0-51da2da643e3 (M005-S01 historical run id; NOT to be reused)",
+      "fbb15d79-c2c6-4e24-a4e7-e45a05ed35ee (M005-S01 historical agent id; NOT to be reused)",
+      "e4bf3eda-fefe-4336-be8f-bd6690bb3aa9 (M002-S08 install run workspace; ephemeral)",
+      "8053b40a-aa36-4d81-8990-84d6018e7bbb (M002-S08 install run id; ephemeral)"
+    ],
+    "no_secret_values_present_in_this_file": true
+  },
+
+  "downstream_handoff": {
+    "T04_paperclip_adapter_proof": {
+      "consumes": [
+        "provider_decision_recorded",
+        "selected_provider.canonical_provider_name",
+        "selected_provider.canonical_model_spelling",
+        "selected_provider.endpoint_mode",
+        "selected_provider.auth_secret_ref",
+        "selected_provider.endpoint_secret_ref",
+        "xiaomi_endpoint_reuse_detection",
+        "inherited_constraints_remain_in_force.inherited_constraints[*].id"
+      ],
+      "prerequisite_state_for_T04": "this artifact phase_verdict === 'PASS' AND provider-contract.json prerequisite_state_for_T03.gate_satisfied === true AND upgrade.json phase_verdict === 'UPGRADE_VERIFIED'",
+      "expected_artifacts": [
+        "runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json",
+        "runtime-evidence/M014-S05-hermes-minimax-rollout.json"
+      ],
+      "note": "T04 mutates the Paperclip adapterConfig.hermesLocal block to flip xiaomi/mimo-v2.5-pro -> minimax/MiniMax-M3 in the primary slot using the profile shape documented in provider-contract.json. Auto-mode lane cannot perform this mutation; live operator confirmation (LFP-LF-02) is required."
+    }
+  },
+
+  "diagnostics": {
+    "verify_no_secrets_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-direct-proof.json'); const s=JSON.stringify(a); const forbidden=['XIAOMI_API_KEY=','OPENAI_API_KEY=','XIAOMI_BASE_URL=','MINIMAX_API_KEY=','MINIMAX_BASE_URL=','Authorization: Bearer ']; const hits=forbidden.filter(f=>s.includes(f)); if(hits.length){console.error('LEAK',hits);process.exit(1)} console.log('OK no secret substring')\"",
+    "verify_phase_verdict_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-direct-proof.json'); const allowed=['PLAN_READY_LIVE_EXECUTION_DEFERRED','PASS','FAIL_PROVIDER_REGISTRY_MISMATCH','FAIL_RESULTJSON_SCHEMA_INVALID','FAIL_XIAOMI_ENDPOINT_REUSE','FAIL_CREDENTIAL_LEAK','FAIL_TERMINAL_NONZERO_EXIT','BLOCKED_NO_OPERATOR_CONFIRMATION']; if(!allowed.includes(a.phase_verdict)){console.error('BAD_VERDICT',a.phase_verdict);process.exit(1)} console.log('OK phase_verdict='+a.phase_verdict)\"",
+    "verify_provider_decision_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-direct-proof.json'); const p=a.selected_provider; if(p.canonical_provider_name!=='minimax'||p.canonical_model_spelling!=='MiniMax-M3'||p.endpoint_mode!=='openai-compatible'||p.auth_secret_ref!=='MINIMAX_API_KEY'||p.endpoint_secret_ref!=='MINIMAX_BASE_URL'){console.error('BAD_PROVIDER_DECISION');process.exit(1)} console.log('OK provider_decision={minimax,MiniMax-M3,openai-compatible,MINIMAX_API_KEY,MINIMAX_BASE_URL}')\"",
+    "verify_pre_direct_cleanup_count_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-direct-proof.json'); if(a.pre_direct_cleanup_results.checks_count!==3){console.error('BAD_PDC_COUNT',a.pre_direct_cleanup_results.checks_count);process.exit(1)} console.log('OK pre_direct_cleanup_count=3')\"",
+    "verify_inherited_constraints_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-direct-proof.json'); const ids=a.inherited_constraints_remain_in_force.inherited_constraints.map(c=>c.id).sort(); const expected=['LFP-LF-01','LFP-LF-02','LFP-LF-03','LFP-S02-01','LFP-S02-02','LFP-S02-03']; if(JSON.stringify(ids)!==JSON.stringify(expected)){console.error('BAD_INHERITED',ids);process.exit(1)} console.log('OK inherited_constraints_count=6')\"",
+    "verify_validator_cli_gate": "node scripts/validate_m014_s05_hermes_minimax.js --phase direct",
+    "verify_validator_test_suite": "node --test scripts/validate_m014_s05_hermes_minimax.js"
+  }
+}

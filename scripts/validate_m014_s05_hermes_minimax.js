@@ -162,6 +162,14 @@ const UPGRADE_EVIDENCE_JSON = path.resolve(
   PROJECT_ROOT,
   'runtime-evidence/M014-S05-hermes-upgrade.json'
 );
+const MINIMAX_PROVIDER_CONTRACT_JSON = path.resolve(
+  PROJECT_ROOT,
+  'runtime-evidence/M014-S05-minimax-provider-contract.json'
+);
+const MINIMAX_DIRECT_PROOF_JSON = path.resolve(
+  PROJECT_ROOT,
+  'runtime-evidence/M014-S05-minimax-direct-proof.json'
+);
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -257,6 +265,29 @@ const REQUIRED_LIVE_EXECUTION_STATUS_ENUM = [
   'deferred-to-fresh-readback-window',
 ];
 
+const REQUIRED_DIRECT_PHASE_VERDICT_ENUM = [
+  'PLAN_READY_LIVE_EXECUTION_DEFERRED',
+  'PASS',
+  'FAIL_PROVIDER_REGISTRY_MISMATCH',
+  'FAIL_RESULTJSON_SCHEMA_INVALID',
+  'FAIL_XIAOMI_ENDPOINT_REUSE',
+  'FAIL_CREDENTIAL_LEAK',
+  'FAIL_TERMINAL_NONZERO_EXIT',
+  'BLOCKED_NO_OPERATOR_CONFIRMATION',
+];
+
+const MINIMAX_CANONICAL_PROVIDER_NAME = 'minimax';
+const MINIMAX_CANONICAL_MODEL_SPELLING = 'MiniMax-M3';
+const MINIMAX_CANONICAL_ENDPOINT_MODE = 'openai-compatible';
+const MINIMAX_AUTH_SECRET_REF = 'MINIMAX_API_KEY';
+const MINIMAX_ENDPOINT_SECRET_REF = 'MINIMAX_BASE_URL';
+
+const REQUIRED_PRE_DIRECT_CLEANUP_NAMES = [
+  'verify_no_xiaomi_session_active',
+  'verify_minimax_secret_refs_resolvable',
+  'verify_clean_session_startup',
+];
+
 // ---------------------------------------------------------------------------
 // Loaders
 // ---------------------------------------------------------------------------
@@ -330,6 +361,50 @@ function loadUpgradeEvidenceOrFail(evidencePath = UPGRADE_EVIDENCE_JSON) {
   }
   if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
     throw new Error('upgrade.json top-level must be a JSON object');
+  }
+  return { raw, parsed };
+}
+
+function loadMinimaxProviderContractOrFail(contractPath = MINIMAX_PROVIDER_CONTRACT_JSON) {
+  if (!fs.existsSync(contractPath)) {
+    throw new Error(`minimax-provider-contract file not found: ${contractPath}`);
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(contractPath, 'utf8');
+  } catch (err) {
+    throw new Error(`minimax-provider-contract read failure: ${err.message}`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`minimax-provider-contract JSON parse failure: ${err.message}`);
+  }
+  if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('minimax-provider-contract top-level must be a JSON object');
+  }
+  return { raw, parsed };
+}
+
+function loadMinimaxDirectProofOrFail(proofPath = MINIMAX_DIRECT_PROOF_JSON) {
+  if (!fs.existsSync(proofPath)) {
+    throw new Error(`minimax-direct-proof file not found: ${proofPath}`);
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(proofPath, 'utf8');
+  } catch (err) {
+    throw new Error(`minimax-direct-proof read failure: ${err.message}`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`minimax-direct-proof JSON parse failure: ${err.message}`);
+  }
+  if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('minimax-direct-proof top-level must be a JSON object');
   }
   return { raw, parsed };
 }
@@ -883,6 +958,240 @@ function validateUpgradeEvidence(parsed, baselineParsed, upgradeContractParsed) 
 }
 
 // ---------------------------------------------------------------------------
+// MiniMax provider contract validator (T03) -- checks V-HM-DI-01 .. V-HM-DI-11
+// against M014-S05-minimax-provider-contract.json.
+// ---------------------------------------------------------------------------
+
+function validateMinimaxProviderContract(parsed, baselineParsed) {
+  const blockers = [];
+  const checks = [];
+
+  checks.push({ id: 'V-HM-DI-01', verdict: 'pass', note: 'minimax-provider-contract.json file exists' });
+  checks.push({ id: 'V-HM-DI-02', verdict: 'pass', note: 'minimax-provider-contract.json parses as JSON object' });
+
+  const canonicalName = parsed.canonical_minimax_provider_name && parsed.canonical_minimax_provider_name.canonical_name;
+  if (canonicalName !== MINIMAX_CANONICAL_PROVIDER_NAME) {
+    blockers.push(`canonical_minimax_provider_name.canonical_name must equal '${MINIMAX_CANONICAL_PROVIDER_NAME}' (got ${canonicalName})`);
+    checks.push({ id: 'V-HM-DI-03', verdict: 'fail', note: `canonical provider name drift: ${canonicalName}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-03', verdict: 'pass', note: `canonical provider name correct: ${canonicalName}` });
+  }
+
+  const endpointMode = parsed.canonical_endpoint_mode && parsed.canonical_endpoint_mode.endpoint_mode;
+  if (endpointMode !== MINIMAX_CANONICAL_ENDPOINT_MODE) {
+    blockers.push(`canonical_endpoint_mode.endpoint_mode must equal '${MINIMAX_CANONICAL_ENDPOINT_MODE}' (got ${endpointMode})`);
+    checks.push({ id: 'V-HM-DI-04', verdict: 'fail', note: `endpoint mode drift: ${endpointMode}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-04', verdict: 'pass', note: `endpoint mode correct: ${endpointMode}` });
+  }
+
+  const modelSpelling = parsed.canonical_model_spelling && parsed.canonical_model_spelling.model_spelling;
+  if (modelSpelling !== MINIMAX_CANONICAL_MODEL_SPELLING) {
+    blockers.push(`canonical_model_spelling.model_spelling must equal '${MINIMAX_CANONICAL_MODEL_SPELLING}' (got ${modelSpelling})`);
+    checks.push({ id: 'V-HM-DI-05', verdict: 'fail', note: `model spelling drift: ${modelSpelling}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-05', verdict: 'pass', note: `model spelling correct: ${modelSpelling}` });
+  }
+
+  const keyEnv = parsed.key_environment_contract || {};
+  if (keyEnv.auth_secret_ref !== MINIMAX_AUTH_SECRET_REF || keyEnv.endpoint_secret_ref !== MINIMAX_ENDPOINT_SECRET_REF) {
+    blockers.push(`key_environment_contract must use ${MINIMAX_AUTH_SECRET_REF} + ${MINIMAX_ENDPOINT_SECRET_REF} (got auth=${keyEnv.auth_secret_ref}, endpoint=${keyEnv.endpoint_secret_ref})`);
+    checks.push({ id: 'V-HM-DI-06', verdict: 'fail', note: `key env contract drift: auth=${keyEnv.auth_secret_ref}, endpoint=${keyEnv.endpoint_secret_ref}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-06', verdict: 'pass', note: `key env contract correct: ${MINIMAX_AUTH_SECRET_REF} + ${MINIMAX_ENDPOINT_SECRET_REF}` });
+  }
+
+  if (keyEnv.secret_ref_envelope_preserved !== true) {
+    blockers.push('key_environment_contract.secret_ref_envelope_preserved must be true (LHA-SECRET-REF-ENVELOPE patch)');
+    checks.push({ id: 'V-HM-DI-07', verdict: 'fail', note: 'secret_ref_envelope_preserved missing' });
+  } else {
+    checks.push({ id: 'V-HM-DI-07', verdict: 'pass', note: 'secret_ref_envelope_preserved=true (LHA-SECRET-REF-ENVELOPE patch preserved)' });
+  }
+
+  const pdc = parsed.pre_direct_cleanup || {};
+  const pdcChecks = pdc.checks || [];
+  const pdcNames = new Set(pdcChecks.map((c) => c && c.name));
+  const missingPdc = REQUIRED_PRE_DIRECT_CLEANUP_NAMES.filter((n) => !pdcNames.has(n));
+  if (pdcChecks.length !== 3 || missingPdc.length > 0) {
+    blockers.push(`pre_direct_cleanup.checks_count must be 3 with all required dimensions (count=${pdcChecks.length}, missing: ${missingPdc.join(', ')})`);
+    checks.push({ id: 'V-HM-DI-08', verdict: 'fail', note: `pre-direct cleanup gap: count=${pdcChecks.length}, missing=${missingPdc.join(',')}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-08', verdict: 'pass', note: 'all 3 pre-direct cleanup dimensions covered' });
+  }
+
+  const xiaomiProhibition = parsed.xiaomi_endpoint_reuse_prohibition || {};
+  const xiaomiProhibitionFields = [
+    'no_xiaomi_endpoint_use',
+    'no_xiaomi_api_key_use',
+    'no_xiaomi_base_url_use',
+    'no_xiaomi_session_id_reuse',
+  ];
+  const xiaomiProhibitionViolations = xiaomiProhibitionFields.filter((f) => xiaomiProhibition[f] !== true);
+  if (xiaomiProhibitionViolations.length > 0) {
+    blockers.push(`xiaomi_endpoint_reuse_prohibition must set all 4 fields to true (violations: ${xiaomiProhibitionViolations.join(', ')})`);
+    checks.push({ id: 'V-HM-DI-09', verdict: 'fail', note: `xiaomi prohibition incomplete: ${xiaomiProhibitionViolations.join(', ')}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-09', verdict: 'pass', note: 'all 4 xiaomi_endpoint_reuse_prohibition fields set to true' });
+  }
+
+  const contractInherited = parsed.inherited_constraints_remain_in_force || {};
+  const contractInheritedList = contractInherited.inherited_constraints || [];
+  const contractInheritedIds = new Set(contractInheritedList.map((c) => c && c.id));
+  const missingContractInherited = REQUIRED_INHERITED_CONSTRAINT_IDS.filter((id) => !contractInheritedIds.has(id));
+  if (missingContractInherited.length > 0) {
+    blockers.push(`provider-contract inherited_constraints_remain_in_force missing: ${missingContractInherited.join(', ')}`);
+    checks.push({ id: 'V-HM-DI-10', verdict: 'fail', note: `inherited constraint drift: ${missingContractInherited.join(', ')}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-10', verdict: 'pass', note: 'all 6 LFP-* inherited constraints carried forward in provider-contract' });
+  }
+
+  const prereqState = parsed.prerequisite_state_for_T03 || {};
+  if (prereqState.gate_satisfied === false) {
+    checks.push({ id: 'V-HM-DI-11', verdict: 'pass', note: 'prerequisite_state_for_T03.gate_satisfied=false (auto-mode deferred honestly)' });
+  } else if (prereqState.gate_satisfied === true) {
+    if (typeof prereqState.gate_satisfied_rationale !== 'string' || prereqState.gate_satisfied_rationale.length < 10) {
+      blockers.push('prerequisite_state_for_T03.gate_satisfied=true requires gate_satisfied_rationale with explicit evidence pointer');
+      checks.push({ id: 'V-HM-DI-11', verdict: 'fail', note: 'gate_satisfied=true without rationale' });
+    } else {
+      checks.push({ id: 'V-HM-DI-11', verdict: 'pass', note: 'prerequisite_state_for_T03.gate_satisfied=true with rationale' });
+    }
+  } else {
+    blockers.push('prerequisite_state_for_T03.gate_satisfied must be a boolean');
+    checks.push({ id: 'V-HM-DI-11', verdict: 'fail', note: `gate_satisfied must be boolean (got ${typeof prereqState.gate_satisfied})` });
+  }
+
+  return {
+    verdict: blockers.length === 0 ? 'pass' : 'fail',
+    blockers,
+    checks,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// MiniMax direct proof validator (T03) -- checks V-HM-DI-12 .. V-HM-DI-21
+// against M014-S05-minimax-direct-proof.json.
+// ---------------------------------------------------------------------------
+
+function validateMinimaxDirectProof(parsed, providerContractParsed, baselineParsed) {
+  const blockers = [];
+  const checks = [];
+
+  checks.push({ id: 'V-HM-DI-12', verdict: 'pass', note: 'minimax-direct-proof.json file exists' });
+  checks.push({ id: 'V-HM-DI-13', verdict: 'pass', note: 'minimax-direct-proof.json parses as JSON object' });
+
+  const phaseVerdict = parsed.phase_verdict;
+  const phaseVerdictEnum = parsed.phase_verdict_enum_lock || [];
+  if (typeof phaseVerdict !== 'string' || !phaseVerdictEnum.includes(phaseVerdict)) {
+    blockers.push(`direct-proof phase_verdict must be in phase_verdict_enum_lock (got ${phaseVerdict})`);
+    checks.push({ id: 'V-HM-DI-14', verdict: 'fail', note: `phase_verdict not in enum_lock: ${phaseVerdict}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-14', verdict: 'pass', note: `phase_verdict admissible: ${phaseVerdict}` });
+  }
+
+  const liveStatus = parsed.live_execution_status;
+  const liveStatusEnum = parsed.live_execution_status_enum_lock || [];
+  if (typeof liveStatus !== 'string' || !liveStatusEnum.includes(liveStatus)) {
+    blockers.push(`direct-proof live_execution_status must be in live_execution_status_enum_lock (got ${liveStatus})`);
+    checks.push({ id: 'V-HM-DI-15', verdict: 'fail', note: `live_execution_status not in enum_lock: ${liveStatus}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-15', verdict: 'pass', note: `live_execution_status admissible: ${liveStatus}` });
+  }
+
+  if (parsed.fresh_readback_required !== true) {
+    blockers.push('direct-proof fresh_readback_required must be true');
+    checks.push({ id: 'V-HM-DI-16', verdict: 'fail', note: 'fresh_readback_required missing' });
+  } else {
+    checks.push({ id: 'V-HM-DI-16', verdict: 'pass', note: 'fresh_readback_required asserted' });
+  }
+
+  const selected = parsed.selected_provider || {};
+  const selectedFields = {
+    canonical_provider_name: selected.canonical_provider_name,
+    canonical_model_spelling: selected.canonical_model_spelling,
+    endpoint_mode: selected.endpoint_mode,
+    auth_secret_ref: selected.auth_secret_ref,
+    endpoint_secret_ref: selected.endpoint_secret_ref,
+  };
+  const expectedFields = {
+    canonical_provider_name: MINIMAX_CANONICAL_PROVIDER_NAME,
+    canonical_model_spelling: MINIMAX_CANONICAL_MODEL_SPELLING,
+    endpoint_mode: MINIMAX_CANONICAL_ENDPOINT_MODE,
+    auth_secret_ref: MINIMAX_AUTH_SECRET_REF,
+    endpoint_secret_ref: MINIMAX_ENDPOINT_SECRET_REF,
+  };
+  const selectedMismatches = Object.keys(expectedFields).filter(
+    (k) => selectedFields[k] !== expectedFields[k]
+  );
+  if (selectedMismatches.length > 0) {
+    const detail = selectedMismatches.map((k) => `${k}=${selectedFields[k]} (expected ${expectedFields[k]})`).join(', ');
+    blockers.push(`selected_provider must match provider-contract canonicals (mismatches: ${detail})`);
+    checks.push({ id: 'V-HM-DI-17', verdict: 'fail', note: `provider decision drift: ${detail}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-17', verdict: 'pass', note: 'selected_provider matches provider-contract canonicals' });
+  }
+
+  const pdcResults = parsed.pre_direct_cleanup_results || {};
+  const pdcResultsCount = pdcResults.checks_count;
+  if (pdcResultsCount !== 3) {
+    blockers.push(`direct-proof pre_direct_cleanup_results.checks_count must be 3 (got ${pdcResultsCount})`);
+    checks.push({ id: 'V-HM-DI-18', verdict: 'fail', note: `pre-direct cleanup count drift: ${pdcResultsCount}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-18', verdict: 'pass', note: 'pre_direct_cleanup_results covers all 3 checks' });
+  }
+
+  const evidenceInherited = parsed.inherited_constraints_remain_in_force || {};
+  const evidenceInheritedList = evidenceInherited.inherited_constraints || [];
+  const evidenceInheritedIds = new Set(evidenceInheritedList.map((c) => c && c.id));
+  const missingEvidenceInherited = REQUIRED_INHERITED_CONSTRAINT_IDS.filter((id) => !evidenceInheritedIds.has(id));
+  if (missingEvidenceInherited.length > 0) {
+    blockers.push(`direct-proof inherited_constraints_remain_in_force missing: ${missingEvidenceInherited.join(', ')}`);
+    checks.push({ id: 'V-HM-DI-19', verdict: 'fail', note: `evidence inherited constraint drift: ${missingEvidenceInherited.join(', ')}` });
+  } else {
+    checks.push({ id: 'V-HM-DI-19', verdict: 'pass', note: 'all 6 LFP-* inherited constraints preserved in direct proof' });
+  }
+
+  const contractString = providerContractParsed ? JSON.stringify(providerContractParsed) : '';
+  const evidenceString = JSON.stringify(parsed);
+  const combinedString = `${contractString}\n${evidenceString}`;
+  const credentialHits = scanCredentialLeaks(combinedString);
+  if (credentialHits.length > 0) {
+    blockers.push(`direct redaction leak: ${credentialHits.map((h) => h.redacted).join(', ')}`);
+    checks.push({
+      id: 'V-HM-DI-20',
+      verdict: 'fail',
+      note: `direct redaction leak: ${credentialHits.length} match(es)`,
+    });
+  } else {
+    checks.push({ id: 'V-HM-DI-20', verdict: 'pass', note: 'provider-contract + direct-proof no credential value leak' });
+  }
+
+  const uuidMatches = combinedString.match(UUID_RE) || [];
+  const unexpectedUuids = uuidMatches.filter(
+    (u) => !APPROVED_UUID_8CHAR_PREFIXES.has(uuidPrefix(u))
+  );
+  if (unexpectedUuids.length > 0) {
+    blockers.push(`direct UUID literal leak: ${unexpectedUuids.length} unexpected UUID(s)`);
+    checks.push({
+      id: 'V-HM-DI-21',
+      verdict: 'fail',
+      note: `unexpected UUID literal(s): ${unexpectedUuids.map(redactUuidsInString).join(', ')}`,
+    });
+  } else {
+    checks.push({
+      id: 'V-HM-DI-21',
+      verdict: 'pass',
+      note: 'provider-contract + direct-proof no unapproved UUID literal',
+    });
+  }
+
+  return {
+    verdict: blockers.length === 0 ? 'pass' : 'fail',
+    blockers,
+    checks,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // CLI
 // ---------------------------------------------------------------------------
 
@@ -900,14 +1209,12 @@ function cli() {
     process.exit(2);
   }
 
-  if (phase === 'direct' || phase === 'final') {
-    // Fail-closed placeholder for not-yet-implemented phases (mirrors S04
-    // validator behavior for direct/final). T03 ships --phase direct; T04
-    // ships --phase final.
-    const phaseToTask = { direct: 3, final: 4 };
+  // The --phase final placeholder (T04) remains fail-closed. --phase direct
+  // (T03) now loads + validates the provider-contract + direct-proof artifacts.
+  if (phase === 'final') {
     process.stderr.write(
-      `FAIL: --phase ${phase} is reserved for T0${phaseToTask[phase]} (not implemented yet).\n` +
-      `Run the S05 T0${phaseToTask[phase]} task to produce the corresponding artifact, then re-run with --phase ${phase}.\n`
+      `FAIL: --phase final is reserved for T04 (not implemented yet).\n` +
+      `Run the S05 T04 task to produce the corresponding artifact, then re-run with --phase final.\n`
     );
     process.exit(1);
   }
@@ -952,8 +1259,26 @@ function cli() {
       path.relative(PROJECT_ROOT, UPGRADE_CONTRACT_JSON),
       path.relative(PROJECT_ROOT, UPGRADE_EVIDENCE_JSON),
     ];
+  } else if (phase === 'direct') {
+    // --phase direct (T03): validate provider-contract + direct-proof
+    let providerContractParsed;
+    let directProofParsed;
+    try {
+      providerContractParsed = loadMinimaxProviderContractOrFail().parsed;
+      directProofParsed = loadMinimaxDirectProofOrFail().parsed;
+    } catch (err) {
+      process.stderr.write(`FAIL: ${err.message}\n`);
+      process.exit(2);
+    }
+    const providerContractResult = validateMinimaxProviderContract(providerContractParsed, parsed);
+    const directProofResult = validateMinimaxDirectProof(directProofParsed, providerContractParsed, parsed);
+    allChecks = allChecks.concat(providerContractResult.checks, directProofResult.checks);
+    allBlockers = allBlockers.concat(providerContractResult.blockers, directProofResult.blockers);
+    additionalArtifacts = [
+      path.relative(PROJECT_ROOT, MINIMAX_PROVIDER_CONTRACT_JSON),
+      path.relative(PROJECT_ROOT, MINIMAX_DIRECT_PROOF_JSON),
+    ];
   }
-
   const summary = {
     phase,
     artifact: path.relative(PROJECT_ROOT, BASELINE_JSON),
@@ -1286,6 +1611,186 @@ describe('M014-S05 Hermes upgraded validator', () => {
   });
 });
 
+describe('M014-S05 MiniMax direct proof validator', () => {
+  let baselineParsed;
+  let providerContractParsed;
+  let directProofParsed;
+
+  before(() => {
+    baselineParsed = loadBaselineOrFail().parsed;
+    providerContractParsed = loadMinimaxProviderContractOrFail().parsed;
+    directProofParsed = loadMinimaxDirectProofOrFail().parsed;
+  });
+
+  // V-HM-DI-01
+  it('minimax-provider-contract.json file exists', () => {
+    assert.ok(fs.existsSync(MINIMAX_PROVIDER_CONTRACT_JSON), `missing ${MINIMAX_PROVIDER_CONTRACT_JSON}`);
+  });
+
+  // V-HM-DI-02
+  it('minimax-provider-contract.json parses as JSON object', () => {
+    assert.equal(typeof providerContractParsed, 'object');
+    assert.ok(providerContractParsed !== null);
+    assert.ok(!Array.isArray(providerContractParsed));
+  });
+
+  // V-HM-DI-03
+  it('canonical_minimax_provider_name.canonical_name is minimax', () => {
+    assert.equal(
+      providerContractParsed.canonical_minimax_provider_name.canonical_name,
+      MINIMAX_CANONICAL_PROVIDER_NAME
+    );
+  });
+
+  // V-HM-DI-04
+  it('canonical_endpoint_mode.endpoint_mode is openai-compatible', () => {
+    assert.equal(
+      providerContractParsed.canonical_endpoint_mode.endpoint_mode,
+      MINIMAX_CANONICAL_ENDPOINT_MODE
+    );
+  });
+
+  // V-HM-DI-05
+  it('canonical_model_spelling.model_spelling is MiniMax-M3', () => {
+    assert.equal(
+      providerContractParsed.canonical_model_spelling.model_spelling,
+      MINIMAX_CANONICAL_MODEL_SPELLING
+    );
+  });
+
+  // V-HM-DI-06
+  it('key_environment_contract uses MINIMAX_API_KEY + MINIMAX_BASE_URL', () => {
+    const k = providerContractParsed.key_environment_contract;
+    assert.equal(k.auth_secret_ref, MINIMAX_AUTH_SECRET_REF);
+    assert.equal(k.endpoint_secret_ref, MINIMAX_ENDPOINT_SECRET_REF);
+  });
+
+  // V-HM-DI-07
+  it('key_environment_contract.secret_ref_envelope_preserved is true', () => {
+    assert.equal(
+      providerContractParsed.key_environment_contract.secret_ref_envelope_preserved,
+      true
+    );
+  });
+
+  // V-HM-DI-08
+  it('pre_direct_cleanup.checks_count === 3 with required dimensions', () => {
+    const checks = providerContractParsed.pre_direct_cleanup.checks;
+    assert.equal(checks.length, 3, `pre-direct cleanup count must be 3, got ${checks.length}`);
+    const names = new Set(checks.map((c) => c.name));
+    for (const required of REQUIRED_PRE_DIRECT_CLEANUP_NAMES) {
+      assert.ok(names.has(required), `missing pre-direct cleanup check: ${required}`);
+    }
+  });
+
+  // V-HM-DI-09
+  it('xiaomi_endpoint_reuse_prohibition sets all 4 fields to true', () => {
+    const p = providerContractParsed.xiaomi_endpoint_reuse_prohibition;
+    for (const f of ['no_xiaomi_endpoint_use', 'no_xiaomi_api_key_use', 'no_xiaomi_base_url_use', 'no_xiaomi_session_id_reuse']) {
+      assert.equal(p[f], true, `xiaomi prohibition field ${f} must be true`);
+    }
+  });
+
+  // V-HM-DI-10
+  it('provider-contract inherited_constraints_remain_in_force carries all 6 LFP-* IDs', () => {
+    const ids = new Set(
+      providerContractParsed.inherited_constraints_remain_in_force.inherited_constraints.map((c) => c.id)
+    );
+    for (const required of REQUIRED_INHERITED_CONSTRAINT_IDS) {
+      assert.ok(ids.has(required), `missing inherited constraint: ${required}`);
+    }
+  });
+
+  // V-HM-DI-11
+  it('prerequisite_state_for_T03.gate_satisfied is false (auto-mode deferred)', () => {
+    assert.equal(providerContractParsed.prerequisite_state_for_T03.gate_satisfied, false);
+  });
+
+  // V-HM-DI-12
+  it('minimax-direct-proof.json file exists', () => {
+    assert.ok(fs.existsSync(MINIMAX_DIRECT_PROOF_JSON), `missing ${MINIMAX_DIRECT_PROOF_JSON}`);
+  });
+
+  // V-HM-DI-13
+  it('minimax-direct-proof.json parses as JSON object', () => {
+    assert.equal(typeof directProofParsed, 'object');
+    assert.ok(directProofParsed !== null);
+    assert.ok(!Array.isArray(directProofParsed));
+  });
+
+  // V-HM-DI-14
+  it('direct-proof phase_verdict is in its enum_lock', () => {
+    const enumLock = directProofParsed.phase_verdict_enum_lock || [];
+    assert.ok(
+      enumLock.includes(directProofParsed.phase_verdict),
+      `phase_verdict ${directProofParsed.phase_verdict} not in enum_lock`
+    );
+  });
+
+  // V-HM-DI-15
+  it('direct-proof live_execution_status is in its enum_lock', () => {
+    const enumLock = directProofParsed.live_execution_status_enum_lock || [];
+    assert.ok(
+      enumLock.includes(directProofParsed.live_execution_status),
+      `live_execution_status ${directProofParsed.live_execution_status} not in enum_lock`
+    );
+  });
+
+  // V-HM-DI-16
+  it('direct-proof fresh_readback_required === true', () => {
+    assert.equal(directProofParsed.fresh_readback_required, true);
+  });
+
+  // V-HM-DI-17
+  it('selected_provider matches provider-contract canonicals', () => {
+    const s = directProofParsed.selected_provider;
+    assert.equal(s.canonical_provider_name, MINIMAX_CANONICAL_PROVIDER_NAME);
+    assert.equal(s.canonical_model_spelling, MINIMAX_CANONICAL_MODEL_SPELLING);
+    assert.equal(s.endpoint_mode, MINIMAX_CANONICAL_ENDPOINT_MODE);
+    assert.equal(s.auth_secret_ref, MINIMAX_AUTH_SECRET_REF);
+    assert.equal(s.endpoint_secret_ref, MINIMAX_ENDPOINT_SECRET_REF);
+  });
+
+  // V-HM-DI-18
+  it('direct-proof pre_direct_cleanup_results.checks_count === 3', () => {
+    assert.equal(directProofParsed.pre_direct_cleanup_results.checks_count, 3);
+  });
+
+  // V-HM-DI-19
+  it('direct-proof inherited_constraints_remain_in_force carries all 6 LFP-* IDs', () => {
+    const ids = new Set(
+      directProofParsed.inherited_constraints_remain_in_force.inherited_constraints.map((c) => c.id)
+    );
+    for (const required of REQUIRED_INHERITED_CONSTRAINT_IDS) {
+      assert.ok(ids.has(required), `missing inherited constraint: ${required}`);
+    }
+  });
+
+  // V-HM-DI-20
+  it('no credential value leaks across provider-contract.json AND direct-proof.json', () => {
+    const combined = JSON.stringify(providerContractParsed) + '\n' + JSON.stringify(directProofParsed);
+    const hits = scanCredentialLeaks(combined);
+    assert.equal(
+      hits.length,
+      0,
+      `credential leak(s): ${hits.map((h) => h.redacted).join(', ')}`
+    );
+  });
+
+  // V-HM-DI-21
+  it('no unapproved UUID literal across provider-contract.json AND direct-proof.json', () => {
+    const combined = JSON.stringify(providerContractParsed) + '\n' + JSON.stringify(directProofParsed);
+    const matches = combined.match(UUID_RE) || [];
+    const unexpected = matches.filter((u) => !APPROVED_UUID_8CHAR_PREFIXES.has(uuidPrefix(u)));
+    assert.equal(
+      unexpected.length,
+      0,
+      `unexpected UUID literal(s): ${unexpected.map(redactUuidsInString).join(', ')}`
+    );
+  });
+});
+
+
 // ---------------------------------------------------------------------------
 // Auto-run CLI when invoked directly, but NOT when invoked under node --test
 // (the test runner spawns this file as its own entry, so require.main === module
@@ -1302,10 +1807,14 @@ module.exports = {
   validateUpstreamDiffPresence,
   validateUpgradeContract,
   validateUpgradeEvidence,
+  validateMinimaxProviderContract,
+  validateMinimaxDirectProof,
   loadBaselineOrFail,
   loadUpstreamDiffOrFail,
   loadUpgradeContractOrFail,
   loadUpgradeEvidenceOrFail,
+  loadMinimaxProviderContractOrFail,
+  loadMinimaxDirectProofOrFail,
   scanCredentialLeaks,
   REQUIRED_PATCH_IDS,
   REQUIRED_INHERITED_CONSTRAINT_IDS,
@@ -1313,6 +1822,13 @@ module.exports = {
   REQUIRED_PRE_FLIGHT_CHECK_NAMES,
   REQUIRED_PHASE_VERDICT_ENUM,
   REQUIRED_LIVE_EXECUTION_STATUS_ENUM,
+  REQUIRED_DIRECT_PHASE_VERDICT_ENUM,
+  REQUIRED_PRE_DIRECT_CLEANUP_NAMES,
+  MINIMAX_CANONICAL_PROVIDER_NAME,
+  MINIMAX_CANONICAL_MODEL_SPELLING,
+  MINIMAX_CANONICAL_ENDPOINT_MODE,
+  MINIMAX_AUTH_SECRET_REF,
+  MINIMAX_ENDPOINT_SECRET_REF,
   HERMES_AGENT_PIN_RE,
   FORBIDDEN_CREDENTIAL_VALUE_PATTERNS,
   UUID_RE,
@@ -1321,4 +1837,6 @@ module.exports = {
   UPSTREAM_DIFF_MD,
   UPGRADE_CONTRACT_JSON,
   UPGRADE_EVIDENCE_JSON,
+  MINIMAX_PROVIDER_CONTRACT_JSON,
+  MINIMAX_DIRECT_PROOF_JSON,
 };
