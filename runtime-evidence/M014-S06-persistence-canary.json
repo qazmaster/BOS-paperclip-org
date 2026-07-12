@@ -1,0 +1,378 @@
+{
+  "$schema": "https://schemas.open-gsd.net/m014-s06-persistence-canary/v1.json",
+  "milestone": "M014-a9jj46",
+  "slice": "S06",
+  "task": "T04",
+  "purpose": "Paperclip native state and Hermes MiniMax binding persistence canary after byte-identical safe_restart from paperclip-runtime.lock.json. Side-effect-free; auto-mode lane cannot execute safe_restart or capture pre/post snapshots without operator confirmation.",
+  "generated": "2026-07-12T20:49:08.835Z",
+  "generated_by": "scripts/run_m014_s06_persistence_canary.js via gsd-executor/auto-mode",
+  "consumes": [
+    "paperclip-runtime.lock.json",
+    "runtime-evidence/M014-S05-minimax-provider-contract.json",
+    "runtime-evidence/M014-S05-minimax-direct-proof.json",
+    "runtime-evidence/M014-S06-minimax-direct-live.json",
+    "runtime-evidence/M014-S06-paperclip-hermes-live.json",
+    "runtime-evidence/M014-S06-rollout-verdict.json"
+  ],
+  "captured_in_phase": "M014-S06-T04-persistence-canary",
+  "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+  "phase_verdict_enum_lock": [
+    "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "PASS",
+    "FAIL_PRE_SNAPSHOT_MISSING",
+    "FAIL_POST_SNAPSHOT_MISSING",
+    "FAIL_SAFE_RESTART_COMMAND_MUTATED",
+    "FAIL_NATIVE_STATE_DRIFT",
+    "FAIL_HERMES_BINDING_DRIFT",
+    "FAIL_CREDENTIAL_LEAK",
+    "FAIL_TERMINAL_NONZERO_EXIT",
+    "FAIL_PG_DATA_PATH_MISSING",
+    "BLOCKED_NO_OPERATOR_CONFIRMATION",
+    "BLOCKED_PREREQUISITE_GAP"
+  ],
+  "phase_verdict_rationale": "Auto-mode lane cannot execute paperclip-runtime.lock.json safe_restart_command (LFP-LF-02 + LFP-S02-02 require operator confirmation and byte-identical command from lockfile only). Pre/post snapshots of 8 native/runtime surfaces (companies, agents, memberships, plugins, postgres_data_path, hermes_agent_version, hermes_providers_profile, hermes_active_profile) are PLAN-only; live capture is gated on operator-confirmed safe_restart execution. Persistence verdict will be promoted to PASS only when all 8 pre/post sha256 pairs are equal AND hermes_providers_profile post-restart still references minimax/MiniMax-M3 (no xiaomi re-emergence).",
+  "live_execution_status": "deferred-to-operator-confirmed-safe-restart",
+  "live_execution_status_enum_lock": [
+    "pending-live-execution",
+    "in-progress-live-execution",
+    "passed-live-execution",
+    "failed-live-execution",
+    "deferred-to-operator-confirmed-safe-restart"
+  ],
+  "live_execution_status_rationale": "Safe_restart execution is operator-confirmed-only per LFP-LF-02; auto-mode has no operator on call.",
+  "fresh_readback_required": true,
+  "fresh_readback_via": "operator-confirmed live executor on the canonical VPS session (NOT via auto-mode lane)",
+  "prerequisite_artifacts_audit": {
+    "s05_provider_contract_ok": true,
+    "s05_direct_proof_phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "s05_direct_proof_live_status": "deferred-to-fresh-readback-window",
+    "s06_direct_live_phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "s06_direct_live_live_status": "deferred-to-fresh-readback-window",
+    "s06_paperclip_hermes_live_phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "s06_paperclip_hermes_live_live_status": "deferred-to-operator-confirmed-paperclip-adapter-flip",
+    "s06_rollout_verdict_phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "s06_rollout_verdict_live_status": "deferred-to-rollout-verdict-computation",
+    "upstream_phase_verdict_summary": {
+      "s05_direct_proof": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+      "s06_direct_live": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+      "s06_paperclip_hermes_live": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+      "s06_rollout_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED"
+    },
+    "all_upstream_deferred_or_pass": true,
+    "lockfile_ok": true,
+    "safe_restart_command_present": true,
+    "safe_restart_command_byte_length": 240,
+    "safe_restart_command_sha256": "789f574d18f8ec9bb4ca3bbfb6f0bc64a6f4e63f0ead3b15cce4d639c07502f4",
+    "stale_company_ids_count": 6
+  },
+  "snapshot_target_set": [
+    "paperclip_companies",
+    "paperclip_agents",
+    "paperclip_memberships",
+    "paperclip_plugins",
+    "paperclip_postgres_data_path",
+    "hermes_agent_version",
+    "hermes_providers_profile",
+    "hermes_active_profile"
+  ],
+  "snapshot_target_set_size": 8,
+  "safe_restart_command_source": "paperclip-runtime.lock.json",
+  "safe_restart_command_byte_identical_required": true,
+  "safe_restart_command_byte_identical_sha256": "789f574d18f8ec9bb4ca3bbfb6f0bc64a6f4e63f0ead3b15cce4d639c07502f4",
+  "safe_restart_command_byte_length": 240,
+  "pre_restart_snapshot_plan": {
+    "captured_at_field_name": "captured_at_utc",
+    "captured_at_value_placeholder": "<ISO 8601 timestamp recorded by live executor>",
+    "correlation_id_field_name": "correlation_id",
+    "correlation_id_format_expected": "YYYYMMDD_HHMMSS_<6hex> (e.g. 20260712_203000_a1b2c3) — must be fresh and MUST NOT match any M005-S01 xiaomi session id",
+    "fields_to_capture": [
+      {
+        "target": "paperclip_companies",
+        "capture_method_hint": "SELECT count(*), array_agg(id ORDER BY created_at) FROM companies",
+        "redaction_posture": "all UUIDs -> 8-char prefix + ****-****-****-************; credential values removed",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "paperclip_agents",
+        "capture_method_hint": "SELECT count(*), array_agg(id ORDER BY created_at) FROM agents",
+        "redaction_posture": "all UUIDs -> 8-char prefix + ****-****-****-************; credential values removed",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "paperclip_memberships",
+        "capture_method_hint": "SELECT count(*), array_agg(id ORDER BY created_at) FROM memberships",
+        "redaction_posture": "all UUIDs -> 8-char prefix + ****-****-****-************; credential values removed",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "paperclip_plugins",
+        "capture_method_hint": "SELECT count(*), array_agg(id ORDER BY created_at) FROM plugins",
+        "redaction_posture": "all UUIDs -> 8-char prefix + ****-****-****-************; credential values removed",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "paperclip_postgres_data_path",
+        "capture_method_hint": "sha256 of $(stat -c %s ${POSTGRES_DATA_DIR}) || echo \"<stat failure>\" (POSTGRES_DATA_DIR from /etc/paperclip/pg.conf or env PAPERCLIP_PG_DATA)",
+        "redaction_posture": "all UUIDs -> 8-char prefix + ****-****-****-************; credential values removed",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "hermes_agent_version",
+        "capture_method_hint": "hermes-agent introspection --output hermes_agent_version",
+        "redaction_posture": "all UUIDs -> 8-char prefix + ****-****-****-************; credential values removed",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "hermes_providers_profile",
+        "capture_method_hint": "hermes-agent introspection --output hermes_providers_profile",
+        "redaction_posture": "all UUIDs -> 8-char prefix + ****-****-****-************; credential values removed",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "hermes_active_profile",
+        "capture_method_hint": "hermes-agent introspection --output hermes_active_profile",
+        "redaction_posture": "all UUIDs -> 8-char prefix + ****-****-****-************; credential values removed",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      }
+    ]
+  },
+  "post_restart_snapshot_plan": {
+    "captured_at_field_name": "captured_at_utc",
+    "captured_at_value_placeholder": "<ISO 8601 timestamp recorded by live executor after safe_restart completes>",
+    "correlation_id_field_name": "correlation_id",
+    "correlation_id_format_expected": "YYYYMMDD_HHMMSS_<6hex> (e.g. 20260712_203000_a1b2c3) — must be fresh and MUST NOT match any M005-S01 xiaomi session id",
+    "fields_to_capture": [
+      {
+        "target": "paperclip_companies",
+        "capture_method_hint": "identical to pre_restart_snapshot — same query, same redaction policy, same field shape",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "paperclip_agents",
+        "capture_method_hint": "identical to pre_restart_snapshot — same query, same redaction policy, same field shape",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "paperclip_memberships",
+        "capture_method_hint": "identical to pre_restart_snapshot — same query, same redaction policy, same field shape",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "paperclip_plugins",
+        "capture_method_hint": "identical to pre_restart_snapshot — same query, same redaction policy, same field shape",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "paperclip_postgres_data_path",
+        "capture_method_hint": "identical to pre_restart_snapshot — same query, same redaction policy, same field shape",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "hermes_agent_version",
+        "capture_method_hint": "identical to pre_restart_snapshot — same query, same redaction policy, same field shape",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "hermes_providers_profile",
+        "capture_method_hint": "identical to pre_restart_snapshot — same query, same redaction policy, same field shape",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      },
+      {
+        "target": "hermes_active_profile",
+        "capture_method_hint": "identical to pre_restart_snapshot — same query, same redaction policy, same field shape",
+        "expected_output_shape": "{ target, sha256, captured_at_utc, correlation_id, redacted_count }"
+      }
+    ]
+  },
+  "diff_policy": {
+    "rule": "For every snapshot target, pre_restart_snapshot[target].sha256 MUST equal post_restart_snapshot[target].sha256.",
+    "expected_diff_field_count": 8,
+    "expected_diff_fields": [
+      "paperclip_companies_equal",
+      "paperclip_agents_equal",
+      "paperclip_memberships_equal",
+      "paperclip_plugins_equal",
+      "paperclip_postgres_data_path_equal",
+      "hermes_agent_version_equal",
+      "hermes_providers_profile_equal",
+      "hermes_active_profile_equal"
+    ],
+    "pass_requires": "every expected_diff_field === true",
+    "hermes_binding_extra": "hermes_providers_profile MUST show provider=minimax and model=MiniMax-M3 in BOTH pre and post (i.e. canonical MiniMax profile survives safe_restart, xiaomi does NOT come back)",
+    "native_state_extra": "paperclip_companies, paperclip_agents, paperclip_memberships, paperclip_plugins MUST have the same id sets in pre and post (no entity loss or duplication)",
+    "pg_data_path_extra": "paperclip_postgres_data_path.sha256 MUST be unchanged (proves Postgres data volume not wiped)"
+  },
+  "pass_decision_rule": {
+    "verdict_pass": "pre/post sha256 equal on all 8 targets AND hermes_providers_profile still references minimax/MiniMax-M3",
+    "verdict_fail_native_state_drift": "any paperclip_* target sha256 differs",
+    "verdict_fail_hermes_binding_drift": "hermes_providers_profile no longer references minimax OR no longer references MiniMax-M3",
+    "verdict_fail_pg_data_path": "paperclip_postgres_data_path.sha256 differs",
+    "verdict_fail_restart_command_mutated": "safe_restart_command_sha256 differs from lockfile SHA-256"
+  },
+  "canonical_provider_expected_after_restart": {
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "endpoint_class": "openai-compatible",
+    "api_key_secret_ref": "MINIMAX_API_KEY",
+    "base_url_secret_ref": "MINIMAX_BASE_URL"
+  },
+  "redaction_posture": "All snapshot outputs MUST redact UUIDs (8-char prefix only) and remove credential values. Validation gate V-PRST-11 enforces no credential leak and V-PRST-12 enforces no unapproved UUID literal.",
+  "stale_company_ids_excluded_from_snapshot": [
+    "9feb4c22",
+    "43c74adb",
+    "1a194762",
+    "7595fd85",
+    "7eede16c",
+    "8233ea7b"
+  ],
+  "live_execution_blockers": [
+    {
+      "id": "LHA-EX-S06T04-01",
+      "severity": "blocking",
+      "description": "LFP-LF-02 + LFP-S02-02 prohibit auto-mode from executing paperclip-runtime.lock.json safe_restart_command. Pre/post snapshots cannot be live-captured; runner is PLAN-only.",
+      "evidence_pointer": "paperclip-runtime.lock.json#LFP-LF-02 / LFP-S02-02 inherited_constraints_remain_in_force"
+    },
+    {
+      "id": "LHA-EX-S06T04-02",
+      "severity": "blocking",
+      "description": "S06-T03 rollout-verdict.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means persistence canary has no rolled-out runtime to validate against. Snapshot diff would only test the un-flipped baseline.",
+      "evidence_pointer": "runtime-evidence/M014-S06-rollout-verdict.json#phase_verdict"
+    },
+    {
+      "id": "LHA-EX-S06T04-03",
+      "severity": "blocking",
+      "description": "S06-T02 paperclip-hermes-live.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means the MiniMax hermesLocal adapter flip has not been observed live, so hermes_providers_profile post-restart comparison cannot be grounded.",
+      "evidence_pointer": "runtime-evidence/M014-S06-paperclip-hermes-live.json#phase_verdict"
+    },
+    {
+      "id": "LHA-EX-S06T04-04",
+      "severity": "blocking",
+      "description": "S06-T01 direct-live.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means fresh-session minimax/MiniMax-M3 invocation has not been observed live yet.",
+      "evidence_pointer": "runtime-evidence/M014-S06-minimax-direct-live.json#phase_verdict"
+    },
+    {
+      "id": "LHA-EX-S06T04-05",
+      "severity": "blocking",
+      "description": "S05-T02 upgrade.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means hermes-agent==0.15.2 still on the live VPS; hermes-agent==0.18.2 upgrade not yet executed live. hermes_agent_version post-restart would be unchanged from pre-restart in either case.",
+      "evidence_pointer": "runtime-evidence/M014-S05-hermes-upgrade.json#phase_verdict"
+    },
+    {
+      "id": "LHA-EX-S06T04-06",
+      "severity": "advisory",
+      "description": "R3 stale ID ledger (9feb4c22 / 43c74adb / 1a194762 / 7595fd85 / 7eede16c / 8233ea7b) cross-checked against snapshot outputs. Any stale id resurfacing as live observation fails V-PRST-12 UUID literal gate.",
+      "evidence_pointer": ".gsd/KNOWLEDGE.md#R3 + paperclip-runtime.lock.json#stale_company_ids"
+    }
+  ],
+  "live_execution_blocker_count": 6,
+  "inherited_constraints_remain_in_force": {
+    "inherited_constraints": [
+      {
+        "id": "LFP-LF-01",
+        "in_force": true,
+        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+      },
+      {
+        "id": "LFP-LF-02",
+        "in_force": true,
+        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+      },
+      {
+        "id": "LFP-LF-03",
+        "in_force": true,
+        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+      },
+      {
+        "id": "LFP-S02-01",
+        "in_force": true,
+        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+      },
+      {
+        "id": "LFP-S02-02",
+        "in_force": true,
+        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+      },
+      {
+        "id": "LFP-S02-03",
+        "in_force": true,
+        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+      }
+    ]
+  },
+  "promotion_discipline": {
+    "policy": "PASS verdict requires (a) all 8 pre/post snapshot target sha256 pairs equal, (b) hermes_providers_profile post-restart still references minimax provider AND MiniMax-M3 model, (c) safe_restart_command_sha256 matches paperclip-runtime.lock.json SHA-256 byte-for-byte (no command extension), (d) no credential value or unapproved UUID literal in snapshot captures (V-PRST-11 + V-PRST-12).",
+    "fail_closed_postures": {
+      "FAIL_SAFE_RESTART_COMMAND_MUTATED": "safe_restart_command_sha256 differs from paperclip-runtime.lock.json; command was extended or substituted (LFP-S02-02 breach)",
+      "FAIL_NATIVE_STATE_DRIFT": "any of paperclip_companies/agents/memberships/plugins sha256 differs; entity loss or duplication",
+      "FAIL_HERMES_BINDING_DRIFT": "hermes_providers_profile post-restart no longer references minimax OR no longer references MiniMax-M3",
+      "FAIL_PG_DATA_PATH_MISSING": "paperclip_postgres_data_path.sha256 differs OR cannot be computed (data volume missing or unwritable)",
+      "FAIL_PRE_SNAPSHOT_MISSING": "pre_restart_snapshot missing or captured_at_utc not within 5 minutes of safe_restart invocation",
+      "FAIL_POST_SNAPSHOT_MISSING": "post_restart_snapshot missing or captured_at_utc not within 5 minutes of paperclip_back_up_signal",
+      "FAIL_CREDENTIAL_LEAK": "snapshot capture contains credential value or unapproved UUID literal (V-PRST-11 + V-PRST-12 fail)",
+      "FAIL_TERMINAL_NONZERO_EXIT": "safe_restart_command exits non-zero OR post-restart paperclip_healthcheck fails"
+    },
+    "auto_mode_lane_status": "computed-but-not-promoted"
+  },
+  "negative_tests_executed": [
+    {
+      "test": "audit_xiaomi_session_id_reuse",
+      "result": "passed_via_static_audit",
+      "note": "no live xiaomi session id observed because no live execution occurred (deferred); R3 ledger cross-checked"
+    },
+    {
+      "test": "audit_credential_leak_in_capture",
+      "result": "passed_via_static_audit",
+      "note": "evidence file scanned by validator V-HM-LD-10 / V-HM-LA-10 / V-PRST-11 patterns; no credential value present"
+    },
+    {
+      "test": "audit_unapproved_uuid_literal",
+      "result": "passed_via_static_audit",
+      "note": "R3 stale id ledger cross-checked against snapshot output placeholders; no unapproved UUID literal in this evidence file"
+    },
+    {
+      "test": "audit_safe_restart_command_byte_identical",
+      "result": "passed_via_static_audit",
+      "note": "lockfile.safe_restart_command_sha256 pre-computed and stored as safe_restart_command_byte_identical_sha256; V-PRST-07 enforces equality post-restart"
+    },
+    {
+      "test": "audit_snapshot_target_set_completeness",
+      "result": "passed_via_static_audit",
+      "note": "8 surfaces enumerated (companies/agents/memberships/plugins/pg_data_path/hermes_version/hermes_providers/hermes_active_profile); V-PRST-09 enforces set membership"
+    }
+  ],
+  "self_check": {
+    "phase_verdict_in_enum_lock": true,
+    "live_execution_status_in_enum_lock": true,
+    "fresh_readback_required": true,
+    "snapshot_target_set_size": 8,
+    "diff_fields_expected_count": 8,
+    "inherited_constraints_count": 6,
+    "live_execution_blocker_count": 6,
+    "auto_mode_lane_status": "computed-but-not-promoted"
+  },
+  "credential_redaction_posture": {
+    "uuid_redaction": "8-char prefix only; 8-4-4-4-12 hex literals are NOT present in this file (validated by V-PRST-12)",
+    "credential_key_value_redaction": "KEY=VALUE shapes forbidden by V-PRST-11",
+    "bearer_token_redaction": "Authorization: Bearer <token> forbidden",
+    "sk_tp_prefix_redaction": "sk-* and tp-* token shapes forbidden",
+    "session_id_corpus_exclusion": "snapshot correlation_id must NOT match any M005-S01 xiaomi session id (cross-checked against R3 ledger)"
+  },
+  "downstream_handoff": {
+    "S07_full_fleet_rollout": "consumes persistence_canary verdict; blocked until persistence verdict=PASS AND rollout_verdict=ROLLOUT",
+    "S06-T04_self_closeout": "this evidence file IS the T04 closeout artifact; persistence verdict promoted to PASS only after operator-confirmed safe_restart captures equal pre/post sha256 pairs"
+  },
+  "diagnostics": {
+    "how_to_inspect_run_after_completion": "node --test scripts/validate_m014_s05_hermes_minimax.js && node scripts/validate_m014_s05_hermes_minimax.js --phase s06-persistence (V-PRST-* checks)",
+    "how_to_compute_safe_restart_command_sha256": "node -e \"console.log(require(\"crypto\").createHash(\"sha256\").update(require(\"fs\").readFileSync(\"paperclip-runtime.lock.json\",\"utf8\")).digest(\"hex\"))\" — should equal safe_restart_command_byte_identical_sha256",
+    "known_blockers": [
+      "LFP-LF-02: live mutation requires operator confirmation; auto-mode has no operator on call",
+      "LFP-S02-02: only the byte-identical safe_restart_command from paperclip-runtime.lock.json may be executed; runner must not invent or extend the command",
+      "LFP-S02-01: VPS forensics verdict H-INCONCLUSIVE; only safe_restart_command is allowed (no destructive recovery)",
+      "S06-T03 prerequisite: rollout-verdict.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means persistence canary has no rolled-out runtime to validate against",
+      "S06-T02 prerequisite: paperclip-hermes-live.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means the MiniMax hermesLocal adapter flip has not been observed live, so the hermes_providers_profile post-restart comparison cannot be grounded",
+      "S06-T01 prerequisite: direct-live.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means fresh-session minimax/MiniMax-M3 invocation has not been observed live yet",
+      "S05-T02 prerequisite: upgrade.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means hermes-agent==0.15.2 still on the live VPS; hermes-agent==0.18.2 upgrade not yet executed live",
+      "S05-T03 prerequisite: direct-proof.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means canonical MiniMax provider profile not yet exercised live",
+      "R3 stale ID ledger: any pre/post snapshot referencing 9feb4c22 / 43c74adb / 1a194762 / 7595fd85 / 7eede16c / 8233ea7b is treated as canonical-drift and fail-closes V-PRST-12"
+    ]
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "$schema": "https://schemas.open-gsd.net/m014-s06-rollout-verdict/v1.json",
+  "milestone": "M014-a9jj46",
+  "slice": "S06",
+  "task": "T03",
+  "purpose": "Fail-closed MiniMax rollout verdict computed from canonical S05/S06 evidence. Side-effect-free; auto-mode lane cannot promote ROLLOUT without operator-confirmed live executor.",
+  "generated": "2026-07-12T20:48:26.135Z",
+  "generated_by": "scripts/build_m014_s06_rollout_verdict.js via gsd-executor/auto-mode",
+  "consumes": [
+    "runtime-evidence/M014-S05-hermes-minimax-rollout.json",
+    "runtime-evidence/M014-S05-minimax-provider-contract.json",
+    "runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json",
+    "runtime-evidence/M014-S05-minimax-direct-proof.json",
+    "runtime-evidence/M014-S06-minimax-direct-live.json",
+    "runtime-evidence/M014-S06-paperclip-hermes-live.json"
+  ],
+  "captured_in_phase": "M014-S06-T03-rollout-verdict",
+  "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+  "phase_verdict_enum_lock": [
+    "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "ROLLOUT",
+    "ROLLOUT_DEFERRED",
+    "ROLLBACK_DECLARED",
+    "BLOCKED_RBC_TRIGGER",
+    "BLOCKED_NO_OPERATOR_CONFIRMATION",
+    "BLOCKED_PREREQUISITE_GAP"
+  ],
+  "phase_verdict_rationale": "All 4 upstream S05/S06 evidence files (M014-S05-minimax-direct-proof.json, M014-S05-paperclip-hermes-minimax-proof.json, M014-S06-minimax-direct-live.json, M014-S06-paperclip-hermes-live.json) record phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED. No RPC-* has live_observed=true yet; no RBC-* trigger has been tripped. Rollout verdict cannot be promoted to ROLLOUT without operator-confirmed live observation of all 4 RPC-* conditions and zero RBC-* triggers.",
+  "rollout_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+  "rollout_verdict_enum_lock": [
+    "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "ROLLOUT",
+    "ROLLOUT_DEFERRED",
+    "ROLLBACK_DECLARED",
+    "BLOCKED_RBC_TRIGGER",
+    "BLOCKED_NO_OPERATOR_CONFIRMATION",
+    "BLOCKED_PREREQUISITE_GAP"
+  ],
+  "rollout_verdict_rationale": "Fail-closed verdict computation per T03 runner computeRolloutVerdict(): all upstream phase_verdict == PLAN_READY_LIVE_EXECUTION_DEFERRED -> PLAN_READY_LIVE_EXECUTION_DEFERRED. Auto-mode has no operator on call (LFP-LF-02) and cannot promote ROLLOUT without live observation. To reach ROLLOUT, every upstream evidence must reach PASS and the 4 RPC-* conditions must be live_observed=true with zero RBC-* triggers tripped.",
+  "rollout_decision_rule": {
+    "promote_to_ROLLOUT": "rollout_pre_conditions.conditions[1..4].live_observed === true AND rollback_pre_conditions.triggers[1..3].tripped === false AND upstream phase_verdict of all 4 S05/S06 evidence === PASS",
+    "revert_to_ROLLBACK_DECLARED": "rollback_pre_conditions.triggers[1..3].tripped === true (any single RBC trip is enough)",
+    "revert_to_BLOCKED_PREREQUISITE_GAP": "any upstream phase_verdict === BLOCKED_* or FAIL_* (not DEFERRED, not PASS)",
+    "stay_PLAN_READY_LIVE_EXECUTION_DEFERRED": "all upstream DEFERRED and live not yet observed",
+    "source_pointer": "scripts/build_m014_s06_rollout_verdict.js + runtime-evidence/M014-S05-minimax-direct-proof.json + runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json + runtime-evidence/M014-S06-minimax-direct-live.json + runtime-evidence/M014-S06-paperclip-hermes-live.json"
+  },
+  "rollout_pre_conditions": {
+    "conditions_count": 4,
+    "conditions": [
+      {
+        "id": "RPC-01",
+        "name": "paperclip_hermes_local_terminal_success",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution",
+        "upstream_phase_verdict_evidence": "runtime-evidence/M014-S06-paperclip-hermes-live.json",
+        "upstream_phase_verdict_value": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_observed_required_for_ROLLOUT": true
+      },
+      {
+        "id": "RPC-02",
+        "name": "pre_adapter_cleanup_all_passed",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution",
+        "upstream_phase_verdict_evidence": "runtime-evidence/M014-S06-paperclip-hermes-live.json",
+        "upstream_phase_verdict_value": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_observed_required_for_ROLLOUT": true
+      },
+      {
+        "id": "RPC-03",
+        "name": "resultJson_bos_schema_valid",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution",
+        "upstream_phase_verdict_evidence": "runtime-evidence/M014-S05-minimax-direct-proof.json",
+        "upstream_phase_verdict_value": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_observed_required_for_ROLLOUT": true
+      },
+      {
+        "id": "RPC-04",
+        "name": "no_xiaomi_endpoint_reuse",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution",
+        "upstream_phase_verdict_evidence": "runtime-evidence/M014-S06-minimax-direct-live.json",
+        "upstream_phase_verdict_value": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_observed_required_for_ROLLOUT": true
+      }
+    ]
+  },
+  "rollback_pre_conditions": {
+    "triggers_count": 3,
+    "triggers": [
+      {
+        "id": "RBC-01",
+        "name": "session_id_matches_xiaomi_corpus",
+        "tripped": false,
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution",
+        "trip_required_for_ROLLBACK_DECLARED": true
+      },
+      {
+        "id": "RBC-02",
+        "name": "credential_value_observed_in_capture",
+        "tripped": false,
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution",
+        "trip_required_for_ROLLBACK_DECLARED": true
+      },
+      {
+        "id": "RBC-03",
+        "name": "provider_name_drift_to_unknown",
+        "tripped": false,
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution",
+        "trip_required_for_ROLLBACK_DECLARED": true
+      }
+    ]
+  },
+  "xiaomi_fallback_retention_plan": {
+    "policy": "Xiaomi/mimo-v2.5-pro binding is retained in paperclip-runtime.lock.json safe_restart_command bypass ONLY as a documented emergency fallback (LFP-LF-01 prefer-Paperclip-routes carve-out is NOT active here). The bypass is gated by hermes-agent==0.15.2 presence in the VPS readback; until S05-T02 upgrade.json phase_verdict=UPGRADE_VERIFIED, the bypass cannot be safety-tested.",
+    "fallback_command_in_lockfile": false,
+    "fallback_command_provenance": "n/a — lockfile forbids any xiaomi-typing bypass; LFP-LF-03 forbids unapproved commands"
+  },
+  "full_fleet_rollout_gate": {
+    "out_of_scope_for_T04": true,
+    "pre_conditions_count": 5,
+    "pre_conditions": [
+      { "id": "FFR-01", "name": "two_consecutive_clean_rollouts_on_bounded_agents" },
+      { "id": "FFR-02", "name": "operator_signed_off_post_bounded_review" },
+      { "id": "FFR-03", "name": "vps_postgres_backup_age_under_24h" },
+      { "id": "FFR-04", "name": "hermes_agent_version_pinned_in_lockfile" },
+      { "id": "FFR-05", "name": "rollout_audit_trail_retained_30_days" }
+    ],
+    "rationale": "T03 promotes only single bounded agent + canonical MiniMax profile. Full Paperclip fleet rollout requires 5 additional FFR-* pre-conditions (T07+ scope)."
+  },
+  "live_execution_status": "deferred-to-rollout-verdict-computation",
+  "live_execution_status_enum_lock": [
+    "pending-live-execution",
+    "in-progress-live-execution",
+    "passed-live-execution",
+    "failed-live-execution",
+    "deferred-to-rollout-verdict-computation"
+  ],
+  "live_execution_status_rationale": "Auto-mode lane computes the verdict but cannot promote; verdict remains deferred until operator-confirmed live executor observes all 4 RPC-* conditions.",
+  "fresh_readback_required": true,
+  "fresh_readback_via": "operator-confirmed live executor on the canonical VPS session (NOT via auto-mode lane)",
+  "inherited_constraints_remain_in_force": {
+    "inherited_constraints": [
+      { "id": "LFP-LF-01", "in_force": true, "rationale": "S05 constraint: prefer Paperclip routes; no core patch — preserved unchanged in S06." },
+      { "id": "LFP-LF-02", "in_force": true, "rationale": "S05 constraint: live mutation requires operator confirmation — auto-mode has no operator on call; this verdict is computed but not promoted." },
+      { "id": "LFP-LF-03", "in_force": true, "rationale": "S05 constraint: forbidden commands unless explicitly approved — no rollback commands issued by auto-mode." },
+      { "id": "LFP-S02-01", "in_force": true, "rationale": "S02 constraint: VPS forensics H-INCONCLUSIVE; no destructive recovery — preserved unchanged." },
+      { "id": "LFP-S02-02", "in_force": true, "rationale": "S02 constraint: safe_restart_command is the one in lockfile only — preserved unchanged; no command extension or substitution by auto-mode." },
+      { "id": "LFP-S02-03", "in_force": true, "rationale": "S02 constraint: stale ID ledger not canonical — R3 ledger cross-checked against rollout RPC-* evidence; no stale company id reused as live observation." }
+    ]
+  },
+  "decisions_to_be_recorded_or_revised_post_rollout": [
+    {
+      "id": "D-pending-minimax-rollout",
+      "decision": "promote hermes-agent==0.18.2 + minimax/MiniMax-M3 to Paperclip bounded fleet",
+      "choice": "deferred until ROLLOUT verdict reached (all 4 RPC-* live_observed=true AND zero RBC-* tripped)",
+      "rationale": "fail-closed: do not promote without live evidence; current upstream state is PLAN_READY_LIVE_EXECUTION_DEFERRED"
+    }
+  ],
+  "negative_tests_executed": [
+    {
+      "test": "audit_xiaomi_session_id_reuse",
+      "result": "passed_via_static_audit",
+      "note": "no live xiaomi session id observed because no live execution occurred (deferred)"
+    },
+    {
+      "test": "audit_credential_leak_in_capture",
+      "result": "passed_via_static_audit",
+      "note": "evidence file scanned by validator V-HM-DI-20 / V-HM-AD-20 / V-HM-LD-10 patterns; no credential value present"
+    },
+    {
+      "test": "audit_stale_company_id_resurface",
+      "result": "passed_via_static_audit",
+      "note": "R3 stale ledger cross-checked; no stale id used in this evidence"
+    }
+  ],
+  "self_check": {
+    "phase_verdict_in_enum_lock": true,
+    "live_execution_status_in_enum_lock": true,
+    "rollout_verdict_in_enum_lock": true,
+    "all_upstream_phase_verdicts_admissible": true,
+    "rollout_pre_conditions_count": 4,
+    "rollback_pre_conditions_count": 3,
+    "inherited_constraints_count": 6,
+    "fresh_readback_required_acknowledged": true,
+    "auto_mode_lane_status": "computed-but-not-promoted"
+  },
+  "credential_redaction_posture": {
+    "uuid_redaction": "8-char prefix only; 8-4-4-4-12 hex literals are NOT present in this file (validated by V-HM-LD-11 / V-HM-LA-11 / V-HM-AD-21 family)",
+    "credential_key_value_redaction": "KEY=VALUE shapes forbidden by validator V-HM-DI-20 / V-HM-LD-10 / V-HM-LA-10 / V-HM-AD-20",
+    "bearer_token_redaction": "Authorization: Bearer <token> forbidden",
+    "sk_tp_prefix_redaction": "sk-* and tp-* token shapes forbidden"
+  },
+  "downstream_handoff": {
+    "S06_T04_persistence_canary": "consumes this rollout verdict as one of 4 upstream evidence sources; persistence canary can be PLAN_READY_LIVE_EXECUTION_DEFERRED until rollout is promoted",
+    "S07_full_fleet_rollout": "consumes rollout_verdict + persistence canary verdict; blocked until ROLLOUT AND persistence PASS"
+  },
+  "diagnostics": {
+    "how_to_inspect_run_after_completion": "node --test scripts/validate_m014_s05_hermes_minimax.js && node scripts/validate_m014_s05_hermes_minimax.js --phase s06-rollout (V-HM-LR-* checks)",
+    "known_blockers": [
+      "LFP-LF-02: live mutation requires operator confirmation; auto-mode has no operator on call",
+      "LFP-S02-01: VPS forensics verdict H-INCONCLUSIVE; only safe_restart_command allowed",
+      "S06-T01 prerequisite: direct-live.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means RPC-04 no_xiaomi_endpoint_reuse cannot be live-observed",
+      "S06-T02 prerequisite: paperclip-hermes-live.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means RPC-01 + RPC-02 cannot be live-observed",
+      "S05-T02 prerequisite: upgrade.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means hermes-agent==0.15.2 still on VPS",
+      "S05-T03 prerequisite: direct-proof.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means RPC-03 resultJson_bos_schema_valid cannot be live-observed"
+    ]
+  }
+}

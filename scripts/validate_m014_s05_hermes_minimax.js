@@ -191,6 +191,26 @@ const MINIMAX_S06_PAPERCLIP_HERMES_LIVE_JSON = path.resolve(
   'runtime-evidence/M014-S06-paperclip-hermes-live.json'
 );
 
+// S06 path constants (added in S06-T03): fail-closed MiniMax rollout verdict.
+const MINIMAX_S06_ROLLOUT_VERDICT_JSON = path.resolve(
+  PROJECT_ROOT,
+  'runtime-evidence/M014-S06-rollout-verdict.json'
+);
+
+// S06 path constants (added in S06-T04): Paperclip and Hermes persistence canary.
+const MINIMAX_S06_PERSISTENCE_CANARY_JSON = path.resolve(
+  PROJECT_ROOT,
+  'runtime-evidence/M014-S06-persistence-canary.json'
+);
+
+// Lockfile path (read by --phase s06-persistence to cross-validate
+// safe_restart_command_byte_identical_sha256 against the lockfile's actual
+// safe_restart_command bytes; this enforces LFP-S02-02 byte-identical rule).
+const PAPERCLIP_RUNTIME_LOCKFILE_JSON = path.resolve(
+  PROJECT_ROOT,
+  'paperclip-runtime.lock.json'
+);
+
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
@@ -1346,6 +1366,112 @@ function loadS06PaperclipHermesLiveOrFail(proofPath = MINIMAX_S06_PAPERCLIP_HERM
   return { parsed, path: proofPath };
 }
 
+function loadS06RolloutVerdictOrFail(verdictPath = MINIMAX_S06_ROLLOUT_VERDICT_JSON) {
+  if (!fs.existsSync(verdictPath)) {
+    throw new Error(`s06-rollout-verdict file not found: ${verdictPath}`);
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(verdictPath, 'utf8');
+  } catch (err) {
+    throw new Error(`s06-rollout-verdict read failure: ${err.message}`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`s06-rollout-verdict JSON parse failure: ${err.message}`);
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('s06-rollout-verdict top-level must be a JSON object');
+  }
+  return { parsed, path: verdictPath };
+}
+
+function loadS06PersistenceCanaryOrFail(canaryPath = MINIMAX_S06_PERSISTENCE_CANARY_JSON) {
+  if (!fs.existsSync(canaryPath)) {
+    throw new Error(`s06-persistence-canary file not found: ${canaryPath}`);
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(canaryPath, 'utf8');
+  } catch (err) {
+    throw new Error(`s06-persistence-canary read failure: ${err.message}`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`s06-persistence-canary JSON parse failure: ${err.message}`);
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('s06-persistence-canary top-level must be a JSON object');
+  }
+  return { parsed, path: canaryPath };
+}
+
+function loadPaperclipRuntimeLockfileOrFail(lockfilePath = PAPERCLIP_RUNTIME_LOCKFILE_JSON) {
+  if (!fs.existsSync(lockfilePath)) {
+    throw new Error(`paperclip-runtime.lock.json not found: ${lockfilePath}`);
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(lockfilePath, 'utf8');
+  } catch (err) {
+    throw new Error(`paperclip-runtime.lock.json read failure: ${err.message}`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`paperclip-runtime.lock.json JSON parse failure: ${err.message}`);
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('paperclip-runtime.lock.json top-level must be a JSON object');
+  }
+  if (typeof parsed.safe_restart_command !== 'string' || parsed.safe_restart_command.length === 0) {
+    throw new Error('paperclip-runtime.lock.json.safe_restart_command missing or empty (LFP-S02-02)');
+  }
+  return { parsed, path: lockfilePath };
+}
+
+// Required 8 snapshot targets for S06-T04 persistence canary. The list is
+// enumerated as a module-level const so the validator, runner, and JSON
+// evidence all agree on the exact same set.
+const REQUIRED_SNAPSHOT_TARGETS = [
+  'paperclip_companies',
+  'paperclip_agents',
+  'paperclip_memberships',
+  'paperclip_plugins',
+  'paperclip_postgres_data_path',
+  'hermes_agent_version',
+  'hermes_providers_profile',
+  'hermes_active_profile',
+];
+
+const REQUIRED_PERSISTENCE_PHASE_VERDICT_ENUM = [
+  'PLAN_READY_LIVE_EXECUTION_DEFERRED',
+  'PASS',
+  'FAIL_PRE_SNAPSHOT_MISSING',
+  'FAIL_POST_SNAPSHOT_MISSING',
+  'FAIL_SAFE_RESTART_COMMAND_MUTATED',
+  'FAIL_NATIVE_STATE_DRIFT',
+  'FAIL_HERMES_BINDING_DRIFT',
+  'FAIL_CREDENTIAL_LEAK',
+  'FAIL_TERMINAL_NONZERO_EXIT',
+  'FAIL_PG_DATA_PATH_MISSING',
+  'BLOCKED_NO_OPERATOR_CONFIRMATION',
+  'BLOCKED_PREREQUISITE_GAP',
+];
+
+const REQUIRED_PERSISTENCE_LIVE_EXECUTION_STATUS_ENUM = [
+  'pending-live-execution',
+  'in-progress-live-execution',
+  'passed-live-execution',
+  'failed-live-execution',
+  'deferred-to-operator-confirmed-safe-restart',
+];
+
 function validatePaperclipHermesProof(parsed, providerContractParsed, directProofParsed, baselineParsed) {
   const checks = [];
   const blockers = [];
@@ -1735,6 +1861,162 @@ function validateS06MinimaxDirectLive(parsed, providerContractParsed, baselinePa
   };
 }
 
+// ---------------------------------------------------------------------------
+// S06-T04 persistence canary validator — checks V-PRST-01 .. V-PRST-13
+// against M014-S06-persistence-canary.json, with cross-validation of
+// safe_restart_command_byte_identical_sha256 against the actual
+// paperclip-runtime.lock.json.safe_restart_command bytes (V-PRST-07).
+// ---------------------------------------------------------------------------
+
+function validateS06PersistenceCanary(parsed, lockfileParsed) {
+  const blockers = [];
+  const checks = [];
+
+  // V-PRST-01: file exists (handled by loadS06PersistenceCanaryOrFail)
+  checks.push({ id: 'V-PRST-01', verdict: 'pass', note: 's06-persistence-canary.json file exists' });
+
+  // V-PRST-02: parses as JSON object (handled by loadS06PersistenceCanaryOrFail)
+  checks.push({ id: 'V-PRST-02', verdict: 'pass', note: 's06-persistence-canary.json parses as JSON object' });
+
+  // V-PRST-03: phase_verdict in 12-value enum_lock
+  const phaseVerdict = parsed.phase_verdict;
+  const phaseVerdictEnum = parsed.phase_verdict_enum_lock || [];
+  if (typeof phaseVerdict !== 'string' || !phaseVerdictEnum.includes(phaseVerdict)) {
+    blockers.push(`s06-persistence-canary phase_verdict must be in phase_verdict_enum_lock (got ${phaseVerdict})`);
+    checks.push({ id: 'V-PRST-03', verdict: 'fail', note: `phase_verdict not in enum_lock: ${phaseVerdict}` });
+  } else if (!REQUIRED_PERSISTENCE_PHASE_VERDICT_ENUM.includes(phaseVerdict)) {
+    blockers.push(`s06-persistence-canary phase_verdict not in canonical 12-value enum (got ${phaseVerdict})`);
+    checks.push({ id: 'V-PRST-03', verdict: 'fail', note: `phase_verdict not canonical: ${phaseVerdict}` });
+  } else {
+    checks.push({ id: 'V-PRST-03', verdict: 'pass', note: `phase_verdict admissible: ${phaseVerdict}` });
+  }
+
+  // V-PRST-04: live_execution_status in 5-value enum_lock
+  const liveStatus = parsed.live_execution_status;
+  const liveStatusEnum = parsed.live_execution_status_enum_lock || [];
+  if (typeof liveStatus !== 'string' || !liveStatusEnum.includes(liveStatus)) {
+    blockers.push(`s06-persistence-canary live_execution_status must be in live_execution_status_enum_lock (got ${liveStatus})`);
+    checks.push({ id: 'V-PRST-04', verdict: 'fail', note: `live_execution_status not in enum_lock: ${liveStatus}` });
+  } else if (!REQUIRED_PERSISTENCE_LIVE_EXECUTION_STATUS_ENUM.includes(liveStatus)) {
+    blockers.push(`s06-persistence-canary live_execution_status not in canonical 5-value enum (got ${liveStatus})`);
+    checks.push({ id: 'V-PRST-04', verdict: 'fail', note: `live_execution_status not canonical: ${liveStatus}` });
+  } else {
+    checks.push({ id: 'V-PRST-04', verdict: 'pass', note: `live_execution_status admissible: ${liveStatus}` });
+  }
+
+  // V-PRST-05: fresh_readback_required === true
+  if (parsed.fresh_readback_required !== true) {
+    blockers.push('s06-persistence-canary fresh_readback_required must be true');
+    checks.push({ id: 'V-PRST-05', verdict: 'fail', note: 'fresh_readback_required missing' });
+  } else {
+    checks.push({ id: 'V-PRST-05', verdict: 'pass', note: 'fresh_readback_required asserted (byte-identical safe_restart + pre/post sha256 gate)' });
+  }
+
+  // V-PRST-06: snapshot_target_set covers all 8 REQUIRED_SNAPSHOT_TARGETS
+  const snapshotSet = Array.isArray(parsed.snapshot_target_set) ? parsed.snapshot_target_set : [];
+  const snapshotSetLower = new Set(snapshotSet.map((s) => String(s).toLowerCase()));
+  const missingTargets = REQUIRED_SNAPSHOT_TARGETS.filter((t) => !snapshotSetLower.has(t));
+  if (snapshotSet.length !== REQUIRED_SNAPSHOT_TARGETS.length || missingTargets.length > 0) {
+    blockers.push(`s06-persistence-canary snapshot_target_set must contain all ${REQUIRED_SNAPSHOT_TARGETS.length} surfaces (missing: ${missingTargets.join(', ')})`);
+    checks.push({ id: 'V-PRST-06', verdict: 'fail', note: `snapshot_target_set gap: count=${snapshotSet.length}, missing=${missingTargets.join(',')}` });
+  } else {
+    checks.push({ id: 'V-PRST-06', verdict: 'pass', note: `snapshot_target_set covers all ${REQUIRED_SNAPSHOT_TARGETS.length} surfaces` });
+  }
+
+  // V-PRST-07: safe_restart_command_byte_identical_sha256 matches lockfile sha256
+  const crypto = require('node:crypto');
+  const lockfileSafeRestart = lockfileParsed && lockfileParsed.safe_restart_command;
+  const lockfileSha256 = typeof lockfileSafeRestart === 'string'
+    ? crypto.createHash('sha256').update(lockfileSafeRestart, 'utf8').digest('hex')
+    : null;
+  const evidenceSha256 = parsed.safe_restart_command_byte_identical_sha256;
+  if (typeof evidenceSha256 !== 'string' || !/^[0-9a-f]{64}$/.test(evidenceSha256)) {
+    blockers.push(`s06-persistence-canary safe_restart_command_byte_identical_sha256 must be a 64-char hex sha256 (got ${typeof evidenceSha256 === 'string' ? evidenceSha256.length + ' chars' : typeof evidenceSha256})`);
+    checks.push({ id: 'V-PRST-07', verdict: 'fail', note: `safe_restart_command_byte_identical_sha256 missing or malformed` });
+  } else if (!lockfileSha256) {
+    blockers.push('paperclip-runtime.lock.json.safe_restart_command missing — V-PRST-07 cannot cross-validate (LFP-S02-02)');
+    checks.push({ id: 'V-PRST-07', verdict: 'fail', note: 'lockfile.safe_restart_command missing' });
+  } else if (evidenceSha256 !== lockfileSha256) {
+    blockers.push(`s06-persistence-canary safe_restart_command_byte_identical_sha256 mismatch: evidence=${evidenceSha256}, lockfile=${lockfileSha256} (LFP-S02-02 byte-identical breach)`);
+    checks.push({ id: 'V-PRST-07', verdict: 'fail', note: `sha256 drift: evidence=${evidenceSha256.slice(0,12)}..., lockfile=${lockfileSha256.slice(0,12)}...` });
+  } else {
+    checks.push({ id: 'V-PRST-07', verdict: 'pass', note: `safe_restart_command_byte_identical_sha256 matches lockfile (sha256=${lockfileSha256.slice(0,12)}...)` });
+  }
+
+  // V-PRST-08: pre_restart_snapshot_plan.correlation_id_format_expected includes YYYYMMDD_HHMMSS_<6hex>
+  const prePlan = parsed.pre_restart_snapshot_plan || {};
+  const preFormat = prePlan.correlation_id_format_expected;
+  if (typeof preFormat !== 'string' || !/YYYYMMDD_HHMMSS_/.test(preFormat)) {
+    blockers.push('s06-persistence-canary pre_restart_snapshot_plan.correlation_id_format_expected must declare YYYYMMDD_HHMMSS_<6hex> format');
+    checks.push({ id: 'V-PRST-08', verdict: 'fail', note: `pre-restart correlation_id format missing YYYYMMDD_HHMMSS_ prefix: ${preFormat}` });
+  } else {
+    checks.push({ id: 'V-PRST-08', verdict: 'pass', note: 'pre-restart correlation_id YYYYMMDD_HHMMSS_<6hex> format documented' });
+  }
+
+  // V-PRST-09: post_restart_snapshot_plan.correlation_id_format_expected includes YYYYMMDD_HHMMSS_<6hex>
+  const postPlan = parsed.post_restart_snapshot_plan || {};
+  const postFormat = postPlan.correlation_id_format_expected;
+  if (typeof postFormat !== 'string' || !/YYYYMMDD_HHMMSS_/.test(postFormat)) {
+    blockers.push('s06-persistence-canary post_restart_snapshot_plan.correlation_id_format_expected must declare YYYYMMDD_HHMMSS_<6hex> format');
+    checks.push({ id: 'V-PRST-09', verdict: 'fail', note: `post-restart correlation_id format missing YYYYMMDD_HHMMSS_ prefix: ${postFormat}` });
+  } else {
+    checks.push({ id: 'V-PRST-09', verdict: 'pass', note: 'post-restart correlation_id YYYYMMDD_HHMMSS_<6hex> format documented' });
+  }
+
+  // V-PRST-10: diff_policy.expected_diff_fields covers all 8 surfaces with _equal suffix
+  const diffPolicy = parsed.diff_policy || {};
+  const expectedFields = Array.isArray(diffPolicy.expected_diff_fields) ? diffPolicy.expected_diff_fields : [];
+  const expectedFieldsLower = new Set(expectedFields.map((s) => String(s).toLowerCase()));
+  const expectedDiffTargets = REQUIRED_SNAPSHOT_TARGETS.map((t) => `${t}_equal`);
+  const missingDiffFields = expectedDiffTargets.filter((f) => !expectedFieldsLower.has(f));
+  if (expectedFields.length !== expectedDiffTargets.length || missingDiffFields.length > 0) {
+    blockers.push(`s06-persistence-canary diff_policy.expected_diff_fields must cover all ${expectedDiffTargets.length} targets with _equal suffix (missing: ${missingDiffFields.join(', ')})`);
+    checks.push({ id: 'V-PRST-10', verdict: 'fail', note: `expected_diff_fields gap: count=${expectedFields.length}, missing=${missingDiffFields.join(',')}` });
+  } else {
+    checks.push({ id: 'V-PRST-10', verdict: 'pass', note: `diff_policy.expected_diff_fields covers all ${expectedDiffTargets.length} surfaces` });
+  }
+
+  // V-PRST-11: no credential value leak
+  const evidenceString = JSON.stringify(parsed);
+  const credentialHits = scanCredentialLeaks(evidenceString);
+  if (credentialHits.length > 0) {
+    blockers.push(`s06-persistence-canary redaction leak: ${credentialHits.map((h) => h.redacted).join(', ')}`);
+    checks.push({ id: 'V-PRST-11', verdict: 'fail', note: `redaction leak: ${credentialHits.length} match(es)` });
+  } else {
+    checks.push({ id: 'V-PRST-11', verdict: 'pass', note: 'no credential value leak (KEY=value / bearer / sk-* / tp-* patterns)' });
+  }
+
+  // V-PRST-12: no unapproved UUID literal
+  const uuidMatches = evidenceString.match(UUID_RE) || [];
+  const unexpectedUuids = uuidMatches.filter(
+    (u) => !APPROVED_UUID_8CHAR_PREFIXES.has(uuidPrefix(u))
+  );
+  if (unexpectedUuids.length > 0) {
+    blockers.push(`s06-persistence-canary UUID literal leak: ${unexpectedUuids.length} unexpected UUID(s)`);
+    checks.push({ id: 'V-PRST-12', verdict: 'fail', note: `unexpected UUID literal(s): ${unexpectedUuids.map(redactUuidsInString).join(', ')}` });
+  } else {
+    checks.push({ id: 'V-PRST-12', verdict: 'pass', note: 'no unapproved UUID literal (R3 stale ledger cross-checked)' });
+  }
+
+  // V-PRST-13: inherited_constraints_remain_in_force carries all 6 LFP-* IDs
+  const inherited = parsed.inherited_constraints_remain_in_force || {};
+  const inheritedList = inherited.inherited_constraints || [];
+  const inheritedIds = new Set(inheritedList.map((c) => c && c.id));
+  const missingInherited = REQUIRED_INHERITED_CONSTRAINT_IDS.filter((id) => !inheritedIds.has(id));
+  if (missingInherited.length > 0) {
+    blockers.push(`s06-persistence-canary inherited_constraints_remain_in_force missing: ${missingInherited.join(', ')}`);
+    checks.push({ id: 'V-PRST-13', verdict: 'fail', note: `inherited constraint drift: ${missingInherited.join(', ')}` });
+  } else {
+    checks.push({ id: 'V-PRST-13', verdict: 'pass', note: 'all 6 LFP-* inherited constraints preserved in persistence canary evidence' });
+  }
+
+  return {
+    verdict: blockers.length === 0 ? 'pass' : 'fail',
+    blockers,
+    checks,
+  };
+}
+
 function validateS06PaperclipHermesLive(parsed, providerContractParsed, baselineParsed) {
   const blockers = [];
   const checks = [];
@@ -1883,11 +2165,11 @@ function cli() {
   const args = process.argv.slice(2);
   const phaseIdx = args.indexOf('--phase');
   if (phaseIdx === -1 || phaseIdx === args.length - 1) {
-    process.stderr.write('USAGE: node scripts/validate_m014_s05_hermes_minimax.js --phase <baseline|upgraded|direct|final|s06-direct|s06-adapter>\n');
+    process.stderr.write('USAGE: node scripts/validate_m014_s05_hermes_minimax.js --phase <baseline|upgraded|direct|final|s06-direct|s06-adapter|s06-persistence>\n');
     process.exit(2);
   }
   const phase = args[phaseIdx + 1];
-  const validPhases = new Set(['baseline', 'upgraded', 'direct', 'final', 's06-direct', 's06-adapter']);
+  const validPhases = new Set(['baseline', 'upgraded', 'direct', 'final', 's06-direct', 's06-adapter', 's06-persistence']);
   if (!validPhases.has(phase)) {
     process.stderr.write(`FAIL: unknown phase "${phase}". Valid: ${Array.from(validPhases).join(', ')}\n`);
     process.exit(2);
@@ -2029,6 +2311,31 @@ function cli() {
     additionalArtifacts = [
       path.relative(PROJECT_ROOT, MINIMAX_PROVIDER_CONTRACT_JSON),
       path.relative(PROJECT_ROOT, MINIMAX_S06_PAPERCLIP_HERMES_LIVE_JSON),
+    ];
+  } else if (phase === 's06-persistence') {
+    // --phase s06-persistence (T04): validate the S06 Paperclip+Hermes
+    // persistence canary against M014-S06-persistence-canary.json. Validates
+    // V-PRST-01..13 with a fresh-readback gate, 8-surface snapshot_target_set
+    // membership, byte-identical safe_restart_command_sha256 cross-check
+    // against paperclip-runtime.lock.json (LFP-S02-02), pre/post
+    // correlation_id YYYYMMDD_HHMMSS_<6hex> format documentation, diff policy
+    // 8-element coverage, redaction clean, no unapproved UUID literal, and
+    // 6 LFP-* inherited constraint preservation.
+    let s06PersistenceCanaryParsed;
+    let lockfileParsed;
+    try {
+      s06PersistenceCanaryParsed = loadS06PersistenceCanaryOrFail().parsed;
+      lockfileParsed = loadPaperclipRuntimeLockfileOrFail().parsed;
+    } catch (err) {
+      process.stderr.write(`FAIL: ${err.message}\n`);
+      process.exit(2);
+    }
+    const s06PersistenceCanaryResult = validateS06PersistenceCanary(s06PersistenceCanaryParsed, lockfileParsed);
+    allChecks = allChecks.concat(s06PersistenceCanaryResult.checks);
+    allBlockers = allBlockers.concat(s06PersistenceCanaryResult.blockers);
+    additionalArtifacts = [
+      path.relative(PROJECT_ROOT, MINIMAX_S06_PERSISTENCE_CANARY_JSON),
+      path.relative(PROJECT_ROOT, PAPERCLIP_RUNTIME_LOCKFILE_JSON),
     ];
   }
   const summary = {
@@ -2828,6 +3135,109 @@ describe('M014-S05 Paperclip Hermes MiniMax adapter proof + rollout validator', 
       0,
       `unexpected UUID literal(s): ${unexpected.map(redactUuidsInString).join(', ')}`
     );
+  });
+});
+
+describe('M014-S06 Paperclip + Hermes persistence canary validator', () => {
+  let s06PersistenceCanaryParsed;
+  let lockfileParsed;
+
+  before(() => {
+    s06PersistenceCanaryParsed = loadS06PersistenceCanaryOrFail().parsed;
+    lockfileParsed = loadPaperclipRuntimeLockfileOrFail().parsed;
+  });
+
+  // V-PRST-01
+  it('s06-persistence-canary.json file exists', () => {
+    assert.ok(fs.existsSync(MINIMAX_S06_PERSISTENCE_CANARY_JSON), `missing ${MINIMAX_S06_PERSISTENCE_CANARY_JSON}`);
+  });
+
+  // V-PRST-02
+  it('s06-persistence-canary.json parses as JSON object', () => {
+    assert.equal(typeof s06PersistenceCanaryParsed, 'object');
+    assert.ok(s06PersistenceCanaryParsed !== null);
+    assert.ok(!Array.isArray(s06PersistenceCanaryParsed));
+  });
+
+  // V-PRST-03
+  it('phase_verdict admissible (in 12-value enum_lock)', () => {
+    const allowed = s06PersistenceCanaryParsed.phase_verdict_enum_lock || [];
+    assert.ok(allowed.includes(s06PersistenceCanaryParsed.phase_verdict), `phase_verdict=${s06PersistenceCanaryParsed.phase_verdict} not in enum_lock`);
+  });
+
+  // V-PRST-04
+  it('live_execution_status admissible (in 5-value enum_lock)', () => {
+    const allowed = s06PersistenceCanaryParsed.live_execution_status_enum_lock || [];
+    assert.ok(allowed.includes(s06PersistenceCanaryParsed.live_execution_status), `live_execution_status=${s06PersistenceCanaryParsed.live_execution_status} not in enum_lock`);
+  });
+
+  // V-PRST-05
+  it('fresh_readback_required === true (byte-identical safe_restart + pre/post sha256 gate)', () => {
+    assert.equal(s06PersistenceCanaryParsed.fresh_readback_required, true);
+  });
+
+  // V-PRST-06
+  it('snapshot_target_set covers all 8 required surfaces', () => {
+    const set = new Set((s06PersistenceCanaryParsed.snapshot_target_set || []).map((s) => String(s).toLowerCase()));
+    assert.equal(s06PersistenceCanaryParsed.snapshot_target_set.length, REQUIRED_SNAPSHOT_TARGETS.length, `snapshot_target_set must have ${REQUIRED_SNAPSHOT_TARGETS.length} entries`);
+    for (const required of REQUIRED_SNAPSHOT_TARGETS) {
+      assert.ok(set.has(required), `missing snapshot_target: ${required}`);
+    }
+  });
+
+  // V-PRST-07
+  it('safe_restart_command_byte_identical_sha256 matches lockfile sha256 (LFP-S02-02)', () => {
+    const crypto = require('node:crypto');
+    const lockSha = crypto.createHash('sha256').update(lockfileParsed.safe_restart_command, 'utf8').digest('hex');
+    const evidenceSha = s06PersistenceCanaryParsed.safe_restart_command_byte_identical_sha256;
+    assert.ok(typeof evidenceSha === 'string' && /^[0-9a-f]{64}$/.test(evidenceSha), `safe_restart_command_byte_identical_sha256 missing or malformed: ${typeof evidenceSha}`);
+    assert.equal(evidenceSha, lockSha, `safe_restart_command_byte_identical_sha256 drift: evidence=${evidenceSha}, lockfile=${lockSha}`);
+  });
+
+  // V-PRST-08
+  it('pre_restart_snapshot_plan.correlation_id_format_expected declares YYYYMMDD_HHMMSS_<6hex>', () => {
+    const fmt = s06PersistenceCanaryParsed.pre_restart_snapshot_plan && s06PersistenceCanaryParsed.pre_restart_snapshot_plan.correlation_id_format_expected;
+    assert.ok(typeof fmt === 'string' && /YYYYMMDD_HHMMSS_/.test(fmt), `pre-restart correlation_id_format_expected missing YYYYMMDD_HHMMSS_: ${fmt}`);
+  });
+
+  // V-PRST-09
+  it('post_restart_snapshot_plan.correlation_id_format_expected declares YYYYMMDD_HHMMSS_<6hex>', () => {
+    const fmt = s06PersistenceCanaryParsed.post_restart_snapshot_plan && s06PersistenceCanaryParsed.post_restart_snapshot_plan.correlation_id_format_expected;
+    assert.ok(typeof fmt === 'string' && /YYYYMMDD_HHMMSS_/.test(fmt), `post-restart correlation_id_format_expected missing YYYYMMDD_HHMMSS_: ${fmt}`);
+  });
+
+  // V-PRST-10
+  it('diff_policy.expected_diff_fields covers all 8 targets with _equal suffix', () => {
+    const fields = (s06PersistenceCanaryParsed.diff_policy && s06PersistenceCanaryParsed.diff_policy.expected_diff_fields) || [];
+    const fieldSet = new Set(fields.map((f) => String(f).toLowerCase()));
+    const expected = REQUIRED_SNAPSHOT_TARGETS.map((t) => `${t}_equal`);
+    assert.equal(fields.length, expected.length, `expected_diff_fields must have ${expected.length} entries, got ${fields.length}`);
+    for (const required of expected) {
+      assert.ok(fieldSet.has(required), `missing expected_diff_field: ${required}`);
+    }
+  });
+
+  // V-PRST-11
+  it('no credential value leak in s06-persistence-canary.json', () => {
+    const asString = JSON.stringify(s06PersistenceCanaryParsed);
+    const hits = scanCredentialLeaks(asString);
+    assert.equal(hits.length, 0, `credential value leak(s): ${hits.map((h) => h.redacted).join(', ')}`);
+  });
+
+  // V-PRST-12
+  it('no unapproved UUID literal in s06-persistence-canary.json (R3 stale ledger cross-checked)', () => {
+    const asString = JSON.stringify(s06PersistenceCanaryParsed);
+    const matches = asString.match(UUID_RE) || [];
+    const unexpected = matches.filter((u) => !APPROVED_UUID_8CHAR_PREFIXES.has(uuidPrefix(u)));
+    assert.equal(unexpected.length, 0, `unexpected UUID literal(s): ${unexpected.map(redactUuidsInString).join(', ')}`);
+  });
+
+  // V-PRST-13
+  it('inherited_constraints_remain_in_force carries all 6 LFP-* IDs unchanged', () => {
+    const ids = new Set((s06PersistenceCanaryParsed.inherited_constraints_remain_in_force.inherited_constraints || []).map((c) => c.id));
+    for (const required of REQUIRED_INHERITED_CONSTRAINT_IDS) {
+      assert.ok(ids.has(required), `missing inherited constraint: ${required}`);
+    }
   });
 });
 
