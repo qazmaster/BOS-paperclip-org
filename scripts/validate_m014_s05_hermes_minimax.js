@@ -185,6 +185,12 @@ const MINIMAX_S06_DIRECT_LIVE_JSON = path.resolve(
   'runtime-evidence/M014-S06-minimax-direct-live.json'
 );
 
+// S06 path constants (added in S06-T02): live Paperclip hermes_local MiniMax proof artifact.
+const MINIMAX_S06_PAPERCLIP_HERMES_LIVE_JSON = path.resolve(
+  PROJECT_ROOT,
+  'runtime-evidence/M014-S06-paperclip-hermes-live.json'
+);
+
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
@@ -1318,6 +1324,28 @@ function loadS06MinimaxDirectLiveOrFail(proofPath = MINIMAX_S06_DIRECT_LIVE_JSON
   return { parsed, path: proofPath };
 }
 
+function loadS06PaperclipHermesLiveOrFail(proofPath = MINIMAX_S06_PAPERCLIP_HERMES_LIVE_JSON) {
+  if (!fs.existsSync(proofPath)) {
+    throw new Error(`s06-paperclip-hermes-live file not found: ${proofPath}`);
+  }
+  let raw;
+  try {
+    raw = fs.readFileSync(proofPath, 'utf8');
+  } catch (err) {
+    throw new Error(`s06-paperclip-hermes-live read failure: ${err.message}`);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`s06-paperclip-hermes-live JSON parse failure: ${err.message}`);
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('s06-paperclip-hermes-live top-level must be a JSON object');
+  }
+  return { parsed, path: proofPath };
+}
+
 function validatePaperclipHermesProof(parsed, providerContractParsed, directProofParsed, baselineParsed) {
   const checks = [];
   const blockers = [];
@@ -1707,15 +1735,159 @@ function validateS06MinimaxDirectLive(parsed, providerContractParsed, baselinePa
   };
 }
 
+function validateS06PaperclipHermesLive(parsed, providerContractParsed, baselineParsed) {
+  const blockers = [];
+  const checks = [];
+
+  // V-HM-LA-01
+  checks.push({ id: 'V-HM-LA-01', verdict: 'pass', note: 's06-paperclip-hermes-live.json file exists' });
+
+  // V-HM-LA-02
+  checks.push({ id: 'V-HM-LA-02', verdict: 'pass', note: 's06-paperclip-hermes-live.json parses as JSON object' });
+
+  // V-HM-LA-03: phase_verdict admissible (9-value enum_lock with Paperclip-specific values)
+  const phaseVerdict = parsed.phase_verdict;
+  const phaseVerdictEnum = parsed.phase_verdict_enum_lock || [];
+  if (typeof phaseVerdict !== 'string' || !phaseVerdictEnum.includes(phaseVerdict)) {
+    blockers.push(`s06-paperclip-hermes-live phase_verdict must be in phase_verdict_enum_lock (got ${phaseVerdict})`);
+    checks.push({ id: 'V-HM-LA-03', verdict: 'fail', note: `phase_verdict not in enum_lock: ${phaseVerdict}` });
+  } else {
+    checks.push({ id: 'V-HM-LA-03', verdict: 'pass', note: `phase_verdict admissible: ${phaseVerdict}` });
+  }
+
+  // V-HM-LA-04: live_execution_status admissible (5-value enum_lock with Paperclip-specific status)
+  const liveStatus = parsed.live_execution_status;
+  const liveStatusEnum = parsed.live_execution_status_enum_lock || [];
+  if (typeof liveStatus !== 'string' || !liveStatusEnum.includes(liveStatus)) {
+    blockers.push(`s06-paperclip-hermes-live live_execution_status must be in live_execution_status_enum_lock (got ${liveStatus})`);
+    checks.push({ id: 'V-HM-LA-04', verdict: 'fail', note: `live_execution_status not in enum_lock: ${liveStatus}` });
+  } else {
+    checks.push({ id: 'V-HM-LA-04', verdict: 'pass', note: `live_execution_status admissible: ${liveStatus}` });
+  }
+
+  // V-HM-LA-05: fresh_readback_required === true (S06-T02 fresh-session + fresh-bounded-agent mandate)
+  if (parsed.fresh_readback_required !== true) {
+    blockers.push('s06-paperclip-hermes-live fresh_readback_required must be true');
+    checks.push({ id: 'V-HM-LA-05', verdict: 'fail', note: 'fresh_readback_required missing' });
+  } else {
+    checks.push({ id: 'V-HM-LA-05', verdict: 'pass', note: 'fresh_readback_required asserted (bounded-agent + fresh-session mandate preserved)' });
+  }
+
+  // V-HM-LA-06: bounded_test_agent_target.agent_kind === 'bounded-test-agent'
+  const bounded = parsed.bounded_test_agent_target;
+  if (!bounded || bounded.agent_kind !== 'bounded-test-agent') {
+    blockers.push('s06-paperclip-hermes-live bounded_test_agent_target.agent_kind must be "bounded-test-agent"');
+    checks.push({ id: 'V-HM-LA-06', verdict: 'fail', note: `bounded_test_agent_target.agent_kind=${bounded && bounded.agent_kind}` });
+  } else {
+    checks.push({ id: 'V-HM-LA-06', verdict: 'pass', note: 'bounded_test_agent_target.agent_kind=bounded-test-agent (T02-specific bounded-agent mandate)' });
+  }
+
+  // V-HM-LA-07: adapter_profile_target.profile_shape has all 9 REQUIRED_PAPERCLIP_PROFILE_KEYS
+  const flip = parsed.paperclip_adapter_config_flip || {};
+  const profile = flip.adapter_profile_target && flip.adapter_profile_target.profile_shape;
+  if (!profile || typeof profile !== 'object') {
+    blockers.push('s06-paperclip-hermes-live paperclip_adapter_config_flip.adapter_profile_target.profile_shape missing or not object');
+    checks.push({ id: 'V-HM-LA-07', verdict: 'fail', note: 'adapter_profile_target.profile_shape missing' });
+  } else {
+    const missingProfileKeys = REQUIRED_PAPERCLIP_PROFILE_KEYS.filter((k) => !(k in profile));
+    if (missingProfileKeys.length > 0) {
+      blockers.push(`s06-paperclip-hermes-live adapter_profile_target.profile_shape missing keys: ${missingProfileKeys.join(', ')}`);
+      checks.push({ id: 'V-HM-LA-07', verdict: 'fail', note: `missing profile keys: ${missingProfileKeys.join(', ')}` });
+    } else {
+      checks.push({ id: 'V-HM-LA-07', verdict: 'pass', note: `all ${REQUIRED_PAPERCLIP_PROFILE_KEYS.length} REQUIRED_PAPERCLIP_PROFILE_KEYS present in adapter profile` });
+    }
+  }
+
+  // V-HM-LA-08: pre_adapter_cleanup_results.checks_count === 3 (PAC-* planned checks)
+  const pacResults = parsed.pre_adapter_cleanup_results || {};
+  const pacResultsCount = pacResults.checks_count;
+  if (pacResultsCount !== 3) {
+    blockers.push(`s06-paperclip-hermes-live pre_adapter_cleanup_results.checks_count must be 3 (got ${pacResultsCount})`);
+    checks.push({ id: 'V-HM-LA-08', verdict: 'fail', note: `pre-adapter cleanup count drift: ${pacResultsCount}` });
+  } else {
+    checks.push({ id: 'V-HM-LA-08', verdict: 'pass', note: 'pre_adapter_cleanup_results covers all 3 PAC-* checks (xiaomi termination + pre-mutation readback + safe-restart clean)' });
+  }
+
+  // V-HM-LA-09: xiaomi_adapter_config_prohibition (all 4 layers true: provider_name + model_spelling + secret_ref + session_id)
+  const xrp = parsed.xiaomi_adapter_config_prohibition || {};
+  const xrpLayers = {
+    no_xiaomi_provider_name: xrp.no_xiaomi_provider_name,
+    no_xiaomi_model_spelling: xrp.no_xiaomi_model_spelling,
+    no_xiaomi_secret_ref_use: xrp.no_xiaomi_secret_ref_use,
+    no_xiaomi_session_id_reuse: xrp.no_xiaomi_session_id_reuse,
+  };
+  const xrpMissing = Object.entries(xrpLayers).filter(([, v]) => v !== true).map(([k]) => k);
+  if (xrpMissing.length > 0) {
+    blockers.push(`s06-paperclip-hermes-live xiaomi_adapter_config_prohibition layers not all true: ${xrpMissing.join(', ')}`);
+    checks.push({ id: 'V-HM-LA-09', verdict: 'fail', note: `xiaomi adapter config prohibition gap: ${xrpMissing.join(', ')}` });
+  } else {
+    checks.push({ id: 'V-HM-LA-09', verdict: 'pass', note: 'all 4 xiaomi_adapter_config_prohibition layers true (provider_name + model_spelling + secret_ref + session_id)' });
+  }
+
+  // V-HM-LA-10: no credential value leak (provider-contract + S06 paperclip-hermes-live combined scan)
+  const contractString = providerContractParsed ? JSON.stringify(providerContractParsed) : '';
+  const evidenceString = JSON.stringify(parsed);
+  const combinedString = `${contractString}\n${evidenceString}`;
+  const credentialHits = scanCredentialLeaks(combinedString);
+  if (credentialHits.length > 0) {
+    blockers.push(`s06-paperclip-hermes-live redaction leak: ${credentialHits.map((h) => h.redacted).join(', ')}`);
+    checks.push({
+      id: 'V-HM-LA-10',
+      verdict: 'fail',
+      note: `s06 redaction leak: ${credentialHits.length} match(es)`,
+    });
+  } else {
+    checks.push({ id: 'V-HM-LA-10', verdict: 'pass', note: 'provider-contract + s06-paperclip-hermes-live no credential value leak' });
+  }
+
+  // V-HM-LA-11: no unapproved UUID literal (same APPROVED_UUID_8CHAR_PREFIXES gate as S05; cross-checked against R3 stale ledger)
+  const uuidMatches = combinedString.match(UUID_RE) || [];
+  const unexpectedUuids = uuidMatches.filter(
+    (u) => !APPROVED_UUID_8CHAR_PREFIXES.has(uuidPrefix(u))
+  );
+  if (unexpectedUuids.length > 0) {
+    blockers.push(`s06-paperclip-hermes-live UUID literal leak: ${unexpectedUuids.length} unexpected UUID(s)`);
+    checks.push({
+      id: 'V-HM-LA-11',
+      verdict: 'fail',
+      note: `unexpected UUID literal(s): ${unexpectedUuids.map(redactUuidsInString).join(', ')}`,
+    });
+  } else {
+    checks.push({
+      id: 'V-HM-LA-11',
+      verdict: 'pass',
+      note: 'provider-contract + s06-paperclip-hermes-live no unapproved UUID literal (R3 stale ledger gate cross-checked)',
+    });
+  }
+
+  // V-HM-LA-12: inherited_constraints_remain_in_force carries all 6 LFP-* IDs (no relaxations)
+  const evidenceInherited = parsed.inherited_constraints_remain_in_force || {};
+  const evidenceInheritedList = evidenceInherited.inherited_constraints || [];
+  const evidenceInheritedIds = new Set(evidenceInheritedList.map((c) => c && c.id));
+  const missingEvidenceInherited = REQUIRED_INHERITED_CONSTRAINT_IDS.filter((id) => !evidenceInheritedIds.has(id));
+  if (missingEvidenceInherited.length > 0) {
+    blockers.push(`s06-paperclip-hermes-live inherited_constraints_remain_in_force missing: ${missingEvidenceInherited.join(', ')}`);
+    checks.push({ id: 'V-HM-LA-12', verdict: 'fail', note: `inherited constraint drift: ${missingEvidenceInherited.join(', ')}` });
+  } else {
+    checks.push({ id: 'V-HM-LA-12', verdict: 'pass', note: 'all 6 LFP-* inherited constraints preserved in S06 paperclip-hermes-live proof' });
+  }
+
+  return {
+    verdict: blockers.length === 0 ? 'pass' : 'fail',
+    blockers,
+    checks,
+  };
+}
+
 function cli() {
   const args = process.argv.slice(2);
   const phaseIdx = args.indexOf('--phase');
   if (phaseIdx === -1 || phaseIdx === args.length - 1) {
-    process.stderr.write('USAGE: node scripts/validate_m014_s05_hermes_minimax.js --phase <baseline|upgraded|direct|final|s06-direct>\n');
+    process.stderr.write('USAGE: node scripts/validate_m014_s05_hermes_minimax.js --phase <baseline|upgraded|direct|final|s06-direct|s06-adapter>\n');
     process.exit(2);
   }
   const phase = args[phaseIdx + 1];
-  const validPhases = new Set(['baseline', 'upgraded', 'direct', 'final', 's06-direct']);
+  const validPhases = new Set(['baseline', 'upgraded', 'direct', 'final', 's06-direct', 's06-adapter']);
   if (!validPhases.has(phase)) {
     process.stderr.write(`FAIL: unknown phase "${phase}". Valid: ${Array.from(validPhases).join(', ')}\n`);
     process.exit(2);
@@ -1833,6 +2005,30 @@ function cli() {
     additionalArtifacts = [
       path.relative(PROJECT_ROOT, MINIMAX_PROVIDER_CONTRACT_JSON),
       path.relative(PROJECT_ROOT, MINIMAX_S06_DIRECT_LIVE_JSON),
+    ];
+  } else if (phase === 's06-adapter') {
+    // --phase s06-adapter (T02): validate the S06 paperclip-hermes-live proof
+    // against M014-S06-paperclip-hermes-live.json. Same provider/contract gates
+    // from S05 are preserved (provider-contract is cross-checked); new
+    // V-HM-LA-01..12 checks verify S06-T02-specific bounded-test-agent,
+    // adapter profile, pre-adapter cleanup, xiaomi adapter config prohibition,
+    // and inherited LFP-* constraint coverage.
+    let providerContractParsed;
+    let s06PaperclipHermesLiveParsed;
+    try {
+      providerContractParsed = loadMinimaxProviderContractOrFail().parsed;
+      s06PaperclipHermesLiveParsed = loadS06PaperclipHermesLiveOrFail().parsed;
+    } catch (err) {
+      process.stderr.write(`FAIL: ${err.message}\n`);
+      process.exit(2);
+    }
+    const providerContractResult = validateMinimaxProviderContract(providerContractParsed, parsed);
+    const s06PaperclipHermesLiveResult = validateS06PaperclipHermesLive(s06PaperclipHermesLiveParsed, providerContractParsed, parsed);
+    allChecks = allChecks.concat(providerContractResult.checks, s06PaperclipHermesLiveResult.checks);
+    allBlockers = allBlockers.concat(providerContractResult.blockers, s06PaperclipHermesLiveResult.blockers);
+    additionalArtifacts = [
+      path.relative(PROJECT_ROOT, MINIMAX_PROVIDER_CONTRACT_JSON),
+      path.relative(PROJECT_ROOT, MINIMAX_S06_PAPERCLIP_HERMES_LIVE_JSON),
     ];
   }
   const summary = {
