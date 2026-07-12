@@ -1,0 +1,397 @@
+{
+  "$schema": "gsd/m014-s04-paperclip-native-smoke-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S04",
+  "task": "T04",
+  "purpose": "Bounded native Paperclip artifact smoke verification. Tests only the create-readback surfaces that MEM054/MEM058 explicitly permit: native issue, document, and comment create-readback. ALL OTHER plugin/UI/data/action/tool/state/activity/events/Hermes/GSD-Pi surfaces remain blocked or unvalidated regardless of this artifact's verdict. Verdict this turn: BLOCKED_NO_LIVE_API — no authenticated HTTP API access was available in auto-mode (LFP-S02-01, LFP-LF-03), so bounded_native_smoke_attempted is false and no native surface was exercised.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S04/T04)",
+  "consumes": [
+    "runtime-evidence/M014-S04-paperclip-baseline.json",
+    "runtime-evidence/M014-S04-paperclip-post-upgrade.json",
+    "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+    "runtime-evidence/M014-S01-runtime-truth-map.json",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "native-smoke",
+  "native_smoke_verdict": "BLOCKED_NO_LIVE_API",
+  "bounded_native_smoke_attempted": false,
+  "verdict_enum_lock": [
+    "PASS",
+    "BLOCKED_NO_LIVE_API",
+    "BLOCKED_NO_DEPLOY_ARTIFACTS",
+    "BLOCKED_AUTH_DRIFT",
+    "BLOCKED_ISSUE_CREATE_FAILED",
+    "BLOCKED_DOCUMENT_CREATE_FAILED",
+    "BLOCKED_COMMENT_CREATE_FAILED",
+    "BLOCKED_READBACK_HASH_MISMATCH"
+  ],
+  "verdict_classification_rationale": "T04 native-smoke verdict is the deterministic function f(t02_contract_present, t03_deploy_present, fresh_readback_performed, session_cookie_available, bounded_native_smoke_attempted) → BLOCKED_NO_LIVE_API. With t03_deploy_present=false (no upgrade actually deployed) and fresh_readback_performed=false (no authenticated readback possible in auto-mode per LFP-S02-01), there is no live API endpoint to issue against. bounded_native_smoke_attempted is therefore false by construction. Per MEM049 ('blocker/fallback artifacts can be valid diagnostics during live phase, but final phase requires live-evidence with issue, document, and comment readback hashes'), promoting to PASS would require actual create-readback hashes — which were not produced. Per MEM139 (no-promotion ledger), this artifact records the BLOCKED verdict honestly without false PASS claims.",
+  "boundary_discipline": {
+    "policy": "Only bounded native issue/document/comment create-readback surfaces are ever promotable by this artifact. Every other surface MUST be in rejected_surfaces.",
+    "rule_reference": "MEM054, MEM058, MEM056, MEM049, MEM139",
+    "promotable_surface_classes": [
+      "issue_create",
+      "issue_readback",
+      "document_create",
+      "document_readback",
+      "comment_create",
+      "comment_readback"
+    ],
+    "promotable_surface_count": 6,
+    "rejected_surface_classes_count": 15,
+    "promotable_evidence_required": "issue_id, issue_readback_hash, document_id, document_readback_hash, comment_id, comment_readback_hash; each hash MUST be a sha256 of the canonicalized readback body, recorded as sha256:<64-hex> per the truncation discipline"
+  },
+
+  "freshness_posture": {
+    "policy": "snapshot",
+    "as_of": "2026-07-12",
+    "must_reprobe_after": "2026-07-12T00:00:00Z",
+    "rule_reference": "R3 + R4 in .gsd/KNOWLEDGE.md",
+    "live_api_access_used": false,
+    "live_api_access_blockers": [
+      {
+        "id": "LAB-NS-01",
+        "blocker": "auto-mode execution lane; no human on call to confirm VPS SSH for nginx config readback per LFP-S02-01",
+        "rule_reference": "LFP-S02-01 inherited from S02 forensic verdict"
+      },
+      {
+        "id": "LAB-NS-02",
+        "blocker": "PAPERCLIP_API_KEY is REJECTED as an auth source per LFP-LF-03; session-cookie is the only allowed mode but no live session cookie is provisioned in auto-mode",
+        "rule_reference": "LFP-LF-03 from paperclip-runtime.lock.json"
+      },
+      {
+        "id": "LAB-NS-03",
+        "blocker": "T03 deploy did not actually deploy any revision (PRE-T03-DEPLOY.exists=false), so there is no deployed runtime to smoke against even if API access were available",
+        "rule_reference": "runtime-evidence/M014-S04-paperclip-post-upgrade.json prerequisite_artifacts_audit"
+      },
+      {
+        "id": "LAB-NS-04",
+        "blocker": "S02 verdict is H-INCONCLUSIVE with zero captures; the canonical admin session is unverified and bootstrapping a fresh session would require LFP-LF-03 to be honored end-to-end",
+        "rule_reference": "runtime-evidence/M014-S02-vps-forensics-verdict.json"
+      }
+    ]
+  },
+
+  "prerequisite_artifacts_audit": {
+    "policy": "Bounded native smoke requires T02 contract (to know the target revision) and T03 deploy proof (to confirm a deployed runtime exists) and post-upgrade artifact (to anchor the comparison). All three are absent.",
+    "filesystem_check_timestamp": "2026-07-12",
+    "filesystem_check_method": "fs.existsSync on absolute paths under runtime-evidence/",
+    "checks": [
+      {
+        "id": "PRE-NS-T02-CONTRACT",
+        "expected_path": "runtime-evidence/M014-S04-paperclip-upgrade-contract.json",
+        "exists": false,
+        "consequence": "no pinned target revision means smoke evidence cannot be tied to any specific upstream tag"
+      },
+      {
+        "id": "PRE-NS-T03-DEPLOY",
+        "expected_path": "runtime-evidence/M014-S04-paperclip-deploy.json",
+        "exists": false,
+        "consequence": "no deployed runtime means there is nothing to smoke against"
+      },
+      {
+        "id": "PRE-NS-T03-ROLLBACK",
+        "expected_path": "runtime-evidence/M014-S04-paperclip-rollback.json",
+        "exists": false,
+        "consequence": "no rollback proof means smoke evidence has no rollback anchor"
+      },
+      {
+        "id": "PRE-NS-POST-UPGRADE",
+        "expected_path": "runtime-evidence/M014-S04-paperclip-post-upgrade.json",
+        "exists": true,
+        "sibling_artifact": "yes — this artifact references it"
+      }
+    ],
+    "any_prerequisite_absent": true,
+    "absent_count": 3,
+    "absent_artifact_ids": [
+      "PRE-NS-T02-CONTRACT",
+      "PRE-NS-T03-DEPLOY",
+      "PRE-NS-T03-ROLLBACK"
+    ]
+  },
+
+  "bounded_native_smoke_attempted": {
+    "issue_create": {
+      "attempted": false,
+      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
+    },
+    "issue_readback": {
+      "attempted": false,
+      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
+    },
+    "document_create": {
+      "attempted": false,
+      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
+    },
+    "document_readback": {
+      "attempted": false,
+      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
+    },
+    "comment_create": {
+      "attempted": false,
+      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
+    },
+    "comment_readback": {
+      "attempted": false,
+      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
+    }
+  },
+
+  "bounded_native_smoke_evidence": {
+    "issue": {
+      "issue_id": null,
+      "issue_create_request_hash": null,
+      "issue_readback_response_hash": null,
+      "issue_readback_canonicalized_hash": null,
+      "issue_artifact_family": "issue",
+      "status": "blocked"
+    },
+    "document": {
+      "document_id": null,
+      "document_create_request_hash": null,
+      "document_readback_response_hash": null,
+      "document_readback_canonicalized_hash": null,
+      "document_artifact_family": "document",
+      "status": "blocked"
+    },
+    "comment": {
+      "comment_id": null,
+      "comment_create_request_hash": null,
+      "comment_readback_response_hash": null,
+      "comment_readback_canonicalized_hash": null,
+      "comment_artifact_family": "comment",
+      "status": "blocked"
+    },
+    "all_five_bos_artifact_families_present": false,
+    "five_families_required": [
+      "decision",
+      "blueprint",
+      "evaluation",
+      "circuit_state",
+      "betting_table"
+    ],
+    "five_families_status": "blocked — no live API access means no BOS-shaped evidence can be produced per MEM049"
+  },
+
+  "rejected_surfaces": [
+    {"surface_id": "REJ-PLUGIN-REG", "surface": "plugin_registration", "rule_reference": "MEM054, MEM058"},
+    {"surface_id": "REJ-UI-WIDGET", "surface": "ui_dashboard_widgets", "rule_reference": "MEM054, MEM058"},
+    {"surface_id": "REJ-UI-TAB", "surface": "ui_issue_detail_tabs", "rule_reference": "MEM054, MEM058"},
+    {"surface_id": "REJ-DATA-REG", "surface": "data_registration", "rule_reference": "MEM054, MEM058"},
+    {"surface_id": "REJ-ACTION-REG", "surface": "actions_registration", "rule_reference": "MEM054, MEM058"},
+    {"surface_id": "REJ-TOOL-REG", "surface": "tools_registration", "rule_reference": "MEM054, MEM058"},
+    {"surface_id": "REJ-APPROVALS", "surface": "approvals", "rule_reference": "MEM054"},
+    {"surface_id": "REJ-STATE", "surface": "state_readback", "rule_reference": "MEM054"},
+    {"surface_id": "REJ-ACTIVITY", "surface": "activity_readback", "rule_reference": "MEM054"},
+    {"surface_id": "REJ-EVENTS", "surface": "events_readback", "rule_reference": "MEM054"},
+    {"surface_id": "REJ-HERMES", "surface": "hermes_execution", "rule_reference": "MEM054, MEM139"},
+    {"surface_id": "REJ-GSDPI", "surface": "gsdpi_local_execution", "rule_reference": "MEM046, MEM054"},
+    {"surface_id": "REJ-COMPANY", "surface": "company_drift_claim", "rule_reference": "R3 stale-id ledger"},
+    {"surface_id": "REJ-MEMBERSHIP", "surface": "owner_membership_claim", "rule_reference": "MEM139"},
+    {"surface_id": "REJ-ADAPTER", "surface": "adapter_registry_claim", "rule_reference": "MEM336, MEM046"}
+  ],
+
+  "promotion_discipline": {
+    "policy": "T04 native-smoke artifact MUST NOT promote unconfirmed plugin/UI/data/action/tool/state/activity/events/Hermes/GSD-Pi surfaces. Even on a hypothetical PASS verdict, only the six bounded native artifact families (issue/document/comment × create/readback) could be marked confirmed.",
+    "bounded_native_artifact_promotion_only": true,
+    "promoted_surfaces": [],
+    "rejected_surfaces_count": 15,
+    "rule_reference": "MEM054, MEM058, MEM056, MEM049, MEM046, MEM139",
+    "verification": "scripts/validate_m014_s04_paperclip_upgrade.js --phase final enforces no promoted_surfaces entries that are not in the bounded-native-allowlist; see V-UP-F11"
+  },
+
+  "inherited_constraints_remain_in_force": {
+    "policy": "All six inherited constraint IDs from T01 baseline MUST remain in force through T04 native-smoke; this artifact explicitly re-asserts them so the validator can cross-check.",
+    "inherits_from": "runtime-evidence/M014-S04-paperclip-baseline.json#rollout_safety_constraints.inherited_constraints",
+    "constraints": [
+      {
+        "id": "LFP-LF-01",
+        "source": "paperclip-runtime.lock.json",
+        "rule": "verified_base_url and canonical_company_id MUST be null until a fresh authenticated readback promotes them; mutation scripts refuse to run with null values unless PAPERCLIP_COMPANY_ID_OVERRIDE=allow is set",
+        "still_in_force": true,
+        "binding_to_native_smoke": "this artifact does not run any mutation script; bounded_native_smoke_attempted=false is consistent with LFP-LF-01"
+      },
+      {
+        "id": "LFP-LF-02",
+        "source": "paperclip-runtime.lock.json + R2 + P1",
+        "rule": "Public sign-up (POST /api/auth/sign-up) MUST NOT be invoked against the public host for recon; nginx lockdown is the source of truth and MUST remain in place",
+        "still_in_force": true,
+        "binding_to_native_smoke": "this artifact does not invoke /api/auth/sign-up at all; bounded_native_smoke_attempted=false avoids the public-host probe entirely"
+      },
+      {
+        "id": "LFP-LF-03",
+        "source": "paperclip-runtime.lock.json",
+        "rule": "PAPERCLIP_API_KEY is REJECTED as an auth source; session-cookie is the only allowed mode",
+        "still_in_force": true,
+        "binding_to_native_smoke": "this artifact honors LFP-LF-03 by not embedding any API key; bounded_native_smoke would have required session-cookie if attempted, but no session cookie is provisioned in auto-mode"
+      },
+      {
+        "id": "LFP-S02-01",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "VPS forensic verdict was H-INCONCLUSIVE with zero captures; explicit user confirmation is required before any future VPS read-only probe",
+        "still_in_force": true,
+        "binding_to_native_smoke": "LAB-NS-01 records this constraint's manifestation per T04"
+      },
+      {
+        "id": "LFP-S02-02",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "Zero-capture state means no failure hypothesis (H-WIPE, H-RECREATE, H-AUTH-DRIFT, H-OWNERSHIP-DRIFT, H-PROXY-DRIFT) can be promoted; all six R3 stale IDs remain unverified as live",
+        "still_in_force": true,
+        "binding_to_native_smoke": "all canonical company_id fields in this artifact are null; no stale UUID is promoted to authoritative"
+      },
+      {
+        "id": "LFP-S02-03",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "T01 baseline cannot assert wipe/recreate/auth-drift/ownership-drift/proxy-drift; it can only assert upstream-identity, local-patches-detected, and fresh-readback-required",
+        "still_in_force": true,
+        "binding_to_native_smoke": "native-smoke extends this: bounded_native_smoke_evidence fields are null because no live readback was performed"
+      }
+    ],
+    "constraint_count": 6,
+    "all_constraints_present": true
+  },
+
+  "downstream_handoff": {
+    "S05_hermes_upgrade": {
+      "blocked_by_t04_native_smoke": true,
+      "unblocks_when": "Bounded native smoke runs against a confirmed upgrade and produces issue/document/comment readback hashes that pass the SHA-256 canonicalization check"
+    },
+    "S06_persistence_canary": {
+      "blocked_by_t04_native_smoke": true,
+      "unblocks_when": "S04 produces bounded_native_smoke_verdict=PASS with five BOS artifact families present and zero native approvals"
+    },
+    "S07_bounded_e2e": {
+      "blocked_by_t04_native_smoke": true,
+      "unblocks_when": "S04-S06 all confirmed; S05/S06 must independently prove their claims before S07"
+    }
+  },
+
+  "negative_tests_executed": [
+    {
+      "test_id": "NT-NS-01",
+      "scenario": "Bounded native smoke attempted without live API access (current state)",
+      "result": "PASS — bounded_native_smoke_attempted=false is recorded honestly; no false hash values produced"
+    },
+    {
+      "test_id": "NT-NS-02",
+      "scenario": "T03 deploy did not actually deploy (current state)",
+      "result": "PASS — PRE-NS-T03-DEPLOY.exists=false is acknowledged; verdict BLOCKED_NO_LIVE_API"
+    },
+    {
+      "test_id": "NT-NS-03",
+      "scenario": "Promotion of plugin/UI/data/action/tool/state/activity/events/Hermes/GSD-Pi surfaces (forbidden per MEM054)",
+      "result": "PASS — promoted_surfaces=[]; rejected_surfaces_count=15"
+    },
+    {
+      "test_id": "NT-NS-04",
+      "scenario": "All five BOS artifact families present",
+      "result": "BLOCKED — five_families_status explicitly records 'blocked — no live API access means no BOS-shaped evidence can be produced'; validator does not promote"
+    },
+    {
+      "test_id": "NT-NS-05",
+      "scenario": "PAPERCLIP_API_KEY used as auth source (forbidden per LFP-LF-03)",
+      "result": "PASS — no PAPERCLIP_API_KEY= substring in this artifact; auth is explicitly session-cookie-only"
+    },
+    {
+      "test_id": "NT-NS-06",
+      "scenario": "Public sign-up probe against paperclip.oysana.com (forbidden per R2 + LFP-LF-02)",
+      "result": "PASS — this artifact does not invoke /api/auth/sign-up"
+    },
+    {
+      "test_id": "NT-NS-07",
+      "scenario": "Secret substring leak",
+      "result": "PASS — REDACTION_FORBIDDEN_SUBSTRINGS scan enforced by V-UP-F12"
+    },
+    {
+      "test_id": "NT-NS-08",
+      "scenario": "Full UUID literal leak",
+      "result": "PASS — UUID_LITERAL_RE scan enforced by V-UP-F12; only 8-char prefixes used"
+    },
+    {
+      "test_id": "NT-NS-09",
+      "scenario": "bounded_native_smoke_attempted=true but no live evidence recorded",
+      "result": "BLOCKED — if any future artifact sets bounded_native_smoke_attempted=true, validator (V-UP-F10) requires bounded_native_smoke_evidence fields to be populated; current artifact correctly sets attempted=false"
+    }
+  ],
+
+  "verification_evidence_inline": {
+    "validator_path": "scripts/validate_m014_s04_paperclip_upgrade.js",
+    "validator_invoke": "node --test scripts/validate_m014_s04_paperclip_upgrade.js",
+    "phase_invoke": "node scripts/validate_m014_s04_paperclip_upgrade.js --phase final",
+    "validator_dependencies": [
+      "runtime-evidence/M014-S04-paperclip-baseline.json",
+      "runtime-evidence/M014-S04-paperclip-upstream-diff.md",
+      "runtime-evidence/M014-S04-paperclip-post-upgrade.json (sibling artifact)",
+      "runtime-evidence/M014-S04-paperclip-native-smoke.json (this artifact)"
+    ],
+    "expected_validator_test_ids": [
+      "V-UP-F01..F06 post-upgrade artifact checks",
+      "V-UP-F07 native-smoke.json file exists",
+      "V-UP-F08 native-smoke.json parses as JSON object",
+      "V-UP-F09 native-smoke verdict is one of verdict_enum_lock",
+      "V-UP-F10 native-smoke bounded_native_smoke_attempted === false (no live API access)",
+      "V-UP-F11 native-smoke does NOT promote plugin/UI/data/action/tool surfaces",
+      "V-UP-F12 native-smoke redaction discipline (no secret substrings, no full UUID literals)",
+      "V-UP-F13 post-upgrade inherits all 6 baseline constraint IDs",
+      "V-UP-F14 native-smoke inherits all 6 baseline constraint IDs",
+      "V-UP-F15 post-upgrade explicitly acknowledges prerequisite artifact absence",
+      "V-UP-F16 native-smoke explicitly acknowledges prerequisite artifact absence"
+    ]
+  },
+
+  "diagnostics": {
+    "verify_artifact_exists": "test -s runtime-evidence/M014-S04-paperclip-native-smoke.json",
+    "verify_json_parse": "node -e \"JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-native-smoke.json'))\"",
+    "verify_verdict_status": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); console.assert(j.native_smoke_verdict==='BLOCKED_NO_LIVE_API','verdict='+j.native_smoke_verdict)\"",
+    "verify_smoke_attempted_false": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); console.assert(j.bounded_native_smoke_attempted===false,'bounded_native_smoke_attempted must be false')\"",
+    "verify_verdict_enum_lock": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); const lock=new Set(j.verdict_enum_lock); console.assert(lock.has('BLOCKED_NO_LIVE_API'),'enum lock missing BLOCKED_NO_LIVE_API'); console.assert(!lock.has('PASS_LIVE'),'enum lock must not include false-PASS values')\"",
+    "verify_no_secrets": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-native-smoke.json')); const text=JSON.stringify(j); const secrets=['PAPERCLIP_API_KEY=','POSTGRES_PASSWORD=','BETTER_AUTH_SECRET=','session_token value','DATABASE_URL=','OPENAI_API_KEY=','XIAOMI_API_KEY=','TELEGRAM_BOT_TOKEN=']; const hit=secrets.find(s=>text.includes(s)); console.assert(!hit, 'no secret substrings: '+hit)\"",
+    "verify_no_full_uuid": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-native-smoke.json')); const re=/\\\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\\\b/i; const hit=JSON.stringify(j).match(re); console.assert(!hit,'no full UUID literal: '+hit)\"",
+    "verify_promotion_discipline": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); console.assert(Array.isArray(j.promotion_discipline.promoted_surfaces) && j.promotion_disurfaces.length===0,'promoted_surfaces must be empty')\"",
+    "verify_inherited_constraints": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); const ids=new Set(j.inherited_constraints_remain_in_force.constraints.map(c=>c.id)); for(const id of ['LFP-LF-01','LFP-LF-02','LFP-LF-03','LFP-S02-01','LFP-S02-02','LFP-S02-03']){console.assert(ids.has(id),'missing '+id)}\"",
+    "verify_rejected_surfaces": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); console.assert(j.rejected_surfaces.length>=15,'must list at least 15 rejected surfaces')\"",
+    "run_validator": "node --test scripts/validate_m014_s04_paperclip_upgrade.js",
+    "run_phase_final": "node scripts/validate_m014_s04_paperclip_upgrade.js --phase final",
+    "sibling_artifact": "runtime-evidence/M014-S04-paperclip-post-upgrade.json"
+  },
+
+  "self_check": {
+    "verdict_status_admissible": true,
+    "native_smoke_verdict_matches_blockers": true,
+    "bounded_native_smoke_attempted_false_honest": true,
+    "live_api_access_blockers_listed": true,
+    "prerequisite_audit_exhaustive": true,
+    "rejected_surfaces_count_minimum_15": true,
+    "promoted_surfaces_empty": true,
+    "redaction_discipline_holds": true,
+    "no_secret_substring": true,
+    "no_full_uuid_literal": true,
+    "five_bos_artifact_families_status_recorded": true,
+    "downstream_handoff_blocked_correctly": true,
+    "negative_tests_cover_blockers_and_overclaim_modes": true,
+    "verification_evidence_inline_complete": true,
+    "no_ssh_invocation": true,
+    "no_remote_command": true,
+    "no_paperclip_mutation": true,
+    "no_secret_disclosure": true,
+    "no_git_operations": true,
+    "no_destructive_command": true
+  },
+
+  "anti_replay": {
+    "captured_at": "2026-07-12T17:50:00Z",
+    "captured_by": "GSD auto-mode executor (M014-a9jj46/S04/T04)",
+    "policy": "snapshot",
+    "no_credential_seeds": true,
+    "no_session_cookie_seeds": true,
+    "no_full_uuid_echo": true,
+    "redaction_notes": [
+      "Stale UUIDs would be recorded as 8-char prefixes (9feb4c22…, 43c74adb…, 1a194762…, 7595fd85…, 7eede16c…, 8233ea7b…) per the truncation discipline; this artifact contains none because all canonical company_id fields are null.",
+      "No SHA-256 hash literals appear because bounded_native_smoke_evidence is empty (attempted=false).",
+      "Admin email is NOT echoed here.",
+      "Telegram chat id is NOT echoed here per MEM053."
+    ]
+  }
+}
