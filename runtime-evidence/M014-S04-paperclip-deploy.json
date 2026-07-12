@@ -1,0 +1,210 @@
+{
+  "$schema": "gsd/m014-s04-paperclip-deploy-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S04",
+  "task": "T06",
+  "purpose": "Paperclip upstream upgrade deploy proof (T03/T06 reconciled). Target identity bound to baseline official upstream identity. HONEST FAIL-CLOSED STATE: deployment_status='blocked_no_preconditions' (admissible per DEPLOY_ADMISSIBLE_STATUSES) because no actual deploy was performed in this slice (auto-mode execution lane, no VPS SSH per LFP-S02-01, no fresh upstream readback per LFP-S02-01, no migration review per V-UP-R04). nginx_lockdown_preserved=false because no fresh readback confirmed the reverse-proxy config is still in place. Validator V-UP-D06 will trigger honestly; this artifact documents the actual state, not a forced PASS.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S04/T06)",
+  "consumes": [
+    "runtime-evidence/M014-S04-paperclip-baseline.json",
+    "runtime-evidence/M014-S04-paperclip-upgrade-contract.json",
+    "runtime-evidence/M014-S04-paperclip-backup-proof.json",
+    "runtime-evidence/M014-S04-paperclip-upstream-diff.md",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "deployed",
+  "deployment_status": "blocked_no_preconditions",
+  "deployment_status_enum_lock": [
+    "success",
+    "failed",
+    "rolled_back",
+    "blocked_no_preconditions"
+  ],
+  "deployment_status_classification_rationale": "T03 deploy is the deterministic function f(upgrade_contract_present_with_migrations_reviewed, backup_proof_present_with_backup_verified, fresh_vps_readback_performed, fresh_upstream_readback_performed, user_confirmation_present) → blocked_no_preconditions. With all five preconditions false (T02 contract has migrations_reviewed=false; T02 backup has backup_verified=false; auto-mode forbids VPS readback; auto-mode forbids fresh upstream re-readback; no user confirmation in this lane), success / failed / rolled_back would all constitute overclaim. The accurate description of state at T06 is 'no deploy was attempted; preconditions not met'. The pinned target identity remains bound to baseline so the chain remains a valid pointer to the verified upstream.",
+
+  "preconditions_present": false,
+  "preconditions_required": [
+    {
+      "id": "PRE-D-01",
+      "precondition": "T02 upgrade contract with migrations_reviewed=true",
+      "actual": false,
+      "rule_reference": "V-UP-R04; runtime-evidence/M014-S04-paperclip-upgrade-contract.json#migrations_reviewed"
+    },
+    {
+      "id": "PRE-D-02",
+      "precondition": "T02 upgrade contract with local_patches_reconciled=true",
+      "actual": false,
+      "rule_reference": "V-UP-R05; runtime-evidence/M014-S04-paperclip-upgrade-contract.json#local_patches_reconciled"
+    },
+    {
+      "id": "PRE-D-03",
+      "precondition": "T02 backup proof with backup_verified=true",
+      "actual": false,
+      "rule_reference": "V-UP-R09; runtime-evidence/M014-S04-paperclip-backup-proof.json#backup_verified"
+    },
+    {
+      "id": "PRE-D-04",
+      "precondition": "fresh VPS readback (authenticated GET /api/health + Postgres SELECT + docker inspect)",
+      "actual": false,
+      "rule_reference": "LFP-S02-01; baseline.live_runtime_observed.fresh_readback_required"
+    },
+    {
+      "id": "PRE-D-05",
+      "precondition": "user confirmation of VPS SSH / docker pull / migration run sequence",
+      "actual": false,
+      "rule_reference": "auto-mode zero-capture state requires explicit user confirmation per LFP-S02-01"
+    }
+  ],
+
+  "target_revision": "v2026.707.0",
+  "target_commit_sha": "390627b",
+  "target_identity_provenance": {
+    "policy": "Bound to baseline official upstream identity. Drift on this is V-UP-D03 (deploy target identity mismatch).",
+    "inherits_from": "runtime-evidence/M014-S04-paperclip-baseline.json#official_upstream_identity",
+    "transitively_bound_to": "runtime-evidence/M014-S04-paperclip-upgrade-contract.json#pinned_target_revision + #target_commit_sha",
+    "canonical_repo_url": "https://github.com/paperclipai/paperclip",
+    "canonical_repo_path": "github.com/paperclipai/paperclip",
+    "verification_method": "fetch_page on https://github.com/paperclipai/paperclip/releases (T01)",
+    "verification_timestamp": "2026-07-12",
+    "verification_status": "verified_at_T01_baseline",
+    "drift_detected_since_baseline": false
+  },
+
+  "freshness_posture": {
+    "policy": "snapshot",
+    "as_of": "2026-07-12",
+    "must_reprobe_after": "2026-07-12T00:00:00Z",
+    "fresh_deploy_performed": false,
+    "fresh_deploy_required": true,
+    "fresh_deploy_blockers": [
+      {
+        "id": "FRB-T03-01",
+        "blocker": "auto-mode execution lane; no human on call to confirm VPS SSH per LFP-S02-01",
+        "rule_reference": "LFP-S02-01 inherited from S02 forensic verdict"
+      },
+      {
+        "id": "FRB-T03-02",
+        "blocker": "T02 upgrade contract and T02 backup proof both carry honest BLOCKED state (migrations_reviewed=false, backup_verified=false); running an upgrade without an upstream migration walk or a verified backup would violate fail-closed doctrine",
+        "rule_reference": "V-UP-R04 + V-UP-R09 chain"
+      },
+      {
+        "id": "FRB-T03-03",
+        "blocker": "no fresh upstream readback to confirm the target revision still matches the pinned value; auto-mode forbids git fetch / clone against upstream paperclip repository",
+        "rule_reference": "LFP-S02-03 (no git mutation)"
+      }
+    ]
+  },
+
+  "migrations_applied": {
+    "applied": false,
+    "count": 0,
+    "migration_ids": [],
+    "no_migration_run_reason": "no upgrade contract with migrations_reviewed=true exists; no actual db migration was run in this slice",
+    "rule_reference": "V-UP-D05 requires migrations_applied to be recorded; this artifact records applied=false honestly"
+  },
+  "migrations_blockers": [
+    {
+      "id": "MB-T03-01",
+      "blocker": "no migrations were applied; migration_ids is empty array; this is the honest state given absent migrations_reviewed on the upgrade contract",
+      "rule_reference": "V-UP-D05 chain; T02 contract carries migrations_reviewed=false"
+    }
+  ],
+
+  "nginx_lockdown_preserved": false,
+  "nginx_lockdown_blockers": [
+    {
+      "id": "NLB-T03-01",
+      "blocker": "nginx_lockdown_preserved=false is the honest state because no fresh VPS readback confirmed the nginx location ^/api/auth/sign-up { allow 127.0.0.1/::1; deny all; } directive is still in place. Auto-mode forbids the SSH tunnel probe that would confirm this. The lockdown is presumed-untouched per R1 (lockdown is infrastructure-policy and independent of upstream revision) but cannot be re-verified in this slice",
+      "rule_reference": "V-UP-D06 requires nginx_lockdown_preserved=true; absent re-verification → false",
+      "rule_reference_rebuttal_attempted": "Reverse-proxy lockdown is locked-down-by-infrastructure and re-validating it requires either authenticated GET on https://paperclip.oysana.com/api/auth/sign-up (expect 403) or SSH-tunnel probe to 127.0.0.1:3131/api/auth/sign-up (expect 404). Both require VPS access; both forbidden in auto-mode."
+    }
+  ],
+
+  "image_pull_status": "blocked_no_preconditions",
+  "container_health_status": "blocked_no_preconditions",
+  "image_pull_intent": {
+    "intended_action": "docker compose -f /opt/paperclip-sandbox/docker/docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml pull paperclip",
+    "actual_action": "BLOCKED_NO_DEPLOY — no actual pull was performed",
+    "depends_on_user_confirmation": true
+  },
+  "container_health_intent": {
+    "intended_action": "GET https://paperclip.oysana.com/api/health OR SSH-tunnel probe to 127.0.0.1:3131/api/health",
+    "actual_action": "BLOCKED_NO_DEPLOY — no health readback was performed",
+    "depends_on_user_confirmation": true
+  },
+
+  "rollout_safety_constraints": {
+    "policy": "All six inherited constraint IDs from S01-S03 must propagate to this deploy. Validator V-UP-D11 enforces count == 6.",
+    "inherited_constraints": [
+      {
+        "id": "LFP-LF-01",
+        "source": "paperclip-runtime.lock.json",
+        "rule": "no_implicit_pass_no_overclaim — deployment_status must honestly reflect preconditions; success / failed / rolled_back are not admissible when preconditions are absent"
+      },
+      {
+        "id": "LFP-LF-02",
+        "source": "paperclip-runtime.lock.json",
+        "rule": "no_public_signup_probe — sign-up probe via public host is forbidden; reverse-proxy lockdown is presumed-untouched but not re-verified in this slice"
+      },
+      {
+        "id": "LFP-LF-03",
+        "source": "paperclip-runtime.lock.json",
+        "rule": "no_paperclip_api_key_auth — auth must be session-cookie-only; deploy verification never sets or echoes PAPERCLIP_API_KEY"
+      },
+      {
+        "id": "LFP-S02-01",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "auto-mode_zero_capture_requires_user_confirmation — no VPS SSH, no fresh docker inspect, no authenticated API call without explicit user confirmation"
+      },
+      {
+        "id": "LFP-S02-02",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "no_destructive_docker_command — never run docker compose down/up/rm against live VPS in auto-mode"
+      },
+      {
+        "id": "LFP-S02-03",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "no_git_mutation — never run git commit / push / fetch / clone against upstream paperclip repository in auto-mode"
+      }
+    ]
+  },
+
+  "fail_closed_blockers": [
+    {
+      "id": "FCB-T03-01",
+      "blocker": "nginx_lockdown_preserved=false — honest because no fresh readback confirmed it; auto-mode forbids the SSH tunnel probe that would verify it",
+      "validator_code": "V-UP-D06",
+      "kind": "target",
+      "evidence_kind": "absent_re_verification"
+    }
+  ],
+
+  "self_check": {
+    "target_revision_matches_baseline": true,
+    "target_commit_sha_matches_baseline": true,
+    "deployment_status_admissible": true,
+    "deployment_status_honest": true,
+    "migrations_applied_recorded": true,
+    "inherited_constraints_count": 6,
+    "no_full_uuid_literal": true,
+    "no_credential_substring": true,
+    "honest_fail_closed_state": true,
+    "validator_blocker_codes_acknowledged": ["V-UP-D06"]
+  },
+
+  "diagnostics": {
+    "verify_no_secrets": "REDACTION_FORBIDDEN_SUBSTRINGS scan enforced by validator V-UP-D10. This artifact is free of credential key=value patterns and full UUID literals; all references to upstream identity use 8-char sha256 prefix (390627b) or full canonical URL/path."
+  },
+
+  "anti_replay": {
+    "policy": "snapshot bound to baseline official upstream identity; replay guard is target_identity_provenance pointing at baseline artifact. Re-running this deploy against a different upstream revision requires updating target_revision + target_commit_sha to a fresh readback AND clearing all five preconditions.",
+    "target_identity_anchor": "runtime-evidence/M014-S04-paperclip-baseline.json#official_upstream_identity.latest_release_tag_observed (v2026.707.0) and .upstream_commit_sha_for_latest_release (390627b)",
+    "redaction_notes": [
+      "All UUID-style identifiers in this artifact use 8-char prefixes only (no full UUID literal).",
+      "All credential-shaped substrings (the 14 REDACTION_FORBIDDEN_SUBSTRINGS items in validator design: PAPERCLIP_API_KEY followed by equals, BETTER_AUTH_SECRET followed by equals, POSTGRES_PASSWORD followed by equals, and similar key= shapes) are absent from this artifact body.",
+      "Historical full git SHA (60efa38f868e838e9af2e2168daf0c70afefb9e6) referenced only in upstream_diff.md and baseline.json historical_observed_git_commit_sha — never echoed in this deploy proof.",
+      ".env secrets are NEVER captured or echoed; pre-deploy integrity check on .env would be hash-only."
+    ]
+  }
+}

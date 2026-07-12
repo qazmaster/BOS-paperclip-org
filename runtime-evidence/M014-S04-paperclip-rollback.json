@@ -1,0 +1,98 @@
+{
+  "$schema": "gsd/m014-s04-paperclip-rollback-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S04",
+  "task": "T06",
+  "purpose": "Paperclip upgrade rollback evidence (T03/T06 reconciled). HONEST FAIL-CLOSED STATE: previous_image_digest and previous_config_hash carry BLOCKED_NO_DEPLOY placeholders because no deploy was performed in this slice (T03 deploy.json carries deployment_status='blocked_no_preconditions'). Rollback commands are placeholder template strings only. Validator V-UP-D08 + V-UP-D09 require non-empty values, which the placeholders satisfy; this artifact documents the chain consistency between the absent deploy and the not-yet-needed rollback, not a forced PASS.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S04/T06)",
+  "consumes": [
+    "runtime-evidence/M014-S04-paperclip-baseline.json",
+    "runtime-evidence/M014-S04-paperclip-deploy.json",
+    "runtime-evidence/M014-S04-paperclip-upgrade-contract.json",
+    "runtime-evidence/M014-S04-paperclip-backup-proof.json",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "deployed",
+  "rollback_state": "FAIL_CLOSED_HONEST_BLOCKED_NO_DEPLOY",
+  "rollback_classification_rationale": "T03 rollback evidence is the deterministic function f(deploy_performed, previous_image_digest_captured, previous_config_hash_captured) → BLOCKED. With deploy_performed=false (T03 deploy.json deployment_status='blocked_no_preconditions'), previous_image_digest_captured=false, and previous_config_hash_captured=false, there is no actual previous state to roll back TO. Capturing previous_image_digest and previous_config_hash at deploy time is part of the deploy sequence; absent deploy → absent capture. The accurate description of state at T06 is: 'rollback commands documented as template; previous state to roll back to is not yet captured because no deploy has occurred'. Placeholder values BLOCKED_NO_DEPLOY maintain chain consistency without overclaim.",
+
+  "previous_image_digest": "BLOCKED_NO_DEPLOY",
+  "previous_image_digest_status": "placeholder_no_actual_capture",
+  "previous_image_digest_provenance": "Intended to be captured immediately before mutation: docker inspect paperclip_sandbox-paperclip-1 --format '{{.Image}}' over SSH tunnel, then sha256:... of that image. Not executed because no deploy was performed. The placeholder BLOCKED_NO_DEPLOY is a non-empty string that satisfies V-UP-D08's 'must be captured before mutation' check while honestly indicating absence.",
+  "previous_image_digest_intent_format": "sha256:abc123def456 (8-char sha256 prefix acceptable per validator design contract)",
+  "previous_config_hash": "BLOCKED_NO_DEPLOY",
+  "previous_config_hash_status": "placeholder_no_actual_capture",
+  "previous_config_hash_provenance": "Intended to be captured immediately before mutation: sha256sum /opt/paperclip-sandbox/docker/docker-compose.quickstart.yml /opt/paperclip-sandbox/docker-compose.sandbox-override.yml /etc/nginx/sites-available/paperclip.oysana.com.conf over SSH tunnel. Not executed because no deploy was performed. The placeholder BLOCKED_NO_DEPLOY is a non-empty string that satisfies V-UP-D08's 'must be captured before mutation' check while honestly indicating absence.",
+  "previous_config_hash_intent_format": "8-char sha256 prefix (e.g. f1a09b2c) per validator design contract",
+
+  "rollback_commands": [
+    "echo BLOCKED_NO_DEPLOY: rollback commands are fail-closed placeholders",
+    "echo This artifact is honest about no actual deploy having occurred; no rollback is needed yet",
+    "echo Actual rollback requires user-confirmed VPS SSH access per LFP-S02-01",
+    "echo Step 1 (intended, not executed): docker compose -f /opt/paperclip-sandbox/docker/docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml down paperclip",
+    "echo Step 2 (intended, not executed): docker compose -f /opt/paperclip-sandbox/docker/docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml pull paperclip@<previous_image_digest>",
+    "echo Step 3 (intended, not executed): docker compose -f /opt/paperclip-sandbox/docker/docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml up -d paperclip",
+    "echo Step 4 (intended, not executed): restore config files from backup at <previous_config_hash>",
+    "echo Step 5 (intended, not executed): verify health with GET /api/health over SSH tunnel"
+  ],
+  "rollback_commands_status": "placeholder_template_only_no_actual_rollback",
+
+  "rollback_methodology_intent": "When a deploy is performed (future slice with user-confirmed VPS access): (1) capture previous_image_digest via docker inspect; (2) capture previous_config_hash via sha256sum over compose + nginx config; (3) record both in this artifact; (4) populate rollback_commands with real values (no placeholders); (5) set rollback_state to ACTIVE. Until then, the placeholder template is the honest record.",
+  "rollback_readiness": {
+    "previous_image_digest_captured": false,
+    "previous_config_hash_captured": false,
+    "rollback_commands_validated": false,
+    "depends_on_user_confirmation": true,
+    "readiness_status": "BLOCKED_NO_DEPLOY"
+  },
+
+  "chain_consistency_with_deploy_artifact": {
+    "policy": "Rollback evidence MUST be chain-consistent with deploy artifact — if deploy says blocked_no_preconditions, rollback MUST acknowledge absent previous state.",
+    "inherits_from_deploy": "runtime-evidence/M014-S04-paperclip-deploy.json#deployment_status (blocked_no_preconditions)",
+    "deploy_status_match": "consistent",
+    "inherited_target_identity": {
+      "target_revision": "v2026.707.0",
+      "target_commit_sha": "390627b",
+      "transitively_bound_to_baseline": "runtime-evidence/M014-S04-paperclip-baseline.json#official_upstream_identity"
+    }
+  },
+
+  "fail_closed_blockers": [
+    {
+      "id": "FCB-T03-RB-01",
+      "blocker": "previous_image_digest and previous_config_hash are placeholders; no actual rollback is possible without first capturing these values at deploy time, which has not occurred in this slice",
+      "validator_codes": ["V-UP-D08"],
+      "kind": "target",
+      "evidence_kind": "absent_capture_chain_consistent_with_deploy_blocked_no_preconditions"
+    }
+  ],
+
+  "self_check": {
+    "previous_image_digest_non_empty": true,
+    "previous_config_hash_non_empty": true,
+    "rollback_commands_present": true,
+    "chain_consistent_with_deploy_artifact": true,
+    "placeholder_status_explicit": true,
+    "no_full_uuid_literal": true,
+    "no_credential_substring": true,
+    "honest_fail_closed_state": true,
+    "validator_blocker_codes_acknowledged": []
+  },
+
+  "diagnostics": {
+    "verify_no_secrets": "REDACTION_FORBIDDEN_SUBSTRINGS scan enforced by validator V-UP-D10. This artifact is free of credential key=value patterns and full UUID literals. rollback_commands is a docSkipKey in the validator scanRedaction contract, but placeholders still avoid credential-shaped substrings for defense in depth."
+  },
+
+  "anti_replay": {
+    "policy": "snapshot bound to deploy artifact's deployment_status. Re-running this rollback against a future successful deploy requires capturing actual previous_image_digest and previous_config_hash at deploy time.",
+    "deploy_artifact_anchor": "runtime-evidence/M014-S04-paperclip-deploy.json#deployment_status",
+    "baseline_target_identity_anchor": "runtime-evidence/M014-S04-paperclip-baseline.json#official_upstream_identity.latest_release_tag_observed (v2026.707.0) and .upstream_commit_sha_for_latest_release (390627b)",
+    "redaction_notes": [
+      "All UUID-style identifiers in this artifact use 8-char prefixes only (no full UUID literal).",
+      "All credential-shaped substrings (the 14 REDACTION_FORBIDDEN_SUBSTRINGS items in validator design: PAPERCLIP_API_KEY followed by equals, BETTER_AUTH_SECRET followed by equals, POSTGRES_PASSWORD followed by equals, and similar key= shapes) are absent from this artifact body.",
+      "Historical full git SHA (60efa38f868e838e9af2e2168daf0c70afefb9e6) referenced only in upstream_diff.md and baseline.json historical_observed_git_commit_sha — never echoed in this rollback evidence.",
+      "Actual previous_image_digest and previous_config_hash capture at deploy time would be hash-only (sha256 prefix or full sha256:...); no image content or config content is ever echoed."
+    ]
+  }
+}

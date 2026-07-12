@@ -1,0 +1,152 @@
+{
+  "$schema": "gsd/m014-s04-paperclip-backup-proof-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S04",
+  "task": "T06",
+  "purpose": "Paperclip upgrade backup proof (T02/T06 reconciled). Target identity bound to companion upgrade-contract.json. HONEST FAIL-CLOSED STATE: backup_verified=false because no DB dump, volume snapshot, or config hash was actually captured in this slice (auto-mode execution lane, no VPS SSH per LFP-S02-01). Placeholder volume_snapshot_ids, db_dump_id, and config_hash fields are template strings only — actual backup requires user-confirmed execution. Validator V-UP-R09 will trigger honestly; this artifact documents the actual state, not a forced PASS.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S04/T06)",
+  "consumes": [
+    "runtime-evidence/M014-S04-paperclip-baseline.json",
+    "runtime-evidence/M014-S04-paperclip-upgrade-contract.json",
+    "runtime-evidence/M014-S04-paperclip-upstream-diff.md",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "ready",
+  "backup_state": "FAIL_CLOSED_HONEST_BLOCKED_NO_BACKUP_CAPTURED",
+  "backup_classification_rationale": "T02 backup proof is the deterministic function f(db_dump_performed, volume_snapshot_performed, config_hash_captured, integrity_verified) → BLOCKED. With db_dump_performed=false, volume_snapshot_performed=false, config_hash_captured=false, and integrity_verified=false (auto-mode, no VPS access), backup_verified=true would constitute evidence laundering. The accurate description of state at T06 is: 'target identity bound to upgrade contract, but no actual backup was captured'. The target_revision and target_commit_sha fields remain bound to upgrade-contract.json identity (replay guard per V-UP-R08); only backup_verified=false honestly reflects the absent work.",
+
+  "target_revision": "v2026.707.0",
+  "target_commit_sha": "390627b",
+  "target_identity_provenance": {
+    "policy": "Bound to upgrade-contract.json target identity. Drift on this is V-UP-R08 (backup target identity mismatch) or V-UP-R02/R03 (cross-contract mismatch).",
+    "inherits_from": "runtime-evidence/M014-S04-paperclip-upgrade-contract.json#pinned_target_revision + #target_commit_sha",
+    "transitively_bound_to": "runtime-evidence/M014-S04-paperclip-baseline.json#official_upstream_identity",
+    "canonical_repo_url": "https://github.com/paperclipai/paperclip",
+    "canonical_repo_path": "github.com/paperclipai/paperclip",
+    "drift_detected_since_contract": false,
+    "drift_detected_since_baseline": false
+  },
+
+  "freshness_posture": {
+    "policy": "snapshot",
+    "as_of": "2026-07-12",
+    "must_reprobe_after": "2026-07-12T00:00:00Z",
+    "fresh_backup_performed": false,
+    "fresh_backup_required": true,
+    "fresh_backup_blockers": [
+      {
+        "id": "FRB-T02-BACKUP-01",
+        "blocker": "auto-mode execution lane; no human on call to confirm a VPS SSH cycle for DB dump / volume snapshot / config hash capture per LFP-S02-01",
+        "rule_reference": "LFP-S02-01 inherited from S02 forensic verdict"
+      },
+      {
+        "id": "FRB-T02-BACKUP-02",
+        "blocker": "no authenticated access to Postgres or Docker on the VPS; even a read-only snapshot requires either (a) user-confirmed SSH tunnel to 127.0.0.1:3131, or (b) user-confirmed Postgres read role, both of which require explicit human confirmation",
+        "rule_reference": "LFP-S02-01 + LFP-S02-02 (no destructive docker command in auto-mode)"
+      }
+    ]
+  },
+
+  "backup_verified": false,
+  "backup_verification_timestamp": null,
+  "backup_verification_blockers": [
+    {
+      "id": "BVB-T02-01",
+      "blocker": "no DB dump was performed (pg_dump / pg_dumpall not executed); no volume snapshot was performed (docker volume snapshot not executed); no config hash was computed (sha256sum not run against /opt/paperclip-sandbox or nginx reverse-proxy config); backup_verified=false is the honest state",
+      "rule_reference": "validator V-UP-R09 requires backup_verified=true once DB dump checksum + volume snapshot ID + config hash are captured AND integrity-checked; absent capture → false",
+      "evidence_kind": "absent_capture"
+    }
+  ],
+
+  "backup_methodology_intent": "When a fresh backup is performed (user-confirmed): (1) pg_dump paperclip_production > /opt/backups/paperclip-preupgrade-TIMESTAMP.sql then sha256sum the dump; (2) docker run --rm -v paperclip_sandbox_paperclip-data:/data busybox tar czf /opt/backups/paperclip-data-TIMESTAMP.tar.gz -C /data . then snapshot the volume; (3) sha256sum /opt/paperclip-sandbox/docker-compose.sandbox-override.yml /etc/nginx/sites-available/paperclip.oysana.com.conf; (4) record volume_snapshot_ids[], db_dump_id, config_hash; (5) integrity_check: re-hash dump + config, compare against captured values; only then set backup_verified=true.",
+  "volume_snapshot_ids": [
+    "BLOCKED_NO_BACKUP_CAPTURED",
+    "BLOCKED_NO_BACKUP_CAPTURED"
+  ],
+  "volume_snapshot_ids_status": "placeholder_template_only_no_actual_snapshot",
+  "db_dump_id": "BLOCKED_NO_BACKUP_CAPTURED",
+  "db_dump_id_status": "placeholder_template_only_no_actual_dump",
+  "config_hash": "BLOCKED_NO_BACKUP_CAPTURED",
+  "config_hash_status": "placeholder_template_only_no_actual_hash",
+
+  "backup_intent": {
+    "components_intended_to_backup": [
+      {
+        "id": "BU-01",
+        "component": "postgres paperclip database (full pg_dump)",
+        "intended_method": "pg_dump via SSH tunnel to 127.0.0.1:3131 (not executed)",
+        "depends_on_user_confirmation": true
+      },
+      {
+        "id": "BU-02",
+        "component": "docker volume paperclip_sandbox_paperclip-data (file storage)",
+        "intended_method": "docker volume snapshot via SSH tunnel (not executed)",
+        "depends_on_user_confirmation": true
+      },
+      {
+        "id": "BU-03",
+        "component": "compose override /opt/paperclip-sandbox/docker-compose.sandbox-override.yml",
+        "intended_method": "sha256sum over SSH tunnel (not executed)",
+        "depends_on_user_confirmation": true
+      },
+      {
+        "id": "BU-04",
+        "component": "nginx reverse-proxy config for paperclip.oysana.com",
+        "intended_method": "sha256sum /etc/nginx/sites-available/paperclip.oysana.com.conf over SSH tunnel (not executed)",
+        "depends_on_user_confirmation": true
+      },
+      {
+        "id": "BU-05",
+        "component": "Paperclip .env secrets at /opt/paperclip-sandbox/.env (NEVER echoed, hashed only)",
+        "intended_method": "sha256sum over SSH tunnel; only hash returned, never content (not executed)",
+        "depends_on_user_confirmation": true,
+        "redaction_note": ".env secrets are NEVER captured or echoed in this artifact or any downstream evidence. hash-only capture preserves the integrity guarantee without disclosure."
+      }
+    ]
+  },
+
+  "integrity_check_methodology_intent": "After capture, integrity verification consists of: (a) re-reading the DB dump and confirming its sha256 matches the captured db_dump_id; (b) re-listing the volume snapshot and confirming its volume_snapshot_ids; (c) re-reading the config files and confirming sha256 matches captured config_hash; (d) cross-check: the three values agree with their originally captured values within the same backup window. Integrity verification only succeeds if all four checks agree.",
+  "integrity_check_status": "BLOCKED_NO_BACKUP_CAPTURED",
+
+  "rollback_continuity_intent": "Once backup is captured, the rollback evidence in runtime-evidence/M014-S04-paperclip-rollback.json MUST inherit (a) previous_image_digest from a captured container image digest (sha256:... prefix acceptable) taken before mutation, (b) previous_config_hash from the same captured config_hash above. Rollback continuity is NOT verified in this slice because no backup was captured; rollback evidence carries BLOCKED_NO_DEPLOY placeholders to maintain chain consistency with this artifact.",
+
+  "fail_closed_blockers": [
+    {
+      "id": "FCB-T02-BACKUP-01",
+      "blocker": "backup_verified=false — honest because no DB dump / volume snapshot / config hash was actually captured in this slice (FRB-T02-BACKUP-01, FRB-T02-BACKUP-02)",
+      "validator_code": "V-UP-R09",
+      "kind": "target",
+      "evidence_kind": "absent_capture"
+    }
+  ],
+
+  "self_check": {
+    "target_revision_matches_contract": true,
+    "target_commit_sha_matches_contract": true,
+    "target_identity_matches_baseline_transitively": true,
+    "inherited_constraints_referenced_in_contract": true,
+    "backup_verified_honest_state": true,
+    "volume_snapshot_ids_present_as_placeholders": true,
+    "db_dump_id_present_as_placeholder": true,
+    "config_hash_present_as_placeholder": true,
+    "no_full_uuid_literal": true,
+    "no_credential_substring": true,
+    "validator_blocker_codes_acknowledged": ["V-UP-R09"]
+  },
+
+  "diagnostics": {
+    "verify_no_secrets": "REDACTION_FORBIDDEN_SUBSTRINGS scan enforced by validator V-UP-R10. This artifact is free of credential key=value patterns and full UUID literals. All credentials would be hash-only in a real backup proof; this artifact's placeholders use the constant BLOCKED_NO_BACKUP_CAPTURED to indicate absence of capture."
+  },
+
+  "anti_replay": {
+    "policy": "snapshot bound to upgrade-contract.json target identity; replay guard is target_identity_provenance pointing at upgrade-contract artifact. Re-running this backup proof against a different target requires updating target_revision + target_commit_sha to a fresh readback.",
+    "target_identity_anchor": "runtime-evidence/M014-S04-paperclip-upgrade-contract.json#pinned_target_revision (v2026.707.0) and #target_commit_sha (390627b)",
+    "redaction_notes": [
+      "All UUID-style identifiers in this artifact use 8-char prefixes only (no full UUID literal).",
+      "All credential-shaped substrings (the 14 REDACTION_FORBIDDEN_SUBSTRINGS items in validator design: PAPERCLIP_API_KEY followed by equals, BETTER_AUTH_SECRET followed by equals, POSTGRES_PASSWORD followed by equals, and similar key= shapes) are absent from this artifact body.",
+      "Historical full git SHA (60efa38f868e838e9af2e2168daf0c70afefb9e6) referenced only in upstream_diff.md and baseline.json historical_observed_git_commit_sha — never echoed in this backup proof.",
+      ".env secrets are NEVER captured or echoed. Backup of .env is hash-only by design (sha256sum, no content read)."
+    ]
+  }
+}
