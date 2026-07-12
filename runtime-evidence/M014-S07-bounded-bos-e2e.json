@@ -1,0 +1,464 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/s07-bounded-bos-e2e.v1.json",
+  "milestone": "M014-a9jj46",
+  "slice": "S07",
+  "task": "T02",
+  "purpose": "Canonical bounded BOS Light E2E evidence (side-effect-free planning artifact). Records redacted request journal with control-plane/business/readback classification, bounded poll history, pre/post counters, expected-versus-observed side-effect ledger, native readback hashes, blocker boundary, and validator check IDs. Runner does NOT dispatch; observed counters are all zero (fail-closed posture). T03/T04 will replace observed counters with real numbers from a single operator-confirmed live run.",
+  "generated": "2026-07-12T21:52:12.526Z",
+  "generated_by": "gsd-executor/auto-mode (S07-T02)",
+  "auth_mode": "session-cookie",
+  "bounded_policy": {
+    "max_issue_creates": 1,
+    "max_heartbeat_invokes": 1,
+    "max_control_plane_sign_ins": 1,
+    "max_readback_gets": 2,
+    "max_polls": 8,
+    "max_business_mutations_per_run": 2,
+    "invariant": "EXACTLY 1 issue create + EXACTLY 1 heartbeat invoke + 1 sign-in + 2 readbacks. Any deviation is fail-closed."
+  },
+  "inherited_constraints_remain_in_force": [
+    {
+      "id": "LFP-LF-01",
+      "in_force": true,
+      "rationale": "S07 carries forward S05/S06 LFP-* constraints unchanged; no relaxations; runner is side-effect-free (audit + plan only)."
+    },
+    {
+      "id": "LFP-LF-02",
+      "in_force": true,
+      "rationale": "S07 carries forward S05/S06 LFP-* constraints unchanged; no relaxations; runner is side-effect-free (audit + plan only)."
+    },
+    {
+      "id": "LFP-LF-03",
+      "in_force": true,
+      "rationale": "S07 carries forward S05/S06 LFP-* constraints unchanged; no relaxations; runner is side-effect-free (audit + plan only)."
+    },
+    {
+      "id": "LFP-S02-01",
+      "in_force": true,
+      "rationale": "S07 carries forward S05/S06 LFP-* constraints unchanged; no relaxations; runner is side-effect-free (audit + plan only)."
+    },
+    {
+      "id": "LFP-S02-02",
+      "in_force": true,
+      "rationale": "S07 carries forward S05/S06 LFP-* constraints unchanged; no relaxations; runner is side-effect-free (audit + plan only)."
+    },
+    {
+      "id": "LFP-S02-03",
+      "in_force": true,
+      "rationale": "S07 carries forward S05/S06 LFP-* constraints unchanged; no relaxations; runner is side-effect-free (audit + plan only)."
+    }
+  ],
+  "preconditions_audit": {
+    "lockfile_ok": true,
+    "stale_company_ids_count": 6,
+    "forbidden_commands_count": 5,
+    "upstream_gate_satisfied": false,
+    "upstream_artifacts": {
+      "s04Deploy": {
+        "ok": true,
+        "phase_verdict": "blocked_no_preconditions",
+        "live_execution_status": null,
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": false
+      },
+      "s04PostUpgrade": {
+        "ok": true,
+        "phase_verdict": "BLOCKED_NO_DEPLOY_ARTIFACTS",
+        "live_execution_status": null,
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": false
+      },
+      "s04NativeSmoke": {
+        "ok": true,
+        "phase_verdict": "BLOCKED_NO_LIVE_API",
+        "live_execution_status": null,
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": false
+      },
+      "s05Upgrade": {
+        "ok": true,
+        "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_execution_status": "deferred-to-fresh-readback-window",
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": true
+      },
+      "s05Direct": {
+        "ok": true,
+        "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_execution_status": "deferred-to-fresh-readback-window",
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": true
+      },
+      "s05Paperclip": {
+        "ok": true,
+        "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_execution_status": "deferred-to-fresh-readback-window",
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": true
+      },
+      "s06DirectLive": {
+        "ok": true,
+        "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_execution_status": "deferred-to-fresh-readback-window",
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": true
+      },
+      "s06PaperclipHermesLive": {
+        "ok": true,
+        "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_execution_status": "deferred-to-operator-confirmed-paperclip-adapter-flip",
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": true
+      },
+      "s06Rollout": {
+        "ok": true,
+        "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_execution_status": "deferred-to-rollout-verdict-computation",
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": true
+      },
+      "s06Persistence": {
+        "ok": true,
+        "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "live_execution_status": "deferred-to-operator-confirmed-safe-restart",
+        "phase_admissible_for_live": false,
+        "fresh_readback_required": true
+      }
+    }
+  },
+  "redacted_request_journal": {
+    "total_entries": 5,
+    "control_plane_count": 1,
+    "business_count": 2,
+    "readback_count": 2,
+    "entries": [
+      {
+        "seq": 1,
+        "classification": "control-plane",
+        "method": "POST",
+        "path": "/api/auth/sign-in",
+        "request_headers_redacted": {
+          "Cookie": "<absent — sign-in does not carry Cookie>"
+        },
+        "request_body_redacted_shape": {
+          "email": "<redacted>",
+          "password": "<never recorded>"
+        },
+        "expected_response_status": 200,
+        "response_redacted": {
+          "Set-Cookie": "session=<redacted-8-char-prefix>; Path=/; HttpOnly; SameSite=Lax"
+        },
+        "side_effect": "none (control-plane: session acquisition only)"
+      },
+      {
+        "seq": 2,
+        "classification": "business",
+        "method": "POST",
+        "path": "/api/issues",
+        "request_headers_redacted": {
+          "Cookie": "session=<redacted-8-char-prefix>"
+        },
+        "request_body_redacted_shape": {
+          "title": "bounded BOS Light MiniMax M3 heartbeat issue (no credentials, no xiaomi)",
+          "description": "references bounded-test-agent + MiniMax M3 + hermes_local",
+          "body": "bounded BOS workflow description (no credentials, no full UUIDs, no xiaomi references)"
+        },
+        "expected_response_status": 201,
+        "response_redacted": {
+          "id": "<redacted-8-char-prefix>",
+          "title": "<redacted>",
+          "status": "open"
+        },
+        "side_effect": "issues_created += 1"
+      },
+      {
+        "seq": 3,
+        "classification": "business",
+        "method": "POST",
+        "path": "/api/agents/{bounded_agent_id}/heartbeat",
+        "request_headers_redacted": {
+          "Cookie": "session=<redacted-8-char-prefix>"
+        },
+        "request_body_redacted_shape": {
+          "prompt": "bounded BOS Light workflow prompt referencing the created issue (no credentials, no xiaomi)",
+          "timeoutSec": 300,
+          "graceSec": 5
+        },
+        "expected_response_status": 200,
+        "response_redacted": {
+          "runId": "<redacted-8-char-prefix>",
+          "status": "succeeded",
+          "terminal": true,
+          "exit_code": 0,
+          "resultJson_bos_required_fields": [
+            "schemaVersion",
+            "runId",
+            "issueId",
+            "division",
+            "role",
+            "status"
+          ],
+          "routing_chain_if_present": [
+            "Div7.MissionControl",
+            "DecisionDelegated",
+            "Div1.HCO",
+            "operational divisions"
+          ]
+        },
+        "side_effect": "heartbeat_runs_started += 1"
+      },
+      {
+        "seq": 4,
+        "classification": "readback",
+        "method": "GET",
+        "path": "/api/issues/{issue_id}",
+        "request_headers_redacted": {
+          "Cookie": "session=<redacted-8-char-prefix>"
+        },
+        "expected_response_status": 200,
+        "response_redacted": {
+          "id": "<redacted-8-char-prefix>",
+          "title": "<redacted>",
+          "status": "open"
+        },
+        "side_effect": "none (readback only)"
+      },
+      {
+        "seq": 5,
+        "classification": "readback",
+        "method": "GET",
+        "path": "/api/agents/{bounded_agent_id}",
+        "request_headers_redacted": {
+          "Cookie": "session=<redacted-8-char-prefix>"
+        },
+        "expected_response_status": 200,
+        "response_redacted": {
+          "id": "<redacted-8-char-prefix>",
+          "adapterConfig_hermesLocal": {
+            "provider": "minimax",
+            "model": "MiniMax-M3"
+          },
+          "wakeCount": "integer >= 1 (delta from pre = 1)"
+        },
+        "side_effect": "none (readback only)"
+      }
+    ],
+    "bounded_policy": "EXACTLY 1 control-plane + 2 business + 2 readback = 5 entries. Any deviation is fail-closed.",
+    "redaction_discipline": "All cookies, ids, runIds, and UUIDs are redacted to 8-char prefixes. No credentials in any entry."
+  },
+  "bounded_poll_history": {
+    "max_poll_budget": 8,
+    "polls_executed_planned": 8,
+    "polls": [
+      {
+        "seq": 1,
+        "route": "GET /api/issues/{issue_id}",
+        "poll_kind": "issue-readback",
+        "budget_remaining_after": 7
+      },
+      {
+        "seq": 2,
+        "route": "GET /api/issues/{issue_id}",
+        "poll_kind": "issue-readback-retry",
+        "budget_remaining_after": 6
+      },
+      {
+        "seq": 3,
+        "route": "GET /api/agents/{bounded_agent_id}",
+        "poll_kind": "wakeCount-pre",
+        "budget_remaining_after": 5
+      },
+      {
+        "seq": 4,
+        "route": "GET /api/agents/{bounded_agent_id}",
+        "poll_kind": "wakeCount-post",
+        "budget_remaining_after": 4
+      },
+      {
+        "seq": 5,
+        "route": "GET /api/agents/{bounded_agent_id}/heartbeat/{runId}",
+        "poll_kind": "heartbeat-status",
+        "budget_remaining_after": 3
+      },
+      {
+        "seq": 6,
+        "route": "GET /api/agents/{bounded_agent_id}/heartbeat/{runId}",
+        "poll_kind": "heartbeat-status-retry",
+        "budget_remaining_after": 2
+      },
+      {
+        "seq": 7,
+        "route": "GET /api/agents/{bounded_agent_id}/heartbeat/{runId}",
+        "poll_kind": "terminal-check",
+        "budget_remaining_after": 1
+      },
+      {
+        "seq": 8,
+        "route": "GET /api/issues/{issue_id}",
+        "poll_kind": "final-issue-state",
+        "budget_remaining_after": 0
+      }
+    ],
+    "budget_policy": "No poll beyond seq=8. ANY unbounded poll is fail-closed.",
+    "classification_rationale": "All polls are GET /api/*; classified as readback (not business mutation)."
+  },
+  "pre_post_counters": {
+    "pre_dispatch_counters": {
+      "issues_count": 0,
+      "heartbeat_runs_count": 0,
+      "session_cookies_active": 0
+    },
+    "post_dispatch_counters_fail_closed": {
+      "issues_count": 0,
+      "heartbeat_runs_count": 0,
+      "session_cookies_active": 0
+    },
+    "counter_policy": "Pre captured BEFORE any HTTP dispatch; post captured AFTER all HTTP dispatch completes. On fail-closed (no dispatch), pre == post == 0. Live PASS path: pre + observed = post."
+  },
+  "expected_vs_observed_side_effect_ledger": {
+    "policy": "expected-versus-observed side-effect ledger. Runner is fail-closed (no dispatch), so observed = zeros across the board. T03/T04 replace observed counters with real numbers from a single operator-confirmed live run.",
+    "expected": {
+      "issues_created": 1,
+      "heartbeat_runs_started": 1,
+      "documents_created": 0,
+      "comments_created": 0,
+      "approvals_created": 0,
+      "agents_mutated": 0,
+      "unexpected_mutating_routes": 0,
+      "unconfirmed_live_side_effects": 0
+    },
+    "observed_fail_closed": {
+      "issues_created": 0,
+      "heartbeat_runs_started": 0,
+      "documents_created": 0,
+      "comments_created": 0,
+      "approvals_created": 0,
+      "agents_mutated": 0,
+      "unexpected_mutating_routes": 0,
+      "unconfirmed_live_side_effects": 0
+    },
+    "deltas": {
+      "issues_created": 1,
+      "heartbeat_runs_started": 1,
+      "documents_created": 0,
+      "comments_created": 0,
+      "approvals_created": 0,
+      "agents_mutated": 0,
+      "unexpected_mutating_routes": 0,
+      "unconfirmed_live_side_effects": 0
+    },
+    "ledger_zero_invariants": {
+      "business_mutation_count": 0,
+      "unexpected_mutating_routes": 0,
+      "unconfirmed_live_side_effects": 0,
+      "validator_invariant": "V-BOS-E2E-29 fail-closed invariant: business_mutation_count=0 AND all-zero ledger counters when entry-gate verdict=fail"
+    }
+  },
+  "native_readback_hashes": {
+    "policy": "sha256 hashes of expected payload shapes for native readbacks. Real sha256 will replace these in T03/T04 after a single operator-confirmed live run.",
+    "issue_readback_sha256": "2acd77e75db0d188f753f8e1f69c9b3bcb632957b26f4e879350a4cd33e9a743",
+    "heartbeat_readback_sha256": "8af81358d0e5fc0f7251d6055ba831ac96e7b9b7d9ac6a7d14c95ed514b131e3",
+    "agent_readback_sha256": "36bc4b79e533ef8c1d984e550c2039dfca4ae948dbcaf79a47a5fe55b70dad11",
+    "shape_inputs": {
+      "issue_readback_shape": "{\"id\":\"string\",\"title\":\"string\",\"status\":\"open\",\"created_at\":\"ISO8601\"}",
+      "heartbeat_readback_shape": "{\"runId\":\"string\",\"status\":\"succeeded\",\"terminal\":true,\"exit_code\":0,\"resultJson\":{\"bos\":{\"schemaVersion\":\"bos-light-v1\",\"runId\":\"00000000-0000-0000-0000-000000000000\",\"issueId\":\"00000000-0000-0000-0000-000000000000\",\"division\":\"Div1.HCO\",\"role\":\"bos-light\",\"status\":\"succeeded\"}}}",
+      "agent_readback_shape": "{\"id\":\"string\",\"adapterConfig\":{\"hermesLocal\":{\"provider\":\"minimax\",\"model\":\"MiniMax-M3\"}},\"wakeCount\":1}"
+    }
+  },
+  "validator_check_ids": [
+    "V-BOS-E2E-01",
+    "V-BOS-E2E-02",
+    "V-BOS-E2E-03",
+    "V-BOS-E2E-04",
+    "V-BOS-E2E-05",
+    "V-BOS-E2E-06",
+    "V-BOS-E2E-07",
+    "V-BOS-E2E-08",
+    "V-BOS-E2E-09",
+    "V-BOS-E2E-10",
+    "V-BOS-E2E-11",
+    "V-BOS-E2E-12",
+    "V-BOS-E2E-13",
+    "V-BOS-E2E-14",
+    "V-BOS-E2E-15",
+    "V-BOS-E2E-16",
+    "V-BOS-E2E-17",
+    "V-BOS-E2E-18",
+    "V-BOS-E2E-19",
+    "V-BOS-E2E-20",
+    "V-BOS-E2E-21",
+    "V-BOS-E2E-22",
+    "V-BOS-E2E-23",
+    "V-BOS-E2E-24",
+    "V-BOS-E2E-25",
+    "V-BOS-E2E-26",
+    "V-BOS-E2E-27",
+    "V-BOS-E2E-28",
+    "V-BOS-E2E-29",
+    "V-BOS-E2E-30"
+  ],
+  "blocker_boundary": {
+    "policy": "If ANY blocker exists, the runner emits a fail-closed evidence file with business_mutation_count=0 and zero ledger counters. Recovery begins from the failing boundary WITHOUT re-mutation.",
+    "blockers": [
+      "s04Deploy: phase_verdict=blocked_no_preconditions not admissible for live dispatch",
+      "s04Deploy: fresh_readback_required must be true",
+      "s04PostUpgrade: phase_verdict=BLOCKED_NO_DEPLOY_ARTIFACTS not admissible for live dispatch",
+      "s04PostUpgrade: fresh_readback_required must be true",
+      "s04NativeSmoke: phase_verdict=BLOCKED_NO_LIVE_API not admissible for live dispatch",
+      "s04NativeSmoke: fresh_readback_required must be true",
+      "s05Upgrade: phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED not admissible for live dispatch",
+      "s05Direct: phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED not admissible for live dispatch",
+      "s05Paperclip: phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED not admissible for live dispatch",
+      "s06DirectLive: phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED not admissible for live dispatch",
+      "s06PaperclipHermesLive: phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED not admissible for live dispatch",
+      "s06Rollout: phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED not admissible for live dispatch",
+      "s06Persistence: phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED not admissible for live dispatch"
+    ],
+    "recovery_starts_from": "failing boundary (no retry, no re-dispatch)",
+    "re_mutation_policy": "NEVER retry a business mutation after a blocker. Recovery is precondition-fix, not retry."
+  },
+  "canonical_provider": "minimax",
+  "canonical_model": "MiniMax-M3",
+  "stale_company_ids_known": [
+    "9feb4c22",
+    "43c74adb",
+    "1a194762",
+    "7595fd85",
+    "7eede16c",
+    "8233ea7b"
+  ],
+  "routing_chain_required": [
+    "Div7.MissionControl",
+    "DecisionDelegated",
+    "Div1.HCO",
+    "operational divisions"
+  ],
+  "bos_result_required_fields": [
+    "schemaVersion",
+    "runId",
+    "issueId",
+    "division",
+    "role",
+    "status"
+  ],
+  "business_mutation_count": 0,
+  "ledger": {
+    "issues_created": 0,
+    "heartbeat_runs_started": 0,
+    "documents_created": 0,
+    "comments_created": 0,
+    "approvals_created": 0,
+    "agents_mutated": 0,
+    "unexpected_mutating_routes": 0,
+    "unconfirmed_live_side_effects": 0
+  },
+  "next_steps_for_operator": [
+    "Resolve upstream S04-S06 deferred state (each must reach its required phase_verdict)",
+    "Re-run T02 to refresh the canonical evidence file",
+    "Provision a fresh bounded-test-agent (UUID v4 not in R3 stale ledger)",
+    "Execute the planned session-cookie sequence in an operator-confirmed session",
+    "Capture raw (pre-redaction) resultJson.bos + native issue id + heartbeat runId into the canonical evidence",
+    "Re-run S07-T02 in --mode plan to validate the operator-captured evidence",
+    "Run S07-T04 in --phase require-pass mode to close acceptance"
+  ]
+}
