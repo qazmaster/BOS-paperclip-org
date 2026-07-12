@@ -4,7 +4,7 @@
   "slice": "S07",
   "task": "T02",
   "purpose": "Canonical bounded BOS Light E2E evidence (side-effect-free planning artifact). Records redacted request journal with control-plane/business/readback classification, bounded poll history, pre/post counters, expected-versus-observed side-effect ledger, native readback hashes, blocker boundary, and validator check IDs. Runner does NOT dispatch; observed counters are all zero (fail-closed posture). T03/T04 will replace observed counters with real numbers from a single operator-confirmed live run.",
-  "generated": "2026-07-12T21:52:12.526Z",
+  "generated": "2026-07-12T22:02:44.783Z",
   "generated_by": "gsd-executor/auto-mode (S07-T02)",
   "auth_mode": "session-cookie",
   "bounded_policy": {

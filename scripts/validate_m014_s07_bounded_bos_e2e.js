@@ -412,11 +412,18 @@ function loadLockfileOrNull() {
 }
 
 function loadTargetEvidenceOrNull() {
-  if (!fs.existsSync(S07_TARGET_JSON)) {
+  return loadTargetEvidenceFromPath(S07_TARGET_JSON);
+}
+
+function loadTargetEvidenceFromPath(filePath) {
+  if (!filePath) {
+    return null;
+  }
+  if (!fs.existsSync(filePath)) {
     return null;
   }
   try {
-    return JSON.parse(fs.readFileSync(S07_TARGET_JSON, 'utf8'));
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
   } catch {
     return null;
   }
@@ -1620,31 +1627,555 @@ function validateEntryGate(artifacts, targetEvidence) {
 }
 
 // ---------------------------------------------------------------------------
-// T03/T04 placeholder phases (fail-closed until T03 lands)
+// T03: --phase allow-blocker (canonical blocker evidence validator)
 // ---------------------------------------------------------------------------
 
-function validateAllowBlocker(targetEvidence) {
-  if (!targetEvidence) {
+const ALLOW_BLOCKER_TOP_LEVEL_KEYS = [
+  'bounded_policy',
+  'inherited_constraints_remain_in_force',
+  'preconditions_audit',
+  'redacted_request_journal',
+  'bounded_poll_history',
+  'pre_post_counters',
+  'expected_vs_observed_side_effect_ledger',
+  'native_readback_hashes',
+  'validator_check_ids',
+  'blocker_boundary',
+  'canonical_provider',
+  'canonical_model',
+  'stale_company_ids_known',
+  'routing_chain_required',
+  'bos_result_required_fields',
+  'business_mutation_count',
+  'ledger'
+];
+
+const ALLOW_BLOCKER_CHECK_IDS = [
+  'AB-01',
+  'AB-02',
+  'AB-03',
+  'AB-04',
+  'AB-05',
+  'AB-06',
+  'AB-07',
+  'AB-08',
+  'AB-09',
+  'AB-10',
+  'AB-11',
+  'AB-12',
+  'AB-13',
+  'AB-14',
+  'AB-15',
+  'AB-16',
+  'AB-17',
+  'AB-18',
+  'AB-19',
+  'AB-20'
+];
+
+function checkAllowBlockerEvidenceParses(targetEvidence) {
+  if (targetEvidence === null || typeof targetEvidence !== 'object' || Array.isArray(targetEvidence)) {
     return {
-      verdict: 'fail',
-      blockers: ['target S07 evidence (runtime-evidence/M014-S07-bounded-bos-e2e.json) missing for --phase allow-blocker'],
-      checks: [],
-      placeholder: true
+      blocker: 'target evidence missing or not a JSON object (allow-blocker requires the canonical S07 evidence file)',
+      check: { id: 'AB-01', verdict: 'fail', note: 'canonical evidence missing or not a JSON object' }
+    };
+  }
+  return { check: { id: 'AB-01', verdict: 'pass', note: 'canonical evidence parses as JSON object' } };
+}
+
+function checkAllowBlockerTopLevelShape(targetEvidence) {
+  const missing = ALLOW_BLOCKER_TOP_LEVEL_KEYS.filter((k) => !(k in targetEvidence));
+  if (missing.length > 0) {
+    return {
+      blocker: `canonical blocker evidence missing required top-level keys: ${missing.join(', ')}`,
+      check: { id: 'AB-02', verdict: 'fail', note: `missing keys: ${missing.join(', ')}` }
     };
   }
   return {
-    verdict: 'fail',
-    blockers: ['--phase allow-blocker is a T03 deliverable; currently a placeholder. Set to fail-closed until T03 lands.'],
-    checks: [],
-    placeholder: true
+    check: { id: 'AB-02', verdict: 'pass', note: `all ${ALLOW_BLOCKER_TOP_LEVEL_KEYS.length} required top-level keys present` }
   };
 }
+
+function checkAllowBlockerUpstreamGateNotSatisfied(targetEvidence) {
+  const audit = targetEvidence.preconditions_audit || {};
+  if (audit.upstream_gate_satisfied !== false) {
+    return {
+      blocker: `canonical blocker evidence must record preconditions_audit.upstream_gate_satisfied=false (got ${JSON.stringify(audit.upstream_gate_satisfied)})`,
+      check: { id: 'AB-03', verdict: 'fail', note: `upstream_gate_satisfied=${JSON.stringify(audit.upstream_gate_satisfied)}` }
+    };
+  }
+  return { check: { id: 'AB-03', verdict: 'pass', note: 'preconditions_audit.upstream_gate_satisfied=false (fail-closed blocker)' } };
+}
+
+function checkAllowBlockerBusinessMutationCount(targetEvidence) {
+  const bmc = targetEvidence.business_mutation_count;
+  if (bmc !== 0) {
+    return {
+      blocker: `canonical blocker evidence must record business_mutation_count=0 (got ${JSON.stringify(bmc)})`,
+      check: { id: 'AB-04', verdict: 'fail', note: `business_mutation_count=${JSON.stringify(bmc)}` }
+    };
+  }
+  return { check: { id: 'AB-04', verdict: 'pass', note: 'business_mutation_count=0 (fail-closed invariant)' } };
+}
+
+function checkAllowBlockerLedgerAllZero(targetEvidence) {
+  const ledger = targetEvidence.ledger || {};
+  const requiredZeroKeys = [
+    'issues_created',
+    'heartbeat_runs_started',
+    'documents_created',
+    'comments_created',
+    'approvals_created',
+    'agents_mutated',
+    'unexpected_mutating_routes',
+    'unconfirmed_live_side_effects'
+  ];
+  const missing = requiredZeroKeys.filter((k) => !(k in ledger));
+  if (missing.length > 0) {
+    return {
+      blocker: `canonical blocker evidence ledger missing required keys: ${missing.join(', ')}`,
+      check: { id: 'AB-05', verdict: 'fail', note: `missing ledger keys: ${missing.join(', ')}` }
+    };
+  }
+  const violations = requiredZeroKeys.filter((k) => ledger[k] !== 0);
+  if (violations.length > 0) {
+    return {
+      blocker: `canonical blocker evidence ledger must record all-zero counters (violations: ${violations.map((k) => `${k}=${ledger[k]}`).join(', ')})`,
+      check: { id: 'AB-05', verdict: 'fail', note: `ledger violations: ${violations.join(', ')}` }
+    };
+  }
+  return { check: { id: 'AB-05', verdict: 'pass', note: 'all 8 ledger counters are zero (fail-closed invariant)' } };
+}
+
+function checkAllowBlockerValidatorCheckIds(targetEvidence) {
+  const ids = targetEvidence.validator_check_ids || [];
+  if (!Array.isArray(ids)) {
+    return {
+      blocker: 'canonical blocker evidence validator_check_ids must be an array',
+      check: { id: 'AB-06', verdict: 'fail', note: 'validator_check_ids is not an array' }
+    };
+  }
+  const expectedIds = ENTRY_GATE_CHECKS.map(([id]) => id);
+  const expectedSet = new Set(expectedIds);
+  const actualSet = new Set(ids);
+  const missing = expectedIds.filter((id) => !actualSet.has(id));
+  const extra = ids.filter((id) => !expectedSet.has(id));
+  if (missing.length > 0 || extra.length > 0) {
+    const parts = [];
+    if (missing.length > 0) parts.push(`missing: ${missing.join(', ')}`);
+    if (extra.length > 0) parts.push(`extra: ${extra.join(', ')}`);
+    return {
+      blocker: `canonical blocker evidence validator_check_ids must exactly mirror the 30 V-BOS-E2E-NN IDs (${parts.join('; ')})`,
+      check: { id: 'AB-06', verdict: 'fail', note: parts.join('; ') }
+    };
+  }
+  return {
+    check: { id: 'AB-06', verdict: 'pass', note: `all ${expectedIds.length} V-BOS-E2E-NN IDs present, no extras` }
+  };
+}
+
+function checkAllowBlockerRequestJournalBounded(targetEvidence) {
+  const journal = targetEvidence.redacted_request_journal || {};
+  const expected = { total_entries: 5, control_plane_count: 1, business_count: 2, readback_count: 2 };
+  const violations = [];
+  for (const [k, v] of Object.entries(expected)) {
+    if (journal[k] !== v) {
+      violations.push(`${k}=${JSON.stringify(journal[k])} (expected ${v})`);
+    }
+  }
+  const entries = Array.isArray(journal.entries) ? journal.entries : [];
+  const classifications = entries.map((e) => e && e.classification).filter(Boolean);
+  const classCounts = {
+    'control-plane': classifications.filter((c) => c === 'control-plane').length,
+    business: classifications.filter((c) => c === 'business').length,
+    readback: classifications.filter((c) => c === 'readback').length
+  };
+  if (classCounts['control-plane'] !== 1 || classCounts.business !== 2 || classCounts.readback !== 2) {
+    violations.push(`entry classification counts=${JSON.stringify(classCounts)} (expected 1+2+2)`);
+  }
+  if (violations.length > 0) {
+    return {
+      blocker: `canonical blocker evidence redacted_request_journal violates bounded contract (${violations.join('; ')})`,
+      check: { id: 'AB-07', verdict: 'fail', note: violations.join('; ') }
+    };
+  }
+  return {
+    check: { id: 'AB-07', verdict: 'pass', note: 'redacted_request_journal bounded: 1 control-plane + 2 business + 2 readback' }
+  };
+}
+
+function checkAllowBlockerPollHistoryBounded(targetEvidence) {
+  const policy = targetEvidence.bounded_policy || {};
+  const history = targetEvidence.bounded_poll_history || {};
+  const maxPolls = policy.max_polls;
+  const polls = Array.isArray(history.polls) ? history.polls : [];
+  if (maxPolls !== 8) {
+    return {
+      blocker: `canonical blocker evidence bounded_policy.max_polls must be 8 (got ${JSON.stringify(maxPolls)})`,
+      check: { id: 'AB-08', verdict: 'fail', note: `max_polls=${JSON.stringify(maxPolls)}` }
+    };
+  }
+  if (polls.length !== 8) {
+    return {
+      blocker: `canonical blocker evidence bounded_poll_history.polls must contain exactly 8 polls (got ${polls.length})`,
+      check: { id: 'AB-08', verdict: 'fail', note: `polls.length=${polls.length}` }
+    };
+  }
+  let monotonic = true;
+  let lastBudget = Infinity;
+  for (const p of polls) {
+    const budget = typeof p.budget_remaining_after === 'number' ? p.budget_remaining_after : null;
+    if (budget === null || budget > lastBudget) {
+      monotonic = false;
+      break;
+    }
+    lastBudget = budget;
+  }
+  if (!monotonic) {
+    return {
+      blocker: 'canonical blocker evidence bounded_poll_history must record monotonically-decreasing budget_remaining_after',
+      check: { id: 'AB-08', verdict: 'fail', note: 'poll budget not monotonically decreasing' }
+    };
+  }
+  return {
+    check: { id: 'AB-08', verdict: 'pass', note: `bounded_poll_history: 8 polls, monotonically decreasing budget to 0` }
+  };
+}
+
+function checkAllowBlockerInheritedConstraints(targetEvidence) {
+  const list = Array.isArray(targetEvidence.inherited_constraints_remain_in_force) ? targetEvidence.inherited_constraints_remain_in_force : [];
+  const expected = REQUIRED_INHERITED_CONSTRAINT_IDS;
+  const present = new Set(list.map((c) => c && c.id));
+  const missing = expected.filter((id) => !present.has(id));
+  const notInForce = list.filter((c) => expected.includes(c && c.id) && c.in_force !== true);
+  if (missing.length > 0) {
+    return {
+      blocker: `canonical blocker evidence missing inherited constraint IDs: ${missing.join(', ')}`,
+      check: { id: 'AB-09', verdict: 'fail', note: `missing: ${missing.join(', ')}` }
+    };
+  }
+  if (notInForce.length > 0) {
+    return {
+      blocker: `canonical blocker evidence inherited constraints not in_force=true: ${notInForce.map((c) => c.id).join(', ')}`,
+      check: { id: 'AB-09', verdict: 'fail', note: `not in_force: ${notInForce.map((c) => c.id).join(', ')}` }
+    };
+  }
+  return {
+    check: { id: 'AB-09', verdict: 'pass', note: `all 6 LFP-* constraints present and in_force=true` }
+  };
+}
+
+function checkAllowBlockerCanonicalProviderModel(targetEvidence) {
+  if (targetEvidence.canonical_provider !== CANONICAL_MINIMAX_PROVIDER) {
+    return {
+      blocker: `canonical blocker evidence canonical_provider must equal "${CANONICAL_MINIMAX_PROVIDER}" (got ${JSON.stringify(targetEvidence.canonical_provider)})`,
+      check: { id: 'AB-10', verdict: 'fail', note: `canonical_provider=${JSON.stringify(targetEvidence.canonical_provider)}` }
+    };
+  }
+  if (targetEvidence.canonical_model !== CANONICAL_MINIMAX_MODEL) {
+    return {
+      blocker: `canonical blocker evidence canonical_model must equal "${CANONICAL_MINIMAX_MODEL}" (got ${JSON.stringify(targetEvidence.canonical_model)})`,
+      check: { id: 'AB-10', verdict: 'fail', note: `canonical_model=${JSON.stringify(targetEvidence.canonical_model)}` }
+    };
+  }
+  return {
+    check: { id: 'AB-10', verdict: 'pass', note: `canonical provider=minimax model=MiniMax-M3 (xiaomi prohibited)` }
+  };
+}
+
+function checkAllowBlockerStaleCompanyIds(targetEvidence) {
+  const known = Array.isArray(targetEvidence.stale_company_ids_known) ? targetEvidence.stale_company_ids_known : [];
+  const missing = Array.from(R3_STALE_PREFIXES).filter((p) => !known.includes(p));
+  if (missing.length > 0) {
+    return {
+      blocker: `canonical blocker evidence stale_company_ids_known missing R3 prefixes: ${missing.join(', ')}`,
+      check: { id: 'AB-11', verdict: 'fail', note: `missing R3 prefixes: ${missing.join(', ')}` }
+    };
+  }
+  return {
+    check: { id: 'AB-11', verdict: 'pass', note: `stale_company_ids_known carries all ${R3_STALE_PREFIXES.size} R3 prefixes` }
+  };
+}
+
+function checkAllowBlockerRoutingChain(targetEvidence) {
+  const chain = targetEvidence.routing_chain_required;
+  if (!Array.isArray(chain) || chain.length !== R026_ROUTING_CHAIN.length) {
+    return {
+      blocker: `canonical blocker evidence routing_chain_required must be a ${R026_ROUTING_CHAIN.length}-step R026 chain (got length=${Array.isArray(chain) ? chain.length : 'non-array'})`,
+      check: { id: 'AB-12', verdict: 'fail', note: `routing_chain_required length invalid` }
+    };
+  }
+  const mismatches = [];
+  for (let i = 0; i < R026_ROUTING_CHAIN.length; i++) {
+    if (chain[i] !== R026_ROUTING_CHAIN[i]) {
+      mismatches.push(`step[${i}]=${JSON.stringify(chain[i])} (expected ${JSON.stringify(R026_ROUTING_CHAIN[i])})`);
+    }
+  }
+  if (mismatches.length > 0) {
+    return {
+      blocker: `canonical blocker evidence routing_chain_required does not preserve R026 (${mismatches.join('; ')})`,
+      check: { id: 'AB-12', verdict: 'fail', note: mismatches.join('; ') }
+    };
+  }
+  return {
+    check: { id: 'AB-12', verdict: 'pass', note: `R026 routing chain preserved: ${R026_ROUTING_CHAIN.join(' -> ')}` }
+  };
+}
+
+function checkAllowBlockerBosFields(targetEvidence) {
+  const fields = targetEvidence.bos_result_required_fields;
+  const expected = ['schemaVersion', 'runId', 'issueId', 'division', 'role', 'status'];
+  if (!Array.isArray(fields)) {
+    return {
+      blocker: 'canonical blocker evidence bos_result_required_fields must be an array of 6 fields',
+      check: { id: 'AB-13', verdict: 'fail', note: 'bos_result_required_fields is not an array' }
+    };
+  }
+  const missing = expected.filter((f) => !fields.includes(f));
+  const extra = fields.filter((f) => !expected.includes(f));
+  if (missing.length > 0 || extra.length > 0) {
+    const parts = [];
+    if (missing.length > 0) parts.push(`missing: ${missing.join(', ')}`);
+    if (extra.length > 0) parts.push(`extra: ${extra.join(', ')}`);
+    return {
+      blocker: `canonical blocker evidence bos_result_required_fields must exactly match the 6 BOS fields (${parts.join('; ')})`,
+      check: { id: 'AB-13', verdict: 'fail', note: parts.join('; ') }
+    };
+  }
+  return {
+    check: { id: 'AB-13', verdict: 'pass', note: 'bos_result_required_fields exactly matches the 6 mandatory BOS fields' }
+  };
+}
+
+function checkAllowBlockerPrePostCountersEqual(targetEvidence) {
+  const counters = targetEvidence.pre_post_counters || {};
+  const pre = counters.pre_dispatch_counters;
+  const post = counters.post_dispatch_counters_fail_closed;
+  if (!pre || !post) {
+    return {
+      blocker: 'canonical blocker evidence pre_post_counters must record pre_dispatch_counters and post_dispatch_counters_fail_closed',
+      check: { id: 'AB-14', verdict: 'fail', note: 'missing pre/post counter objects' }
+    };
+  }
+  const preKeys = Object.keys(pre).sort();
+  const postKeys = Object.keys(post).sort();
+  if (preKeys.length !== postKeys.length || preKeys.some((k, i) => k !== postKeys[i])) {
+    return {
+      blocker: `canonical blocker evidence pre/post counter keys differ (pre=${preKeys.join(',')} post=${postKeys.join(',')})`,
+      check: { id: 'AB-14', verdict: 'fail', note: `pre keys != post keys` }
+    };
+  }
+  const diffs = [];
+  for (const k of preKeys) {
+    if (pre[k] !== post[k]) {
+      diffs.push(`${k}: pre=${pre[k]} post=${post[k]}`);
+    }
+  }
+  if (diffs.length > 0) {
+    return {
+      blocker: `canonical blocker evidence pre_dispatch_counters must equal post_dispatch_counters_fail_closed (diffs: ${diffs.join('; ')})`,
+      check: { id: 'AB-14', verdict: 'fail', note: diffs.join('; ') }
+    };
+  }
+  return {
+    check: { id: 'AB-14', verdict: 'pass', note: `pre/post counters deep-equal across ${preKeys.length} keys` }
+  };
+}
+
+function checkAllowBlockerObservedFailClosedZero(targetEvidence) {
+  const ledger = targetEvidence.expected_vs_observed_side_effect_ledger || {};
+  const observed = ledger.observed_fail_closed;
+  if (!observed || typeof observed !== 'object') {
+    return {
+      blocker: 'canonical blocker evidence expected_vs_observed_side_effect_ledger.observed_fail_closed must be present',
+      check: { id: 'AB-15', verdict: 'fail', note: 'observed_fail_closed missing' }
+    };
+  }
+  const violations = Object.entries(observed)
+    .filter(([, v]) => typeof v === 'number' && v !== 0)
+    .map(([k, v]) => `${k}=${v}`);
+  if (violations.length > 0) {
+    return {
+      blocker: `canonical blocker evidence observed_fail_closed must be all-zero (violations: ${violations.join(', ')})`,
+      check: { id: 'AB-15', verdict: 'fail', note: `observed violations: ${violations.join(', ')}` }
+    };
+  }
+  return {
+    check: { id: 'AB-15', verdict: 'pass', note: `observed_fail_closed all-zero across ${Object.keys(observed).length} counters` }
+  };
+}
+
+function checkAllowBlockerNoCredentialLeaks(targetEvidence) {
+  const haystack = JSON.stringify(targetEvidence);
+  const leaks = scanCredentialLeaks(haystack);
+  if (leaks.length > 0) {
+    return {
+      blocker: `canonical blocker evidence must not contain credential values (${leaks.length} leak(s): ${leaks.slice(0, 3).map((l) => l.redacted).join(', ')})`,
+      check: { id: 'AB-16', verdict: 'fail', note: `${leaks.length} credential leak(s) detected` }
+    };
+  }
+  return { check: { id: 'AB-16', verdict: 'pass', note: 'no credential value patterns detected in canonical blocker evidence' } };
+}
+
+function checkAllowBlockerNoUnapprovedUuids(targetEvidence) {
+  const haystack = JSON.stringify(targetEvidence);
+  const leaks = scanUuidLeaks(haystack);
+  if (leaks.length > 0) {
+    return {
+      blocker: `canonical blocker evidence must not contain unapproved full UUID literals (${leaks.length} leak(s))`,
+      check: { id: 'AB-17', verdict: 'fail', note: `${leaks.length} unapproved UUID literal(s) detected` }
+    };
+  }
+  return { check: { id: 'AB-17', verdict: 'pass', note: 'no unapproved full UUID literals detected in canonical blocker evidence' } };
+}
+
+function checkAllowBlockerNativeReadbackHashes(targetEvidence) {
+  const hashes = targetEvidence.native_readback_hashes;
+  if (!hashes || typeof hashes !== 'object' || Array.isArray(hashes)) {
+    return {
+      blocker: 'canonical blocker evidence native_readback_hashes must be a non-array object',
+      check: { id: 'AB-18', verdict: 'fail', note: 'native_readback_hashes missing or not an object' }
+    };
+  }
+  const entries = Object.entries(hashes);
+  if (entries.length < 3) {
+    return {
+      blocker: `canonical blocker evidence native_readback_hashes must include >= 3 sha256 hashes (got ${entries.length})`,
+      check: { id: 'AB-18', verdict: 'fail', note: `only ${entries.length} hash entries` }
+    };
+  }
+  const sha256Re = /^[0-9a-f]{64}$/i;
+  const invalid = entries.filter(([, v]) => typeof v !== 'string' || !sha256Re.test(v));
+  if (invalid.length > 0) {
+    return {
+      blocker: `canonical blocker evidence native_readback_hashes entries must be 64-char sha256 hex (invalid: ${invalid.map(([k]) => k).join(', ')})`,
+      check: { id: 'AB-18', verdict: 'fail', note: `invalid hex: ${invalid.map(([k]) => k).join(', ')}` }
+    };
+  }
+  return {
+    check: { id: 'AB-18', verdict: 'pass', note: `${entries.length} sha256 hashes all match 64-char hex` }
+  };
+}
+
+function checkAllowBlockerReMutationPolicy(targetEvidence) {
+  const boundary = targetEvidence.blocker_boundary || {};
+  const policy = typeof boundary.re_mutation_policy === 'string' ? boundary.re_mutation_policy.toUpperCase() : '';
+  if (!policy.includes('NEVER')) {
+    return {
+      blocker: `canonical blocker evidence blocker_boundary.re_mutation_policy must start with "NEVER" (got ${JSON.stringify(boundary.re_mutation_policy)})`,
+      check: { id: 'AB-19', verdict: 'fail', note: `re_mutation_policy=${JSON.stringify(boundary.re_mutation_policy)}` }
+    };
+  }
+  const recovery = typeof boundary.recovery_starts_from === 'string' ? boundary.recovery_starts_from.toLowerCase() : '';
+  if (!recovery.includes('failing')) {
+    return {
+      blocker: `canonical blocker evidence blocker_boundary.recovery_starts_from must reference a failing boundary (got ${JSON.stringify(boundary.recovery_starts_from)})`,
+      check: { id: 'AB-19', verdict: 'fail', note: `recovery_starts_from=${JSON.stringify(boundary.recovery_starts_from)}` }
+    };
+  }
+  return {
+    check: { id: 'AB-19', verdict: 'pass', note: 'blocker_boundary.re_mutation_policy=NEVER retry; recovery_starts_from=failing boundary' }
+  };
+}
+
+function checkAllowBlockerUpstreamArtifactsAllDeferred(targetEvidence) {
+  const audit = targetEvidence.preconditions_audit || {};
+  const upstream = audit.upstream_artifacts || {};
+  const requiredKeys = [
+    's04Deploy',
+    's04PostUpgrade',
+    's04NativeSmoke',
+    's05Upgrade',
+    's05Direct',
+    's05Paperclip',
+    's06DirectLive',
+    's06PaperclipHermesLive',
+    's06Rollout',
+    's06Persistence'
+  ];
+  const missing = requiredKeys.filter((k) => !(k in upstream));
+  if (missing.length > 0) {
+    return {
+      blocker: `canonical blocker evidence preconditions_audit.upstream_artifacts missing keys: ${missing.join(', ')}`,
+      check: { id: 'AB-20', verdict: 'fail', note: `missing upstream keys: ${missing.join(', ')}` }
+    };
+  }
+  const admissibleViolations = requiredKeys.filter((k) => upstream[k] && upstream[k].phase_admissible_for_live !== false);
+  if (admissibleViolations.length > 0) {
+    return {
+      blocker: `canonical blocker evidence requires every upstream artifact phase_admissible_for_live=false (violations: ${admissibleViolations.join(', ')})`,
+      check: { id: 'AB-20', verdict: 'fail', note: `admissible violations: ${admissibleViolations.join(', ')}` }
+    };
+  }
+  return {
+    check: { id: 'AB-20', verdict: 'pass', note: `all 10 upstream artifacts recorded with phase_admissible_for_live=false` }
+  };
+}
+
+const ALLOW_BLOCKER_CHECKS = [
+  checkAllowBlockerEvidenceParses,
+  checkAllowBlockerTopLevelShape,
+  checkAllowBlockerUpstreamGateNotSatisfied,
+  checkAllowBlockerBusinessMutationCount,
+  checkAllowBlockerLedgerAllZero,
+  checkAllowBlockerValidatorCheckIds,
+  checkAllowBlockerRequestJournalBounded,
+  checkAllowBlockerPollHistoryBounded,
+  checkAllowBlockerInheritedConstraints,
+  checkAllowBlockerCanonicalProviderModel,
+  checkAllowBlockerStaleCompanyIds,
+  checkAllowBlockerRoutingChain,
+  checkAllowBlockerBosFields,
+  checkAllowBlockerPrePostCountersEqual,
+  checkAllowBlockerObservedFailClosedZero,
+  checkAllowBlockerNoCredentialLeaks,
+  checkAllowBlockerNoUnapprovedUuids,
+  checkAllowBlockerNativeReadbackHashes,
+  checkAllowBlockerReMutationPolicy,
+  checkAllowBlockerUpstreamArtifactsAllDeferred
+];
+
+function validateAllowBlocker(targetEvidence) {
+  if (targetEvidence === null || targetEvidence === undefined) {
+    return {
+      verdict: 'fail',
+      blockers: [
+        'canonical S07 evidence (runtime-evidence/M014-S07-bounded-bos-e2e.json) missing for --allow-blocker / --phase allow-blocker'
+      ],
+      checks: [],
+      summary: { blockers_count: 1, checks_count: 0, pass_count: 0, fail_count: 0 }
+    };
+  }
+  const checks = [];
+  const blockers = [];
+  for (const fn of ALLOW_BLOCKER_CHECKS) {
+    const result = fn(targetEvidence);
+    if (result.check) checks.push(result.check);
+    if (result.blocker) blockers.push(result.blocker);
+  }
+  const verdict = blockers.length === 0 ? 'pass' : 'fail';
+  return {
+    verdict,
+    blockers,
+    checks,
+    summary: {
+      blockers_count: blockers.length,
+      checks_count: checks.length,
+      pass_count: checks.filter((c) => c.verdict === 'pass').length,
+      fail_count: checks.filter((c) => c.verdict === 'fail').length
+    }
+  };
+}
+
+// ---------------------------------------------------------------------------
+// T04: --phase require-pass (placeholder until T04 lands)
+// ---------------------------------------------------------------------------
 
 function validateRequirePass(targetEvidence) {
   if (!targetEvidence) {
     return {
       verdict: 'fail',
-      blockers: ['target S07 evidence missing for --phase require-pass'],
+      blockers: ['target S07 evidence missing for --require-pass / --phase require-pass'],
       checks: [],
       placeholder: true
     };
@@ -1662,11 +2193,21 @@ function validateRequirePass(targetEvidence) {
 // ---------------------------------------------------------------------------
 
 function parseArgs(argv) {
-  const args = { phase: null, json: false, help: false };
+  const args = {
+    phase: null,
+    allowBlocker: null,
+    requirePass: null,
+    json: false,
+    help: false
+  };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--phase') {
       args.phase = argv[++i];
+    } else if (a === '--allow-blocker') {
+      args.allowBlocker = argv[++i];
+    } else if (a === '--require-pass') {
+      args.requirePass = argv[++i];
     } else if (a === '--json') {
       args.json = true;
     } else if (a === '--help' || a === '-h') {
@@ -1679,21 +2220,33 @@ function parseArgs(argv) {
 function printHelp() {
   process.stdout.write(
     [
-      'Usage: node scripts/validate_m014_s07_bounded_bos_e2e.js --phase <phase> [--json]',
+      'Usage: node scripts/validate_m014_s07_bounded_bos_e2e.js [flags]',
+      '',
+      'Flags:',
+      '  --phase <phase>          run a phase: entry-gate | allow-blocker | require-pass',
+      '                           (uses the canonical runtime-evidence file at runtime-evidence/M014-S07-bounded-bos-e2e.json)',
+      '  --allow-blocker <file>   validate the fail-closed canonical blocker evidence at <file> (T03)',
+      '                           short-circuits --phase routing; <file> overrides the default evidence path',
+      '  --require-pass <file>    validate the canonical runtime-execution-proof at <file> (T04 placeholder)',
+      '                           short-circuits --phase routing; <file> overrides the default evidence path',
+      '  --json                   emit JSON result to stdout (one phase at a time)',
+      '  --help, -h               show this help',
       '',
       'Phases:',
       '  entry-gate      validate the fail-closed upstream gate (T01; current)',
-      '  allow-blocker   validate a fail-closed blocker artifact (T03; placeholder)',
+      '  allow-blocker   validate a fail-closed blocker artifact (T03; canonical)',
       '  require-pass    validate the canonical runtime-execution-proof (T04; placeholder)',
       '',
       'Exit codes:',
       '  0  PASS (entry-gate cleared; every upstream gate promoted; or blocker/require-pass approved)',
       '  1  FAIL (validation error; fail-closed)',
-      '  2  LOAD (could not read upstream artifacts)',
+      '  2  LOAD (could not read upstream artifacts, unknown phase, or missing/invalid evidence path)',
       '',
       'Examples:',
       '  node scripts/validate_m014_s07_bounded_bos_e2e.js --phase entry-gate',
       '  node scripts/validate_m014_s07_bounded_bos_e2e.js --phase entry-gate --json',
+      '  node scripts/validate_m014_s07_bounded_bos_e2e.js --allow-blocker runtime-evidence/M014-S07-bounded-bos-e2e.json',
+      '  node scripts/validate_m014_s07_bounded_bos_e2e.js --require-pass runtime-evidence/M014-S07-bounded-bos-e2e.json',
       ''
     ].join('\n')
   );
@@ -1705,6 +2258,39 @@ function runCLI(argv) {
     printHelp();
     return 0;
   }
+
+  // Explicit file-path flags short-circuit --phase routing and take an
+  // arbitrary evidence file. They support both the canonical S07 evidence
+  // file path and a synthetic test fixture.
+  if (args.allowBlocker) {
+    const targetEvidence = loadTargetEvidenceFromPath(path.resolve(PROJECT_ROOT, args.allowBlocker));
+    const result = validateAllowBlocker(targetEvidence);
+    if (args.json) {
+      process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+    } else {
+      process.stdout.write(
+        `phase=allow-blocker file=${args.allowBlocker} verdict=${result.verdict} blockers=${result.blockers.length} checks=${result.summary.checks_count} pass=${result.summary.pass_count} fail=${result.summary.fail_count}\n`
+      );
+      for (const b of result.blockers) {
+        process.stdout.write(`  blocker: ${b}\n`);
+      }
+    }
+    return result.verdict === 'pass' ? 0 : 1;
+  }
+  if (args.requirePass) {
+    const targetEvidence = loadTargetEvidenceFromPath(path.resolve(PROJECT_ROOT, args.requirePass));
+    const result = validateRequirePass(targetEvidence);
+    if (args.json) {
+      process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+    } else {
+      process.stdout.write(`phase=require-pass file=${args.requirePass} verdict=${result.verdict} blockers=${result.blockers.length}\n`);
+      for (const b of result.blockers) {
+        process.stdout.write(`  blocker: ${b}\n`);
+      }
+    }
+    return result.verdict === 'pass' ? 0 : 1;
+  }
+
   if (!args.phase) {
     process.stderr.write('error: --phase <phase> is required (try --help)\n');
     return 2;
@@ -1743,7 +2329,9 @@ function runCLI(argv) {
     if (args.json) {
       process.stdout.write(JSON.stringify(result, null, 2) + '\n');
     } else {
-      process.stdout.write(`phase=allow-blocker verdict=${result.verdict} blockers=${result.blockers.length}\n`);
+      process.stdout.write(
+        `phase=allow-blocker verdict=${result.verdict} blockers=${result.blockers.length} checks=${result.summary.checks_count} pass=${result.summary.pass_count} fail=${result.summary.fail_count}\n`
+      );
       for (const b of result.blockers) {
         process.stdout.write(`  blocker: ${b}\n`);
       }
@@ -1813,6 +2401,7 @@ module.exports = {
   loadUpstreamArtifacts,
   loadLockfileOrNull,
   loadTargetEvidenceOrNull,
+  loadTargetEvidenceFromPath,
   // Helpers
   scanCredentialLeaks,
   scanUuidLeaks,
