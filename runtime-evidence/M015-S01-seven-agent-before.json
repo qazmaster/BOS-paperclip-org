@@ -1,0 +1,208 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-seven-agent-before.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S01",
+  "task": "T01",
+  "generated": "2026-07-13T17:00:30.255Z",
+  "source": "read-only Postgres and protected VPS backup",
+  "company": {
+    "issue_prefix": "AIP",
+    "name": "aipay.kz"
+  },
+  "backup": {
+    "directory": "/opt/paperclip-sandbox/backups/m015-seven-divisions-before-20260713T165858Z",
+    "dump_sha256": "114e67c0bcd5ecd759b51a7471ed5b49fa7d78d3cf7b224cf8b7089ae2b311e3",
+    "manifest_sha256": "13e67999a55a5d72144be4b28132917455a25893ceb8b45897d8bfa821304e80",
+    "repo_head": "390627b46eb333309d357004384b220ecf8a65af",
+    "integrity_verified": true,
+    "restore_verified": true,
+    "restored_agent_rows": 7,
+    "restored_grant_rows": 7,
+    "permissions": "0600"
+  },
+  "agent_count": 7,
+  "agents": [
+    {
+      "name": "Div1.HCO",
+      "title": "Human Capital & Organization",
+      "status": "idle",
+      "reports_to": "CEO",
+      "adapter_type": "hermes_local",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "default(all)",
+      "instructions_bundle_mode": "absent",
+      "instructions_file_configured": false,
+      "extra_args": [
+        "--provider",
+        "xiaomi",
+        "--ignore-user-config",
+        "-p",
+        "div1-hco"
+      ],
+      "permissions": [
+        "tasks:assign"
+      ]
+    },
+    {
+      "name": "Div2.MasterPlanner",
+      "title": "Master Planner",
+      "status": "idle",
+      "reports_to": "CEO",
+      "adapter_type": "hermes_local",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "default(all)",
+      "instructions_bundle_mode": "absent",
+      "instructions_file_configured": false,
+      "extra_args": [
+        "--provider",
+        "xiaomi",
+        "--ignore-user-config",
+        "-p",
+        "div2-masterplanner"
+      ],
+      "permissions": [
+        "tasks:assign"
+      ]
+    },
+    {
+      "name": "Div3.Treasury",
+      "title": "Treasury & Finance",
+      "status": "idle",
+      "reports_to": "CEO",
+      "adapter_type": "hermes_local",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "default(all)",
+      "instructions_bundle_mode": "absent",
+      "instructions_file_configured": false,
+      "extra_args": [
+        "--provider",
+        "xiaomi",
+        "--ignore-user-config",
+        "-p",
+        "div3-treasury"
+      ],
+      "permissions": [
+        "tasks:assign"
+      ]
+    },
+    {
+      "name": "Div4.Production",
+      "title": "Production & Engineering",
+      "status": "idle",
+      "reports_to": "CEO",
+      "adapter_type": "hermes_local",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "default(all)",
+      "instructions_bundle_mode": "absent",
+      "instructions_file_configured": false,
+      "extra_args": [
+        "--provider",
+        "xiaomi",
+        "--ignore-user-config",
+        "-p",
+        "div4-production"
+      ],
+      "permissions": [
+        "tasks:assign"
+      ]
+    },
+    {
+      "name": "Div5.QualificationsLibraryLearning",
+      "title": "Qualifications, Library & Learning",
+      "status": "idle",
+      "reports_to": "CEO",
+      "adapter_type": "hermes_local",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "default(all)",
+      "instructions_bundle_mode": "absent",
+      "instructions_file_configured": false,
+      "extra_args": [
+        "--provider",
+        "xiaomi",
+        "--ignore-user-config",
+        "-p",
+        "div5-qualificationslibrarylearning"
+      ],
+      "permissions": [
+        "tasks:assign"
+      ]
+    },
+    {
+      "name": "Div6.External",
+      "title": "External Relations & Security",
+      "status": "idle",
+      "reports_to": "CEO",
+      "adapter_type": "hermes_local",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "default(all)",
+      "instructions_bundle_mode": "absent",
+      "instructions_file_configured": false,
+      "extra_args": [
+        "--provider",
+        "xiaomi",
+        "--ignore-user-config",
+        "-p",
+        "div6-external"
+      ],
+      "permissions": [
+        "tasks:assign"
+      ]
+    },
+    {
+      "name": "Div7.MissionControl",
+      "title": "Mission Control / Strategy",
+      "status": "idle",
+      "reports_to": "CEO",
+      "adapter_type": "hermes_local",
+      "provider": "xiaomi",
+      "model": "mimo-v2.5-pro",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "default(all)",
+      "instructions_bundle_mode": "absent",
+      "instructions_file_configured": false,
+      "extra_args": [
+        "--provider",
+        "xiaomi",
+        "--ignore-user-config",
+        "-p",
+        "div7-missioncontrol"
+      ],
+      "permissions": [
+        "tasks:assign"
+      ]
+    }
+  ],
+  "observations": {
+    "all_agents_present": true,
+    "all_hermes_local": true,
+    "all_have_session_persistence": true,
+    "stale_xiaomi_count": 7,
+    "legacy_profile_arg_count": 7,
+    "missing_instruction_bundle_count": 7,
+    "all_report_to_ceo": true,
+    "default_all_toolsets_count": 7
+  },
+  "redaction": {
+    "full_uuid_values_stored": false,
+    "credentials_stored": false
+  }
+}
