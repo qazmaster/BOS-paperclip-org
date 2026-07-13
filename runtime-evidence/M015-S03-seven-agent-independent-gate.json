@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T03",
-  "generated": "2026-07-13T22:54:57.142Z",
+  "generated": "2026-07-13T23:26:02.874Z",
   "status": "FAIL_CLOSED",
   "gate_model": "49 per-agent conditions (7 agents x 7 checks) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)",
   "upstream_artifacts": {
