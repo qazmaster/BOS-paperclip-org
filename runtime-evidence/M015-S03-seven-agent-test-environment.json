@@ -1,0 +1,89 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-seven-agent-test-environment.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T01",
+  "generated": "2026-07-13T22:40:15.588Z",
+  "status": "FAIL_CLOSED",
+  "company": {
+    "issue_prefix": "AIP",
+    "name": "aipay.kz"
+  },
+  "source_contract": "runtime-evidence/M015-S01-seven-agent-target-contract.json",
+  "cross_reference": "runtime-evidence/M015-S02-seven-agent-after.json",
+  "probe_endpoint": "POST /api/companies/{companyId}/adapters/hermes_local/test-environment",
+  "agent_count_expected": 7,
+  "probe_count_observed": 1,
+  "probe_order": [
+    "Div7.MissionControl",
+    "Div1.HCO",
+    "Div2.MasterPlanner",
+    "Div3.Treasury",
+    "Div4.Production",
+    "Div5.QualificationsLibraryLearning",
+    "Div6.External"
+  ],
+  "pass_count": 0,
+  "fail_count": 1,
+  "blockers": [
+    {
+      "code": "M15-S03-NAME-DRIFT",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "live name drift: extra=M014.S07.BoundedMiniMax missing=none"
+    },
+    {
+      "code": "M15-S03-AGT-Div7.MissionControl-STATUS-WARN",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "response status warn"
+    }
+  ],
+  "agents": [
+    {
+      "name": "Div7.MissionControl",
+      "agent_role_observed": "researcher",
+      "adapter_config_redacted": {
+        "model": "MiniMax-M3",
+        "quiet": true,
+        "graceSec": 5,
+        "provider": "minimax",
+        "toolsets": "terminal,file",
+        "timeoutSec": 600,
+        "persistSession": true,
+        "instructionsFilePath": "<redacted-id>",
+        "instructionsRootPath": "<redacted-id>",
+        "instructionsEntryFile": "AGENTS.md",
+        "instructionsBundleMode": "managed"
+      },
+      "testEnvironment": {
+        "http_status": 200,
+        "response_status": "warn",
+        "body_kind": "object",
+        "error_message": null,
+        "check_codes": [
+          "hermes_version",
+          "hermes_model_configured",
+          "hermes_api_keys_found",
+          "hermes_provider_mismatch"
+        ],
+        "check_statuses": [],
+        "redaction_safe_message_tail": [
+          "Hermes Agent version: Hermes Agent v0.18.2 (2026.7.7.2)\nProject: /paperclip/hermes-runtime/lib/python3.13/site-packages\nPython: 3.13.5\nOpenAI SDK: 2.24.0\nUp to date",
+          "Model: MiniMax-M3",
+          "API keys found: OpenAI, MiniMax",
+          "Provider mismatch: adapterConfig has \"minimax\" but ~/.hermes/config.yaml has \"openai-api\". Using adapterConfig value."
+        ]
+      },
+      "verdict": "warn",
+      "blocker_code": "M15-S03-AGT-Div7.MissionControl-STATUS-WARN",
+      "xiaomi_endpoint_reuse_detected": false
+    }
+  ],
+  "xiaomi_endpoint_reuse_detected": false,
+  "redaction": {
+    "full_ids": false,
+    "credentials": false
+  },
+  "probe_elapsed_ms": 2675
+}
