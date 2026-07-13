@@ -1,0 +1,371 @@
+{
+  "$schema": "gsd/m014-s05-minimax-provider-contract-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S05",
+  "task": "T03",
+  "purpose": "MiniMax M3 provider contract for Hermes runtime. Documents the canonical MiniMax provider name, endpoint mode, model spelling, key environment contract, and Paperclip profile shape that T03 will prove via a clean direct Hermes session. Side-effect-free planning artifact: the actual direct invocation against the MiniMax endpoint is gated by the prerequisite upgrade verification (T02 phase_verdict=UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY + 6/6 pre-flight PASSED + 4/4 patch reconciliation RECONCILED) and by explicit operator confirmation (LFP-LF-02).",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S05/T03)",
+  "consumes": [
+    "runtime-evidence/M014-S05-hermes-baseline.json",
+    "runtime-evidence/M014-S05-hermes-upgrade-contract.json",
+    "runtime-evidence/M014-S05-hermes-upgrade.json",
+    "runtime-evidence/M014-S05-hermes-upstream-diff.md",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "minimax-provider-contract",
+
+  "freshness_posture": {
+    "policy": "contract-snapshot",
+    "as_of": "2026-07-12",
+    "must_reprobe_after": "2026-07-12T00:00:00Z",
+    "rule_reference": "R3 + R4 in .gsd/KNOWLEDGE.md",
+    "trigger_conditions": [
+      "any MiniMax PyPI provider release or naming convention change",
+      "any mutation of M014-S05-hermes-upgrade.json phase_verdict away from UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY",
+      "any change to /paperclip/hermes-runtime on the live VPS without going through the hermes-rollback path",
+      "any change to the MiniMax API base URL or key environment contract",
+      "any decision to swap MiniMax M3 for a different model (per upstream release notes M3 is the canonical target)",
+      "any change to the Paperclip adapterConfig.hermesLocal.minimaxProfile block",
+      "any new doc on the MiniMax API contract that changes auth header shape or request schema"
+    ]
+  },
+
+  "prerequisite_state_for_T03": {
+    "policy": "This contract enumerates the upgrade.json state that T03 requires BEFORE live execution. In the auto-mode execution lane, T02 produced upgrade.json with phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED (NOT UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY), so T03 records the prerequisite gate but the actual live execution is deferred to an operator-confirmed session.",
+    "required_upgrade_phase_verdict": "UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY",
+    "required_pre_flight_checks_passed": 6,
+    "required_pre_flight_checks_total": 6,
+    "required_patch_reconciliations_passed": 4,
+    "required_patch_reconciliations_total": 4,
+    "current_upgrade_phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "current_pre_flight_checks_passed": 0,
+    "current_pre_flight_checks_total": 6,
+    "current_patch_reconciliations_passed": 0,
+    "current_patch_reconciliations_total": 4,
+    "gate_satisfied": false,
+    "gate_satisfied_rationale": "T02 phase_verdict is PLAN_READY_LIVE_EXECUTION_DEFERRED (auto-mode lane cannot execute live VPS readback or pip install); therefore T03 cannot satisfy prerequisite_state_for_T03 in the auto-mode lane and records the contract only."
+  },
+
+  "minimax_provider_registry_target": {
+    "policy": "The target state of the Hermes provider registry AFTER T03 direct execution succeeds. T03 introduces the MiniMax provider into the registry; T04 swaps it into the primary slot of the Paperclip adapter config. The registry carries three providers total: xiaomi (deprecation gated by T04 success), openai-codex (preserved fallback), and minimax (new MiniMax M3 binding).",
+
+    "providers_target": [
+      {
+        "slot": "primary",
+        "provider": "minimax",
+        "model": "MiniMax-M3",
+        "endpoint_class": "openai-compatible",
+        "endpoint_base_url_secret_ref": "MINIMAX_BASE_URL",
+        "auth_api_key_secret_ref": "MINIMAX_API_KEY",
+        "request_schema": "chat_completions",
+        "expected_response_shape": "openai-chat-completions-json",
+        "evidence_pointer": "This contract; live verification deferred to operator session",
+        "current_live_state": "contract-only; NOT in the live registry until T03 live execution succeeds"
+      },
+      {
+        "slot": "fallback",
+        "provider": "openai-codex",
+        "model": "gpt-5.3-codex",
+        "endpoint_class": "codex-cli-local",
+        "endpoint_base_url_secret_ref": null,
+        "auth_api_key_secret_ref": "OPENAI_API_KEY",
+        "request_schema": "codex-cli-local",
+        "expected_response_shape": "codex-cli-stdout",
+        "evidence_pointer": "runtime-evidence/M014-S05-hermes-baseline.json -> provider_registry_observed.providers_observed[1]",
+        "current_live_state": "historical-fallback; preserved unchanged"
+      }
+    ],
+
+    "providers_count_target": 2,
+    "providers_count_after_minimax_added": 3,
+    "provider_alias_allowlist_target": ["xiaomi", "openai-codex", "minimax"],
+    "endpoint_class_allowlist_target": ["openai-compatible", "codex-cli-local"],
+    "model_spellings_target": ["MiniMax-M3", "mimo-v2.5-pro", "gpt-5.3-codex"]
+  },
+
+  "canonical_minimax_provider_name": {
+    "policy": "Single canonical name used in the Hermes CLI --provider flag and in the Paperclip adapterConfig.hermesLocal.minimaxProfile.provider field. Must match exactly across hermes-paperclip wrapper args, upstream hermes --list-providers output, and Paperclip adapterConfig.",
+    "canonical_name": "minimax",
+    "canonical_name_alternates_considered": [
+      {"name": "MiniMax", "rejected_reason": "Mixed-case; would break grep-on-config invariants and downstream BOS agent dispatch tables that use lowercase provider keys"},
+      {"name": "minimax-m3", "rejected_reason": "Provider / model split: provider name is the registry slot key, model is the model identifier within the provider slot"},
+      {"name": "minimax-ai", "rejected_reason": "Vendor brand ('MiniMax') is not the provider; provider is the registry entry that maps to one outbound endpoint. Using brand in provider name risks future brand-model coupling"},
+      {"name": "minimax-m3-only", "rejected_reason": "Future MiniMax M4/M5 models would require provider rename; provider names should be vendor-stable"}
+    ],
+    "canonical_name_alternates_considered_count": 4,
+    "canonical_name_rationale": "Lowercase, vendor-stable, model-agnostic. Matches the hermes-agent convention of using the upstream provider registry key (xiaomi, openai-codex) as the --provider flag value. Avoids case-mismatch drift between config, CLI, and Paperclip adapter."
+  },
+
+  "canonical_endpoint_mode": {
+    "policy": "Hermes provider endpoint mode (how hermes-paperclip talks to the outbound API). The MiniMax endpoint exposes an OpenAI-compatible chat completions surface, so the endpoint mode mirrors the xiaomi primary provider.",
+    "endpoint_mode": "openai-compatible",
+    "endpoint_mode_alternates_considered": [
+      {"mode": "anthropic-messages", "rejected_reason": "MiniMax API surface is OpenAI-compatible chat completions, not Anthropic Messages; choosing anthropic-messages would force a non-existent client implementation"},
+      {"mode": "custom-curl", "rejected_reason": "Custom curl mode is for non-OpenAI vendors; MiniMax exposes a documented chat completions surface so the openai-compatible client is the right fit"},
+      {"mode": "codex-cli-local", "rejected_reason": "codex-cli-local is for the openai-codex fallback that uses the Codex CLI subprocess; MiniMax is a hosted API"}
+    ],
+    "endpoint_mode_alternates_considered_count": 3,
+    "endpoint_mode_rationale": "MiniMax exposes an OpenAI-compatible chat completions API (verified via the MiniMax developer docs schema: POST /v1/chat/completions with bearer auth and standard OpenAI message schema). The hermes-agent openai-compatible client handles auth, request shaping, streaming, and tool calls; no custom client needed."
+  },
+
+  "canonical_model_spelling": {
+    "policy": "Exact model identifier string passed via --model flag and stored in Paperclip adapterConfig. Must match the upstream MiniMax API model name verbatim.",
+    "model_spelling": "MiniMax-M3",
+    "model_spelling_alternates_considered": [
+      {"spelling": "M3", "rejected_reason": "Too short; collides with the existing 'mimo-v2.5-pro' prefix in dispatch tables. MiniMax-M3 disambiguates vendor from model"},
+      {"spelling": "minimax-m3", "rejected_reason": "Lowercase prefix is wrong case; the upstream model identifier is published with the canonical 'MiniMax' brand prefix and a hyphen to M3 (per MiniMax developer docs API reference)"},
+      {"spelling": "MiniMax-M3-2026-07", "rejected_reason": "Date-suffixed model names are appropriate for snapshot models; M3 is the stable model family name, not a specific dated snapshot"},
+      {"spelling": "minimax-MiniMax-M3", "rejected_reason": "Double-prefix is a typo; the canonical name is one MiniMax brand prefix + M3 model suffix"}
+    ],
+    "model_spelling_alternates_considered_count": 4,
+    "model_spelling_rationale": "Matches the MiniMax developer docs published model identifier verbatim. The case-sensitive spelling is required for the OpenAI-compatible client to resolve the model on the MiniMax backend; a case-mismatch returns 404 model_not_found.",
+    "model_spelling_source_pointer": "MiniMax developer docs -> Models reference (verified by fetch_page on https://platform.MiniMax.io/docs/models in T01 baseline freshness_posture)"
+  },
+
+  "key_environment_contract": {
+    "policy": "Environment variables that the openai-compatible client reads at runtime. The MiniMax binding follows the same shape as the Xiaomi binding: one auth key (bearer) + one base URL (endpoint host). The values are passed through Paperclip secret_ref envelope (LHA-SECRET-REF-ENVELOPE) so the adapter never sees the resolved values in rendered adapterConfig.",
+    "auth_secret_ref": "MINIMAX_API_KEY",
+    "auth_secret_ref_env_var": "MINIMAX_API_KEY",
+    "auth_secret_ref_payload_shape": "bearer-token-string",
+    "auth_header_construction": "Authorization: Bearer <MINIMAX_API_KEY resolved value>",
+    "endpoint_secret_ref": "MINIMAX_BASE_URL",
+    "endpoint_secret_ref_env_var": "MINIMAX_BASE_URL",
+    "endpoint_secret_ref_payload_shape": "https-url-string",
+    "endpoint_construction": "<MINIMAX_BASE_URL resolved value>/v1/chat/completions",
+    "secret_ref_envelope_preserved": true,
+    "secret_ref_envelope_id": "LHA-SECRET-REF-ENVELOPE",
+    "secret_ref_envelope_preserved_evidence_pointer": "runtime-evidence/M014-S05-hermes-baseline.json -> local_paperclip_adapter_compatibility_patches.patches_observed[3]",
+
+    "key_contract_alternates_considered": [
+      {
+        "shape": "single env var MINIMAX_API_KEY only (base URL hardcoded in hermes-agent upstream)",
+        "rejected_reason": "Hardcoding the base URL in upstream hermes-agent breaks portability between MiniMax staging and production endpoints, and forces a hermes-agent code patch every time the MiniMax base URL changes. The xiaomi binding uses two secret refs for the same reason."
+      },
+      {
+        "shape": "MINIMAX_BEARER + MINIMAX_TENANT_ID (split token shape)",
+        "rejected_reason": "MiniMax uses a single bearer token model per the OpenAI-compatible chat completions contract; splitting into bearer+tenant would require a custom client and adds no security value (tenant gating is handled by the bearer token scope itself)."
+      },
+      {
+        "shape": "MINIMAX_API_KEY_V2 + MINIMAX_BASE_URL_V2 (versioned env var names)",
+        "rejected_reason": "Versioned env var names are appropriate for breaking auth contract changes. The current MiniMax bearer auth contract is stable; versioning the env var names adds friction without benefit."
+      }
+    ],
+    "key_contract_alternates_considered_count": 3,
+    "key_contract_rationale": "Mirrors the Xiaomi xiaomi binding shape (auth + base URL as two separate secret_ref env vars) so the Paperclip adapter config diff is minimal: only XIAOMI_API_KEY -> MINIMAX_API_KEY and XIAOMI_BASE_URL -> MINIMAX_BASE_URL. Same secret_ref envelope shape (LHA-SECRET-REF-ENVELOPE) is preserved by construction."
+  },
+
+  "paperclip_minimax_profile_shape": {
+    "policy": "The Paperclip adapterConfig.hermesLocal block that will be applied in T04 (T03 only documents the contract shape; T04 mutates the live adapter config under operator confirmation).",
+
+    "profile_name": "minimax-m3",
+    "profile_shape": {
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "timeoutSec": 300,
+      "graceSec": 5,
+      "endpoint_class": "openai-compatible",
+      "api_key_secret_ref": "MINIMAX_API_KEY",
+      "base_url_secret_ref": "MINIMAX_BASE_URL",
+      "structured_output_schema": "bos",
+      "session_id_format_expected": "YYYYMMDD_HHMMSS_<6hex> (same shape as xiaomi/openai-codex per upstream hermes-agent)"
+    },
+    "profile_added_by": "T03 (contract) + T04 (live adapter config mutation)",
+    "profile_added_in_phase": "minimax-provider-contract",
+
+    "xiaomi_profile_status_after_T03": "preserved-and-deprecated-pending-T04",
+    "xiaomi_profile_deprecation_gating": "xiaomi/mimo-v2.5-pro profile is NOT removed by T03 (auto-mode lane cannot mutate adapter config); deprecation is gated by T04 live adapter config flip succeeding and a clean Paperclip session on the minimax profile",
+    "openai_codex_profile_status_after_T03": "preserved-unchanged",
+    "openai_codex_profile_role_after_T03": "fallback-only; openai-codex/gpt-5.3-codex stays as the fallback provider, never as the primary"
+  },
+
+  "pre_direct_cleanup": {
+    "policy": "Pre-execution cleanup that the live executor MUST perform before starting a clean MiniMax M3 run. Each step MUST be recorded in direct-proof.json with exit code + timestamp.",
+    "checks": [
+      {
+        "id": "PDC-01",
+        "name": "verify_no_xiaomi_session_active",
+        "command": "ps -ef | grep -E 'hermes-paperclip.*xiaomi|hermes-paperclip.*mimo' | grep -v grep",
+        "expected_output_shape": "exit code 1 (no match) — there must be no active Xiaomi Hermes session",
+        "pass_criteria": "exit code 1 AND empty stdout",
+        "live_execution_status": "pending-live-execution",
+        "rationale": "Per task plan: 'terminate Xiaomi sessions' before starting clean MiniMax run"
+      },
+      {
+        "id": "PDC-02",
+        "name": "verify_minimax_secret_refs_resolvable",
+        "command": "Paperclip secret-store resolution check on MINIMAX_API_KEY and MINIMAX_BASE_URL (Paperclip admin API; never echoes resolved values)",
+        "expected_output_shape": "exit code 0 AND resolved: true for both MINIMAX_API_KEY and MINIMAX_BASE_URL",
+        "pass_criteria": "both secret_refs resolve successfully (resolver returns success without exposing the value)",
+        "live_execution_status": "pending-live-execution",
+        "rationale": "Per task plan: 'Supply the existing GSD-held access through a secret reference'"
+      },
+      {
+        "id": "PDC-03",
+        "name": "verify_clean_session_startup",
+        "command": "/paperclip/hermes-runtime/bin/hermes-paperclip --version && /paperclip/hermes-runtime/bin/hermes-paperclip --list-providers | grep -E '^minimax'",
+        "expected_output_shape": "stdout contains 'Hermes Agent v0.18.2 (2026.7.8.1)' AND 'minimax' is listed as a known provider",
+        "pass_criteria": "exit code 0 AND version label match AND minimax in provider list",
+        "live_execution_status": "pending-live-execution",
+        "rationale": "Per task plan: 'start a clean Hermes session' — confirms runtime version + provider registry state"
+      }
+    ],
+    "checks_count": 3,
+    "live_execution_status": "pending-live-execution"
+  },
+
+  "post_direct_validation_requirements": {
+    "policy": "Validation requirements that the direct-proof.json MUST satisfy before phase_verdict can be promoted to PASS. Each requirement maps to a downstream validator check (V-HM-DI-13 .. V-HM-DI-19).",
+
+    "terminal_status_requirement": {
+      "description": "hermes-paperclip invocation against MiniMax MUST exit with code 0",
+      "expected_exit_code": 0,
+      "live_capture_field": "direct_run.live_captured_exit_code"
+    },
+    "structured_output_requirement": {
+      "description": "resultJson.bos MUST be present in stdout and parse as a JSON object with at minimum keys {session_id, resultJson} where resultJson.bos is the BOS-shaped payload",
+      "expected_shape": "stdout JSON object with top-level keys session_id + resultJson; resultJson.bos is a BOS-shaped object",
+      "live_capture_field": "direct_run.live_captured_stdout_redacted_tail"
+    },
+    "endpoint_class_requirement": {
+      "description": "The MiniMax invocation MUST use the openai-compatible endpoint class — NOT codex-cli-local (which would route through Codex CLI, not MiniMax)",
+      "expected_endpoint_class": "openai-compatible",
+      "live_capture_field": "direct_run.endpoint_class_observed"
+    },
+    "provider_name_requirement": {
+      "description": "The MiniMax invocation MUST use --provider=minimax (canonical lowercase) — NOT MiniMax / minimax-m3 / any other casing",
+      "expected_provider_name": "minimax",
+      "live_capture_field": "direct_run.provider_observed"
+    },
+    "model_spelling_requirement": {
+      "description": "The MiniMax invocation MUST use --model=MiniMax-M3 (canonical mixed-case spelling) — NOT M3 / minimax-m3 / etc.",
+      "expected_model_spelling": "MiniMax-M3",
+      "live_capture_field": "direct_run.model_observed"
+    },
+    "xiaomi_endpoint_reuse_prohibition": {
+      "description": "The MiniMax invocation MUST NOT route through any xiaomi endpoint or use any XIAOMI_API_KEY / XIAOMI_BASE_URL secret",
+      "expected_no_xiaomi_reuse": true,
+      "live_capture_field": "direct_run.xiaomi_endpoint_reuse_detected"
+    },
+    "credential_redaction_requirement": {
+      "description": "The captured stdout MUST NOT contain any MINIMAX_API_KEY= / MINIMAX_BASE_URL= value, Bearer token, sk-* / tp-* token shape",
+      "redaction_scan_target": "direct_run.live_captured_stdout_redacted_tail + entire direct-proof.json",
+      "live_capture_field": "credential_redaction_posture.scan_clean"
+    },
+    "session_id_correlation_requirement": {
+      "description": "The session_id in stdout MUST be a fresh YYYYMMDD_HHMMSS_<6hex> value that does not appear in any prior runtime evidence (proves no replay of an old session)",
+      "fresh_session_required": true,
+      "live_capture_field": "direct_run.session_id"
+    }
+  },
+
+  "live_execution_blockers_for_T03": [
+    {
+      "id": "LHA-EX-T03-01",
+      "summary": "T02 phase_verdict is still PLAN_READY_LIVE_EXECUTION_DEFERRED; T03 prerequisite_state_for_T03.gate_satisfied is false; no live MiniMax execution is permitted",
+      "rule": "T02 prerequisite chain (upgrade.json phase_verdict=UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY)",
+      "evidence_pointer": "runtime-evidence/M014-S05-hermes-upgrade.json -> phase_verdict",
+      "blocks_steps": ["PDC-01", "PDC-02", "PDC-03", "DIRECT-RUN"]
+    },
+    {
+      "id": "LHA-EX-T03-02",
+      "summary": "Auto-mode executor cannot open authenticated SSH session to VPS 87.99.146.178 (no operator present for LFP-LF-02 confirmation)",
+      "rule": "LFP-LF-02",
+      "evidence_pointer": "paperclip-runtime.lock.json -> mutation_default_sources.explicit_override_policy",
+      "blocks_steps": ["PDC-01", "PDC-02", "PDC-03", "DIRECT-RUN"]
+    },
+    {
+      "id": "LHA-EX-T03-03",
+      "summary": "Live VPS readback blocked by S02 H-INCONCLUSIVE verdict (zero captures from VPS read-only inspection)",
+      "rule": "LFP-S02-01",
+      "evidence_pointer": "runtime-evidence/M014-S02-vps-forensics-verdict.json -> verdict_status",
+      "blocks_steps": ["PDC-01", "PDC-02", "PDC-03", "DIRECT-RUN"]
+    },
+    {
+      "id": "LHA-EX-T03-04",
+      "summary": "Hermes runtime wheel is still hermes-agent==0.15.2 on the live VPS (T02 upgrade not yet executed live); the canonical MiniMax provider may not exist in the 0.15.2 provider registry",
+      "rule": "upgrade verification gate",
+      "evidence_pointer": "runtime-evidence/M014-S05-hermes-upgrade.json -> phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED; runtime-evidence/M014-S05-hermes-baseline.json -> live_runtime_observed.current_runtime_version=null",
+      "blocks_steps": ["PDC-03", "DIRECT-RUN"]
+    }
+  ],
+  "live_execution_blocker_count": 4,
+
+  "xiaomi_endpoint_reuse_prohibition": {
+    "policy": "The MiniMax M3 run MUST NOT route through any Xiaomi endpoint, MUST NOT use XIAOMI_API_KEY or XIAOMI_BASE_URL secrets, and MUST NOT produce a session id that matches any Xiaomi session id observed in M005-S01 evidence. Any reuse triggers V-HM-DI-16 fail-closed.",
+    "no_xiaomi_endpoint_use": true,
+    "no_xiaomi_api_key_use": true,
+    "no_xiaomi_base_url_use": true,
+    "no_xiaomi_session_id_reuse": true,
+    "xiaomi_session_id_corpus_reference": "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe-live-*.json (per-session observed session ids)"
+  },
+
+  "inherited_constraints_remain_in_force": {
+    "policy": "All 6 inherited LFP-* constraint IDs from baseline §rollout_safety_constraints remain in force through T03 -> T04 -> slice closeout. T03 introduces no new constraint relaxations.",
+    "inherited_constraints": [
+      {"id": "LFP-LF-01", "summary": "Prefer Paperclip HTTP/admin routes; never patch Paperclip core source.", "source": "paperclip-runtime.lock.json + S04 baseline"},
+      {"id": "LFP-LF-02", "summary": "Live mutation requires explicit authenticated operator confirmation with PAPERCLIP_COMPANY_ID_OVERRIDE=allow and visible target company.", "source": "paperclip-runtime.lock.json mutation_default_sources"},
+      {"id": "LFP-LF-03", "summary": "Forbidden commands (docker compose down -v, prune, rm, volume rm) unless explicitly approved for destructive recovery.", "source": "paperclip-runtime.lock.json forbidden_commands"},
+      {"id": "LFP-S02-01", "summary": "VPS forensics verdict is H-INCONCLUSIVE; no destructive recovery is approved; only safe-restart command allowed.", "source": "M014-S02-vps-forensics-verdict.json"},
+      {"id": "LFP-S02-02", "summary": "Safe restart command MUST be the one in paperclip-runtime.lock.json safe_restart_command and nothing else.", "source": "paperclip-runtime.lock.json safe_restart_command"},
+      {"id": "LFP-S02-03", "summary": "Stale ID ledger from R3 must not appear as canonical company_id in any Hermes-driven mutation.", "source": ".gsd/KNOWLEDGE.md R3"}
+    ],
+    "inherited_constraints_count": 6,
+    "new_constraints_added_by_T03": [],
+    "constraints_relaxed_by_T03": []
+  },
+
+  "credential_redaction_posture": {
+    "policy": "T03 provider contract MUST NOT contain any credential value or token shape. The forbidden substring shapes from baseline §credential_redaction_posture and T02 upgrade contract §credential_redaction_posture are carried forward unchanged.",
+    "forbidden_credential_substring_shapes": [
+      "XIAOMI_API_KEY=",
+      "OPENAI_API_KEY=",
+      "XIAOMI_BASE_URL=",
+      "MINIMAX_API_KEY=",
+      "MINIMAX_BASE_URL=",
+      "Authorization: Bearer ",
+      "sk-",
+      "tp-"
+    ],
+    "forbidden_full_uuid_literal_shape": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    "approved_uuid_allowlist": [
+      "43c74adb-b194-44d1-8f8e-ba142544bb9d (M002-S08/M005-S01 historical company; present in evidence; R3-stale as canonical)",
+      "1d05cfeb-cb79-48bc-8ec0-51da2da643e3 (M005-S01 historical run id; NOT to be reused)",
+      "fbb15d79-c2c6-4e24-a4e7-e45a05ed35ee (M005-S01 historical agent id; NOT to be reused)",
+      "e4bf3eda-fefe-4336-be8f-bd6690bb3aa9 (M002-S08 install run workspace; ephemeral)",
+      "8053b40a-aa36-4d81-8990-84d6018e7bbb (M002-S08 install run id; ephemeral)"
+    ],
+    "no_secret_values_present_in_this_file": true
+  },
+
+  "downstream_handoff": {
+    "T04_paperclip_adapter_proof": {
+      "uses": [
+        "minimax_provider_registry_target",
+        "canonical_minimax_provider_name.canonical_name",
+        "canonical_endpoint_mode.endpoint_mode",
+        "canonical_model_spelling.model_spelling",
+        "key_environment_contract",
+        "paperclip_minimax_profile_shape",
+        "post_direct_validation_requirements",
+        "xiaomi_endpoint_reuse_prohibition"
+      ],
+      "prerequisite_state_for_T04": "this artifact gate_satisfied === true AND direct-proof.json phase_verdict === 'PASS' AND direct-proof.json direct_run.live_captured_exit_code === 0 AND direct-proof.json direct_run.xiaomi_endpoint_reuse_detected === false",
+      "expected_artifacts": [
+        "runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json",
+        "runtime-evidence/M014-S05-hermes-minimax-rollout.json"
+      ],
+      "note": "T04 mutates the Paperclip adapterConfig.hermesLocal block to flip xiaomi/mimo-v2.5-pro -> minimax/MiniMax-M3 in the primary slot using the profile shape documented here. Auto-mode lane cannot perform this mutation; live operator confirmation (LFP-LF-02) is required."
+    }
+  },
+
+  "diagnostics": {
+    "verify_contract_redaction_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-provider-contract.json'); const s=JSON.stringify(a); const forbidden=['XIAOMI_API_KEY=','OPENAI_API_KEY=','XIAOMI_BASE_URL=','MINIMAX_API_KEY=','MINIMAX_BASE_URL=','Authorization: Bearer ']; const hits=forbidden.filter(f=>s.includes(f)); if(hits.length){console.error('LEAK',hits);process.exit(1)} console.log('OK no secret substring')\"",
+    "verify_canonical_name_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-provider-contract.json'); if(a.canonical_minimax_provider_name.canonical_name!=='minimax'){console.error('BAD_NAME',a.canonical_minimax_provider_name.canonical_name);process.exit(1)} console.log('OK canonical_name=minimax')\"",
+    "verify_endpoint_mode_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-provider-contract.json'); if(a.canonical_endpoint_mode.endpoint_mode!=='openai-compatible'){console.error('BAD_MODE',a.canonical_endpoint_mode.endpoint_mode);process.exit(1)} console.log('OK endpoint_mode=openai-compatible')\"",
+    "verify_model_spelling_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-provider-contract.json'); if(a.canonical_model_spelling.model_spelling!=='MiniMax-M3'){console.error('BAD_SPELLING',a.canonical_model_spelling.model_spelling);process.exit(1)} console.log('OK model_spelling=MiniMax-M3')\"",
+    "verify_key_env_contract_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-provider-contract.json'); const k=a.key_environment_contract; if(k.auth_secret_ref!=='MINIMAX_API_KEY'||k.endpoint_secret_ref!=='MINIMAX_BASE_URL'){console.error('BAD_KEY_ENV');process.exit(1)} console.log('OK key_env_contract=MINIMAX_API_KEY+MINIMAX_BASE_URL')\"",
+    "verify_prerequisite_gate_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-provider-contract.json'); if(a.prerequisite_state_for_T03.gate_satisfied!==false){console.error('BAD_GATE',a.prerequisite_state_for_T03.gate_satisfied);process.exit(1)} console.log('OK gate_satisfied=false (auto-mode deferred)')\"",
+    "verify_inherited_constraints_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-minimax-provider-contract.json'); const ids=a.inherited_constraints_remain_in_force.inherited_constraints.map(c=>c.id).sort(); const expected=['LFP-LF-01','LFP-LF-02','LFP-LF-03','LFP-S02-01','LFP-S02-02','LFP-S02-03']; if(JSON.stringify(ids)!==JSON.stringify(expected)){console.error('BAD_INHERITED',ids);process.exit(1)} console.log('OK inherited_constraints_count=6')\""
+  }
+}

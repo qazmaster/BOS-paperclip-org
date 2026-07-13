@@ -1,0 +1,315 @@
+{
+  "$schema": "gsd/m014-s04-paperclip-baseline-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S04",
+  "task": "T01",
+  "purpose": "Paperclip pre-upgrade baseline snapshot. Captures the official upstream identity, the historical observed live runtime identity (pre-S02 verdict), the local BOS Light runtime patches that must survive an upstream upgrade, and the fresh-readback requirements that gate any later upgrade. Side-effect-free: read-only, no network calls, no Docker, no git mutation, no secret capture.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S04/T01)",
+  "consumes": [
+    "runtime-evidence/M014-S01-runtime-truth-map.json",
+    "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "baseline",
+  "baseline_phase_verdict": "PROVISIONAL_PENDING_FRESH_READBACK",
+
+  "freshness_posture": {
+    "policy": "snapshot",
+    "as_of": "2026-07-12",
+    "must_reprobe_after": "2026-07-12T00:00:00Z",
+    "rule_reference": "R3 + R4 in .gsd/KNOWLEDGE.md",
+    "trigger_conditions": [
+      "any new doctrine patch after v1.4.2",
+      "any new runtime evidence past the 2026-06-04 failure window",
+      "any mutation of runtime-evidence/ files cited below",
+      "any new GSD memory entry tagged Paperclip-runtime-stability",
+      "any change to vps_targets in M014-S01-runtime-truth-map.json",
+      "any change to the stale-id ledger (R3)",
+      "any upstream Paperclip release tag past v2026.707.0",
+      "any modification of plugin-bos-light/ or adapters/gsdpi-local/",
+      "any change to paperclip-runtime.lock.json runtime_target or auth_modes"
+    ]
+  },
+
+  "official_upstream_identity": {
+    "policy": "Verified by independent remote readback (https://github.com/paperclipai/paperclip) without touching the live VPS or paperclip.oysana.com runtime.",
+    "verification_method": "fetch_page on https://github.com/paperclipai/paperclip/releases",
+    "verification_timestamp": "2026-07-12",
+    "verified": true,
+    "canonical_repo_url": "https://github.com/paperclipai/paperclip",
+    "canonical_repo_path": "github.com/paperclipai/paperclip",
+    "upstream_remote_aliases": ["paperclipai/paperclip"],
+    "latest_release_tag_observed": "v2026.707.0",
+    "latest_release_published_at": "2026-07-07",
+    "latest_release_short_sha": "390627b",
+    "upstream_release_count_visible": 11,
+    "visible_release_tags_in_chronological_order": [
+      "v2026.707.0",
+      "v2026.626.0",
+      "v2026.618.0",
+      "v2026.609.0",
+      "v2026.529.0",
+      "v2026.525.0",
+      "v2026.517.0",
+      "v2026.513.0",
+      "v2026.512.0",
+      "v2026.428.0"
+    ],
+    "upstream_commit_sha_for_latest_release": "390627b",
+    "upstream_branch_default": "master",
+    "upstream_releases_url": "https://github.com/paperclipai/paperclip/releases",
+    "upstream_releases_url_source": "fetch_page",
+    "fresh_readback_required": false,
+    "fresh_readback_via": "web fetch / GitHub releases API"
+  },
+
+  "local_paperclip_checkout": {
+    "policy": "Read-only inventory of Paperclip source code inside this repository. There is NO Paperclip fork or mirror in the local working tree; Paperclip is consumed as an upstream image at runtime, not vendored.",
+    "vendored_checkout_present": false,
+    "vendored_checkout_path": null,
+    "vendored_checkout_branch": null,
+    "vendored_checkout_commit_sha": null,
+    "vendored_checkout_remote_url": null,
+    "local_references_to_upstream_only": [
+      {
+        "kind": "plugin-spec-source",
+        "path": "plugin-bos-light/src/pluginRegistration.ts",
+        "snippet": "https://github.com/paperclipai/paperclip/blob/master/doc/plugins/PLUGIN_SPEC.md",
+        "evidence": "BOS Light plugin imports / documents the Paperclip plugin spec from upstream master branch."
+      },
+      {
+        "kind": "package-peer",
+        "path": "plugin-bos-light/package.json",
+        "snippet": "\"peerDependenciesMeta\": { \"@paperclipai/plugin-sdk\": { \"optional\": true } }",
+        "evidence": "Plugin SDK referenced as an optional peer dependency (consumed from upstream registry)."
+      },
+      {
+        "kind": "docs-reference",
+        "path": "docs/archive/BOS_M002_DEVELOPMENT_HANDOFF.md",
+        "snippet": "pnpm paperclipai auth bootstrap-ceo --help",
+        "evidence": "Paperclip CLI referenced; CLI is shipped by upstream Paperclip not by this repo."
+      }
+    ]
+  },
+
+  "live_runtime_observed": {
+    "policy": "Live Paperclip runtime identity as observed in the LAST authenticated readback window. Captured here as HISTORICAL OBSERVATION ONLY; not promoted to authoritative. S02 verdict is H-INCONCLUSIVE because T02 was blocked without user confirmation, so all live fields below MUST be re-confirmed via authenticated readback before T02 (upgrade contract) is allowed to fire.",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "Authenticated GET on https://paperclip.oysana.com/api/health + Postgres SELECT + docker inspect on the VPS, or SSH tunnel probe against 127.0.0.1:3131",
+
+    "historical_observed_runtime_version": "0.3.1",
+    "historical_observed_runtime_version_source": "docs/archive/PAPERCLIP_LIVE_VALIDATION_REPORT.md",
+    "historical_observed_runtime_version_epoch": "2026-05-28T17:20:20+05:00",
+    "historical_observed_runtime_build_fingerprint": "health.version:0.3.1",
+    "historical_observed_git_describe": "canary/v2026.525.0-canary.1",
+    "historical_observed_git_commit_sha": "60efa38f868e838e9af2e2168daf0c70afefb9e6",
+    "historical_observed_sandbox_path": "/opt/paperclip-sandbox",
+    "historical_observed_container_name": "paperclip_sandbox-paperclip-1",
+    "historical_observed_container_binding": "127.0.0.1:3131->3100/tcp on VPS only",
+    "historical_observed_public_ingress": "https://paperclip.oysana.com",
+    "historical_observed_compose_project": "paperclip_sandbox",
+    "historical_observed_base_compose": "/opt/paperclip-sandbox/docker/docker-compose.quickstart.yml",
+    "historical_observed_override_compose": "/opt/paperclip-sandbox/docker-compose.sandbox-override.yml",
+    "historical_observed_admin_email": "kabidenov.a@gmail.com",
+
+    "current_branch": null,
+    "current_branch_source": "no-vendored-checkout",
+    "current_commit_sha": null,
+    "current_commit_sha_source": "no-fresh-readback",
+    "current_image_digest": null,
+    "current_image_digest_source": "no-fresh-readback",
+    "current_image_tag": null,
+    "current_image_tag_source": "no-fresh-readback",
+    "current_health_status": null,
+    "current_health_version": null,
+    "current_health_deployment_mode": null,
+    "current_health_bootstrap_status": null,
+
+    "current_database_schema_identity": null,
+    "current_database_schema_identity_source": "no-fresh-readback",
+    "current_database_schema_identity_via": "Postgres SELECT version() and SELECT extname FROM pg_extension; Paperclip schema introspection on the live DB",
+    "current_database_schema_migrations_applied": null,
+    "current_database_schema_migrations_via": "drizzle-kit migration history table; npm --prefix paperclip-sandbox drizzle-kit status",
+
+    "current_volumes": null,
+    "current_volumes_via": "docker inspect paperclip_sandbox-paperclip-1 --format '{{json .Mounts}}' and docker volume ls",
+    "current_volumes_required_for_rollback": null,
+
+    "current_canonical_company_id": null,
+    "current_canonical_company_id_status": "provisional-pending-fresh-readback",
+    "current_canonical_company_id_via": "Postgres SELECT id, name FROM company WHERE name LIKE '%BOS%' ORDER BY created_at DESC LIMIT 5; OR authenticated GET /api/companies",
+    "current_canonical_company_visibility_in_canonical_company": null,
+    "current_signup_lockdown_status": null,
+    "current_signup_lockdown_check_via": "GET https://paperclip.oysana.com/api/auth/sign-up (expect 403 from nginx lockdown per R2); SSH-tunnel probe to 127.0.0.1:3131/api/auth/sign-up (expect 404 from Paperclip) per the in-lockfile forbidden-commands policy",
+    "current_owner_membership_status": null,
+    "current_adapter_registry_readback": null,
+    "current_adapter_registry_via": "GET /api/adapters (board-key required per MEM336)"
+  },
+
+  "local_runtime_patches_detected": {
+    "policy": "Local source-tree changes that diverge from upstream Paperclip. These patches MUST be reconciled explicitly in T02 before an upgrade — each is either (a) re-applied on the new upstream revision, (b) obsoleted by upstream, or (c) explicitly removed. Detection method is filesystem walk under plugin-bos-light/, adapters/, configs/, scripts/, skills/, company-template/, docs/. No live runtime mutation was performed to detect these patches.",
+    "detection_method": "filesystem walk + manifest review",
+    "detection_timestamp": "2026-07-12",
+
+    "bos_light_plugin": {
+      "path": "plugin-bos-light/",
+      "kind": "paperclip-plugin",
+      "version_local": "0.1.0",
+      "package_name": "@bos/plugin-bos-light",
+      "manifest_path": "plugin-bos-light/manifest.paperclip-plugin.json",
+      "manifest_status": "draft-0.1",
+      "capabilities_requested": [
+        "config.read",
+        "config.write",
+        "events.subscribe",
+        "state.read",
+        "state.write",
+        "entities.read",
+        "entities.write",
+        "issues.read",
+        "issues.write",
+        "activity.write",
+        "data.register",
+        "actions.register",
+        "tools.register"
+      ],
+      "ui_dashboard_widgets_requested": ["betting-table"],
+      "ui_issue_detail_tabs_requested": [
+        "bos-status",
+        "circuit-state",
+        "gate-results"
+      ],
+      "tools_requested": [
+        "piko:bpi-score",
+        "piko:blueprint-gen",
+        "piko:bpi-blueprint-artifact",
+        "piko:eval-gate",
+        "piko:eval-gate-evidence",
+        "piko:circuit-breaker-observe",
+        "piko:decide"
+      ],
+      "reconciliation_required": true,
+      "reconciliation_note": "All 13 capabilities, 3 UI tabs, and 7 piko tools remain unvalidated against upstream Paperclip per MEM054/MEM058 (plugin registration is fail-closed). T02 upgrade contract must record which capabilities the new upstream revision actually exposes vs which BOS Light requests must be re-validated."
+    },
+
+    "gsdpi_local_adapter": {
+      "path": "adapters/gsdpi-local/",
+      "kind": "paperclip-external-adapter",
+      "purpose": "GSD-Pi local external adapter package — standalone server adapter loaded at startup via Paperclip plugin system per docs/adapters/external-adapters.md.",
+      "reconciliation_required": true,
+      "reconciliation_note": "gsdpi_local is unregistered (MEM046); supported Paperclip readback returns 'Unknown adapter type: gsdpi_local'. T02 must not assume registry readback succeeds against the new upstream without re-validation."
+    },
+
+    "reverse_proxy_signup_lockdown": {
+      "path": "outside-repo (nginx config on VPS)",
+      "kind": "infrastructure-policy",
+      "evidence_local": "P1 in .gsd/KNOWLEDGE.md + R2 + plugin-bos-light/docs references to nginx `location ^/api/auth/sign-up { allow 127.0.0.1/::1; deny all; }`",
+      "reconciliation_required": true,
+      "reconciliation_note": "Signup lockdown is a nginx-layer policy, NOT a Paperclip-layer policy. It must survive any upstream upgrade because it is not stored inside the Paperclip image. T03 deploy step MUST NOT remove or rewrite the nginx vhost; T04 post-upgrade MUST verify the lockdown is still in place (R2).",
+      "fresh_readback_required": true,
+      "fresh_readback_via": "ssh root@87.99.146.178 'nginx -T 2>/dev/null | grep -A3 \"location \\^/api/auth/sign-up\"' (requires explicit user confirmation per S02 fail-closed gate)"
+    },
+
+    "company_template": {
+      "path": "company-template/",
+      "kind": "paperclip-company-package",
+      "purpose": "BOS Light v1.4.1 company template for /BOS divisions",
+      "reconciliation_required": false,
+      "reconciliation_note": "Company templates are content, not runtime code. T02 contract must record template SHA-256 before upgrade and re-import after upgrade only if upstream schema changed."
+    },
+
+    "scripts_and_configs": {
+      "path": "scripts/, configs/, skills/, docs/handoffs/, docs/BOS_Light_v1_4_*",
+      "kind": "orchestration-and-doctrine",
+      "purpose": "BOS Light doctrine, handoffs, and probe scripts. Not part of Paperclip runtime.",
+      "reconciliation_required": false,
+      "reconciliation_note": "Scripts are local-only and run against Paperclip HTTP API; they are not affected by a Paperclip upstream revision bump. However, scripts/validate_m014_s03_script_hardening.js MUST be re-run after upgrade because R3 stale-id membership may shift if Paperclip rotates company IDs."
+    },
+
+    "plugin_sdk_version_floor": {
+      "kind": "peer-dependency",
+      "value": "@paperclipai/plugin-sdk (optional peer)",
+      "reconciliation_required": true,
+      "reconciliation_note": "T02 upgrade contract must record the SDK floor the new upstream revision requires and whether plugin-bos-light still satisfies it. If the new upstream drops or renames a capability used by plugin-bos-light (e.g. 'actions.register'), the upgrade MUST be marked incompatible and T03 must NOT deploy until the plugin source is patched and re-tested."
+    }
+  },
+
+  "local_runtime_patch_count": 4,
+
+  "rollout_safety_constraints": {
+    "policy": "Constraints inherited from paperclip-runtime.lock.json and the M014 S02 forensic verdict. These MUST remain in force through T02-T04; the upgrade contract MUST reference every one of them by name.",
+    "inherited_constraints": [
+      {
+        "id": "LFP-LF-01",
+        "source": "paperclip-runtime.lock.json",
+        "rule": "verified_base_url and canonical_company_id MUST be null until a fresh authenticated readback promotes them; mutation scripts refuse to run with null values unless PAPERCLIP_COMPANY_ID_OVERRIDE=allow is set"
+      },
+      {
+        "id": "LFP-LF-02",
+        "source": "paperclip-runtime.lock.json + R2 + P1",
+        "rule": "Public sign-up (POST /api/auth/sign-up) MUST NOT be invoked against the public host for recon; nginx lockdown is the source of truth and MUST remain in place"
+      },
+      {
+        "id": "LFP-LF-03",
+        "source": "paperclip-runtime.lock.json",
+        "rule": "PAPERCLIP_API_KEY is REJECTED as an auth source; session-cookie is the only allowed mode"
+      },
+      {
+        "id": "LFP-S02-01",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "VPS forensic verdict was H-INCONCLUSIVE with zero captures; explicit user confirmation is required before any future VPS read-only probe"
+      },
+      {
+        "id": "LFP-S02-02",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "Zero-capture state means no failure hypothesis (H-WIPE, H-RECREATE, H-AUTH-DRIFT, H-OWNERSHIP-DRIFT, H-PROXY-DRIFT) can be promoted; all six R3 stale IDs remain unverified as live"
+      },
+      {
+        "id": "LFP-S02-03",
+        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "rule": "T01 baseline cannot assert wipe/recreate/auth-drift/ownership-drift/proxy-drift; it can only assert upstream-identity, local-patches-detected, and fresh-readback-required"
+      }
+    ]
+  },
+
+  "downstream_handoff": {
+    "S04_T02_upgrade_contract": {
+      "uses": [
+        "official_upstream_identity.latest_release_tag_observed",
+        "official_upstream_identity.upstream_commit_sha_for_latest_release",
+        "live_runtime_observed.historical_observed_git_describe",
+        "live_runtime_observed.historical_observed_git_commit_sha",
+        "live_runtime_observed.current_branch",
+        "local_runtime_patches_detected",
+        "rollout_safety_constraints.inherited_constraints"
+      ],
+      "must_pin_revision_to": "official_upstream_identity.upstream_commit_sha_for_latest_release (or a chosen known-good SHA inside the same release line)",
+      "must_reconcile_each_local_patch": true
+    },
+    "S04_T03_deploy": {
+      "must_verify_nginx_lockdown_after_upgrade": true,
+      "must_capture_rollback_image": true,
+      "must_capture_rollback_config": true
+    },
+    "S04_T04_native_smoke": {
+      "must_compare_against_baseline": true,
+      "must_not_promote_unconfirmed_plugin_surfaces": true,
+      "must_not_reuse_baseline_for_promotion_outside_bounded_native_artifact_surfaces": true
+    }
+  },
+
+  "anti_replay": {
+    "policy": "Each baseline capture is one-shot. Reusing a baseline for a different upgrade cycle requires a fresh T01 capture with a new generated timestamp and a new fresh_readback_required=true assertion.",
+    "captured_at": "2026-07-12T17:50:00Z",
+    "captured_by": "GSD auto-mode executor (M014-a9jj46/S04/T01)",
+    "no_credential_seeds": true,
+    "no_session_cookie_seeds": true,
+    "no_full_uuid_echo": true,
+    "redaction_notes": [
+      "Stale UUIDs are recorded as 8-char prefixes only (9feb4c22…, etc.) per the truncation discipline used by the lockfile and S01 truth map.",
+      "Admin email 'kabidenov.a@gmail.com' is the public-by-policy owner email; it is not a credential and appears verbatim in HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md and the S01 truth map.",
+      "Telegram chat id -1003930272893 is recorded in MEM053 but is NOT echoed in this artifact to avoid secret-leak regression in the validator."
+    ]
+  }
+}

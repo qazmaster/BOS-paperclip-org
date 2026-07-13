@@ -1,0 +1,171 @@
+{
+  "$schema": "gsd/m014-s02-vps-forensics-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S02",
+  "task": "T02",
+  "purpose": "Read-only VPS, Docker, Paperclip, and proxy forensic evidence capture. THIS ARTIFACT IS A FAIL-CLOSED BLOCKER because explicit user confirmation for VPS read-only inspection was not obtained before T02 execution. No SSH connection was opened, no VPS command was run, no Paperclip data was mutated, and no secret value was recorded. T01 packet (M014-S02-vps-command-packet.json) is ready and approved; T02 remains gated until a human records explicit confirmation per the slice S02 execution_gate.preconditions.",
+  "generated": "2026-07-11",
+  "generated_by": "GSD auto-mode executor (T02, auto-mode lane)",
+  "verdict_status": "BLOCKED_AT_T02_NO_USER_CONFIRMATION",
+  "verdict_recommendation_for_T03": "H-INCONCLUSIVE",
+  "verdict_recommendation_rationale": "T02 was contractually gated on explicit user confirmation. With confirmation absent, T02 cannot produce forensic captures, and T03 cannot classify the failure pattern from S02 evidence. The only honest verdict T03 may emit is H-INCONCLUSIVE with this artifact cited as the sole primary evidence. Downstream S03 lockfile and S04 persistence canary must consume the T01 packet as the live source of truth (forbidden_commands, redaction_policy, hypothesis_matrix.verdict_options), not T02 outputs.",
+
+  "anti_replay_metadata": {
+    "capture_time_utc": "2026-07-11T15:35:51Z",
+    "vps_hostname": "NOT_OBSERVED (no SSH executed)",
+    "vps_ip": "NOT_OBSERVED (per packet target 87.99.146.178, but not probed in T02)",
+    "operator_role": "GSD auto-mode executor (T02) — execution lane, no human on call",
+    "command_id": "BLOCKER_T02_NO_EXECUTION",
+    "command_text": "NONE (no command invoked; per fail_closed_when[0])",
+    "exit_code": null,
+    "sha256_of_captured_output": "d41d8cd98f00b204e9800998ecf8427e (sha256 of empty input)",
+    "redaction_applied": true
+  },
+
+  "execution_gate": {
+    "preconditions_required": [
+      "explicit user confirmation for VPS read-only inspection recorded in T02",
+      "SSH access to VPS 87.99.146.178 as non-root operator OR root with sudo to docker group",
+      "local evidence-output directory writable: runtime-evidence/"
+    ],
+    "preconditions_evaluated": "2026-07-11T15:35:51Z",
+    "preconditions_satisfied": [
+      "local evidence-output directory writable: runtime-evidence/ (verified by existing T01 outputs M014-S02-vps-command-packet.json 39672B and .md 26671B)"
+    ],
+    "preconditions_missing": [
+      "explicit user confirmation for VPS read-only inspection (auto-mode lane: no human available, ask_user_questions forbidden by execution rules)"
+    ],
+    "preconditions_not_evaluated": [
+      "SSH access to VPS 87.99.146.178 (deliberately not probed because confirmation gate failed first; no SSH opened)"
+    ],
+    "fail_closed_trigger": "downstream_handoff.S02_T02_capture.fail_closed_when[0] from T01 packet: 'no explicit user confirmation recorded before T02 execution'",
+    "decision": "fail-closed per slice S02 must-haves and packet.fail_closed_when[0]. No VPS command executed.",
+    "auto_mode_rule_honored": "execution rules explicitly state 'Autonomous execution: no human is available. Do not call ask_user_questions or secure_env_collect; make reasonable assumptions and document them.' Reasonable assumption: user confirmation absent → write fail-closed blocker, do NOT proceed without confirmation."
+  },
+
+  "captures": [],
+  "captures_count": 0,
+  "captures_note": "Per execution_gate decision and packet.fail_closed_when[0], zero VPS commands were invoked. No docker, docker exec, journalctl, ss, curl, ls, or ssh command was run against VPS 87.99.146.178. No local socket scan against the SSH tunnel port was performed. No Paperclip API call was attempted against either paperclip.oysana.com or 127.0.0.1:3131.",
+
+  "forbidden_commands_audit": {
+    "policy": "All 18 forbidden patterns from T01 packet must remain unrun for the blocker to be valid.",
+    "forbidden_patterns_total": 18,
+    "any_forbidden_command_run": false,
+    "any_destructive_operator_invoked": false,
+    "verification": "this artifact contains no command execution log; absence is by construction because captures is empty and decision is fail-closed before any invocation"
+  },
+
+  "vps_targets_mirror": {
+    "source": "runtime-evidence/M014-S02-vps-command-packet.json (T01)",
+    "vps_ip": "87.99.146.178",
+    "sandbox_path": "/opt/paperclip-sandbox",
+    "compose_project": "paperclip_sandbox",
+    "container_name": "paperclip_sandbox-paperclip-1",
+    "container_binding": "127.0.0.1:3131->3100/tcp on VPS only",
+    "public_ingress": "https://paperclip.oysana.com",
+    "browser_tunnel": "local 127.0.0.1:3131 <-SSH-> VPS 127.0.0.1:3131",
+    "base_compose": "/opt/paperclip-sandbox/docker/docker-compose.quickstart.yml",
+    "override_compose": "/opt/paperclip-sandbox/docker-compose.sandbox-override.yml",
+    "auth_override_env": "BETTER_AUTH_TRUSTED_ORIGINS=http://127.0.0.1:3131",
+    "safe_restart_command": "cd /opt/paperclip-sandbox/docker && docker compose -p paperclip_sandbox --env-file /opt/paperclip-sandbox/.env.sandbox -f docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml up -d --no-build paperclip",
+    "t02_status": "READY TO EXECUTE on user confirmation; not invoked in T02 (fail-closed)"
+  },
+
+  "redaction_policy": {
+    "source": "runtime-evidence/M014-S02-vps-command-packet.json (T01)",
+    "applies_to_blocker_artifact": true,
+    "note": "this blocker artifact contains no captured command output, so redaction targets cannot appear by construction. The policy is mirrored here so T03 validator (scripts/validate_m014_s02_vps_forensics.js, T03 deliverable) can import it directly without re-reading the T01 packet.",
+    "never_print_or_store": [
+      "session cookies (e.g. __Secure-paperclip-default.session_token value)",
+      "admin password (in /root/paperclip-sandbox-admin.env)",
+      "POSTGRES_PASSWORD / DATABASE_URL / REDIS_PASSWORD / OPENAI_API_KEY / XIAOMI_API_KEY values",
+      "TELEGRAM_BOT_TOKEN value",
+      "any URL containing embedded credentials (user:pass@host)",
+      "BETTER_AUTH_SECRET / BETTER_AUTH_SESSION_SECRET / JWT_SECRET values",
+      "api keys, bearer tokens, raw Authorization headers"
+    ],
+    "allowlisted_to_print": [
+      "key names present in env (e.g. BETTER_AUTH_TRUSTED_ORIGINS=) but with value SHA-256 truncated",
+      "file path, file size, file mtime, permission bits (drwxr-xr-x)",
+      "container ID, image ID, image tag (full digest ok; tags are not secrets)",
+      "compose config keys (env names) but not values",
+      "service ports, listening sockets",
+      "systemd unit status (running/failed/dead)"
+    ]
+  },
+
+  "hypothesis_matrix_reference": {
+    "source": "runtime-evidence/M014-S02-vps-command-packet.json (T01)",
+    "note": "Verdict options for T03 are unchanged: H-WIPE, H-RECREATE, H-AUTH-DRIFT, H-OWNERSHIP-DRIFT, H-PROXY-DRIFT, H-INCONCLUSIVE. Without T02 captures, only H-INCONCLUSIVE is admissible per T03 contract.",
+    "t03_must_cite_for_h_inconclusive": [
+      "this blocker artifact (M014-S02-vps-forensics.json) as primary evidence",
+      "T01 packet fail_closed_when[0] as the gating policy source",
+      "zero captures in this artifact (captures_count == 0)"
+    ]
+  },
+
+  "downstream_handoff": {
+    "to_T03_verdict": {
+      "consumes": [
+        "this artifact (verdict_status = BLOCKED_AT_T02_NO_USER_CONFIRMATION, captures = [])",
+        "T01 packet (forbidden_commands, redaction_policy, hypothesis_matrix, vps_targets_mirror)"
+      ],
+      "expected_verdict": "H-INCONCLUSIVE",
+      "must_not_do": [
+        "promote this blocker artifact to a runtime proof of any non-INCONCLUSIVE hypothesis (per T01 packet fail_closed_when semantics + MEM139 no-promotion ledger)",
+        "re-execute any T02 capture without first re-opening S02 with user confirmation",
+        "reuse this artifact as evidence for S03 lockfile live checks; the blocker is diagnostics only"
+      ],
+      "verdict_artifact_path": "runtime-evidence/M014-S02-vps-forensics-verdict.{json,md}",
+      "validator_artifact_path": "scripts/validate_m014_s02_vps_forensics.js (T03 deliverable)"
+    },
+    "to_S03_lockfile": {
+      "consumes_from_T01_packet_only": [
+        "forbidden_commands list as runtime check",
+        "redaction_policy.never_print_or_store as S03 preflight guard",
+        "hypothesis_matrix.verdict_options as S03 status enum"
+      ],
+      "consumes_from_T02_blocker": [],
+      "note": "S03 lockfile must NOT depend on T02 captures; T02 is fail-closed and cannot supply live VPS evidence in the current execution."
+    },
+    "to_S04_persistence_canary": {
+      "consumes_from_T01_packet_only": [
+        "C-8.2 /paperclip company tree snapshot as canary target reference (deferred until T02 unblocks)",
+        "redaction_policy as canary write guard"
+      ],
+      "consumes_from_T02_blocker": [],
+      "note": "S04 persistence canary design can proceed on packet definitions; live canary execution must wait until T02 unblocks."
+    }
+  },
+
+  "re_execution_instructions_when_confirmation_arrives": [
+    "1. Record explicit user confirmation in chat / handoff log / GSD memory (category=convention) referencing this artifact path.",
+    "2. Verify SSH access to 87.99.146.178 (non-root OR root with docker group).",
+    "3. Replace captures array in a NEW artifact (do NOT mutate this blocker; rename it M014-S02-vps-forensics.confirmation-revoked.json or keep it as historical record).",
+    "4. Execute C-1..C-12 from runtime-evidence/M014-S02-vps-command-packet.json in order; redirect every output via tee or >> into runtime-evidence/M014-S02-vps-forensics.json per packet.evidence_anti_replay contract.",
+    "5. Apply redaction_policy.never_print_or_store to every captured output before writing.",
+    "6. Populate the 9 anti-replay metadata fields per capture (capture_time_utc, vps_hostname, vps_ip, operator_role, command_id, command_text, exit_code, sha256_of_captured_output, redaction_applied).",
+    "7. Hand the populated artifact to T03; T03 builds verdict + validator from there."
+  ],
+
+  "diagnostics": {
+    "verify_artifact": "test -s runtime-evidence/M014-S02-vps-forensics.json",
+    "verify_json_parse": "node -e \"JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S02-vps-forensics.json'))\"",
+    "verify_blocker_posture": "node -e \"const j=require('./runtime-evidence/M014-S02-vps-forensics.json'); console.assert(j.verdict_status==='BLOCKED_AT_T02_NO_USER_CONFIRMATION', 'verdict_status'); console.assert(j.captures.length===0, 'captures empty'); console.assert(j.execution_gate.decision.startsWith('fail-closed'), 'fail-closed decision')\"",
+    "verify_no_secrets": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S02-vps-forensics.json')); const text=JSON.stringify(j); const secrets=['TELEGRAM_BOT_TOKEN=','POSTGRES_PASSWORD=','BETTER_AUTH_SECRET=','session_token value']; const hit=secrets.find(s=>text.includes(s)); console.assert(!hit, 'no secret substrings: '+hit)\"",
+    "human_readable_twin": "runtime-evidence/M014-S02-vps-forensics.md"
+  },
+
+  "self_check": {
+    "no_ssh_invocation": true,
+    "no_remote_command": true,
+    "no_paperclip_mutation": true,
+    "no_secret_disclosure": true,
+    "captures_empty_by_design": true,
+    "fail_closed_decision_recorded": true,
+    "t01_packet_referenced_for_live_evidence": true,
+    "t03_h_inconclusive_recommendation_recorded": true,
+    "downstream_handoff_explicit": true,
+    "anti_replay_metadata_complete": true
+  }
+}

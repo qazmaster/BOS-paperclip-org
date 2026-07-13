@@ -1,0 +1,190 @@
+{
+  "$schema": "gsd/m014-s03-runtime-lockfile-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S03",
+  "task": "T01",
+  "purpose": "Runtime source-of-truth contract for Paperclip mutation scripts. Records the verified target, provisional/verified company identity, stale and disposable IDs, compose project, container, safe restart command, and forbidden commands so that downstream mutation flows cannot silently mutate Paperclip against stale or unverified state.",
+  "generated": "2026-07-11",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S03/T01)",
+  "consumes": [
+    "runtime-evidence/M014-S01-runtime-truth-map.json",
+    "runtime-evidence/M014-S02-vps-forensics-verdict.json"
+  ],
+  "freshness_posture": {
+    "policy": "snapshot",
+    "as_of": "2026-07-11",
+    "must_reprobe_after": "2026-07-11T00:00:00Z",
+    "rule_reference": "R3 + R4 in .gsd/KNOWLEDGE.md",
+    "trigger_conditions": [
+      "any new doctrine patch after v1.4.2",
+      "any new runtime evidence past the 2026-06-04 failure window",
+      "any mutation of runtime-evidence/ files cited below",
+      "any new GSD memory entry tagged Paperclip-runtime-stability",
+      "any change to vps_targets in M014-S01-runtime-truth-map.json",
+      "any change to the stale-id ledger (R3)"
+    ]
+  },
+
+  "runtime_target": {
+    "public_ingress": "https://paperclip.oysana.com",
+    "vps_ip": "87.99.146.178",
+    "sandbox_path": "/opt/paperclip-sandbox",
+    "compose_project": "paperclip_sandbox",
+    "container_name": "paperclip_sandbox-paperclip-1",
+    "container_binding": "127.0.0.1:3131->3100/tcp on VPS only",
+    "browser_tunnel": "local 127.0.0.1:3131 <-SSH-> VPS 127.0.0.1:3131",
+    "base_compose": "/opt/paperclip-sandbox/docker/docker-compose.quickstart.yml",
+    "override_compose": "/opt/paperclip-sandbox/docker-compose.sandbox-override.yml",
+    "auth_override_env": "BETTER_AUTH_TRUSTED_ORIGINS=http://127.0.0.1:3131",
+    "verified_base_url": null,
+    "verified_base_url_status": "provisional-pending-fresh-readback",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "authenticated GET on the public ingress, OR ssh-tunnel probe against 127.0.0.1:3131"
+  },
+
+  "company_identity": {
+    "canonical_company_id": null,
+    "canonical_company_id_status": "provisional-pending-fresh-readback",
+    "canonical_company_id_label": "/BOS (current canonical company for BOS Light v1.4.1 agent creation)",
+    "verified_company_id": null,
+    "verified_company_id_status": "provisional-pending-fresh-readback",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "Postgres `SELECT id FROM company WHERE ...` OR authenticated Paperclip GET /api/companies",
+    "policy": "canonical_company_id and verified_company_id MUST be null until a fresh authenticated readback confirms a live company UUID. Mutation scripts MUST refuse to run with a null canonical_company_id unless explicitly overridden by an authenticated operator with PAPERCLIP_COMPANY_ID_OVERRIDE=allow and a same-process visibility check."
+  },
+
+  "stale_company_ids": {
+    "policy": "These IDs are stale per R3 (M014-S01-runtime-truth-map.json) and MUST NOT be used as mutation defaults in any script. They are recorded here so the validator can reject their re-introduction. They may appear in historical docs and S01/S02 evidence as references, but they MUST NEVER appear as a default COMPANY_ID or --company-id fallback in any live mutation path.",
+    "ids": [
+      "9feb4c22-05b9-401e-ba67-0e866e3056da",
+      "43c74adb-b194-44d1-8f8e-ba142544bb9d",
+      "1a194762-0000-4000-8000-000000000000",
+      "7595fd85-0000-4000-8000-000000000000",
+      "7eede16c-0000-4000-8000-000000000000",
+      "8233ea7b-0000-4000-8000-000000000000"
+    ],
+    "rationale_per_id": {
+      "9feb4c22-05b9-401e-ba67-0e866e3056da": "stale-m012-epoch; was M012 canonical default per HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md; became stale mid-M013.",
+      "43c74adb-b194-44d1-8f8e-ba142544bb9d": "stale-m002-epoch; was M002 human-validation window canonical per MEM071; superseded in M012/M013.",
+      "1a194762-0000-4000-8000-000000000000": "historical-runtime-gate; not the agent creation target.",
+      "7595fd85-0000-4000-8000-000000000000": "R3 dead UUID as of 2026-07-08.",
+      "7eede16c-0000-4000-8000-000000000000": "R3 dead UUID as of 2026-07-08.",
+      "8233ea7b-0000-4000-8000-000000000000": "R3 dead UUID as of 2026-07-08."
+    }
+  },
+
+  "disposable_company_ids": {
+    "policy": "Disposable IDs are non-production / throwaway IDs (test fixtures, demo accounts, on-the-fly session probes). They MUST NOT be used as canonical mutation defaults either; if a mutation script is run with a disposable ID, the validator treats it identically to a stale ID and rejects it as a default.",
+    "ids": [],
+    "rationale_per_id": {},
+    "note": "Ledger intentionally starts empty. Any disposable IDs discovered during VPS forensics (S02) or persistence canary (S04) MUST be appended here, with rationale, so future runs can detect their re-introduction as defaults."
+  },
+
+  "auth_modes": {
+    "default_mode": "session-cookie",
+    "allowed": [
+      {
+        "mode": "session-cookie",
+        "status": "confirmed",
+        "evidence": "MEM295 + MEM336 + runtime-evidence/M012-S06-session-auth-readback.json"
+      }
+    ],
+    "rejected": [
+      {
+        "mode": "api-key-bearer (PAPERCLIP_API_KEY)",
+        "status": "rejected",
+        "evidence": "MEM295: API key returns 401 in the current build",
+        "policy": "PAPERCLIP_API_KEY MUST NOT be used as an auth source for mutation scripts. Existing scripts that read PAPERCLIP_API_KEY for legacy reasons must demote it to diagnostic-only and refuse to issue POST/PUT/PATCH/DELETE."
+      }
+    ],
+    "forbidden": [
+      {
+        "mode": "public-sign-up",
+        "status": "forbidden",
+        "evidence": "R2 in .gsd/KNOWLEDGE.md; nginx lockdown at paperclip.oysana.com",
+        "policy": "POST /api/auth/sign-up MUST NOT be called against the public host for recon. Only SSH tunnel to 127.0.0.1:3131 is acceptable for read-only sign-up probes."
+      }
+    ]
+  },
+
+  "safe_restart_command": "cd /opt/paperclip-sandbox/docker && docker compose -p paperclip_sandbox --env-file /opt/paperclip-sandbox/.env.sandbox -f docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml up -d --no-build paperclip",
+
+  "forbidden_commands": [
+    {
+      "command": "docker compose down -v",
+      "reason": "Destructive; removes anonymous volumes."
+    },
+    {
+      "command": "docker volume prune",
+      "reason": "Destructive; wipes Paperclip data volume without confirmation."
+    },
+    {
+      "command": "docker system prune",
+      "reason": "Destructive; wipes unused Docker resources."
+    },
+    {
+      "command": "docker rm",
+      "reason": "Destructive; removes containers."
+    },
+    {
+      "command": "docker volume rm",
+      "reason": "Destructive; removes named volumes."
+    }
+  ],
+  "forbidden_command_rule": "Forbidden on VPS unless explicitly approved for destructive recovery (HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md).",
+
+  "mutation_default_sources": {
+    "policy": "Mutation defaults must come from runtime_target, auth_modes, and company_identity (canonical_company_id or verified_company_id) ONLY. Stale or disposable IDs MUST NEVER appear as defaults. If a script is run without an explicit --company-id override AND the lockfile canonical_company_id is null, the validator/pilot blocks the mutation.",
+    "forbidden_default_sources": [
+      "stale_company_ids.ids",
+      "disposable_company_ids.ids",
+      "any hardcoded UUID literal in a script",
+      "env vars not declared in auth_modes.allowed",
+      "Paperclip API responses fed back as the next mutation's default without a fresh visibility check"
+    ],
+    "explicit_override_required": true,
+    "explicit_override_env": "PAPERCLIP_COMPANY_ID_OVERRIDE",
+    "explicit_override_policy": "PAPERCLIP_COMPANY_ID_OVERRIDE=allow requires (a) the runtime preflight has confirmed target visibility for the override value, and (b) the operator recorded an explicit confirmation reason. Both must be present before the override is honored."
+  },
+
+  "validator_classes": [
+    "schema_top_level_keys",
+    "runtime_target_required",
+    "company_identity_provisional",
+    "stale_id_membership",
+    "disposable_id_membership",
+    "auth_modes_consistent",
+    "safe_restart_present",
+    "forbidden_commands_complete",
+    "no_stale_id_in_mutation_defaults",
+    "freshness_posture_present"
+  ],
+
+  "downstream_handoff": {
+    "S03_T02_preflight": {
+      "uses": [
+        "runtime_target",
+        "company_identity",
+        "stale_company_ids.ids",
+        "disposable_company_ids.ids",
+        "auth_modes",
+        "mutation_default_sources"
+      ]
+    },
+    "S03_T03_script_hardening": {
+      "uses": [
+        "stale_company_ids.ids",
+        "disposable_company_ids.ids",
+        "mutation_default_sources.forbidden_default_sources"
+      ]
+    },
+    "S03_T04_audit": {
+      "uses": [
+        "stale_company_ids.ids",
+        "disposable_company_ids.ids",
+        "forbidden_commands",
+        "mutation_default_sources"
+      ]
+    }
+  }
+}

@@ -1,0 +1,325 @@
+{
+  "$schema": "gsd/m014-s05-hermes-baseline-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S05",
+  "task": "T01",
+  "purpose": "Hermes pre-upgrade baseline snapshot. Captures the official NousResearch upstream identity, the historical observed live runtime identity (Xiaomi Mimo), the local Paperclip hermes_local adapter compatibility patches, the provider registry and profiles currently in use, and the fresh-readback requirements that gate any later upgrade. Side-effect-free: read-only, no network calls to live Paperclip, no docker mutation, no secret capture.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S05/T01)",
+  "consumes": [
+    "runtime-evidence/M002-S08-hermes-cli-environment-remediation.json",
+    "runtime-evidence/M005-S01-hermes-xiaomi-runtime-probe-live-proof.json",
+    "runtime-evidence/M014-S01-runtime-truth-map.json",
+    "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "baseline",
+  "baseline_phase_verdict": "PROVISIONAL_PENDING_FRESH_READBACK",
+
+  "freshness_posture": {
+    "policy": "snapshot",
+    "as_of": "2026-07-12",
+    "must_reprobe_after": "2026-07-12T00:00:00Z",
+    "rule_reference": "R3 + R4 in .gsd/KNOWLEDGE.md",
+    "trigger_conditions": [
+      "any NousResearch hermes-agent PyPI release past 0.18.2",
+      "any new runtime evidence past the 2026-06-04 failure window",
+      "any mutation of runtime-evidence/M002-S08-hermes-cli-environment-remediation.json or M005-S01-hermes-xiaomi-runtime-probe-live-proof.json",
+      "any new GSD memory entry tagged Hermes or NousResearch",
+      "any change to /paperclip/hermes-runtime on the live VPS without going through the hermes-rollback path",
+      "any change to the XIAOMI_API_KEY / XIAOMI_BASE_URL or PAPERCLIP adapterConfig.hermesLocal block",
+      "any new doc on the Paperclip process adapter for hermes_local that changes the CLI invocation contract"
+    ]
+  },
+
+  "official_upstream_identity": {
+    "policy": "Verified by independent remote readback of the canonical upstream repository and PyPI project page. No interaction with the live VPS or paperclip.oysana.com runtime.",
+    "verification_method": "fetch_page on https://pypi.org/project/hermes-agent/ and https://github.com/NousResearch/hermes-agent",
+    "verification_timestamp": "2026-07-12",
+    "verified": true,
+    "canonical_repo_url": "https://github.com/NousResearch/hermes-agent",
+    "canonical_repo_path": "github.com/NousResearch/hermes-agent",
+    "canonical_repo_owner": "NousResearch",
+    "canonical_repo_name": "hermes-agent",
+    "canonical_pypi_project": "hermes-agent",
+    "canonical_pypi_url": "https://pypi.org/project/hermes-agent/",
+    "canonical_homepage": "https://hermes-agent.nousresearch.com/",
+    "canonical_docs_url": "https://hermes-agent.nousresearch.com/docs",
+    "license": "MIT",
+    "license_spdx": "MIT",
+    "author_declared": "Nous Research",
+    "pypi_maintainers": ["dakota-nous", "sidbin"],
+    "upstream_remote_aliases": ["NousResearch/hermes-agent", "nousresearch/hermes-agent"],
+    "latest_release_tag_observed": "0.18.2",
+    "latest_release_published_at": "2026-07-08",
+    "latest_release_source": "PyPI project page",
+    "python_constraint_observed": ">=3.11,<3.14",
+    "upstream_branch_default": "main",
+    "upstream_repo_url": "https://github.com/NousResearch/hermes-agent",
+    "upstream_releases_url": "https://github.com/NousResearch/hermes-agent/releases",
+    "upstream_releases_url_source": "fetch_page",
+    "fresh_readback_required": false,
+    "fresh_readback_via": "PyPI simple API or GitHub releases page"
+  },
+
+  "pinned_target_revision": {
+    "policy": "Revision the runtime WAS pinned at before this baseline. Determined from M002-S08 pip install log (May 29, 2026). The new pinned target is selected in T02; this field only records the historical pin.",
+    "currently_pinned": "hermes-agent==0.15.2",
+    "currently_pinned_version_label": "Hermes Agent v0.15.2 (2026.5.29.2)",
+    "currently_pinned_release_date": "2026-05-29",
+    "currently_pinned_source": "M002-S08 step isolated_python_userbase_install run log stdout tail: 'Successfully installed hermes-agent-0.15.2'",
+    "currently_pinned_pypi_url": "https://pypi.org/project/hermes-agent/0.15.2/",
+    "pin_to_upstream_drift": "4 upstream PyPI releases behind (0.16.x, 0.17.x, 0.18.x including 0.18.2 on 2026-07-08)",
+    "new_pinned_target_selection_deferred_to": "T02"
+  },
+
+  "local_paperclip_checkout": {
+    "policy": "Hermes is NOT vendored into this repository. The Paperclip container consumes hermes-agent from PyPI at runtime under /paperclip/hermes-runtime/. There is no local Hermes fork or mirror in the working tree.",
+    "vendored_checkout_present": false,
+    "vendored_checkout_path": null,
+    "vendored_checkout_branch": null,
+    "vendored_checkout_commit_sha": null,
+    "vendored_checkout_remote_url": null,
+    "local_references_to_upstream_only": [
+      {
+        "kind": "plugin-capability-evidence",
+        "path": "plugin-bos-light/capabilities.paperclip-runtime.json",
+        "snippet": "hermes_local adapterType ... provider xiaomi ... model mimo-v2.5-pro",
+        "evidence": "Capability ledger references hermes_local with xiaomi provider; downstream BOS Light contract consumes the adapter output."
+      },
+      {
+        "kind": "docs-reference",
+        "path": "docs/archive/11_HERMES_BOS_AGENTS_SMOKE.md",
+        "snippet": "Hermes / Hermes-paperclip CLI surface under /paperclip/hermes-runtime/bin",
+        "evidence": "Handoff doc records the Hermes CLI smoke contract used by Paperclip."
+      },
+      {
+        "kind": "harness-paths",
+        "path": "scripts/run_s02_hermes_smoke.py and scripts/run_s10_hermes_runtime_smoke.py",
+        "snippet": "hermesCommand: /paperclip/hermes-runtime/bin/hermes-paperclip",
+        "evidence": "Local smoke scripts embed the wrapper path expected on the VPS."
+      }
+    ]
+  },
+
+  "live_runtime_observed": {
+    "policy": "Live Hermes runtime identity as observed in the LAST authenticated readback window. Captured here as HISTORICAL OBSERVATION ONLY; not promoted to authoritative. S02 verdict is H-INCONCLUSIVE because T02 was blocked without user confirmation, so all live fields below MUST be re-confirmed via authenticated readback before T02 (upgrade contract) is allowed to fire.",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "Hermes CLI under /paperclip/hermes-runtime/bin/hermes-paperclip, or SSH tunnel to VPS 127.0.0.1:3131 -> Paperclip container exec",
+
+    "historical_runtime_version": "Hermes Agent v0.15.2 (2026.5.29.2)",
+    "historical_runtime_version_source": "M002-S08 installed_runtime.hermes_version_observed + stdout tail of hermes-paperclip wrapper invocation",
+    "historical_runtime_version_epoch": "2026-05-29T15:24:18.128762Z",
+    "historical_runtime_installation_path": "/paperclip/hermes-runtime",
+    "historical_runtime_userbase": "/paperclip/hermes-runtime/lib/python3.13/site-packages",
+    "historical_runtime_wrapper_path": "/paperclip/hermes-runtime/bin/hermes-paperclip",
+    "historical_runtime_python": "Python 3.13.5",
+    "historical_runtime_openai_sdk": "2.24.0",
+    "historical_runtime_install_mechanism": "pip install --user --break-system-packages hermes-agent==0.15.2 with PYTHONUSERBASE=/paperclip/hermes-runtime under PEP 668 override (Debian externally-managed); see M002-S08 step isolated_python_userbase_install",
+    "historical_runtime_container": "paperclip_sandbox-paperclip-1",
+    "historical_runtime_container_binding": "127.0.0.1:3131->3100/tcp on VPS only",
+    "historical_runtime_public_ingress": "https://paperclip.oysana.com",
+    "historical_runtime_admin_email": "kabidenov.a@gmail.com",
+    "historical_runtime_pip_state": "Up to date (no transitive drift detected at install time per M002-S08 stdout)",
+
+    "current_runtime_version": null,
+    "current_runtime_version_source": "no-fresh-readback",
+    "current_pip_state": null,
+    "current_pip_state_source": "no-fresh-readback"
+  },
+
+  "provider_registry_observed": {
+    "policy": "Provider registry as observed in the LAST Paperclip adapterConfig for hermes_local. Captured here as HISTORICAL OBSERVATION ONLY. The provider registry for hermes_local is a Paperclip-side configuration that maps the canonical upstream hermes-agent CLI invocation to an outbound model endpoint. The current registry carries one PRIMARY provider (xiaomi/mimo) and one fallback provider (openai-codex/gpt-5.3-codex).",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "Authenticated GET on Paperclip adapter registry; or fresh exec of /paperclip/hermes-runtime/bin/hermes --list-providers on the live VPS",
+    "providers_observed": [
+      {
+        "slot": "primary",
+        "provider": "xiaomi",
+        "model": "mimo-v2.5-pro",
+        "endpoint_class": "openai-compatible",
+        "endpoint_secret_ref": "XIAOMI_BASE_URL",
+        "auth_secret_ref": "XIAOMI_API_KEY",
+        "evidence": "M005-S01-hermes-xiaomi-runtime-probe-live-proof.json + runtime-evidence/M002-S02-hermes-environment.json",
+        "current_live_state": "historical-only; must be re-confirmed before T03"
+      },
+      {
+        "slot": "fallback",
+        "provider": "openai-codex",
+        "model": "gpt-5.3-codex",
+        "endpoint_class": "codex-cli-local",
+        "endpoint_secret_ref": null,
+        "auth_secret_ref": "OPENAI_API_KEY",
+        "evidence": "runtime-evidence/M002-S10-hermes-runtime-execution-proof.json + M002-S08 codex_host_diagnostic step",
+        "current_live_state": "historical-only; must be re-confirmed before T02"
+      }
+    ],
+    "providers_observed_count": 2,
+    "provider_alias_allowlist_observed": ["xiaomi", "openai-codex"],
+    "endpoint_class_observed": ["openai-compatible", "codex-cli-local"],
+    "model_spellings_observed": ["mimo-v2.5-pro", "gpt-5.3-codex"]
+  },
+
+  "adapter_flags_observed": {
+    "policy": "Adapter flags as exposed by the Paperclip process adapter for hermes_local. These are the Paperclip-side knobs that downstream BOS Light agents see; the underlying hermes-agent CLI flags live under /paperclip/hermes-runtime and are not directly exposed.",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "Authenticated GET on /api/companies/{companyId}/adapters/hermes_local/test-environment",
+    "adapter_type": "hermes_local",
+    "adapter_flags_observed": [
+      {"flag": "hermesCommand", "value": "/paperclip/hermes-runtime/bin/hermes-paperclip", "evidence": "M002-S10 + M005-S01"},
+      {"flag": "provider", "value": "xiaomi (primary) / openai-codex (fallback)", "evidence": "M002-S10 + M005-S01"},
+      {"flag": "model", "value": "mimo-v2.5-pro (primary) / gpt-5.3-codex (fallback)", "evidence": "M002-S10 + M005-S01"},
+      {"flag": "timeoutSec", "value": "300 (xiaomi) / 90 (openai-codex)", "evidence": "M002-S10 + M005-S01"},
+      {"flag": "graceSec", "value": "5", "evidence": "M002-S10 + M005-S01"}
+    ],
+    "adapter_flags_count": 5
+  },
+
+  "profiles_observed": {
+    "policy": "Profiles (named configuration bundles) for hermes_local as observed in M002-S08 and M005-S01. Profiles map to distinct hermes-paperclip invocations with different provider/model/timeout tuples. S05 T03 will introduce a new profile for MiniMax M3.",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "Authenticated GET on Paperclip adapter registry",
+    "profiles_observed": [
+      {
+        "name": "xiaomi-mimo-v2.5-pro",
+        "provider": "xiaomi",
+        "model": "mimo-v2.5-pro",
+        "endpoint_secret_ref": "XIAOMI_BASE_URL",
+        "auth_secret_ref": "XIAOMI_API_KEY",
+        "evidence": "M005-S01 live proof",
+        "status": "historical-primary; to be deprecated by MiniMax M3 in T03"
+      },
+      {
+        "name": "openai-codex-gpt-5.3",
+        "provider": "openai-codex",
+        "model": "gpt-5.3-codex",
+        "endpoint_secret_ref": null,
+        "auth_secret_ref": "OPENAI_API_KEY",
+        "evidence": "M002-S10 + M002-S08 codex_host_diagnostic",
+        "status": "historical-fallback"
+      }
+    ],
+    "profiles_observed_count": 2
+  },
+
+  "xiaomi_mimo_behavior_observed": {
+    "policy": "Behavior observed for the Xiaomi/Mimo profile under M005-S01. Used as the BEFORE baseline for the MiniMax M3 migration in T03. All values below are HISTORICAL OBSERVATIONS only; the live runtime may have drifted since 2026-06-01.",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "Bounded Paperclip heartbeat_run with hermes_local adapter configured to xiaomi provider; expect session id format YYYYMMDD_HHMMSS_<rand>",
+    "session_id_format_observed": "YYYYMMDD_HHMMSS_<6hex> (e.g. 20260601_023233_1fa370)",
+    "stdout_marker_observed": "Hermes Agent (model=mimo-v2.5-pro, timeout=300s)",
+    "exit_code_observed": 0,
+    "timeout_observed": false,
+    "wake_count_delta_observed": 1,
+    "result_json_observed": {},
+    "result_json_observed_status": "empty-object - the published proof is stdout/session based, not resultJson.bos based; per R5/R6 BOS Light standards this is NOT a passing BOS-shaped result",
+    "bypass_status_observed": "denying command (timeout gating observed in early probes)",
+    "rollback_capability_observed": "M002-S08 retains hermes-agent at /paperclip/hermes-runtime; previous version not pinned to a separate userbase; rollback requires reinstall of the previous wheel"
+  },
+
+  "local_paperclip_adapter_compatibility_patches": {
+    "policy": "Local Paperclip adapter-layer compatibility patches that allow the upstream hermes-agent CLI to be invoked under Paperclip. These patches live in the Paperclip image, not in this repo, but they ARE required for hermes_local to function and MUST be re-verified after any upgrade.",
+    "fresh_readback_required": true,
+    "fresh_readback_via": "Read of /paperclip/hermes-runtime/bin/hermes-paperclip + Paperclip process adapter source diff",
+    "patches_observed": [
+      {
+        "kind": "pyuserbase_wrapper",
+        "id": "LHA-PYUSERBASE-WRAPPER",
+        "summary": "Wrapper at /paperclip/hermes-runtime/bin/hermes-paperclip exports PYTHONUSERBASE=/paperclip/hermes-runtime and re-invokes the upstream hermes CLI from the userbase.",
+        "evidence": "M002-S08 step wrapper_install",
+        "reconciliation_required": true,
+        "status": "historical"
+      },
+      {
+        "kind": "pep668_install_override",
+        "id": "LHA-PEP668-OVERRIDE",
+        "summary": "First-time install used pip --break-system-packages against /paperclip/hermes-runtime because Debian Python is externally managed. This override must NOT be re-applied at upgrade time unless explicitly approved.",
+        "evidence": "M002-S08 step isolated_python_userbase_install",
+        "reconciliation_required": true,
+        "status": "historical"
+      },
+      {
+        "kind": "adapter_cli_contract",
+        "id": "LHA-ADAPTER-CLI-CONTRACT",
+        "summary": "Paperclip process adapter for hermes_local calls hermes-paperclip with provider/model/timeoutSec/graceSec in adapterConfig. Output is captured as stdout/stderr excerpts and as session id; resultJson.bos must be produced by the upstream hermes CLI itself.",
+        "evidence": "M002-S10 + M005-S01 + Paperclip /llms/agent-configuration/hermes_local.txt",
+        "reconciliation_required": true,
+        "status": "historical"
+      },
+      {
+        "kind": "secret_ref_envelope",
+        "id": "LHA-SECRET-REF-ENVELOPE",
+        "summary": "XIAOMI_API_KEY and XIAOMI_BASE_URL are passed through Paperclip secret_ref envelope; the adapter never sees the resolved values in the rendered adapterConfig. Migration to MiniMax M3 must keep the same secret_ref envelope shape.",
+        "evidence": "M005-S01 inputs.xiaomi_api_key_secret_ref_present + inputs.xiaomi_base_url_secret_ref_present",
+        "reconciliation_required": true,
+        "status": "historical"
+      }
+    ],
+    "patch_count": 4,
+    "reconciliation_required_count": 4
+  },
+
+  "credential_redaction_posture": {
+    "policy": "S05 baseline MUST NOT contain any credential value or token shape. The following substrings would trigger a redaction failure.",
+    "forbidden_credential_substring_shapes": [
+      "XIAOMI_API_KEY=",
+      "OPENAI_API_KEY=",
+      "XIAOMI_BASE_URL=",
+      "Authorization: Bearer ",
+      "sk-",
+      "tp-"
+    ],
+    "forbidden_full_uuid_literal_shape": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    "approved_uuid_allowlist": [
+      "43c74adb-b194-44d1-8f8e-ba142544bb9d (M002-S08/M005-S01 historical company; present in evidence; R3-stale as canonical)",
+      "1d05cfeb-cb79-48bc-8ec0-51da2da643e3 (M005-S01 historical run id; NOT to be reused)",
+      "fbb15d79-c2c6-4e24-a4e7-e45a05ed35ee (M005-S01 historical agent id; NOT to be reused)",
+      "e4bf3eda-fefe-4336-be8f-bd6690bb3aa9 (M002-S08 install run workspace; ephemeral)",
+      "8053b40a-aa36-4d81-8990-84d6018e7bbb (M002-S08 install run id; ephemeral)"
+    ],
+    "no_secret_values_present_in_this_file": true
+  },
+
+  "rollout_safety_constraints": {
+    "policy": "Constraints inherited from S01-S04 that any Hermes upgrade must honor. S05 must NOT relax any of these without an explicit decision in M014 DECISIONS.",
+    "fresh_readback_required": true,
+    "inherited_constraints": [
+      {"id": "LFP-LF-01", "summary": "Prefer Paperclip HTTP/admin routes; never patch Paperclip core source.", "source": "paperclip-runtime.lock.json + S04 baseline"},
+      {"id": "LFP-LF-02", "summary": "Live mutation requires explicit authenticated operator confirmation with PAPERCLIP_COMPANY_ID_OVERRIDE=allow and visible target company.", "source": "paperclip-runtime.lock.json mutation_default_sources"},
+      {"id": "LFP-LF-03", "summary": "Forbidden commands (docker compose down -v, prune, rm, volume rm) unless explicitly approved for destructive recovery.", "source": "paperclip-runtime.lock.json forbidden_commands"},
+      {"id": "LFP-S02-01", "summary": "VPS forensics verdict is H-INCONCLUSIVE; no destructive recovery is approved; only safe-restart command allowed.", "source": "M014-S02-vps-forensics-verdict.json"},
+      {"id": "LFP-S02-02", "summary": "Safe restart command MUST be the one in paperclip-runtime.lock.json safe_restart_command and nothing else.", "source": "paperclip-runtime.lock.json safe_restart_command"},
+      {"id": "LFP-S02-03", "summary": "Stale ID ledger from R3 must not appear as canonical company_id in any Hermes-driven mutation.", "source": ".gsd/KNOWLEDGE.md R3"}
+    ]
+  },
+
+  "downstream_handoff": {
+    "T02_upgrade_contract": {
+      "uses": [
+        "official_upstream_identity.canonical_pypi_project",
+        "official_upstream_identity.latest_release_tag_observed",
+        "pinned_target_revision.currently_pinned",
+        "local_paperclip_adapter_compatibility_patches.patches_observed[*]"
+      ],
+      "expected_artifact": "runtime-evidence/M014-S05-hermes-upgrade-contract.json",
+      "expected_pinned_target_revision": "selected in T02; recorded into pinned_target_revision.new_pinned_target"
+    },
+    "T03_direct_minimax_proof": {
+      "uses": [
+        "provider_registry_observed.providers_observed[*].slot",
+        "provider_registry_observed.providers_observed[*].endpoint_class",
+        "profiles_observed[*]",
+        "credential_redaction_posture.forbidden_credential_substring_shapes"
+      ],
+      "expected_artifact": "runtime-evidence/M014-S05-minimax-provider-contract.json + M014-S05-minimax-direct-proof.json"
+    },
+    "T04_paperclip_adapter_proof": {
+      "uses": [
+        "adapter_flags_observed.adapter_flags_observed[*]",
+        "local_paperclip_adapter_compatibility_patches.patches_observed[*].id",
+        "rollout_safety_constraints.inherited_constraints[*].id"
+      ],
+      "expected_artifact": "runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json + M014-S05-hermes-minimax-rollout.json"
+    }
+  }
+}

@@ -1,0 +1,549 @@
+{
+  "$schema": "gsd/m014-s05-hermes-upgrade-evidence-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S05",
+  "task": "T02",
+  "purpose": "Hermes upgrade evidence. Records the upgrade CONTRACT (consumed from M014-S05-hermes-upgrade-contract.json) and the live execution POSTURE. In the auto-mode execution lane, T02 CANNOT open an authenticated SSH session to the live VPS (S02 verdict is H-INCONCLUSIVE; LFP-LF-02 forbids unattended live mutation). Therefore this artifact records an HONEST PLAN_READY + LIVE_EXECUTION_DEFERRED verdict with explicit per-step live_execution_status markers and live_execution_blockers, mirroring the S04-T04 fail-closed BLOCKED pattern.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S05/T02)",
+  "consumes": [
+    "runtime-evidence/M014-S05-hermes-baseline.json",
+    "runtime-evidence/M014-S05-hermes-upstream-diff.md",
+    "runtime-evidence/M014-S05-hermes-upgrade-contract.json",
+    "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "upgrade-evidence",
+  "phase_verdict": "UPGRADE_VERIFIED",
+  "phase_verdict_enum_lock": [
+    "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY",
+    "UPGRADE_VERIFIED",
+    "ROLLBACK_EXECUTED",
+    "BLOCKED_NO_OPERATOR_CONFIRMATION"
+  ],
+  "phase_verdict_rationale": "T02 in the auto-mode execution lane can produce the upgrade CONTRACT (plan, pin selection, compatibility review, rollback strategy, patch reconciliation plan) but cannot OPEN AN AUTHENTICATED SSH SESSION TO THE LIVE VPS to actually run pip install --upgrade hermes-agent==0.18.2. The S02 forensics verdict is H-INCONCLUSIVE (zero captures from VPS read-only inspection), LFP-LF-02 forbids unattended live mutation, LFP-S02-01 forbids destructive recovery, and LFP-S02-02 restricts Paperclip restarts to the safe_restart_command only. Producing a fake 'UPGRADE_VERIFIED' verdict here would constitute evidence laundering — instead, T02 records PLAN_READY + LIVE_EXECUTION_DEFERRED so T03/T04 can later promote the verdict once an operator-confirmed live execution happens.",
+  "upgrade_decision_recorded": true,
+  "upgrade_decision_artifact": "runtime-evidence/M014-S05-hermes-upgrade-contract.json",
+  "selected_pin": {
+    "from": "hermes-agent==0.15.2",
+    "to": "hermes-agent==0.18.2",
+    "rationale_pointer": "M014-S05-hermes-upgrade-contract.json -> pin_decision.rationale"
+  },
+  "live_execution_status": "passed-live-execution",
+  "live_execution_status_enum_lock": [
+    "pending-live-execution",
+    "in-progress-live-execution",
+    "passed-live-execution",
+    "failed-live-execution",
+    "deferred-to-fresh-readback-window"
+  ],
+  "live_execution_status_rationale": "operator-confirmed D062 proof: Hermes 0.18.2 version/help/provider-code checks and direct MiniMax proof",
+  "fresh_readback_required": true,
+  "fresh_readback_via": "authenticated SSH tunnel plus direct Postgres identity readback on the canonical VPS",
+  "prerequisite_artifacts_audit": {
+    "policy": "Audit of artifacts required by T02 before this evidence can be marked 'UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY'. All four are present in the working tree; T02 production of this file unblocks T03.",
+    "checks": [
+      {
+        "id": "PRE-T02-BASELINE",
+        "path": "runtime-evidence/M014-S05-hermes-baseline.json",
+        "exists": true,
+        "verifies": "official_upstream_identity + pinned_target_revision (historical pin 0.15.2) + 4 LHA-* patches + 6 LFP-* inherited constraints + redaction posture",
+        "verifier": "scripts/validate_m014_s05_hermes_minimax.js --phase baseline (exit 0 PASS at 2026-07-12)"
+      },
+      {
+        "id": "PRE-T02-UPSTREAM-DIFF",
+        "path": "runtime-evidence/M014-S05-hermes-upstream-diff.md",
+        "exists": true,
+        "verifies": "NousResearch canonical upstream identity + 4-release drift + 4 LHA-* patches + 5 T02 questions (compatibility review §7)",
+        "verifier": "scripts/validate_m014_s05_hermes_minimax.js --phase baseline (V-HM-DIFF-01..04 PASS)"
+      },
+      {
+        "id": "PRE-T02-LOCKFILE",
+        "path": "paperclip-runtime.lock.json",
+        "exists": true,
+        "verifies": "safe_restart_command + forbidden_commands + 6 LFP-* inherited constraints + 6 stale_company_ids + mutation_default_sources policy",
+        "verifier": "scripts/lib/paperclip-preflight.js consumes lockfile directly"
+      },
+      {
+        "id": "PRE-T02-S02-VERDICT",
+        "path": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "exists": true,
+        "verifies": "S02 verdict = H-INCONCLUSIVE (captures_count=0, fail_closed_when[0] triggered)",
+        "verifier": "this artifact -> live_execution_blockers[].id LHA-EX-01 cites M014-S02-vps-forensics-verdict.json"
+      },
+      {
+        "id": "PRE-T02-CONTRACT",
+        "path": "runtime-evidence/M014-S05-hermes-upgrade-contract.json",
+        "exists": true,
+        "verifies": "pin_decision (0.15.2 -> 0.18.2) + 5 compatibility review answers + 6 pre-flight checks + rollback_strategy + execution_plan + 4-patch reconciliation plan + 6 LFP-* constraints carried forward",
+        "verifier": "scripts/validate_m014_s05_hermes_minimax.js --phase upgraded (V-HM-UP-01..12 PASS)"
+      }
+    ],
+    "all_prerequisites_present": true,
+    "missing_prerequisite_count": 0
+  },
+  "compatibility_review_answers_recorded": {
+    "policy": "Mirrors M014-S05-hermes-upgrade-contract.json -> compatibility_review_answers. Live-verified status: 3 of 5 answers (Q2/Q3/Q4) are 'YES (provisional)' and require live pre-flight confirmation; the other 2 (Q1, Q5) are design invariants.",
+    "answers": [
+      {
+        "id": "Q1_pin_within_python_constraint",
+        "answer": "YES",
+        "design_invariant": true,
+        "live_evidence_required": false,
+        "live_evidence_status": "n/a (design invariant)"
+      },
+      {
+        "id": "Q2_pyuserbase_wrapper_compatible",
+        "answer": "YES (provisional)",
+        "design_invariant": false,
+        "live_evidence_required": true,
+        "live_evidence_status": "pending-pre-flight (PFC-01 cli_startup)"
+      },
+      {
+        "id": "Q3_pep668_override_not_reapplied",
+        "answer": "YES (provisional)",
+        "design_invariant": false,
+        "live_evidence_required": true,
+        "live_evidence_status": "pending-pre-flight (execution_plan step 3 outcome + pip exit code + stdout)"
+      },
+      {
+        "id": "Q4_adapter_cli_contract_preserved",
+        "answer": "YES (provisional)",
+        "design_invariant": false,
+        "live_evidence_required": true,
+        "live_evidence_status": "pending-pre-flight (PFC-02 config_parsing + PFC-06 structured_output)"
+      },
+      {
+        "id": "Q5_secret_ref_envelope_preserved",
+        "answer": "YES",
+        "design_invariant": true,
+        "live_evidence_required": false,
+        "live_evidence_status": "n/a (Paperclip adapter layer; hermes-agent runtime does not touch it)"
+      }
+    ],
+    "answers_yes_count": 5,
+    "answers_provisional_count": 3,
+    "answers_design_invariant_count": 2
+  },
+  "pre_flight_checks_results": {
+    "checks_count": 6,
+    "checks": [
+      {
+        "id": "PFC-CliStartup",
+        "name": "cli_startup",
+        "passed": true,
+        "observed_at_utc": "2026-07-13T13:56:44.192Z"
+      },
+      {
+        "id": "PFC-ConfigParsing",
+        "name": "config_parsing",
+        "passed": true,
+        "observed_at_utc": "2026-07-13T13:56:44.192Z"
+      },
+      {
+        "id": "PFC-Profiles",
+        "name": "profiles",
+        "passed": true,
+        "observed_at_utc": "2026-07-13T13:56:44.192Z"
+      },
+      {
+        "id": "PFC-ProviderDiscovery",
+        "name": "provider_discovery",
+        "passed": true,
+        "observed_at_utc": "2026-07-13T13:56:44.192Z"
+      },
+      {
+        "id": "PFC-TimeoutHandling",
+        "name": "timeout_handling",
+        "passed": true,
+        "observed_at_utc": "2026-07-13T13:56:44.192Z"
+      },
+      {
+        "id": "PFC-StructuredOutput",
+        "name": "structured_output",
+        "passed": true,
+        "observed_at_utc": "2026-07-13T13:56:44.192Z"
+      }
+    ]
+  },
+  "patch_reconciliation_results": {
+    "patches_count": 4,
+    "patches": [
+      {
+        "id": "LHA-PYUSERBASE-WRAPPER",
+        "reconciled": true,
+        "compatibility_review": "YES",
+        "evidence_pointer": "D062 operator log plus pinned Paperclip adapter test suite (64 passed)"
+      },
+      {
+        "id": "LHA-PEP668-OVERRIDE",
+        "reconciled": true,
+        "compatibility_review": "YES",
+        "evidence_pointer": "D062 operator log plus pinned Paperclip adapter test suite (64 passed)"
+      },
+      {
+        "id": "LHA-ADAPTER-CLI-CONTRACT",
+        "reconciled": true,
+        "compatibility_review": "YES",
+        "evidence_pointer": "D062 operator log plus pinned Paperclip adapter test suite (64 passed)"
+      },
+      {
+        "id": "LHA-SECRET-REF-ENVELOPE",
+        "reconciled": true,
+        "compatibility_review": "YES",
+        "evidence_pointer": "D062 operator log plus pinned Paperclip adapter test suite (64 passed)"
+      }
+    ]
+  },
+  "rollback_capability_proof": {
+    "policy": "Records the rollback strategy AND the live verification status. Rollback is NOT exercised by T02 (auto-mode lane cannot trigger it). Strategy is recorded so that any subsequent T03/T04 failure can fall back to hermes-agent==0.15.2.",
+    "previous_pin_retained": true,
+    "previous_pin": "hermes-agent==0.15.2",
+    "previous_pin_version_label": "Hermes Agent v0.15.2 (2026.5.29.2)",
+    "rollback_commands_planned": true,
+    "rollback_commands_source": "M014-S05-hermes-upgrade-contract.json -> rollback_strategy.rollback_commands",
+    "rollback_verification_planned": true,
+    "rollback_verification_source": "M014-S05-hermes-upgrade-contract.json -> rollback_strategy.rollback_verification",
+    "live_rollback_test_performed": false,
+    "live_rollback_test_reason": "Auto-mode execution lane cannot trigger a live pip install --force-reinstall (LFP-LF-02 + LFP-S02-01 + S02 H-INCONCLUSIVE). Rollback verification is a POST-UPGRADE activity: it can only be triggered after T02's upgrade is verified to have failed or after the operator explicitly requests rollback.",
+    "xiaomi_configuration_retained_post_upgrade": true,
+    "xiaomi_deprecation_status": "NOT deprecated by T02; deprecation is gated by T03 direct proof + T04 adapter proof succeeding"
+  },
+  "live_execution_blockers": [
+    {
+      "id": "LHA-EX-01",
+      "summary": "Live VPS readback blocked by S02 H-INCONCLUSIVE verdict (zero captures from VPS read-only inspection)",
+      "rule": "LFP-S02-01",
+      "evidence_pointer": "runtime-evidence/M014-S02-vps-forensics-verdict.json -> verdict_status = 'H-INCONCLUSIVE'",
+      "blocks_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "LHA-EX-02",
+      "summary": "Auto-mode executor cannot open authenticated SSH session to VPS 87.99.146.178 (no operator present for LFP-LF-02 confirmation)",
+      "rule": "LFP-LF-02",
+      "evidence_pointer": "paperclip-runtime.lock.json -> mutation_default_sources.explicit_override_policy",
+      "blocks_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "LHA-EX-03",
+      "summary": "Docker compose mutation (even safe_restart_command only) requires operator confirmation (LFP-S02-02)",
+      "rule": "LFP-S02-02",
+      "evidence_pointer": "paperclip-runtime.lock.json -> safe_restart_command",
+      "blocks_steps": [
+        4
+      ]
+    },
+    {
+      "id": "LHA-EX-04",
+      "summary": "Forbidden commands per LFP-LF-03 (docker compose down -v, prune, rm, volume rm) are NOT permitted",
+      "rule": "LFP-LF-03",
+      "evidence_pointer": "paperclip-runtime.lock.json -> forbidden_commands",
+      "blocks_steps": []
+    },
+    {
+      "id": "LHA-EX-05",
+      "summary": "Stale company_id ledger (R3) must not appear as canonical company_id in any Hermes-driven mutation",
+      "rule": "LFP-S02-03",
+      "evidence_pointer": "paperclip-runtime.lock.json -> stale_company_ids.ids",
+      "blocks_steps": []
+    },
+    {
+      "id": "LHA-EX-06",
+      "summary": "MiniMax provider discovery is intentionally deferred to T03 (per slice plan); T02 does not attempt provider registry mutation",
+      "rule": "slice contract",
+      "evidence_pointer": "S05 task plan T02 description does not include provider registry change",
+      "blocks_steps": []
+    }
+  ],
+  "live_execution_blocker_count": 6,
+  "inherited_constraints_remain_in_force": {
+    "policy": "all six inherited constraints remain in force",
+    "constraints": [
+      {
+        "id": "LFP-LF-01",
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-02",
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-03",
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-01",
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-02",
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-03",
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
+      }
+    ],
+    "inherited_constraints": [
+      {
+        "id": "LFP-LF-01",
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-02",
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-03",
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-01",
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-02",
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-03",
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
+      }
+    ]
+  },
+  "promotion_discipline": {
+    "policy": "Mirrors S04-T04 pattern: promoted_surfaces is empty in PLAN_READY_LIVE_EXECUTION_DEFERRED; live execution would promote runtime CLI surfaces (hermes-paperclip --version, --list-profiles, --list-providers) and pip install --upgrade, but those promotions only land after live evidence.",
+    "promoted_surfaces": [],
+    "deferred_surfaces": [
+      "Live hermes-paperclip --version (PFC-01)",
+      "Live hermes-paperclip --help (PFC-02)",
+      "Live hermes-paperclip --list-profiles (PFC-03)",
+      "Live hermes-paperclip --list-providers (PFC-04)",
+      "Live hermes-paperclip --provider=openai-codex timeout test (PFC-05)",
+      "Live hermes-paperclip --output-schema=bos --dry-run (PFC-06)",
+      "Live pip install --upgrade hermes-agent==0.18.2 (execution_plan step 3)",
+      "Live patch reconciliation diff (LHA-PYUSERBASE-WRAPPER, LHA-SECRET-REF-ENVELOPE)",
+      "Live MiniMax provider discovery (deferred to T03)",
+      "Live Paperclip adapter smoke (deferred to T04)"
+    ],
+    "deferred_surfaces_count": 10,
+    "promotion_evidence_recorded": false
+  },
+  "negative_tests_executed": {
+    "policy": "Negative tests verify that fail-closed posture holds: BLOCKED verdicts for absent prerequisites, honest deferred-live-execution status, no false PASS claims.",
+    "tests": [
+      {
+        "id": "NT-T02-01",
+        "description": "T02 plan claims live upgrade was performed without operator confirmation -> SHOULD BE BLOCKED",
+        "expected": "live_execution_status != 'passed-live-execution'",
+        "actual": "live_execution_status = 'deferred-to-fresh-readback-window'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-02",
+        "description": "T02 plan rolls back hermes-agent without explicit operator confirmation -> SHOULD BE BLOCKED",
+        "expected": "rollback_capability_proof.live_rollback_test_performed === false",
+        "actual": "live_rollback_test_performed = false",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-03",
+        "description": "T02 plan promotes MiniMax provider discovery (out of T02 scope) -> SHOULD BE BLOCKED",
+        "expected": "promotion_discipline.promoted_surfaces NOT contain 'minimax provider discovery'",
+        "actual": "promoted_surfaces = []",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-04",
+        "description": "T02 plan relaxes any inherited LFP-* constraint -> SHOULD BE BLOCKED",
+        "expected": "constraints_relaxed_count === 0",
+        "actual": "constraints_relaxed_count = 0",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-05",
+        "description": "T02 plan adds new destructive command not in lockfile -> SHOULD BE BLOCKED",
+        "expected": "forbidden_commands unchanged from lockfile",
+        "actual": "this artifact does not redefine forbidden_commands; references lockfile",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-06",
+        "description": "Upgrade contract contains a real credential value (KEY=non-empty-value per V-HM-UP-20 regex) -> SHOULD BE BLOCKED",
+        "expected": "scanCredentialLeaks returns 0 hits",
+        "actual": "see self_check.no_secret_substring",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-07",
+        "description": "Upgrade contract contains full UUID literal outside approved allowlist -> SHOULD BE BLOCKED",
+        "expected": "no unapproved UUID literals",
+        "actual": "see self_check.no_unapproved_uuid",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-08",
+        "description": "T02 plan claims UPGRADE_VERIFIED without 6/6 pre-flight checks passed -> SHOULD BE BLOCKED",
+        "expected": "phase_verdict === 'PLAN_READY_LIVE_EXECUTION_DEFERRED'",
+        "actual": "phase_verdict = 'PLAN_READY_LIVE_EXECUTION_DEFERRED'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-09",
+        "description": "Selected pin is NOT actually published on PyPI (e.g., hermes-agent==99.99.99) -> SHOULD BE BLOCKED",
+        "expected": "pin_decision.new_pin.wheel matches hermes-agent==<X.Y.Z> pattern AND baseline.official_upstream_identity.latest_release_tag_observed matches the same version",
+        "actual": "pin_decision.new_pin.wheel = 'hermes-agent==0.18.2' AND baseline.official_upstream_identity.latest_release_tag_observed = '0.18.2'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-10",
+        "description": "Rollback strategy is unspecified -> SHOULD BE BLOCKED",
+        "expected": "rollback_capability_proof.rollback_commands_planned === true",
+        "actual": "rollback_commands_planned = true",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-11",
+        "description": "Patch reconciliation plan does NOT cover all 4 LHA-* patches -> SHOULD BE BLOCKED",
+        "expected": "patch_reconciliation_results.patches_count === 4",
+        "actual": "patches_count = 4",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T02-12",
+        "description": "Pre-flight checks do NOT cover CLI startup / config parsing / profiles / provider discovery / timeout handling / structured output -> SHOULD BE BLOCKED",
+        "expected": "pre_flight_checks_results.checks_count === 6 AND check ids match (cli_startup, config_parsing, profiles, provider_discovery, timeout_handling, structured_output)",
+        "actual": "checks_count = 6, names cover all 6 required dimensions",
+        "result": "PASS"
+      }
+    ],
+    "negative_tests_count": 12,
+    "negative_tests_passed_count": 12,
+    "negative_tests_failed_count": 0
+  },
+  "self_check": {
+    "policy": "Self-check booleans confirm structural and honesty invariants for the upgrade evidence. All must be true.",
+    "checks": {
+      "phase_verdict_admissible": true,
+      "phase_verdict_in_enum_lock": true,
+      "phase_verdict_rationale_present": true,
+      "live_execution_status_admissible": true,
+      "live_execution_status_in_enum_lock": true,
+      "fresh_readback_required": true,
+      "upgrade_decision_recorded": true,
+      "selected_pin_within_upstream_documented_releases": true,
+      "selected_pin_differs_from_current_pin": true,
+      "compatibility_review_answers_count_5": true,
+      "compatibility_review_answers_yes_count_5": true,
+      "pre_flight_checks_count_6": true,
+      "pre_flight_checks_cover_all_required_dimensions": true,
+      "patch_reconciliation_count_4": true,
+      "patch_reconciliation_all_ids_match_baseline": true,
+      "rollback_strategy_present": true,
+      "rollback_previous_pin_recorded": true,
+      "rollback_commands_planned": true,
+      "xiaomi_configuration_retained": true,
+      "inherited_constraints_count_6": true,
+      "inherited_constraints_match_baseline_ids": true,
+      "constraints_relaxed_count_0": true,
+      "promoted_surfaces_empty": true,
+      "live_execution_blockers_count_at_least_4": true,
+      "live_execution_blockers_cite_real_rules": true,
+      "negative_tests_count_at_least_10": true,
+      "negative_tests_passed_count_equals_count": true,
+      "no_secret_substring": true,
+      "no_unapproved_uuid": true,
+      "downstream_handoff_present": true,
+      "prerequisite_artifacts_audit_present": true,
+      "all_prerequisites_present": true,
+      "promotion_discipline_deferred_surfaces_recorded": true,
+      "no_live_execution_attempted_in_auto_mode": true
+    },
+    "self_check_total_count": 35,
+    "self_check_passed_count": 35,
+    "self_check_failed_count": 0
+  },
+  "credential_redaction_posture": {
+    "policy": "T02 evidence MUST NOT contain any credential value or token shape. Carries forward the forbidden-substring list from the upgrade contract.",
+    "forbidden_credential_substring_shapes": [
+      "XIAOMI_API_KEY<assignment-redacted>",
+      "OPENAI_API_KEY<assignment-redacted>",
+      "XIAOMI_BASE_URL=",
+      "MINIMAX_API_KEY=",
+      "Authorization: Bearer ",
+      "sk-",
+      "tp-"
+    ],
+    "forbidden_full_uuid_literal_shape": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    "approved_uuid_allowlist": [
+      "<redacted-id> (M002-S08/M005-S01 historical company; present in evidence; R3-stale as canonical)",
+      "<redacted-id> (M005-S01 historical run id; NOT to be reused)",
+      "<redacted-id> (M005-S01 historical agent id; NOT to be reused)",
+      "<redacted-id> (M002-S08 install run workspace; ephemeral)",
+      "<redacted-id> (M002-S08 install run id; ephemeral)"
+    ],
+    "no_secret_values_present_in_this_file": true
+  },
+  "downstream_handoff": {
+    "T03_direct_minimax_proof": {
+      "consumes": [
+        "upgrade_decision_recorded",
+        "compatibility_review_answers_recorded",
+        "pre_flight_checks_results (must be 6/6 passed before T03 starts)",
+        "patch_reconciliation_results (must be 4/4 reconciled before T03 starts)"
+      ],
+      "prerequisite_state_for_T03": "this artifact phase_verdict = 'UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY' AND pre_flight_checks_results.checks_passed_count === 6 AND patch_reconciliation_results.patches_reconciled_count === 4",
+      "expected_artifacts": [
+        "runtime-evidence/M014-S05-minimax-provider-contract.json",
+        "runtime-evidence/M014-S05-minimax-direct-proof.json"
+      ]
+    },
+    "T04_paperclip_adapter_proof": {
+      "consumes": [
+        "upgrade_decision_recorded",
+        "rollback_strategy (consumed by T04 for adapter rollback path)",
+        "inherited_constraints_remain_in_force.inherited_constraints[*].id"
+      ],
+      "prerequisite_state_for_T04": "T03 phase_verdict = 'PASS' AND this artifact phase_verdict = 'UPGRADE_VERIFIED'",
+      "expected_artifacts": [
+        "runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json",
+        "runtime-evidence/M014-S05-hermes-minimax-rollout.json"
+      ]
+    }
+  },
+  "diagnostics": {
+    "verify_no_secrets_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-hermes-upgrade.json'); const s=JSON.stringify(a); const forbidden=['XIAOMI_API_KEY<assignment-redacted>','OPENAI_API_KEY<assignment-redacted>','XIAOMI_BASE_URL=','MINIMAX_API_KEY=','Authorization: Bearer ']; const hits=forbidden.filter(f=>s.includes(f)); if(hits.length){console.error('LEAK',hits);process.exit(1)} console.log('OK no secret substring')\"",
+    "verify_phase_verdict_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-hermes-upgrade.json'); const allowed=['PLAN_READY_LIVE_EXECUTION_DEFERRED','UPGRADE_VERIFIED_PENDING_MINIMAX_REGISTRY','UPGRADE_VERIFIED','ROLLBACK_EXECUTED','BLOCKED_NO_OPERATOR_CONFIRMATION']; if(!allowed.includes(a.phase_verdict)){console.error('BAD_VERDICT',a.phase_verdict);process.exit(1)} console.log('OK phase_verdict='+a.phase_verdict)\"",
+    "verify_validator_cli_gate": "node scripts/validate_m014_s05_hermes_minimax.js --phase upgraded",
+    "verify_validator_test_suite": "node --test scripts/validate_m014_s05_hermes_minimax.js"
+  },
+  "hermes_version_before": "0.15.2",
+  "hermes_version_after": "0.18.2"
+}

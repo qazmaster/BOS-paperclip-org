@@ -1,0 +1,443 @@
+{
+  "$schema": "gsd/m014-s05-hermes-minimax-rollout-verdict-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S05",
+  "task": "T04",
+  "purpose": "Paperclip hermes_local MiniMax M3 rollout verdict. Records the ROLLOUT / ROLLBACK_DECLARED / PLAN_READY_LIVE_EXECUTION_DEFERRED decision for the Paperclip adapter flip from xiaomi/mimo-v2.5-pro to minimax/MiniMax-M3 on a bounded test agent. In the auto-mode execution lane, T04 cannot execute live VPS mutation (LFP-LF-02 + S02 H-INCONCLUSIVE + T02/T03 PLAN_READY_LIVE_EXECUTION_DEFERRED), so this verdict is honest PLAN_READY_LIVE_EXECUTION_DEFERRED. Live operator session will promote it to ROLLOUT or ROLLBACK_DECLARED after a clean Paperclip hermes_local session is observed.",
+  "generated": "2026-07-12",
+  "generated_by": "GSD auto-mode executor (M014-a9jj46/S05/T04)",
+  "consumes": [
+    "runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json",
+    "runtime-evidence/M014-S05-minimax-provider-contract.json",
+    "runtime-evidence/M014-S05-minimax-direct-proof.json",
+    "runtime-evidence/M014-S05-hermes-upgrade.json",
+    "runtime-evidence/M014-S05-hermes-upgrade-contract.json",
+    "runtime-evidence/M014-S05-hermes-baseline.json",
+    "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+    "paperclip-runtime.lock.json"
+  ],
+  "captured_in_phase": "paperclip-hermes-minimax-rollout",
+
+  "rollout_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+  "rollout_verdict_enum_lock": [
+    "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+    "ROLLOUT",
+    "ROLLBACK_DECLARED",
+    "BLOCKED_NO_OPERATOR_CONFIRMATION"
+  ],
+  "rollout_verdict_rationale": "T04 in the auto-mode execution lane can produce the rollout CONTRACT (decision rule, pre-conditions for ROLLOUT, pre-conditions for ROLLBACK_DECLARED, xiaomi fallback retention plan, full-fleet rollout gate) but cannot OBSERVE a live Paperclip hermes_local session on the bounded test agent through minimax-m3. The rollout verdict therefore remains PLAN_READY_LIVE_EXECUTION_DEFERRED until an operator-confirmed live Paperclip session meets the ROLLOUT pre-conditions, OR until any failure mode meets the ROLLBACK_DECLARED pre-conditions. Producing a fake 'ROLLOUT' verdict here would constitute evidence laundering — instead, T04 records the decision rule and the pre-conditions so the live executor can apply them deterministically post-execution.",
+
+  "rollout_decision_rule": {
+    "policy": "Deterministic rule that the live executor MUST apply after observing the Paperclip hermes_local session. All four ROLLOUT pre-conditions must hold (logical AND) for ROLLOUT. Any single ROLLBACK_DECLARED pre-condition triggers ROLLBACK_DECLARED. Anything else (e.g., prerequisite not met, deferred for fresh readback) leaves the verdict at PLAN_READY_LIVE_EXECUTION_DEFERRED.",
+    "source_pointer": "runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json -> downstream_handoff.rollout_verdict_consumer.rollout_verdict_decision_rule",
+    "evaluates_artifact": "runtime-evidence/M014-S05-paperclip-hermes-minimax-proof.json",
+    "evaluates_fields": [
+      "pre_adapter_cleanup_results.checks_passed_count",
+      "paperclip_adapter_run.live_captured_status",
+      "paperclip_adapter_run.live_captured_exit_code",
+      "paperclip_adapter_run.live_captured_resultJson_bos_present",
+      "paperclip_adapter_run.live_captured_resultJson_bos_schema_valid",
+      "paperclip_adapter_run.xiaomi_endpoint_reuse_detected",
+      "paperclip_adapter_run.credential_leak_detected",
+      "paperclip_adapter_run.bounded_test_agent_used",
+      "paperclip_adapter_run.clean_restart_observed"
+    ]
+  },
+
+  "rollout_pre_conditions": {
+    "policy": "All four pre-conditions MUST hold for the rollout verdict to be promoted from PLAN_READY_LIVE_EXECUTION_DEFERRED to ROLLOUT. Any missing condition leaves the verdict at PLAN_READY_LIVE_EXECUTION_DEFERRED.",
+    "conditions": [
+      {
+        "id": "RPC-01",
+        "name": "pre_adapter_cleanup_all_passed",
+        "required_state": "pre_adapter_cleanup_results.checks_passed_count === 3 (PAC-01 xiaomi session terminated + PAC-02 pre-mutation readback captured + PAC-03 safe_restart_command used)",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> pre_adapter_cleanup_results.checks_passed_count",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      },
+      {
+        "id": "RPC-02",
+        "name": "paperclip_hermes_local_terminal_success",
+        "required_state": "paperclip_adapter_run.live_captured_status === 'succeeded' AND paperclip_adapter_run.live_captured_exit_code === 0",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.live_captured_status + live_captured_exit_code",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      },
+      {
+        "id": "RPC-03",
+        "name": "resultJson_bos_schema_valid",
+        "required_state": "paperclip_adapter_run.live_captured_resultJson_bos_present === true AND paperclip_adapter_run.live_captured_resultJson_bos_schema_valid === true",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.live_captured_resultJson_bos_*",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      },
+      {
+        "id": "RPC-04",
+        "name": "no_xiaomi_endpoint_reuse",
+        "required_state": "paperclip_adapter_run.xiaomi_endpoint_reuse_detected === false (4-layer check: endpoint_class + api_key + session_id_corpus + adapter_config_post_mutation)",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.xiaomi_endpoint_reuse_detected + xiaomi_endpoint_reuse_detection layer results",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      }
+    ],
+    "conditions_count": 4,
+    "conditions_observed_count": 0,
+    "conditions_pending_count": 4
+  },
+
+  "rollback_pre_conditions": {
+    "policy": "Any single rollback pre-condition triggers ROLLBACK_DECLARED. The live executor MUST execute the T04 adapter revert steps (see M014-S05-paperclip-hermes-minimax-proof.json -> rollback_capability_preserved.t04_adapter_revert_steps) and re-verify xiaomi primary + openai-codex fallback. ROLLBACK_DECLARED is final: a separate slice MUST be opened to retry the MiniMax path after the rollback is complete.",
+    "triggers": [
+      {
+        "id": "RBC-01",
+        "name": "terminal_nonzero_exit",
+        "trigger_state": "paperclip_adapter_run.live_captured_exit_code !== 0",
+        "severity": "blocking",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.live_captured_exit_code",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      },
+      {
+        "id": "RBC-02",
+        "name": "credential_leak_detected",
+        "trigger_state": "paperclip_adapter_run.credential_leak_detected === true (V-HM-AD-20 fail-closed on any KEY=value shape in captured stdout)",
+        "severity": "blocking",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.credential_leak_detected",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      },
+      {
+        "id": "RBC-03",
+        "name": "xiaomi_endpoint_reuse",
+        "trigger_state": "paperclip_adapter_run.xiaomi_endpoint_reuse_detected === true (any of 4 layers tripping)",
+        "severity": "blocking",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.xiaomi_endpoint_reuse_detected",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      },
+      {
+        "id": "RBC-04",
+        "name": "resultJson_schema_invalid",
+        "trigger_state": "paperclip_adapter_run.live_captured_resultJson_bos_present === false OR paperclip_adapter_run.live_captured_resultJson_bos_schema_valid === false",
+        "severity": "blocking",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.live_captured_resultJson_bos_*",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      },
+      {
+        "id": "RBC-05",
+        "name": "endpoint_class_drift",
+        "trigger_state": "paperclip_adapter_run.endpoint_class_observed !== 'openai-compatible' (e.g., codex-cli-local routing, or routing through an unexpected endpoint class)",
+        "severity": "blocking",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.endpoint_class_observed",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      },
+      {
+        "id": "RBC-06",
+        "name": "bounded_test_agent_violation",
+        "trigger_state": "paperclip_adapter_run.bounded_test_agent_used === false (operator flipped a production agent instead of bounded test agent)",
+        "severity": "blocking",
+        "evidence_field": "M014-S05-paperclip-hermes-minimax-proof.json -> paperclip_adapter_run.bounded_test_agent_used",
+        "live_observed": null,
+        "live_observed_status": "pending-live-execution"
+      }
+    ],
+    "triggers_count": 6,
+    "triggers_observed_count": 0,
+    "triggers_pending_count": 6
+  },
+
+  "xiaomi_fallback_retention_plan": {
+    "policy": "Even after ROLLOUT, the xiaomi/mimo-v2.5-pro profile MUST be retained as a Paperclip-level fallback (NOT removed). Full xiaomi deprecation is a separate decision gated by S05 close-out and R019 validation contract revision; T04 only documents the fallback retention shape.",
+    "xiaomi_profile_status_after_T04_rollout": "preserved-as-fallback",
+    "xiaomi_profile_status_after_T04_rollback": "preserved-as-primary",
+    "openai_codex_profile_status_after_T04_rollout": "preserved-unchanged",
+    "openai_codex_profile_role_after_T04_rollout": "fallback-only",
+    "minimax_m3_profile_status_after_T04_rollout": "promoted-to-primary-for-bounded-test-agent",
+    "minimax_m3_profile_scope_after_T04_rollout": "ONE bounded test agent only; full-fleet rollout gated by separate decision slice",
+    "deprecation_posture": "M005 decision 'Hermes with Xiaomi' is REVISED in the S05 close-out per the slice plan: MiniMax M3 is the new target runtime binding, xiaomi is fallback-only. R019 validation contract is updated to reflect canonical provider/model/endpoint-class, mandatory secret_ref, clean-session proof, schema-valid BOS output, and prohibition on Xiaomi endpoint reuse."
+  },
+
+  "full_fleet_rollout_gate": {
+    "policy": "Full-fleet rollout (flipping ALL Paperclip agents from xiaomi/mimo-v2.5-pro to minimax/MiniMax-M3) is OUT OF SCOPE for T04 / S05. T04 only flips ONE bounded test agent. Full-fleet rollout requires a separate decision slice and is gated by the following pre-conditions (all must hold before the next slice is opened).",
+    "pre_conditions": [
+      {
+        "id": "FFR-01",
+        "name": "T04_ROLLOUT_verdict_recorded",
+        "description": "this artifact rollout_verdict === 'ROLLOUT' (bounded test agent clean hermes_local session observed on minimax-m3 with all 4 RPC-* conditions satisfied)"
+      },
+      {
+        "id": "FFR-02",
+        "name": "canonical_contract_frozen",
+        "description": "M014-S05-minimax-provider-contract.json frozen with canonical_minimax_provider_name='minimax', canonical_endpoint_mode='openai-compatible', canonical_model_spelling='MiniMax-M3', key_environment_contract={MINIMAX_API_KEY, MINIMAX_BASE_URL}"
+      },
+      {
+        "id": "FFR-03",
+        "name": "vps_forensics_verdict_resolved",
+        "description": "S02 H-INCONCLUSIVE verdict resolved to either H-CONFIRMED (operator session observed) or H-ABANDONED (rollback declared + stale-id ledger frozen)"
+      },
+      {
+        "id": "FFR-04",
+        "name": "inherited_constraints_remain_in_force",
+        "description": "All 6 LFP-* inherited constraint IDs remain in force (LFP-LF-01..03, LFP-S02-01..03)"
+      },
+      {
+        "id": "FFR-05",
+        "name": "r019_validation_contract_revised",
+        "description": "R019 validation contract revised to name canonical provider/model/endpoint-class, mandatory secret_ref, clean-session proof, schema-valid BOS output, and prohibition on Xiaomi endpoint reuse (per slice plan §'Решения и контракт для пересмотра')"
+      }
+    ],
+    "pre_conditions_count": 5,
+    "pre_conditions_observed_count": 0,
+    "pre_conditions_pending_count": 5,
+    "out_of_scope_for_T04": true
+  },
+
+  "live_execution_status": "deferred-to-fresh-readback-window",
+  "live_execution_status_enum_lock": [
+    "pending-live-execution",
+    "in-progress-live-execution",
+    "passed-live-execution",
+    "failed-live-execution",
+    "deferred-to-fresh-readback-window"
+  ],
+  "live_execution_status_rationale": "Auto-mode execution lane cannot open an authenticated SSH session to the live VPS. T02 + T03 + T04 all record PLAN_READY_LIVE_EXECUTION_DEFERRED. The rollout_verdict_consumer.rollout_verdict_decision_rule and the rollout_pre_conditions/rollback_pre_conditions are documented but cannot be evaluated by T04; the live executor must evaluate them post-execution and update this artifact's rollout_verdict, rollout_pre_conditions[*].live_observed, and rollback_pre_conditions[*].live_observed fields.",
+
+  "fresh_readback_required": true,
+  "fresh_readback_via": [
+    "Authenticated SSH tunnel from operator workstation to VPS 87.99.146.178 -> 127.0.0.1:3131 -> paperclip_sandbox-paperclip-1 docker exec",
+    "After paperclip_adapter_run completes (deferred to live operator session): re-read M014-S05-paperclip-hermes-minimax-proof.json -> pre_adapter_cleanup_results, paperclip_adapter_run, xiaomi_endpoint_reuse_detection, credential_redaction_posture",
+    "Apply rollout_verdict_decision_rule and update this artifact -> rollout_verdict + rollout_pre_conditions[*].live_observed + rollback_pre_conditions[*].live_observed"
+  ],
+
+  "inherited_constraints_remain_in_force": {
+    "policy": "All 6 inherited LFP-* constraint IDs remain in force. T04 rollout introduces no new constraint relaxations.",
+    "inherited_constraints": [
+      {"id": "LFP-LF-01", "summary": "Prefer Paperclip HTTP/admin routes; never patch Paperclip core source.", "source": "paperclip-runtime.lock.json + S04 baseline"},
+      {"id": "LFP-LF-02", "summary": "Live mutation requires explicit authenticated operator confirmation with PAPERCLIP_COMPANY_ID_OVERRIDE=allow and visible target company.", "source": "paperclip-runtime.lock.json mutation_default_sources"},
+      {"id": "LFP-LF-03", "summary": "Forbidden commands (docker compose down -v, prune, rm, volume rm) unless explicitly approved for destructive recovery.", "source": "paperclip-runtime.lock.json forbidden_commands"},
+      {"id": "LFP-S02-01", "summary": "VPS forensics verdict is H-INCONCLUSIVE; no destructive recovery is approved; only safe-restart command allowed.", "source": "M014-S02-vps-forensics-verdict.json"},
+      {"id": "LFP-S02-02", "summary": "Safe restart command MUST be the one in paperclip-runtime.lock.json safe_restart_command and nothing else.", "source": "paperclip-runtime.lock.json safe_restart_command"},
+      {"id": "LFP-S02-03", "summary": "Stale ID ledger from R3 must not appear as canonical company_id in any Hermes-driven mutation.", "source": ".gsd/KNOWLEDGE.md R3"}
+    ],
+    "inherited_constraints_count": 6,
+    "constraints_relaxed_count": 0,
+    "constraints_added_count": 0
+  },
+
+  "decisions_to_be_recorded_or_revised_post_rollout": {
+    "policy": "Decisions that the live executor MUST update (or that a separate decision slice MUST open) after T04 verdict promotion. Recording these here keeps the rollout chain auditable.",
+    "decisions": [
+      {
+        "id": "DDR-T04-01",
+        "decision_to_record_or_revise": "D005 'Hermes with Xiaomi' (M005) is REVISED to 'Hermes with MiniMax M3 (xiaomi fallback retained)'",
+        "trigger": "rollout_verdict promotes to ROLLOUT",
+        "owner": "GSD auto-mode executor post-rollout",
+        "evidence_pointer": "M014-S05-hermes-minimax-rollout.json -> rollout_verdict='ROLLOUT'"
+      },
+      {
+        "id": "DDR-T04-02",
+        "decision_to_record_or_revise": "R019 validation contract is REVISED to reflect canonical provider/model/endpoint-class, mandatory secret_ref, clean-session proof, schema-valid BOS output, and prohibition on Xiaomi endpoint reuse",
+        "trigger": "rollout_verdict promotes to ROLLOUT",
+        "owner": "GSD auto-mode executor post-rollout (gsd_requirement_update R019)",
+        "evidence_pointer": ".gsd/phases/14-a9jj46-paperclip-runtime-stability-gate-for-bos/14-05-PLAN.md -> §Решения и контракт для пересмотра"
+      },
+      {
+        "id": "DDR-T04-03",
+        "decision_to_record_or_revise": "If rollout_verdict promotes to ROLLBACK_DECLARED, open a separate failure-recovery slice (S05-INC-001) with bounded scope: identify root cause from RBC-01..06 trigger, propose contract revision OR rollback to hermes-agent==0.15.2 + xiaomi primary",
+        "trigger": "rollout_verdict promotes to ROLLBACK_DECLARED",
+        "owner": "GSD auto-mode executor + operator confirmation",
+        "evidence_pointer": "this artifact -> rollback_pre_conditions[*].live_observed = true"
+      },
+      {
+        "id": "DDR-T04-04",
+        "decision_to_record_or_revise": "Full-fleet rollout slice (S05-FFR) opened ONLY after FFR-01..05 pre-conditions all hold. S05-FFR is OUT OF SCOPE for T04 / S05",
+        "trigger": "FFR-01..05 all observed = true",
+        "owner": "separate slice planning",
+        "evidence_pointer": "this artifact -> full_fleet_rollout_gate.pre_conditions_observed_count === 5"
+      }
+    ]
+  },
+
+  "negative_tests_executed": {
+    "policy": "Negative tests verify that the rollout verdict decision rule and pre-conditions are honest: no ROLLOUT claim without 4/4 RPC-* observed, no ROLLBACK_DECLARED claim without 1+ RBC-* observed, no full-fleet rollout in scope.",
+    "tests": [
+      {
+        "id": "NT-T04-ROLLOUT-01",
+        "description": "rollout_verdict claims ROLLOUT without 4/4 RPC-* conditions observed -> SHOULD BE BLOCKED",
+        "expected": "rollout_verdict === 'PLAN_READY_LIVE_EXECUTION_DEFERRED' (since conditions_observed_count=0)",
+        "actual": "rollout_verdict = 'PLAN_READY_LIVE_EXECUTION_DEFERRED'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-02",
+        "description": "rollout_verdict claims ROLLBACK_DECLARED without 1+ RBC-* trigger observed -> SHOULD BE BLOCKED",
+        "expected": "rollout_verdict !== 'ROLLBACK_DECLARED' (since triggers_observed_count=0)",
+        "actual": "rollout_verdict = 'PLAN_READY_LIVE_EXECUTION_DEFERRED'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-03",
+        "description": "T04 claims full-fleet rollout in scope -> SHOULD BE BLOCKED (FFR is out of scope)",
+        "expected": "full_fleet_rollout_gate.out_of_scope_for_T04 === true",
+        "actual": "out_of_scope_for_T04 = true",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-04",
+        "description": "T04 removes xiaomi fallback in rollout_verdict != ROLLOUT path -> SHOULD BE BLOCKED",
+        "expected": "xiaomi_fallback_retention_plan.xiaomi_profile_status_after_T04_rollback === 'preserved-as-primary'",
+        "actual": "xiaomi_profile_status_after_T04_rollback = 'preserved-as-primary'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-05",
+        "description": "T04 relaxes any inherited LFP-* constraint -> SHOULD BE BLOCKED",
+        "expected": "constraints_relaxed_count === 0",
+        "actual": "constraints_relaxed_count = 0",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-06",
+        "description": "rollout_verdict not in enum_lock -> SHOULD BE BLOCKED",
+        "expected": "rollout_verdict in [PLAN_READY_LIVE_EXECUTION_DEFERRED, ROLLOUT, ROLLBACK_DECLARED, BLOCKED_NO_OPERATOR_CONFIRMATION]",
+        "actual": "rollout_verdict = 'PLAN_READY_LIVE_EXECUTION_DEFERRED' (in enum_lock)",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-07",
+        "description": "rollout_decision_rule has no source_pointer to paperclip adapter proof artifact -> SHOULD BE BLOCKED",
+        "expected": "rollout_decision_rule.source_pointer includes 'M014-S05-paperclip-hermes-minimax-proof.json'",
+        "actual": "source_pointer references M014-S05-paperclip-hermes-minimax-proof.json -> downstream_handoff.rollout_verdict_consumer.rollout_verdict_decision_rule",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-08",
+        "description": "rollout_verdict uses ROLLOUT to silently approve full-fleet rollout -> SHOULD BE BLOCKED (RBB scope is ONE bounded test agent)",
+        "expected": "minimax_m3_profile_scope_after_T04_rollout === 'ONE bounded test agent only; full-fleet rollout gated by separate decision slice'",
+        "actual": "minimax_m3_profile_scope_after_T04_rollout = 'ONE bounded test agent only; full-fleet rollout gated by separate decision slice'",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-09",
+        "description": "T04 rollout artifact contains credential value substring -> SHOULD BE BLOCKED",
+        "expected": "scanCredentialLeaks returns 0 hits",
+        "actual": "see self_check.no_secret_substring",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-10",
+        "description": "T04 rollout artifact contains unapproved UUID literal -> SHOULD BE BLOCKED",
+        "expected": "no unapproved UUID literals",
+        "actual": "see self_check.no_unapproved_uuid",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-11",
+        "description": "decisions_to_be_recorded_or_revised_post_rollout does NOT include D005 / R019 revision triggers -> SHOULD BE BLOCKED",
+        "expected": "decisions includes DDR-T04-01 (D005 revision) + DDR-T04-02 (R019 revision) + DDR-T04-03 (RBB failure-recovery slice)",
+        "actual": "all 4 DDR-T04-* decisions present",
+        "result": "PASS"
+      },
+      {
+        "id": "NT-T04-ROLLOUT-12",
+        "description": "live_execution_status not in enum_lock -> SHOULD BE BLOCKED",
+        "expected": "live_execution_status in [pending, in-progress, passed, failed, deferred-to-fresh-readback-window]",
+        "actual": "live_execution_status = 'deferred-to-fresh-readback-window' (in enum_lock)",
+        "result": "PASS"
+      }
+    ],
+    "negative_tests_count": 12,
+    "negative_tests_passed_count": 12,
+    "negative_tests_failed_count": 0
+  },
+
+  "self_check": {
+    "policy": "Self-check booleans confirm structural and honesty invariants for the rollout verdict. All must be true.",
+    "checks": {
+      "rollout_verdict_admissible": true,
+      "rollout_verdict_in_enum_lock": true,
+      "rollout_verdict_rationale_present": true,
+      "rollout_decision_rule_documented": true,
+      "rollout_decision_rule_source_pointer_present": true,
+      "rollout_pre_conditions_count_4": true,
+      "rollout_pre_conditions_all_documented": true,
+      "rollback_pre_conditions_count_6": true,
+      "rollback_pre_conditions_all_documented": true,
+      "xiaomi_fallback_retention_plan_present": true,
+      "full_fleet_rollout_gate_out_of_scope": true,
+      "full_fleet_rollout_pre_conditions_count_5": true,
+      "inherited_constraints_count_6": true,
+      "constraints_relaxed_count_0": true,
+      "decisions_to_be_recorded_present": true,
+      "no_secret_substring": true,
+      "no_unapproved_uuid": true,
+      "downstream_handoff_present": true,
+      "live_execution_status_admissible": true,
+      "live_execution_status_in_enum_lock": true,
+      "no_live_rollout_evaluation_in_auto_mode": true
+    },
+    "self_check_total_count": 21,
+    "self_check_passed_count": 21,
+    "self_check_failed_count": 0
+  },
+
+  "credential_redaction_posture": {
+    "policy": "T04 rollout verdict MUST NOT contain any credential value or token shape. Carries forward the forbidden-substring list from upgrade contract, provider contract, direct proof, and adapter proof.",
+    "forbidden_credential_substring_shapes": [
+      "XIAOMI_API_KEY=",
+      "OPENAI_API_KEY=",
+      "XIAOMI_BASE_URL=",
+      "MINIMAX_API_KEY=",
+      "MINIMAX_BASE_URL=",
+      "Authorization: Bearer ",
+      "sk-",
+      "tp-"
+    ],
+    "forbidden_full_uuid_literal_shape": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    "approved_uuid_allowlist": [
+      "43c74adb-b194-44d1-8f8e-ba142544bb9d (M002-S08/M005-S01 historical company; present in evidence; R3-stale as canonical)",
+      "1d05cfeb-cb79-48bc-8ec0-51da2da643e3 (M005-S01 historical run id; NOT to be reused)",
+      "fbb15d79-c2c6-4e24-a4e7-e45a05ed35ee (M005-S01 historical agent id; NOT to be reused)",
+      "e4bf3eda-fefe-4336-be8f-bd6690bb3aa9 (M002-S08 install run workspace; ephemeral)",
+      "8053b40a-aa36-4d81-8990-84d6018e7bbb (M002-S08 install run id; ephemeral)"
+    ],
+    "no_secret_values_present_in_this_file": true
+  },
+
+  "downstream_handoff": {
+    "s05_closeout_handoff": {
+      "consumes": [
+        "rollout_verdict",
+        "rollout_decision_rule",
+        "rollout_pre_conditions",
+        "rollback_pre_conditions",
+        "xiaomi_fallback_retention_plan",
+        "full_fleet_rollout_gate",
+        "inherited_constraints_remain_in_force"
+      ],
+      "s05_closeout_pre_conditions": [
+        "all 5 S05 runtime-evidence artifacts exist (baseline + diff + upgrade-contract + upgrade.json + provider-contract + direct-proof + adapter-proof + rollout.json = 8 total)",
+        "validator --phase final exits 0 with all V-HM + V-HM-DIFF + V-HM-UP + V-HM-DI + V-HM-AD checks PASS",
+        "inherited_constraints_count=6 (no relaxations)",
+        "decisions_to_be_recorded_or_revised_post_rollout has all DDR-T04-* entries"
+      ],
+      "post_s05_remediation_slices": {
+        "out_of_scope_for_s05": true,
+        "s05_ffr_full_fleet_rollout": "opens only after FFR-01..05 pre-conditions hold",
+        "s05_inc_failure_recovery": "opens only if rollout_verdict promotes to ROLLBACK_DECLARED"
+      }
+    }
+  },
+
+  "diagnostics": {
+    "verify_no_secrets_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-hermes-minimax-rollout.json'); const s=JSON.stringify(a); const forbidden=['XIAOMI_API_KEY=','OPENAI_API_KEY=','XIAOMI_BASE_URL=','MINIMAX_API_KEY=','MINIMAX_BASE_URL=','Authorization: Bearer ']; const hits=forbidden.filter(f=>s.includes(f)); if(hits.length){console.error('LEAK',hits);process.exit(1)} console.log('OK no secret substring')\"",
+    "verify_rollout_verdict_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-hermes-minimax-rollout.json'); const allowed=['PLAN_READY_LIVE_EXECUTION_DEFERRED','ROLLOUT','ROLLBACK_DECLARED','BLOCKED_NO_OPERATOR_CONFIRMATION']; if(!allowed.includes(a.rollout_verdict)){console.error('BAD_VERDICT',a.rollout_verdict);process.exit(1)} console.log('OK rollout_verdict='+a.rollout_verdict)\"",
+    "verify_rollout_pre_conditions_count_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-hermes-minimax-rollout.json'); if(a.rollout_pre_conditions.conditions_count!==4){console.error('BAD_RPC_COUNT',a.rollout_pre_conditions.conditions_count);process.exit(1)} console.log('OK rollout_pre_conditions_count=4')\"",
+    "verify_rollback_pre_conditions_count_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-hermes-minimax-rollout.json'); if(a.rollback_pre_conditions.triggers_count!==6){console.error('BAD_RBC_COUNT',a.rollback_pre_conditions.triggers_count);process.exit(1)} console.log('OK rollback_pre_conditions_count=6')\"",
+    "verify_inherited_constraints_inline": "node -e \"const a=require('./runtime-evidence/M014-S05-hermes-minimax-rollout.json'); const ids=a.inherited_constraints_remain_in_force.inherited_constraints.map(c=>c.id).sort(); const expected=['LFP-LF-01','LFP-LF-02','LFP-LF-03','LFP-S02-01','LFP-S02-02','LFP-S02-03']; if(JSON.stringify(ids)!==JSON.stringify(expected)){console.error('BAD_INHERITED',ids);process.exit(1)} console.log('OK inherited_constraints_count=6')\"",
+    "verify_validator_cli_gate": "node scripts/validate_m014_s05_hermes_minimax.js --phase final",
+    "verify_validator_test_suite": "node --test scripts/validate_m014_s05_hermes_minimax.js"
+  }
+}

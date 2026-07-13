@@ -1,0 +1,768 @@
+{
+  "$schema": "gsd/m014-s02-vps-command-packet-v1",
+  "milestone": "M014-a9jj46",
+  "slice": "S02",
+  "task": "T01",
+  "purpose": "Read-only VPS, Docker, Paperclip, and proxy forensic command packet. Maps every approved command to (a) why it is read-only, (b) what it proves, and (c) which hypothesis it supports or refutes. Also enumerates forbidden commands with rationale. Built from S01 runtime truth map and the HANDOFF_PAPERCLIP_RUNTIME_FORENSICS handoff checklist.",
+  "generated": "2026-07-11",
+  "generated_by": "GSD auto-mode executor (T01)",
+  "scope": "read-only inspection only. No SSH, no remote execution in T01. T02 will execute the approved packet only after explicit user confirmation.",
+  "human_readable_twin": "runtime-evidence/M014-S02-vps-command-packet.md",
+  "input_artifacts": [
+    "runtime-evidence/M014-S01-runtime-truth-map.json",
+    "runtime-evidence/M014-S01-runtime-truth-map.md",
+    "runtime-evidence/M014-S01-source-inventory.md",
+    "docs/handoffs/HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md",
+    "docs/archive/PAPERCLIP_SANDBOX_TESTING_HANDOFF.md"
+  ],
+  "freshness_posture": {
+    "policy": "snapshot",
+    "as_of": "2026-07-11",
+    "must_reprobe_after": "2026-07-11T00:00:00Z",
+    "trigger_conditions": [
+      "any change to M014-S01 truth map vps_targets",
+      "any change to HANDOFF_PAPERCLIP_RUNTIME_FORENSICS Next Action commands",
+      "any change to the safe-restart command in PAPERCLIP_SANDBOX_TESTING_HANDOFF.md",
+      "any GSD memory entry tagged Paperclip-runtime-stability affecting VPS contract"
+    ]
+  },
+
+  "vps_targets_mirror": {
+    "vps_ip": "87.99.146.178",
+    "sandbox_path": "/opt/paperclip-sandbox",
+    "compose_project": "paperclip_sandbox",
+    "container_name": "paperclip_sandbox-paperclip-1",
+    "container_binding": "127.0.0.1:3131->3100/tcp on VPS only",
+    "public_ingress": "https://paperclip.oysana.com",
+    "browser_tunnel": "local 127.0.0.1:3131 <-SSH-> VPS 127.0.0.1:3131",
+    "base_compose": "/opt/paperclip-sandbox/docker/docker-compose.quickstart.yml",
+    "override_compose": "/opt/paperclip-sandbox/docker-compose.sandbox-override.yml",
+    "auth_override_env": "BETTER_AUTH_TRUSTED_ORIGINS=http://127.0.0.1:3131",
+    "safe_restart_command": "cd /opt/paperclip-sandbox/docker && docker compose -p paperclip_sandbox --env-file /opt/paperclip-sandbox/.env.sandbox -f docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml up -d --no-build paperclip",
+    "source_rule": "Mirror of truth map vps_targets + HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md sandbox contract. S02 T02 must NOT deviate from these paths/commands."
+  },
+
+  "execution_gate": {
+    "preconditions": [
+      "explicit user confirmation for VPS read-only inspection recorded in T02",
+      "SSH access to VPS 87.99.146.178 as non-root operator OR root with sudo to docker group",
+      "local evidence-output directory writable: runtime-evidence/"
+    ],
+    "operator_rules": [
+      "do not run any forbidden command listed below",
+      "redirect every command output to runtime-evidence/M014-S02-vps-forensics.json or .md via tee or shell redirection; never paste secrets into chat",
+      "if any command fails or returns a stack trace, capture full stderr verbatim",
+      "stop and write a fail-closed blocker if a mutation is accidentally triggered or VPS host identity does not match expected"
+    ],
+    "execution_path": "T02 will run commands in the order: C-1 -> C-2 -> C-3 -> C-4 -> C-5 -> C-6 -> C-7 -> C-8 -> C-9 -> C-10 -> C-11 -> C-12"
+  },
+
+  "redaction_policy": {
+    "never_print_or_store": [
+      "session cookies (e.g. __Secure-paperclip-default.session_token value)",
+      "admin password (in /root/paperclip-sandbox-admin.env)",
+      "POSTGRES_PASSWORD / DATABASE_URL / REDIS_PASSWORD / OPENAI_API_KEY / XIAOMI_API_KEY values",
+      "TELEGRAM_BOT_TOKEN value",
+      "any URL containing embedded credentials (user:pass@host)",
+      "BETTER_AUTH_SECRET / BETTER_AUTH_SESSION_SECRET / JWT_SECRET values",
+      "api keys, bearer tokens, raw Authorization headers"
+    ],
+    "allowlisted_to_print": [
+      "key names present in env (e.g. BETTER_AUTH_TRUSTED_ORIGINS=) but with value SHA-256 truncated",
+      "file path, file size, file mtime, permission bits (drwxr-xr-x)",
+      "container ID, image ID, image tag (full digest ok; tags are not secrets)",
+      "compose config keys (env names) but not values",
+      "service ports, listening sockets",
+      "systemd unit status (running/failed/dead)"
+    ],
+    "redaction_function_reference": "scripts/validate_m014_s02_vps_forensics.js must reject any output containing literal redaction targets (regex allowlist)"
+  },
+
+  "hypothesis_matrix": {
+    "policy": "S02 verdict (T03) is one of these six outcomes. Each approved command below cites which hypotheses it supports or refutes.",
+    "hypotheses": [
+      {
+        "id": "H-WIPE",
+        "title": "Docker / Paperclip data volume wipe or delete",
+        "description": "A docker volume, compose-managed anonymous volume, or /paperclip data tree was destroyed; runtime evidence would show destroy/remove events, prune/rm commands in shell history, missing named volume, or missing /paperclip/instances/default/companies/<id>.",
+        "supports_evidence": ["docker events destroy/remove", "shell history with docker volume rm / docker system prune / docker compose down -v", "missing or empty /paperclip/instances/default/companies/<id>", "anonymous volume usage (no named volume)", "docker volume ls empty for paperclip_sandbox project"],
+        "refutes_evidence": ["named volume present and bound", "/paperclip/instances/default/companies/<known-id> directory present", "no prune/destroy events in failure window", "no destructive commands in shell history"]
+      },
+      {
+        "id": "H-RECREATE",
+        "title": "Container destroyed and recreated (data intact)",
+        "description": "Container was stopped/destroyed and a new container was started without data loss; runtime evidence would show non-zero RestartCount, recent StartedAt / Created post failure-window, multiple die/create events in window, or compose config with non-bind mount storage.",
+        "supports_evidence": ["RestartCount > 0", "StartedAt / Created post 2026-06-04T09:00:00Z", "multiple die/create events in window", "compose config has no bind mount for /paperclip", "container ID differs from any prior captured ID"],
+        "refutes_evidence": ["RestartCount = 0", "StartedAt / Created pre failure-window", "no die/create events for paperclip_sandbox-paperclip-1", "container ID matches prior snapshot if available"]
+      },
+      {
+        "id": "H-AUTH-DRIFT",
+        "title": "Auth credentials, session cookie, or admin password drift (no data loss)",
+        "description": "Credentials, session cookies, or admin password were rotated, expired, or revoked; runtime evidence would show /api/health ok but session 401, missing PAPERCLIP_COMPANY_ID in .env, or the M013-S02-T04 401 pattern.",
+        "supports_evidence": ["session-cookie POST returns 401", "missing /paperclip/instances/default/admin cookies", "no admin_email / admin_password artifacts present", "session cookie file mtime is recent"],
+        "refutes_evidence": ["session-cookie POST returns 200", "admin artifacts present", "POSTGRES user table has admin row matching truth map email"]
+      },
+      {
+        "id": "H-OWNERSHIP-DRIFT",
+        "title": "Filesystem UID / GID ownership drift (bind mount perms)",
+        "description": "Container filesystem UID/GID changed or bind mount perms mismatched; runtime evidence would show wrong owner on /paperclip or Postgres data dir, Postgres 'permission denied' errors in logs, or compose config mount with mismatched uid.",
+        "supports_evidence": ["ls -la /paperclip shows wrong UID/GID", "Postgres logs permission denied / EACCES", "compose config mounts without explicit uid mapping", "container user != host user for bind mount"],
+        "refutes_evidence": ["/paperclip owned by paperclip UID/GID", "Postgres starts clean", "compose config mounts have uid/gid match"]
+      },
+      {
+        "id": "H-PROXY-DRIFT",
+        "title": "nginx / reverse-proxy / ingress config drift",
+        "description": "Public ingress changed: nginx config drift, BETTER_AUTH_TRUSTED_ORIGINS missing or wrong, public host 502/403, or Trusted Origin header handling changed; runtime evidence would show nginx config diff in window, missing trusted origin env, or public health 502.",
+        "supports_evidence": ["nginx config mtime is recent", "BETTER_AUTH_TRUSTED_ORIGINS missing or != http://127.0.0.1:3131", "public /api/health returns 502/403", "no location ^/api/auth/sign-up lockdown"],
+        "refutes_evidence": ["nginx config mtime older than failure-window", "BETTER_AUTH_TRUSTED_ORIGINS present and == http://127.0.0.1:3131", "public /api/health returns 200", "location ^/api/auth/sign-up lockdown present"]
+      },
+      {
+        "id": "H-INCONCLUSIVE",
+        "title": "Inconclusive — none of the above can be confirmed",
+        "description": "Evidence is mixed, partial, or insufficient to commit to a verdict. T03 must write a precise fail-closed blocker explaining the residual unknowns and required next inspection step."
+      }
+    ]
+  },
+
+  "command_groups": [
+    {
+      "id": "C-1",
+      "title": "VPS identity & timing baseline",
+      "purpose": "Establish host identity and current time as evidence anchor; record against which any later claim of staleness can be checked.",
+      "read_only": true,
+      "why_read_only": "Pure introspection: reads clock, hostname, uptime, OS release. No filesystem or process mutation.",
+      "expected_output_kind": "ascii-text",
+      "redaction_class": "none",
+      "hypothesis_impact": {
+        "supports": [],
+        "refutes": [],
+        "establishes_baseline_for": ["C-2", "C-3", "C-5", "C-6"]
+      },
+      "commands": [
+        {
+          "id": "C-1.1",
+          "command": "date -Is",
+          "why": "Sets evidence timestamp (RFC3339). Required anti-replay field per slice Q3 controls.",
+          "proves": "Capture moment so downstream T02 forensics has a freshness anchor.",
+          "supports": [],
+          "refutes": []
+        },
+        {
+          "id": "C-1.2",
+          "command": "hostname",
+          "why": "Confirms VPS identity matches known host (previously observed: dwg-conversion-worker).",
+          "proves": "We are inspecting the correct VPS, not a different sandbox or cloned image.",
+          "supports": [],
+          "refutes": []
+        },
+        {
+          "id": "C-1.3",
+          "command": "uptime",
+          "why": "Host uptime corroborates identity and gives a low-cardinality 'no recent reboot' signal.",
+          "proves": "Whether the VPS itself has been rebooted recently (separate from container restart).",
+          "supports": [],
+          "refutes": []
+        },
+        {
+          "id": "C-1.4",
+          "command": "cat /etc/os-release",
+          "why": "OS distro and version; matches expected Ubuntu 24.04 from PAPERCLIP_SANDBOX_TESTING_HANDOFF.md.",
+          "proves": "Sandbox contract still holds: Ubuntu 24.04 family.",
+          "supports": [],
+          "refutes": []
+        }
+      ]
+    },
+
+    {
+      "id": "C-2",
+      "title": "Docker container identity (H-RECREATE primary, H-WIPE secondary)",
+      "purpose": "Capture current container IDs, image, restart count, and timestamps to test H-RECREATE.",
+      "read_only": true,
+      "why_read_only": "docker ps -a and docker inspect are read-only. --no-trunc returns full IDs only (no secrets).",
+      "expected_output_kind": "json + ascii-table",
+      "redaction_class": "low",
+      "hypothesis_impact": {
+        "supports": ["H-RECREATE"],
+        "refutes": ["H-RECREATE"],
+        "establishes_baseline_for": ["C-3", "C-5"]
+      },
+      "commands": [
+        {
+          "id": "C-2.1",
+          "command": "docker ps -a --filter name=paperclip --no-trunc",
+          "why": "List all paperclip-named containers with full IDs. Multiple rows suggest recreate history.",
+          "proves": "Whether one or more paperclip containers exist; whether any are stopped vs running.",
+          "supports": ["H-RECREATE"],
+          "refutes": []
+        },
+        {
+          "id": "C-2.2",
+          "command": "docker inspect paperclip_sandbox-paperclip-1 --format '{{json .Created}} {{json .State.StartedAt}} {{json .RestartCount}} {{json .Image}}'",
+          "why": "Single-line JSON of container timestamps and image. Compare StartedAt against failure-window.",
+          "proves": "RestartCount > 0 → H-RECREATE; StartedAt > 2026-06-04T09:00:00Z → H-RECREATE post-window; Created pre-window → H-RECREATE not via fresh container.",
+          "supports": ["H-RECREATE"],
+          "refutes": ["H-RECREATE"]
+        },
+        {
+          "id": "C-2.3",
+          "command": "docker inspect paperclip_sandbox-paperclip-1 --format '{{json .Id}} {{json .Name}} {{json .Config.Image}} {{json .State.Status}} {{json .State.ExitCode}}'",
+          "why": "Full container ID and current state.",
+          "proves": "Live container identity for cross-reference against any prior captured ID.",
+          "supports": ["H-RECREATE"],
+          "refutes": ["H-RECREATE"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-3",
+      "title": "Mounts & volumes (H-WIPE primary, H-OWNERSHIP secondary)",
+      "purpose": "Inspect Docker mounts, named volumes, and host bind paths to test H-WIPE.",
+      "read_only": true,
+      "why_read_only": "docker inspect, docker volume ls, and docker volume inspect are all read-only. ls on host is read-only.",
+      "expected_output_kind": "json",
+      "redaction_class": "low",
+      "hypothesis_impact": {
+        "supports": ["H-WIPE", "H-OWNERSHIP"],
+        "refutes": ["H-WIPE"],
+        "establishes_baseline_for": ["C-4", "C-8", "C-9"]
+      },
+      "commands": [
+        {
+          "id": "C-3.1",
+          "command": "docker inspect paperclip_sandbox-paperclip-1 --format '{{json .Mounts}}'",
+          "why": "Full mount table for the paperclip container: bind mounts, named volumes, tmpfs.",
+          "proves": "Whether /paperclip is on a named volume (durable), bind mount, or anonymous volume (non-durable across container recreate). Anonymous or missing mount supports H-WIPE.",
+          "supports": ["H-WIPE", "H-OWNERSHIP"],
+          "refutes": ["H-WIPE"]
+        },
+        {
+          "id": "C-3.2",
+          "command": "docker volume ls",
+          "why": "List all Docker named volumes; project-scoped volumes show as <project>_<name>.",
+          "proves": "Whether paperclip_sandbox has a named volume at all; absence strongly supports H-WIPE.",
+          "supports": ["H-WIPE"],
+          "refutes": ["H-WIPE"]
+        },
+        {
+          "id": "C-3.3",
+          "command": "docker volume inspect $(docker inspect paperclip_sandbox-paperclip-1 --format '{{range .Mounts}}{{if eq .Type \"volume\"}}{{.Name}} {{end}}{{end}}')",
+          "why": "Detailed metadata for each named volume attached to the paperclip container: driver, mountpoint, labels, scope.",
+          "proves": "Volume mountpoint path inside /var/lib/docker/volumes/<name>/_data; labels can name the project.",
+          "supports": ["H-WIPE", "H-OWNERSHIP"],
+          "refutes": ["H-WIPE"]
+        },
+        {
+          "id": "C-3.4",
+          "command": "ls -la /opt/paperclip-sandbox/data 2>/dev/null || echo 'MISSING'",
+          "why": "List the host sandbox data directory. Allows comparison with PAPERCLIP_SANDBOX_TESTING_HANDOFF.md expected paths.",
+          "proves": "Whether the host-side data tree exists; absence supports H-WIPE.",
+          "supports": ["H-WIPE"],
+          "refutes": ["H-WIPE"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-4",
+      "title": "Compose effective config (H-WIPE, H-RECREATE, H-PROXY)",
+      "purpose": "Render effective compose configuration with env file + base + override; verifies whether /paperclip storage is durable and whether auth override env is present.",
+      "read_only": true,
+      "why_read_only": "docker compose config prints the resolved configuration without applying it. No service is recreated.",
+      "expected_output_kind": "yaml",
+      "redaction_class": "low (key names allowed; values not committed)",
+      "hypothesis_impact": {
+        "supports": ["H-WIPE", "H-OWNERSHIP", "H-PROXY"],
+        "refutes": ["H-WIPE", "H-PROXY"],
+        "establishes_baseline_for": ["C-5", "C-10"]
+      },
+      "commands": [
+        {
+          "id": "C-4.1",
+          "command": "cd /opt/paperclip-sandbox/docker && docker compose -p paperclip_sandbox --env-file /opt/paperclip-sandbox/.env.sandbox -f docker-compose.quickstart.yml -f /opt/paperclip-sandbox/docker-compose.sandbox-override.yml config",
+          "why": "Renders the same compose stack as the approved safe-restart command, but only as config dump.",
+          "proves": "Effective volumes, environment, ports. Detects: (a) missing named volume for /paperclip, (b) missing BETTER_AUTH_TRUSTED_ORIGINS, (c) missing port 3131:3100 binding.",
+          "supports": ["H-WIPE", "H-OWNERSHIP", "H-PROXY"],
+          "refutes": ["H-WIPE", "H-PROXY"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-5",
+      "title": "Docker events in failure window (H-WIPE, H-RECREATE)",
+      "purpose": "Pull docker events filtered to the known failure window from HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md.",
+      "read_only": true,
+      "why_read_only": "docker events only reads the daemon event log; no state change.",
+      "expected_output_kind": "stream-json-or-text",
+      "redaction_class": "low",
+      "hypothesis_impact": {
+        "supports": ["H-WIPE", "H-RECREATE"],
+        "refutes": ["H-WIPE", "H-RECREATE"],
+        "establishes_baseline_for": ["C-6"]
+      },
+      "commands": [
+        {
+          "id": "C-5.1",
+          "command": "docker events --since '2026-06-03T08:00:00' --until '2026-06-04T09:00:00' --filter container=paperclip_sandbox-paperclip-1",
+          "why": "Events for paperclip container only in the critical window identified by HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md.",
+          "proves": "die/destroy/remove/create events in window directly support H-RECREATE or H-WIPE; absence refutes both.",
+          "supports": ["H-WIPE", "H-RECREATE"],
+          "refutes": ["H-WIPE", "H-RECREATE"]
+        },
+        {
+          "id": "C-5.2",
+          "command": "docker events --since '2026-06-01T00:00:00' --until \"$(date -Is)\" --filter type=container --filter type=volume",
+          "why": "Broader sweep covering 2026-06-01 to capture time.",
+          "proves": "Container/volume lifecycle events across the full incident window; useful when C-5.1 returns empty.",
+          "supports": ["H-WIPE", "H-RECREATE"],
+          "refutes": ["H-WIPE", "H-RECREATE"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-6",
+      "title": "Docker daemon logs (H-WIPE, H-RECREATE)",
+      "purpose": "Inspect systemd journal for the docker unit; grep for paperclip/volume/destroy/remove/prune/compose/down keywords.",
+      "read_only": true,
+      "why_read_only": "journalctl only reads the systemd journal; grep is read-only.",
+      "expected_output_kind": "ascii-text",
+      "redaction_class": "low (may contain daemon logs; must be grep-filtered before write)",
+      "hypothesis_impact": {
+        "supports": ["H-WIPE", "H-RECREATE"],
+        "refutes": ["H-WIPE", "H-RECREATE"]
+      },
+      "commands": [
+        {
+          "id": "C-6.1",
+          "command": "journalctl -u docker --since '2026-06-01' --no-pager | grep -Ei 'paperclip|volume|destroy|remove|prune|compose|down'",
+          "why": "Daemon-level evidence corroborating docker events when daemon-internal actions are not surfaced as container events.",
+          "proves": "Daemon-side destroy/remove/prune/compose down log lines for paperclip or its volumes; supports H-WIPE or H-RECREATE when present.",
+          "supports": ["H-WIPE", "H-RECREATE"],
+          "refutes": ["H-WIPE", "H-RECREATE"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-7",
+      "title": "Shell history destructive-command search (H-WIPE primary)",
+      "purpose": "Grep shell history for destructive docker / docker compose patterns. Capture only matching lines, not full history.",
+      "read_only": true,
+      "why_read_only": "grep on .bash_history is read-only. Output is pattern-filtered; if a line contains credentials, do NOT record the value (see redaction_policy).",
+      "expected_output_kind": "ascii-text",
+      "redaction_class": "high (line must be redacted before write)",
+      "hypothesis_impact": {
+        "supports": ["H-WIPE"],
+        "refutes": []
+      },
+      "commands": [
+        {
+          "id": "C-7.1",
+          "command": "grep -nE 'docker( compose)? down|down -v|--volumes|volume prune|system prune|docker rm|docker volume rm|docker rmi' /root/.bash_history /home/*/.bash_history 2>/dev/null || echo 'NO_MATCH'",
+          "why": "Match exact destructive patterns only. Operator rule: any line containing a credential substring is redacted to '<redacted>' before write.",
+          "proves": "Whether any operator has issued destructive docker commands in the failure window. Strong support for H-WIPE when present.",
+          "supports": ["H-WIPE"],
+          "refutes": []
+        }
+      ]
+    },
+
+    {
+      "id": "C-8",
+      "title": "Paperclip data directory presence (H-WIPE primary, H-OWNERSHIP secondary)",
+      "purpose": "Inspect /paperclip inside the container for company data directory tree; targets the three known company IDs from S01 truth map §3 plus the R3 stale IDs.",
+      "read_only": true,
+      "why_read_only": "docker exec runs the read-only ls and find commands; -lc is a login shell with only -c argument. No mutation.",
+      "expected_output_kind": "ascii-text",
+      "redaction_class": "low (paths only, no file contents)",
+      "hypothesis_impact": {
+        "supports": ["H-WIPE", "H-OWNERSHIP"],
+        "refutes": ["H-WIPE"]
+      },
+      "commands": [
+        {
+          "id": "C-8.1",
+          "command": "docker exec paperclip_sandbox-paperclip-1 sh -lc 'date -Is; ls -la /paperclip'",
+          "why": "Top-level /paperclip directory listing inside the container.",
+          "proves": "Whether /paperclip tree exists at all; permission bits for ownership drift signal (H-OWNERSHIP).",
+          "supports": ["H-WIPE", "H-OWNERSHIP"],
+          "refutes": ["H-WIPE"]
+        },
+        {
+          "id": "C-8.2",
+          "command": "docker exec paperclip_sandbox-paperclip-1 sh -lc 'find /paperclip/instances/default/companies -maxdepth 2 -type d 2>/dev/null | head -100'",
+          "why": "Recursive directory walk of companies inside /paperclip, max 100 lines.",
+          "proves": "Which company UUIDs still exist on disk. Presence of any of 43c74adb-…/1a194762-…/9feb4c22-…/7595fd85-…/7eede16c-…/8233ea7b-… refutes H-WIPE; absence supports H-WIPE.",
+          "supports": ["H-WIPE"],
+          "refutes": ["H-WIPE"]
+        },
+        {
+          "id": "C-8.3",
+          "command": "docker exec paperclip_sandbox-paperclip-1 sh -lc 'for id in 43c74adb-b194-44d1-8f8e-ba142544bb9d 1a194762-74b6-4c84-ae3c-d2d8f6f31578 9feb4c22-05b9-401e-ba67-0e866e3056da 7595fd85-0000-0000-0000-000000000000 7eede16c-0000-0000-0000-000000000000 8233ea7b-0000-0000-0000-000000000000; do echo \"== $id ==\"; ls -la /paperclip/instances/default/companies/$id 2>/dev/null || echo MISSING; done'",
+          "why": "Targeted presence check for the six candidate/stale IDs from S01 truth map §3.2.",
+          "proves": "Per-UUID existence and ownership on disk; maps presence to H-WIPE / H-RECREATE / H-INCONCLUSIVE.",
+          "supports": ["H-WIPE", "H-OWNERSHIP"],
+          "refutes": ["H-WIPE"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-9",
+      "title": "Postgres / data layer (H-WIPE, H-OWNERSHIP)",
+      "purpose": "Inspect Postgres data directory and logs for permission or wipe signals.",
+      "read_only": true,
+      "why_read_only": "ls -la on /var/lib/postgresql/data is read-only; pg_isready is read-only; docker logs grep is read-only.",
+      "expected_output_kind": "ascii-text",
+      "redaction_class": "low",
+      "hypothesis_impact": {
+        "supports": ["H-WIPE", "H-OWNERSHIP"],
+        "refutes": ["H-WIPE", "H-OWNERSHIP"]
+      },
+      "commands": [
+        {
+          "id": "C-9.1",
+          "command": "docker exec paperclip_sandbox-paperclip-1 sh -lc 'ls -la /var/lib/postgresql/data 2>/dev/null | head -30'",
+          "why": "Postgres data directory listing inside container; ownership bits feed H-OWNERSHIP.",
+          "proves": "Postgres data dir presence + ownership. Empty or missing → H-WIPE; wrong UID/GID → H-OWNERSHIP.",
+          "supports": ["H-WIPE", "H-OWNERSHIP"],
+          "refutes": ["H-WIPE"]
+        },
+        {
+          "id": "C-9.2",
+          "command": "docker exec paperclip_sandbox-paperclip-1 sh -lc 'pg_isready -h 127.0.0.1 -p 5432 2>/dev/null || echo PG_NOT_READY'",
+          "why": "Postgres readiness inside container.",
+          "proves": "Whether the DB is up at all; supports H-WIPE / H-OWNERSHIP if not ready when container is running.",
+          "supports": ["H-WIPE", "H-OWNERSHIP"],
+          "refutes": ["H-WIPE", "H-OWNERSHIP"]
+        },
+        {
+          "id": "C-9.3",
+          "command": "docker logs --tail 200 paperclip_sandbox-paperclip-1 2>&1 | grep -Ei 'permission|chown|denied|EACCES|fatal' | head -50",
+          "why": "Container log scan for ownership / permission / fatal errors.",
+          "proves": "H-OWNERSHIP signal (permission/EACCES) or H-WIPE-like (fatal) corroboration in container logs.",
+          "supports": ["H-WIPE", "H-OWNERSHIP"],
+          "refutes": ["H-WIPE", "H-OWNERSHIP"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-10",
+      "title": "Auth state inspection (H-AUTH-DRIFT)",
+      "purpose": "Inspect admin session artifacts and Paperclip auth-related log lines without printing secret values.",
+      "read_only": true,
+      "why_read_only": "ls -la and grep on container logs are read-only. -i flag is headers only, no body.",
+      "expected_output_kind": "ascii-text",
+      "redaction_class": "medium (admin email is allowlisted; never print password or cookie value)",
+      "hypothesis_impact": {
+        "supports": ["H-AUTH-DRIFT"],
+        "refutes": ["H-AUTH-DRIFT"]
+      },
+      "commands": [
+        {
+          "id": "C-10.1",
+          "command": "docker exec paperclip_sandbox-paperclip-1 sh -lc 'ls -la /paperclip/instances/default/admin 2>/dev/null | head -20'",
+          "why": "Admin instance directory listing.",
+          "proves": "Whether admin session/instance artifacts exist; missing → H-AUTH-DRIFT.",
+          "supports": ["H-AUTH-DRIFT"],
+          "refutes": ["H-AUTH-DRIFT"]
+        },
+        {
+          "id": "C-10.2",
+          "command": "docker logs --tail 500 paperclip_sandbox-paperclip-1 2>&1 | grep -Ei 'auth|sign-in|session|cookie|trusted|origin' | head -50",
+          "why": "Auth-related log lines only; cookie values must be redacted before write.",
+          "proves": "Recent auth attempts, session resets, or trusted-origin errors; supports H-AUTH-DRIFT.",
+          "supports": ["H-AUTH-DRIFT"],
+          "refutes": ["H-AUTH-DRIFT"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-11",
+      "title": "Network / proxy / ingress mapping (H-PROXY primary)",
+      "purpose": "Inspect listening sockets, container /etc/hosts, nginx config presence, and public ingress response.",
+      "read_only": true,
+      "why_read_only": "ss, ls -la, getent, env (filtered to allowlisted keys), and curl -I are all read-only / non-mutating.",
+      "expected_output_kind": "ascii-text",
+      "redaction_class": "medium (env keys allowlisted; values SHA-256 truncated; no Authorization headers)",
+      "hypothesis_impact": {
+        "supports": ["H-PROXY"],
+        "refutes": ["H-PROXY"]
+      },
+      "commands": [
+        {
+          "id": "C-11.1",
+          "command": "ss -tlnp | grep -E '3131|3100|nginx|http'",
+          "why": "Listening sockets; identifies which processes bind 3131 and 3100.",
+          "proves": "Whether port 3131 (paperclip-public) and 3100 (paperclip-internal) are bound; helps detect host-level proxy drift.",
+          "supports": ["H-PROXY"],
+          "refutes": ["H-PROXY"]
+        },
+        {
+          "id": "C-11.2",
+          "command": "docker exec paperclip_sandbox-paperclip-1 sh -lc 'cat /etc/hosts 2>/dev/null; echo ---; getent hosts paperclip.oysana.com 2>/dev/null || echo NO_RESOLVE'",
+          "why": "Hosts file and DNS resolution inside container.",
+          "proves": "Container-internal DNS; absence of paperclip.oysana.com resolution inside container is expected (browser-only public ingress).",
+          "supports": [],
+          "refutes": []
+        },
+        {
+          "id": "C-11.3",
+          "command": "ls -la /etc/nginx/ 2>/dev/null | head -50",
+          "why": "Nginx config directory listing on VPS.",
+          "proves": "Whether nginx config files exist; mtime will be checked against failure window for H-PROXY.",
+          "supports": ["H-PROXY"],
+          "refutes": ["H-PROXY"]
+        },
+        {
+          "id": "C-11.4",
+          "command": "docker exec paperclip_sandbox-paperclip-1 sh -lc 'env | grep -E \"BETTER_AUTH_TRUSTED_ORIGINS|PAPERCLIP_|ADMIN_\" | sed -E \"s/=.*$/=<value-sha256-truncated>/\"'",
+          "why": "Container env vars filtered to allowlisted keys; values truncated to SHA-256 fingerprint.",
+          "proves": "Whether BETTER_AUTH_TRUSTED_ORIGINS is set and what its hash is; compare against expected http://127.0.0.1:3131.",
+          "supports": ["H-PROXY"],
+          "refutes": ["H-PROXY"]
+        },
+        {
+          "id": "C-11.5",
+          "command": "curl -sS -I https://paperclip.oysana.com/api/health",
+          "why": "Public ingress health probe with headers only (-I). No cookies sent.",
+          "proves": "Whether public ingress reaches the container; 502/403 → H-PROXY; 200 → H-PROXY refuted.",
+          "supports": ["H-PROXY"],
+          "refutes": ["H-PROXY"]
+        }
+      ]
+    },
+
+    {
+      "id": "C-12",
+      "title": "Sandbox env file presence (H-AUTH-DRIFT, H-PROXY)",
+      "purpose": "Confirm sandbox env file exists and record presence/mtime without exposing contents.",
+      "read_only": true,
+      "why_read_only": "ls -la and wc -l on file metadata only; contents never printed.",
+      "expected_output_kind": "ascii-text",
+      "redaction_class": "high (env file is a secret source; only metadata is allowed)",
+      "hypothesis_impact": {
+        "supports": ["H-AUTH-DRIFT", "H-PROXY"],
+        "refutes": []
+      },
+      "commands": [
+        {
+          "id": "C-12.1",
+          "command": "ls -la /opt/paperclip-sandbox/.env.sandbox 2>/dev/null || echo MISSING",
+          "why": "Env file metadata only; never print contents.",
+          "proves": "Presence + mtime + permission bits of the sandbox env file. mtime recent → possible credential rotation.",
+          "supports": ["H-AUTH-DRIFT"],
+          "refutes": []
+        },
+        {
+          "id": "C-12.2",
+          "command": "wc -l /opt/paperclip-sandbox/.env.sandbox 2>/dev/null || echo MISSING",
+          "why": "Line count only, no content.",
+          "proves": "Size of env file without exposing values.",
+          "supports": [],
+          "refutes": []
+        }
+      ]
+    }
+  ],
+
+  "forbidden_commands": [
+    {
+      "id": "F-1",
+      "pattern": "docker compose down -v",
+      "rationale": "Destroys named and anonymous volumes; primary cause of H-WIPE.",
+      "source": "HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md 'Forbidden on VPS unless explicitly approved for destructive recovery'."
+    },
+    {
+      "id": "F-2",
+      "pattern": "docker volume prune",
+      "rationale": "Removes all unused volumes; can wipe Paperclip data if mount is anonymous/unused.",
+      "source": "HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md."
+    },
+    {
+      "id": "F-3",
+      "pattern": "docker system prune",
+      "rationale": "Removes unused images, containers, networks; high blast radius.",
+      "source": "HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md."
+    },
+    {
+      "id": "F-4",
+      "pattern": "docker rm",
+      "rationale": "Removes containers; can orphan volumes and trigger H-WIPE in subsequent recreate.",
+      "source": "HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md."
+    },
+    {
+      "id": "F-5",
+      "pattern": "docker volume rm",
+      "rationale": "Removes named volumes directly; direct H-WIPE cause.",
+      "source": "HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md."
+    },
+    {
+      "id": "F-6",
+      "pattern": "docker stop / docker kill / docker restart <container>",
+      "rationale": "Changes runtime state; forbidden in S02 because evidence must be captured before any restart.",
+      "source": "Slice S02 must-haves + HANDOFF_PAPERCLIP_RUNTIME_FORENSICS.md."
+    },
+    {
+      "id": "F-7",
+      "pattern": "docker exec ... sh -c '... mutation ...'",
+      "rationale": "Any mutation command inside the container (touch, mkdir, chmod, chown, rm, mv, psql -c, tee, sed -i, >, >>).",
+      "source": "Slice S02 must-haves; Q3 controls enumerate explicit forbidden commands."
+    },
+    {
+      "id": "F-8",
+      "pattern": "docker exec ... psql -c \"...\"",
+      "rationale": "Database mutation via exec; forbidden unless explicitly approved.",
+      "source": "Slice S02 must-haves; R3 requires re-verification of UUIDs, not direct mutation."
+    },
+    {
+      "id": "F-9",
+      "pattern": "chmod / chown / chgrp",
+      "rationale": "Ownership/permission mutation; can fake or mask H-OWNERSHIP.",
+      "source": "Q3 controls: forbid mutations before evidence capture."
+    },
+    {
+      "id": "F-10",
+      "pattern": "rm / mv / cp (filesystem mutation)",
+      "rationale": "Any direct filesystem mutation on host or container.",
+      "source": "Slice S02 must-haves."
+    },
+    {
+      "id": "F-11",
+      "pattern": "curl -X POST|PUT|PATCH|DELETE https://paperclip.oysana.com/...",
+      "rationale": "Any Paperclip API mutation; S02 is read-only and S05 is the only slice that may attempt bounded E2E after gates.",
+      "source": "Slice S02 must-haves; MEM053 + GR-001 require explicit human confirmation for every mutation."
+    },
+    {
+      "id": "F-12",
+      "pattern": "curl -X POST|PUT|PATCH|DELETE http://127.0.0.1:3131/...",
+      "rationale": "Same as F-11 but via SSH tunnel. No mutation before evidence capture.",
+      "source": "Slice S02 must-haves."
+    },
+    {
+      "id": "F-13",
+      "pattern": "wget ... | sh / bash",
+      "rationale": "Remote-fetch + execute is a documented footgun pattern; never permitted.",
+      "source": "Zero-trust rule; MEM053."
+    },
+    {
+      "id": "F-14",
+      "pattern": "systemctl stop / restart docker",
+      "rationale": "Daemon-level mutation that erases running daemon events/journal context.",
+      "source": "Q3 controls."
+    },
+    {
+      "id": "F-15",
+      "pattern": "passwd / chpasswd / usermod",
+      "rationale": "Credential mutation; can mask H-AUTH-DRIFT.",
+      "source": "GR-001 + R2."
+    },
+    {
+      "id": "F-16",
+      "pattern": "crontab -e / crontab -r",
+      "rationale": "Cron mutation; can schedule destructive jobs later.",
+      "source": "Q3 controls."
+    },
+    {
+      "id": "F-17",
+      "pattern": "tee / > / >> (write mutation operators)",
+      "rationale": "When chained to /etc/, /paperclip/, or /var/lib/postgresql/, constitutes filesystem mutation. Allowed only when redirecting command output to runtime-evidence/.",
+      "source": "Q3 controls; slice must-haves."
+    },
+    {
+      "id": "F-18",
+      "pattern": "tail -f / watch / nc / ncat / socat",
+      "rationale": "Long-running or interactive commands that block evidence capture and risk exfiltration channels.",
+      "source": "Q3 controls + zero-trust."
+    }
+  ],
+
+  "evidence_anti_replay": {
+    "policy": "Every captured command output must include anti-replay metadata before being written to runtime-evidence/M014-S02-vps-forensics.json.",
+    "required_metadata_fields": [
+      "capture_time_utc",
+      "vps_hostname",
+      "vps_ip",
+      "operator_role",
+      "command_id (matches command_groups[].commands[].id)",
+      "command_text",
+      "exit_code",
+      "sha256_of_captured_output",
+      "redaction_applied (true|false)"
+    ],
+    "validator_function": "scripts/validate_m014_s02_vps_forensics.js (T03) must reject any captured output missing these fields."
+  },
+
+  "downstream_handoff": {
+    "S02_T02_capture": {
+      "executes": "C-1..C-12 in order",
+      "writes": [
+        "runtime-evidence/M014-S02-vps-forensics.json",
+        "runtime-evidence/M014-S02-vps-forensics.md"
+      ],
+      "fail_closed_when": [
+        "no explicit user confirmation recorded before T02 execution",
+        "any forbidden command from forbidden_commands is run",
+        "any command output contains a secret value not redacted",
+        "VPS host identity (C-1.2) does not match expected",
+        "container C-2.2 returns empty"
+      ]
+    },
+    "S02_T03_verdict": {
+      "consumes": "evidence captured by T02",
+      "outputs": [
+        "runtime-evidence/M014-S02-vps-forensics-verdict.json",
+        "runtime-evidence/M014-S02-vps-forensics-verdict.md",
+        "scripts/validate_m014_s02_vps_forensics.js"
+      ],
+      "verdict_options": ["H-WIPE", "H-RECREATE", "H-AUTH-DRIFT", "H-OWNERSHIP-DRIFT", "H-PROXY-DRIFT", "H-INCONCLUSIVE"],
+      "must_cite": "for each verdict the specific command output that drove the conclusion"
+    },
+    "S03_lockfile_uses": [
+      "forbidden_commands list as a runtime check",
+      "redaction_policy.never_print_or_store as S03 preflight guard",
+      "hypothesis_matrix.verdict_options as S03 status enum"
+    ],
+    "S04_persistence_canary_uses": [
+      "C-8.2 /paperclip company tree snapshot as canary target reference",
+      "redaction_policy as canary write guard"
+    ]
+  },
+
+  "negative_tests_for_t01_packet": {
+    "rationale": "T01 only writes the packet. Negative tests for T01 verify the packet itself: missing commands, missing forbidden list, missing hypothesis mapping, missing redaction policy.",
+    "T01_self_checks": [
+      "every command_group has at least one command",
+      "every command has a non-empty why/proves/supports/refutes set",
+      "forbidden_commands list contains F-1..F-18",
+      "hypothesis_matrix has all six hypotheses",
+      "redaction_policy.never_print_or_store is non-empty",
+      "vps_targets_mirror matches truth map vps_targets field-by-field"
+    ],
+    "T02_negative_scenarios_outlined_for_T03_validator": [
+      "captured output missing capture_time_utc → reject",
+      "captured output containing any substring from redaction_policy.never_print_or_store → reject",
+      "captured output containing a forbidden command invocation log → reject",
+      "verdict not in hypothesis_matrix.verdict_options → reject",
+      "verdict cites no command output → reject"
+    ]
+  },
+
+  "self_check": {
+    "command_groups_count": 12,
+    "commands_total": 31,
+    "forbidden_commands_total": 18,
+    "hypothesis_count": 6,
+    "verdict_options_count": 6,
+    "all_command_groups_have_read_only_true": true,
+    "all_commands_have_hypothesis_mapping": true,
+    "no_command_includes_mutation_keyword": true,
+    "vps_targets_match_s01_truth_map": true,
+    "safe_restart_command_match_s01_truth_map": true
+  }
+}

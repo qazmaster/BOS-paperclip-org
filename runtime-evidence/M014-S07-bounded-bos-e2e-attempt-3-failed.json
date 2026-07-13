@@ -1,0 +1,474 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/s07-bounded-bos-e2e-live.v1.json",
+  "milestone": "M014-a9jj46",
+  "slice": "S07",
+  "task": "T04",
+  "mode": "live",
+  "status": "FAIL_CLOSED",
+  "auth_mode": "session-cookie",
+  "confirmation_scope": "D062 / M014-a9jj46 / S07 / T04",
+  "generated": "2026-07-13T13:33:39.512Z",
+  "run_seed_hash": "c5f24c58e9744c73213accaf126c1e77ef2fc54d17ca2721125f6f1000d04810",
+  "correlation_marker_sha256": "cc8c612f02139f24ffdd69c348e7148ab80a2c1001e9497914bd26aa6d36c4c3",
+  "correlation_id_sha256": "cc8c612f02139f24ffdd69c348e7148ab80a2c1001e9497914bd26aa6d36c4c3",
+  "idempotency_key_sha256": {
+    "issue_create": "b625bec0a2400399c0947c49384d5f6badcd28b8a2e0cb289aaa846da6df458a",
+    "heartbeat": "6e3a99e9c57020b332157bf88a3416afb71ad19c15e64cac03233ecbb27a2dbd",
+    "distinct": true
+  },
+  "recovery_lock": {
+    "schema_version": 2,
+    "seed_hash": "c5f24c58e9744c73213accaf126c1e77ef2fc54d17ca2721125f6f1000d04810",
+    "status": "issue-confirmed",
+    "last_operation": "issue-create",
+    "operations": {
+      "issue-create": {
+        "status": "confirmed",
+        "idempotency_key_hash": "b625bec0a2400399c0947c49384d5f6badcd28b8a2e0cb289aaa846da6df458a",
+        "attempted": true,
+        "confirmed": true
+      },
+      "heartbeat-invoke": {
+        "status": "heartbeat_pending",
+        "idempotency_key_hash": "6e3a99e9c57020b332157bf88a3416afb71ad19c15e64cac03233ecbb27a2dbd",
+        "attempted": true,
+        "confirmed": false,
+        "pre_wake_count": 20
+      }
+    }
+  },
+  "target": {
+    "company_id": "<redacted-id>",
+    "project_id": "<redacted-id>",
+    "agent_id": "<redacted-id>"
+  },
+  "adapter_check": {
+    "adapterType": "hermes_local",
+    "provider": "minimax",
+    "model": "MiniMax-M3"
+  },
+  "terminal_proof": null,
+  "wake_count_delta": null,
+  "preflight": {
+    "pass": true,
+    "blocker_codes": []
+  },
+  "bounded_policy": {
+    "max_issue_creates": 1,
+    "max_heartbeat_posts": 1,
+    "max_readback_gets": 12,
+    "max_heartbeat_polls": 3,
+    "retry_policy": "no POST/PATCH/DELETE retry; ambiguous mutation recovery is GET-only"
+  },
+  "request_journal": [
+    {
+      "method": "POST",
+      "path": "/api/auth/sign-in/email",
+      "classification": "control-plane",
+      "operation": "session-sign-in",
+      "status": 200,
+      "request": {
+        "body_keys": [
+          "email",
+          "password"
+        ],
+        "cookie": "<absent>"
+      },
+      "response": {
+        "session_cookie": "<redacted>"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/<redacted-id>",
+      "classification": "readback-other",
+      "operation": "company-readback",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "id",
+          "name",
+          "description",
+          "status",
+          "issuePrefix",
+          "issueCounter",
+          "budgetMonthlyCents",
+          "spentMonthlyCents",
+          "attachmentMaxBytes",
+          "defaultResponsibleUserId",
+          "requireBoardApprovalForNewAgents",
+          "feedbackDataSharingEnabled",
+          "feedbackDataSharingConsentAt",
+          "feedbackDataSharingConsentByUserId",
+          "feedbackDataSharingTermsVersion",
+          "brandColor",
+          "logoAssetId",
+          "createdAt",
+          "updatedAt",
+          "logoUrl"
+        ],
+        "id": "<redacted-id>",
+        "status": "active"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/<redacted-id>/projects?limit=100",
+      "classification": "readback-other",
+      "operation": "project-list-readback",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "0"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/<redacted-id>/agents",
+      "classification": "readback-other",
+      "operation": "agent-list-readback",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/agents/<redacted-id>",
+      "classification": "readback",
+      "operation": "agent-readback",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "id",
+          "companyId",
+          "name",
+          "role",
+          "title",
+          "icon",
+          "status",
+          "reportsTo",
+          "capabilities",
+          "adapterType",
+          "adapterConfig",
+          "runtimeConfig",
+          "defaultEnvironmentId",
+          "budgetMonthlyCents",
+          "spentMonthlyCents",
+          "pauseReason",
+          "pausedAt",
+          "errorReason",
+          "permissions",
+          "lastHeartbeatAt",
+          "metadata",
+          "createdAt",
+          "updatedAt",
+          "urlKey",
+          "orgChainHealth",
+          "chainOfCommand",
+          "access"
+        ],
+        "id": "<redacted-id>",
+        "status": "idle"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/<redacted-id>/heartbeat-runs?agentId=<redacted-id>&limit=1000",
+      "classification": "readback-other",
+      "operation": "heartbeat-runs-pre-readback",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/<redacted-id>/issues?limit=100",
+      "classification": "readback-other",
+      "operation": "duplicate-pre-readback",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/issues/<redacted-id>",
+      "classification": "readback",
+      "operation": "issue-readback",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "id",
+          "companyId",
+          "projectId",
+          "projectWorkspaceId",
+          "goalId",
+          "parentId",
+          "title",
+          "description",
+          "status",
+          "workMode",
+          "priority",
+          "assigneeAgentId",
+          "assigneeUserId",
+          "checkoutRunId",
+          "executionRunId",
+          "executionAgentNameKey",
+          "executionLockedAt",
+          "createdByAgentId",
+          "createdByUserId",
+          "responsibleUserId",
+          "issueNumber",
+          "identifier",
+          "originKind",
+          "originId",
+          "originRunId",
+          "originFingerprint",
+          "requestDepth",
+          "billingCode",
+          "assigneeAdapterOverrides",
+          "executionPolicy",
+          "executionState",
+          "monitorNextCheckAt",
+          "monitorWakeRequestedAt",
+          "monitorLastTriggeredAt",
+          "monitorAttemptCount",
+          "monitorNotes",
+          "monitorScheduledBy",
+          "executionWorkspaceId",
+          "executionWorkspacePreference",
+          "executionWorkspaceSettings"
+        ],
+        "id": "<redacted-id>",
+        "status": "in_progress"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/<redacted-id>/heartbeat-runs?agentId=<redacted-id>&limit=1000",
+      "classification": "readback-other",
+      "operation": "heartbeat-resume-recovery",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/heartbeat-runs/<redacted-id>",
+      "classification": "readback-other",
+      "operation": "heartbeat-resume-recovery-detail",
+      "status": 200,
+      "request": {
+        "cookie": "<redacted>",
+        "body_keys": []
+      },
+      "response": {
+        "keys": [
+          "id",
+          "companyId",
+          "agentId",
+          "invocationSource",
+          "triggerDetail",
+          "status",
+          "responsibleUserId",
+          "startedAt",
+          "finishedAt",
+          "error",
+          "wakeupRequestId",
+          "exitCode",
+          "signal",
+          "usageJson",
+          "resultJson",
+          "sessionIdBefore",
+          "sessionIdAfter",
+          "logStore",
+          "logRef",
+          "logBytes",
+          "logSha256",
+          "logCompressed",
+          "stdoutExcerpt",
+          "stderrExcerpt",
+          "errorCode",
+          "externalRunId",
+          "processPid",
+          "processGroupId",
+          "processStartedAt",
+          "lastOutputAt",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastOutputBytes",
+          "retryOfRunId",
+          "processLossRetryCount",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "issueCommentStatus",
+          "issueCommentSatisfiedByCommentId"
+        ],
+        "id": "<redacted-id>",
+        "status": "succeeded"
+      }
+    }
+  ],
+  "readback_budget": {
+    "max": 12,
+    "used": 9,
+    "remaining": 3,
+    "scope": "all GET requests, including prechecks, independent readbacks, recovery, and heartbeat status polling"
+  },
+  "unconfirmed_live_side_effect_events": 2,
+  "exact_side_effect_ledger": {
+    "expected": {
+      "issues_created": 1,
+      "heartbeat_runs_started": 1,
+      "documents_created": 0,
+      "comments_created": 0,
+      "approvals_created": 0,
+      "agents_mutated": 0,
+      "unexpected_mutating_routes": 0,
+      "unconfirmed_live_side_effects": 0
+    },
+    "observed": {
+      "issues_created": 1,
+      "heartbeat_runs_started": 0,
+      "documents_created": 0,
+      "comments_created": 0,
+      "approvals_created": 0,
+      "agents_mutated": 0,
+      "unexpected_mutating_routes": 0,
+      "unconfirmed_live_side_effects": 1
+    },
+    "attempted": {
+      "issue_create_posts": 1,
+      "heartbeat_posts": 1,
+      "readback_gets": 9,
+      "operations": {
+        "issue-create": 1,
+        "heartbeat-invoke": 1
+      },
+      "unconfirmed_live_side_effect_events": 2
+    },
+    "readback_gets": 9,
+    "business_mutation_count": 2,
+    "acceptance": {
+      "issue_create_mutations_required": 1,
+      "heartbeat_mutations_required": 1,
+      "exact_mutation_counts": true
+    },
+    "invariant": "all GETs are counted separately; acceptance requires exactly one issue create and one heartbeat mutation; no mutating retry"
+  },
+  "readback_hashes": {
+    "issue": "1a628a1b0534e2a5308adaf60f7918b6abe2a0b4c4c7c8de17261b900f781a76"
+  },
+  "issue_id": "<redacted-id>",
+  "heartbeat_run_id": null,
+  "failure": {
+    "code": "LIVE-HEARTBEAT-01",
+    "where": "heartbeat-readback",
+    "message": "heartbeat resultJson.bos.issueId does not exactly match the created issue id or identifier"
+  }
+}
