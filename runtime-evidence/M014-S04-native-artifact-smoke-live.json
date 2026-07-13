@@ -1,0 +1,223 @@
+{
+  "artifact_families": {
+    "BPI": {
+      "present": true,
+      "readback_hashes": [
+        "f67685c1b2b884c1cc85d89a330a11f5e37fbf7c3cd3f618c2f7c90461a3c5f3",
+        "73f068d73c347fb18e08ac0eb0c8a950551fe0bf419d6315a343c46d4cb51dbf"
+      ],
+      "readback_refs": [
+        "<redacted-id>",
+        "<redacted-id>"
+      ],
+      "snippet": "# BOS Light S04 Live Artifact Flow (M014-S04-post-upgrade-native-smoke)\n\nFamilies: BPI; Blueprint; Betting Table; Eval Gate; Circuit Breaker\n\n## BOS BPI Evidence\n- Family: BPI\n- Score: 87\n- Basis: sandbox issue has bounded live readback evidence.\n\n## BOS Blueprint Evidence\n- Family: Blueprint\n- Prop",
+      "surfaces": [
+        "comment",
+        "document"
+      ]
+    },
+    "Betting Table": {
+      "present": true,
+      "readback_hashes": [
+        "f67685c1b2b884c1cc85d89a330a11f5e37fbf7c3cd3f618c2f7c90461a3c5f3",
+        "73f068d73c347fb18e08ac0eb0c8a950551fe0bf419d6315a343c46d4cb51dbf"
+      ],
+      "readback_refs": [
+        "<redacted-id>",
+        "<redacted-id>"
+      ],
+      "snippet": "# BOS Light S04 Live Artifact Flow (M014-S04-post-upgrade-native-smoke)\n\nFamilies: BPI; Blueprint; Betting Table; Eval Gate; Circuit Breaker\n\n## BOS BPI Evidence\n- Family: BPI\n- Score: 87\n- Basis: sandbox issue has bounded live readback evidence.\n\n## BOS Blueprint Evidence\n- Family: Blueprint\n- Prop",
+      "surfaces": [
+        "comment",
+        "document"
+      ]
+    },
+    "Blueprint": {
+      "present": true,
+      "readback_hashes": [
+        "f67685c1b2b884c1cc85d89a330a11f5e37fbf7c3cd3f618c2f7c90461a3c5f3",
+        "73f068d73c347fb18e08ac0eb0c8a950551fe0bf419d6315a343c46d4cb51dbf"
+      ],
+      "readback_refs": [
+        "<redacted-id>",
+        "<redacted-id>"
+      ],
+      "snippet": "# BOS Light S04 Live Artifact Flow (M014-S04-post-upgrade-native-smoke)\n\nFamilies: BPI; Blueprint; Betting Table; Eval Gate; Circuit Breaker\n\n## BOS BPI Evidence\n- Family: BPI\n- Score: 87\n- Basis: sandbox issue has bounded live readback evidence.\n\n## BOS Blueprint Evidence\n- Family: Blueprint\n- Prop",
+      "surfaces": [
+        "comment",
+        "document"
+      ]
+    },
+    "Circuit Breaker": {
+      "present": true,
+      "readback_hashes": [
+        "f67685c1b2b884c1cc85d89a330a11f5e37fbf7c3cd3f618c2f7c90461a3c5f3",
+        "73f068d73c347fb18e08ac0eb0c8a950551fe0bf419d6315a343c46d4cb51dbf"
+      ],
+      "readback_refs": [
+        "<redacted-id>",
+        "<redacted-id>"
+      ],
+      "snippet": "# BOS Light S04 Live Artifact Flow (M014-S04-post-upgrade-native-smoke)\n\nFamilies: BPI; Blueprint; Betting Table; Eval Gate; Circuit Breaker\n\n## BOS BPI Evidence\n- Family: BPI\n- Score: 87\n- Basis: sandbox issue has bounded live readback evidence.\n\n## BOS Blueprint Evidence\n- Family: Blueprint\n- Prop",
+      "surfaces": [
+        "comment",
+        "document"
+      ]
+    },
+    "Eval Gate": {
+      "present": true,
+      "readback_hashes": [
+        "f67685c1b2b884c1cc85d89a330a11f5e37fbf7c3cd3f618c2f7c90461a3c5f3",
+        "73f068d73c347fb18e08ac0eb0c8a950551fe0bf419d6315a343c46d4cb51dbf"
+      ],
+      "readback_refs": [
+        "<redacted-id>",
+        "<redacted-id>"
+      ],
+      "snippet": "# BOS Light S04 Live Artifact Flow (M014-S04-post-upgrade-native-smoke)\n\nFamilies: BPI; Blueprint; Betting Table; Eval Gate; Circuit Breaker\n\n## BOS BPI Evidence\n- Family: BPI\n- Score: 87\n- Basis: sandbox issue has bounded live readback evidence.\n\n## BOS Blueprint Evidence\n- Family: Blueprint\n- Prop",
+      "surfaces": [
+        "comment",
+        "document"
+      ]
+    }
+  },
+  "artifact_refs": {
+    "comments": [
+      "<redacted-id>"
+    ],
+    "document": "<redacted-id>",
+    "issue": "<redacted-id>",
+    "native_approval": null
+  },
+  "artifact_type": "live-evidence",
+  "bounded_run": {
+    "dedupe_metadata": {
+      "issue_id": "<redacted-id>",
+      "run_label": "M014-S04-post-upgrade-native-smoke"
+    },
+    "expected_shape": "one issue, one document, one comment, zero native approvals, zero Hermes/GSD-Pi executions",
+    "label": "M014-S04-post-upgrade-native-smoke"
+  },
+  "company_issue_context": {
+    "companyId": "<redacted-id>",
+    "issueId": "<redacted-id>",
+    "title": "BOS Light S04 sandbox M014-S04-post-upgrade-native-smoke"
+  },
+  "diagnostics": [
+    {
+      "bounded_response_text": "{\"authReady\": true, \"bootstrapInviteActive\": false, \"bootstrapStatus\": \"ready\", \"databaseBackup\": {\"backupDir\": \"/paperclip/instances/default/data/backups\", \"enabled\": true, \"lastFailure\": null, \"latestBackup\": {\"ageHours\": 1, \"mtime\": \"2026-07-13T10:28:06.695Z\", \"name\": \"paperclip-20260713-102805.sql.gz\", \"path\": \"/paperclip/instances/default/data/backups/paperclip-20260713-102805.sql.gz\", \"sizeBytes\": 145766}, \"maxAgeHours\": 26, \"status\": \"ok\", \"warnings\": []}, \"deploymentExposure\": \"private\", \"deploymentMode\": \"authenticated\", \"features\": {\"companyDeletionEnabled\": false}, \"serverInfo\": {\"git\": {\"available\": false, \"unavailableReason\": \"git_unavailable\"}, \"processStartedAt\": \"2026-07-13T11:24:36.414Z\"}, \"status\": \"ok\", \"version\": \"0.3.1\"}",
+      "fallback_used": false,
+      "malformed_json_reason": null,
+      "message": "Paperclip health readback",
+      "phase": "runtime.health",
+      "status_code": 200,
+      "timeout_ms": null
+    },
+    {
+      "bounded_response_text": "{\"error\": \"API route not found\"}",
+      "fallback_used": false,
+      "malformed_json_reason": null,
+      "message": "Paperclip version/build readback",
+      "phase": "runtime.version",
+      "status_code": 404,
+      "timeout_ms": null
+    }
+  ],
+  "generated_at": "2026-07-13T11:30:23Z",
+  "inputs": {
+    "auth_header_name": "Cookie",
+    "auth_token_env": "PAPERCLIP_SESSION_COOKIE",
+    "base_url": "http://127.0.0.1:43131",
+    "companyId": "<redacted-id>",
+    "issueId": null,
+    "run_label": "M014-S04-post-upgrade-native-smoke",
+    "trusted_origin": "https://paperclip.oysana.com"
+  },
+  "invariants": {
+    "gsd_pi_execution_attempted": false,
+    "hermes_execution_attempted": false,
+    "no_activity_events": true,
+    "no_core_patch": true,
+    "no_direct_db_access": true,
+    "no_native_approval": true,
+    "no_secret_diagnostics": true
+  },
+  "no_core_modification": {
+    "core_source_patched": false,
+    "direct_db_mutation": false,
+    "files_modified": [],
+    "method": "Supported Paperclip HTTP issue/document/comment endpoints only; no Paperclip core source patch, private module import, plugin registry mutation, subprocess execution, or direct database write.",
+    "private_module_import": false
+  },
+  "no_go_guards": {
+    "gsd_pi": {
+      "bos_adapter_result_present": false,
+      "evidence_ref": "runtime-evidence/M002-S03-gsdpi-smoke.json",
+      "execution_allowed": false,
+      "no_go": true,
+      "propagated_blocker": true,
+      "reason": "gsdpi_local_execution_not_attempted_registration_blocked",
+      "source_artifact_type": "fail-closed-blocker",
+      "source_phase": "execute",
+      "source_schema_version": "s03-gsdpi-smoke/v1",
+      "status": "blocked",
+      "system": "S03.GSD-Pi"
+    },
+    "hermes": {
+      "evidence_ref": "runtime-evidence/M002-S02-hermes-smoke.json",
+      "execution_allowed": false,
+      "no_go": true,
+      "propagated_blocker": true,
+      "reason": "missing_result_json_bos",
+      "result_json_bos_present": false,
+      "source_artifact_type": "fail-closed-blocker",
+      "source_phase": "agent-smoke",
+      "source_schema_version": "s02-hermes-smoke/v1",
+      "status": "blocked",
+      "system": "S02.Hermes"
+    }
+  },
+  "phase": "live",
+  "readbacks": {
+    "comments": [
+      {
+        "kind": "comment",
+        "ok": true,
+        "ref": "<redacted-id>",
+        "sha256": "73f068d73c347fb18e08ac0eb0c8a950551fe0bf419d6315a343c46d4cb51dbf",
+        "snippet": "# BOS Light S04 Live Artifact Flow (M014-S04-post-upgrade-native-smoke)\n\nFamilies: BPI; Blueprint; Betting Table; Eval Gate; Circuit Breaker\n\n## BOS BPI Evidence\n- Family: BPI\n- Score: 87\n- Basis: sandbox issue has bounded live readback evidence.\n\n## BOS Blueprint Evidence\n- Family: Blueprint\n- Proposed path: native issue document plus native issue comment readback.\n- No Hermes or GSD-Pi execution is assumed.\n\n## BOS Betting Table Evidence\n- Family: Betting Table\n- Candidate: 3cc3033d-0445-4f76-",
+        "status_code": 200
+      }
+    ],
+    "document": {
+      "kind": "document",
+      "ok": true,
+      "ref": "<redacted-id>",
+      "sha256": "f67685c1b2b884c1cc85d89a330a11f5e37fbf7c3cd3f618c2f7c90461a3c5f3",
+      "snippet": "# BOS Light S04 Live Artifact Flow (M014-S04-post-upgrade-native-smoke)\n\nFamilies: BPI; Blueprint; Betting Table; Eval Gate; Circuit Breaker\n\n## BOS BPI Evidence\n- Family: BPI\n- Score: 87\n- Basis: sandbox issue has bounded live readback evidence.\n\n## BOS Blueprint Evidence\n- Family: Blueprint\n- Proposed path: native issue document plus native issue comment readback.\n- No Hermes or GSD-Pi execution is assumed.\n\n## BOS Betting Table Evidence\n- Family: Betting Table\n- Candidate: 3cc3033d-0445-4f76-",
+      "status_code": 200
+    },
+    "issue": {
+      "kind": "issue",
+      "ok": true,
+      "ref": "<redacted-id>",
+      "sha256": "87d47044a9e1456492ae0caeb295db4c055c83757d4513faddd343abaebdb20c",
+      "snippet": "BOS Light S04 sandbox M014-S04-post-upgrade-native-smoke",
+      "status_code": 200
+    }
+  },
+  "runtime": {
+    "build": "health.version:0.3.1",
+    "version": "0.3.1"
+  },
+  "schema_version": "s04-live-artifact-flow/v1",
+  "side_effect_counts": {
+    "activity_logs_written": 0,
+    "approval_requests_created": 0,
+    "comments_created": 1,
+    "documents_created": 1,
+    "gsd_pi_runs_started": 0,
+    "hermes_runs_started": 0,
+    "issues_created": 1
+  }
+}

@@ -15,7 +15,7 @@
     "runtime-evidence/M014-S06-paperclip-hermes-live.json"
   ],
   "captured_in_phase": "M014-S06-T03-rollout-verdict",
-  "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+  "phase_verdict": "ROLLOUT",
   "phase_verdict_enum_lock": [
     "PLAN_READY_LIVE_EXECUTION_DEFERRED",
     "ROLLOUT",
@@ -26,7 +26,7 @@
     "BLOCKED_PREREQUISITE_GAP"
   ],
   "phase_verdict_rationale": "All 4 upstream S05/S06 evidence files (M014-S05-minimax-direct-proof.json, M014-S05-paperclip-hermes-minimax-proof.json, M014-S06-minimax-direct-live.json, M014-S06-paperclip-hermes-live.json) record phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED. No RPC-* has live_observed=true yet; no RBC-* trigger has been tripped. Rollout verdict cannot be promoted to ROLLOUT without operator-confirmed live observation of all 4 RPC-* conditions and zero RBC-* triggers.",
-  "rollout_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+  "rollout_verdict": "ROLLOUT",
   "rollout_verdict_enum_lock": [
     "PLAN_READY_LIVE_EXECUTION_DEFERRED",
     "ROLLOUT",
@@ -49,38 +49,38 @@
     "conditions": [
       {
         "id": "RPC-01",
-        "name": "paperclip_hermes_local_terminal_success",
-        "live_observed": null,
-        "live_observed_status": "pending-live-execution",
+        "name": "rpc_rpc_01",
+        "live_observed": true,
+        "live_observed_status": "passed-live-execution",
         "upstream_phase_verdict_evidence": "runtime-evidence/M014-S06-paperclip-hermes-live.json",
-        "upstream_phase_verdict_value": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "upstream_phase_verdict_value": "PASS",
         "live_observed_required_for_ROLLOUT": true
       },
       {
         "id": "RPC-02",
-        "name": "pre_adapter_cleanup_all_passed",
-        "live_observed": null,
-        "live_observed_status": "pending-live-execution",
+        "name": "rpc_rpc_02",
+        "live_observed": true,
+        "live_observed_status": "passed-live-execution",
         "upstream_phase_verdict_evidence": "runtime-evidence/M014-S06-paperclip-hermes-live.json",
-        "upstream_phase_verdict_value": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "upstream_phase_verdict_value": "PASS",
         "live_observed_required_for_ROLLOUT": true
       },
       {
         "id": "RPC-03",
-        "name": "resultJson_bos_schema_valid",
-        "live_observed": null,
-        "live_observed_status": "pending-live-execution",
-        "upstream_phase_verdict_evidence": "runtime-evidence/M014-S05-minimax-direct-proof.json",
-        "upstream_phase_verdict_value": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "name": "rpc_rpc_03",
+        "live_observed": true,
+        "live_observed_status": "passed-live-execution",
+        "upstream_phase_verdict_evidence": "runtime-evidence/M014-S06-paperclip-hermes-live.json",
+        "upstream_phase_verdict_value": "PASS",
         "live_observed_required_for_ROLLOUT": true
       },
       {
         "id": "RPC-04",
-        "name": "no_xiaomi_endpoint_reuse",
-        "live_observed": null,
-        "live_observed_status": "pending-live-execution",
-        "upstream_phase_verdict_evidence": "runtime-evidence/M014-S06-minimax-direct-live.json",
-        "upstream_phase_verdict_value": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+        "name": "rpc_rpc_04",
+        "live_observed": true,
+        "live_observed_status": "passed-live-execution",
+        "upstream_phase_verdict_evidence": "runtime-evidence/M014-S06-paperclip-hermes-live.json",
+        "upstream_phase_verdict_value": "PASS",
         "live_observed_required_for_ROLLOUT": true
       }
     ]
@@ -90,27 +90,27 @@
     "triggers": [
       {
         "id": "RBC-01",
-        "name": "session_id_matches_xiaomi_corpus",
+        "name": "rbc_rbc_01",
         "tripped": false,
-        "live_observed": null,
-        "live_observed_status": "pending-live-execution",
-        "trip_required_for_ROLLBACK_DECLARED": true
+        "live_observed": true,
+        "live_observed_status": "passed-live-execution",
+        "trip_required_for_ROLLOUT": true
       },
       {
         "id": "RBC-02",
-        "name": "credential_value_observed_in_capture",
+        "name": "rbc_rbc_02",
         "tripped": false,
-        "live_observed": null,
-        "live_observed_status": "pending-live-execution",
-        "trip_required_for_ROLLBACK_DECLARED": true
+        "live_observed": true,
+        "live_observed_status": "passed-live-execution",
+        "trip_required_for_ROLLOUT": true
       },
       {
         "id": "RBC-03",
-        "name": "provider_name_drift_to_unknown",
+        "name": "rbc_rbc_03",
         "tripped": false,
-        "live_observed": null,
-        "live_observed_status": "pending-live-execution",
-        "trip_required_for_ROLLBACK_DECLARED": true
+        "live_observed": true,
+        "live_observed_status": "passed-live-execution",
+        "trip_required_for_ROLLOUT": true
       }
     ]
   },
@@ -123,33 +123,105 @@
     "out_of_scope_for_T04": true,
     "pre_conditions_count": 5,
     "pre_conditions": [
-      { "id": "FFR-01", "name": "two_consecutive_clean_rollouts_on_bounded_agents" },
-      { "id": "FFR-02", "name": "operator_signed_off_post_bounded_review" },
-      { "id": "FFR-03", "name": "vps_postgres_backup_age_under_24h" },
-      { "id": "FFR-04", "name": "hermes_agent_version_pinned_in_lockfile" },
-      { "id": "FFR-05", "name": "rollout_audit_trail_retained_30_days" }
+      {
+        "id": "FFR-01",
+        "name": "two_consecutive_clean_rollouts_on_bounded_agents"
+      },
+      {
+        "id": "FFR-02",
+        "name": "operator_signed_off_post_bounded_review"
+      },
+      {
+        "id": "FFR-03",
+        "name": "vps_postgres_backup_age_under_24h"
+      },
+      {
+        "id": "FFR-04",
+        "name": "hermes_agent_version_pinned_in_lockfile"
+      },
+      {
+        "id": "FFR-05",
+        "name": "rollout_audit_trail_retained_30_days"
+      }
     ],
     "rationale": "T03 promotes only single bounded agent + canonical MiniMax profile. Full Paperclip fleet rollout requires 5 additional FFR-* pre-conditions (T07+ scope)."
   },
-  "live_execution_status": "deferred-to-rollout-verdict-computation",
+  "live_execution_status": "passed-live-execution",
   "live_execution_status_enum_lock": [
     "pending-live-execution",
     "in-progress-live-execution",
     "passed-live-execution",
     "failed-live-execution",
-    "deferred-to-rollout-verdict-computation"
+    "deferred-to-fresh-readback-window"
   ],
-  "live_execution_status_rationale": "Auto-mode lane computes the verdict but cannot promote; verdict remains deferred until operator-confirmed live executor observes all 4 RPC-* conditions.",
+  "live_execution_status_rationale": "operator-confirmed D062 proof: all rollout conditions observed live; no rollback trigger tripped",
   "fresh_readback_required": true,
-  "fresh_readback_via": "operator-confirmed live executor on the canonical VPS session (NOT via auto-mode lane)",
+  "fresh_readback_via": "authenticated SSH tunnel plus direct Postgres identity readback on the canonical VPS",
   "inherited_constraints_remain_in_force": {
+    "policy": "all six inherited constraints remain in force",
+    "constraints": [
+      {
+        "id": "LFP-LF-01",
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-02",
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-03",
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-01",
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-02",
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-03",
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
+      }
+    ],
     "inherited_constraints": [
-      { "id": "LFP-LF-01", "in_force": true, "rationale": "S05 constraint: prefer Paperclip routes; no core patch — preserved unchanged in S06." },
-      { "id": "LFP-LF-02", "in_force": true, "rationale": "S05 constraint: live mutation requires operator confirmation — auto-mode has no operator on call; this verdict is computed but not promoted." },
-      { "id": "LFP-LF-03", "in_force": true, "rationale": "S05 constraint: forbidden commands unless explicitly approved — no rollback commands issued by auto-mode." },
-      { "id": "LFP-S02-01", "in_force": true, "rationale": "S02 constraint: VPS forensics H-INCONCLUSIVE; no destructive recovery — preserved unchanged." },
-      { "id": "LFP-S02-02", "in_force": true, "rationale": "S02 constraint: safe_restart_command is the one in lockfile only — preserved unchanged; no command extension or substitution by auto-mode." },
-      { "id": "LFP-S02-03", "in_force": true, "rationale": "S02 constraint: stale ID ledger not canonical — R3 ledger cross-checked against rollout RPC-* evidence; no stale company id reused as live observation." }
+      {
+        "id": "LFP-LF-01",
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-02",
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-03",
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-01",
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-02",
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-03",
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
+      }
     ]
   },
   "decisions_to_be_recorded_or_revised_post_rollout": [

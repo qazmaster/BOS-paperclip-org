@@ -1488,17 +1488,24 @@ function validateFinal(postUpgrade, postUpgradeRaw, nativeSmoke, nativeSmokeRaw,
   }
 
   // ----- V-UP-F10 native-smoke bounded_native_smoke_attempted honest -----
-  // JSON.parse preserves the LAST duplicate key, so this may be either a
-  // top-level boolean (false) or an object with per-surface attempted flags.
-  // Both shapes are honest: top-level false = nothing attempted; object with
-  // all per-surface attempted=false = each surface attempted-false.
+  // Blocker evidence is honest when false (or every per-surface flag is
+  // false). PASS evidence is honest only when the bounded live smoke ran and
+  // its independently validated operator evidence is attached.
   const bns = nativeSmoke.bounded_native_smoke_attempted;
+  const liveSmokeProof = nativeSmoke.operator_live_evidence;
   let bnsHonest = false;
   if (bns === false) {
     bnsHonest = true;
+  } else if (bns === true) {
+    bnsHonest = (nsVerdict === 'PASS' || nsVerdict === 'PASS_WITH_NOTES') &&
+      liveSmokeProof && liveSmokeProof.validator_passed === true &&
+      typeof liveSmokeProof.sha256 === 'string' && /^[a-f0-9]{64}$/.test(liveSmokeProof.sha256);
   } else if (bns && typeof bns === 'object' && !Array.isArray(bns)) {
     const perSurface = Object.values(bns).map((v) => v && typeof v === 'object' && v.attempted);
-    bnsHonest = perSurface.length > 0 && perSurface.every((a) => a === false);
+    const allFalse = perSurface.length > 0 && perSurface.every((a) => a === false);
+    const allTrue = perSurface.length > 0 && perSurface.every((a) => a === true);
+    bnsHonest = allFalse || ((nsVerdict === 'PASS' || nsVerdict === 'PASS_WITH_NOTES') &&
+      allTrue && liveSmokeProof && liveSmokeProof.validator_passed === true);
   }
   if (!bnsHonest) {
     blockers.push(

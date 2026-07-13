@@ -359,7 +359,7 @@ function expectCheckVerdict(result, checkId, expectedVerdict) {
 // ---------------------------------------------------------------------------
 
 describe('M014-S07-T01 entry-gate fail-closed contract', () => {
-  describe('Current S04-S06 deferred state', () => {
+  describe('Current S04-S06 operator-promoted state', () => {
     it('loads all 10 upstream artifacts from canonical paths', () => {
       const artifacts = loadUpstreamArtifacts();
       for (const k of Object.keys(validator.UPSTREAM_ARTIFACT_PATHS)) {
@@ -368,53 +368,35 @@ describe('M014-S07-T01 entry-gate fail-closed contract', () => {
       }
     });
 
-    it('validates entry-gate against actual upstream artifacts (must FAIL with >=10 blockers)', () => {
-      const artifacts = loadUpstreamArtifacts();
-      const result = validateEntryGate(artifacts, null);
-      assert.equal(result.verdict, 'fail', 'entry-gate must fail closed against deferred upstream');
-      assert.ok(result.blockers.length >= 10, `expected >=10 blockers, got ${result.blockers.length}`);
+    it('validates the canonical operator-promoted entry gate with zero blockers', () => {
+      const result = validateEntryGate(loadUpstreamArtifacts(), null);
+      assert.equal(result.verdict, 'pass', JSON.stringify(result.blockers));
+      assert.equal(result.blockers.length, 0);
     });
 
-    it('rejects current S04 deploy deployment_status=blocked_no_preconditions', () => {
+    it('records exact S04 live PASS verdicts', () => {
       const artifacts = loadUpstreamArtifacts();
-      const result = validateEntryGate(artifacts, null);
-      expectBlockerOn(result, 'S04 deploy.deployment_status must equal "success"', 'blocked_no_preconditions');
+      assert.equal(artifacts.s04Deploy.parsed.deployment_status, 'success');
+      assert.equal(artifacts.s04PostUpgrade.parsed.post_upgrade_verdict, 'PASS');
+      assert.equal(artifacts.s04NativeSmoke.parsed.native_smoke_verdict, 'PASS');
     });
 
-    it('rejects current S04 post-upgrade verdict=BLOCKED_NO_DEPLOY_ARTIFACTS', () => {
+    it('records exact S05-S06 live promotion verdicts', () => {
       const artifacts = loadUpstreamArtifacts();
-      const result = validateEntryGate(artifacts, null);
-      expectBlockerOn(result, 'S04 post-upgrade.post_upgrade_verdict must equal "PASS"');
+      assert.ok(REQUIRED_S05_UPGRADE_PHASE_VERDICTS.includes(artifacts.s05Upgrade.parsed.phase_verdict));
+      assert.equal(artifacts.s05Direct.parsed.phase_verdict, 'PASS');
+      assert.equal(artifacts.s05Paperclip.parsed.phase_verdict, 'PASS');
+      assert.equal(artifacts.s06DirectLive.parsed.phase_verdict, 'PASS');
+      assert.equal(artifacts.s06PaperclipHermesLive.parsed.phase_verdict, 'PASS');
+      assert.equal(artifacts.s06Rollout.parsed.rollout_verdict, 'ROLLOUT');
+      assert.equal(artifacts.s06Persistence.parsed.phase_verdict, 'PASS');
     });
 
-    it('rejects current S04 native-smoke verdict=BLOCKED_NO_LIVE_API', () => {
-      const artifacts = loadUpstreamArtifacts();
-      const result = validateEntryGate(artifacts, null);
-      expectBlockerOn(result, 'S04 native-smoke.native_smoke_verdict must equal "PASS"');
-    });
-
-    it('rejects current S05/S06 deferred phase_verdicts', () => {
-      const artifacts = loadUpstreamArtifacts();
-      const result = validateEntryGate(artifacts, null);
-      expectBlockerOn(result, 'S05 upgrade.phase_verdict must be one of');
-      expectBlockerOn(result, 'S06 direct-live.phase_verdict must equal "PASS"');
-      expectBlockerOn(result, 'S06 paperclip-hermes-live.phase_verdict must equal "PASS"');
-      expectBlockerOn(result, 'S06 rollout must record phase_verdict="ROLLOUT"');
-      expectBlockerOn(result, 'S06 persistence.phase_verdict must equal "PASS"');
-    });
-
-    it('records exactly 30 entry-gate checks (V-BOS-E2E-01..30)', () => {
-      const artifacts = loadUpstreamArtifacts();
-      const result = validateEntryGate(artifacts, null);
+    it('records exactly 30 passing entry-gate checks (V-BOS-E2E-01..30)', () => {
+      const result = validateEntryGate(loadUpstreamArtifacts(), null);
       assert.equal(result.summary.checks_count, 30);
-      // fail_count is bounded by the number of FAILed checks. Against actual
-      // deferred upstream, MOST checks fail but a small set of static checks
-      // (redaction discipline, inherited-constraint ledger, enum_lock
-      // membership, fresh_readback_required assertion) STILL PASS because the
-      // evidence files are honest about their deferred state. We require
-      // >=10 fail-closed blockers against the deferred S04-S06 chain.
-      assert.ok(result.summary.fail_count >= 10, `expected >=10 fail-closed checks, got ${result.summary.fail_count}`);
-      assert.equal(result.summary.checks_count - result.summary.fail_count, result.summary.pass_count);
+      assert.equal(result.summary.fail_count, 0);
+      assert.equal(result.summary.pass_count, 30);
     });
   });
 
@@ -805,31 +787,33 @@ describe('M014-S07-T01 entry-gate fail-closed contract', () => {
     });
   });
 
-  describe('Stub phases (T03 / T04 placeholders)', () => {
-    it('validateAllowBlocker returns fail when target evidence missing', () => {
+  describe('T03 blocker and T04 require-pass phases', () => {
+    it('validateAllowBlocker fails closed when target evidence is missing', () => {
       const result = validator.validateAllowBlocker(null);
       assert.equal(result.verdict, 'fail');
-      assert.ok(result.placeholder === true);
+      assert.ok(result.blockers.some((blocker) => blocker.includes('missing')));
     });
 
-    it('validateRequirePass returns fail when target evidence missing', () => {
+    it('validateRequirePass fails closed when target evidence is missing', () => {
       const result = validator.validateRequirePass(null);
       assert.equal(result.verdict, 'fail');
-      assert.ok(result.placeholder === true);
+      assert.equal(result.placeholder, false);
+      assert.ok(result.blockers.some((blocker) => blocker.includes('missing')));
     });
 
-    it('validateAllowBlocker returns fail with T03-deliverable blocker when target evidence present', () => {
+    it('validateAllowBlocker rejects malformed evidence with canonical AB checks', () => {
       const result = validator.validateAllowBlocker({ some: 'evidence' });
       assert.equal(result.verdict, 'fail');
-      assert.ok(result.placeholder === true);
-      assert.ok(result.blockers.some((b) => b.includes('T03 deliverable')));
+      assert.equal(result.checks.length, 20);
+      assert.ok(result.blockers.some((blocker) => blocker.includes('required top-level keys')));
     });
 
-    it('validateRequirePass returns fail with T04-deliverable blocker when target evidence present', () => {
+    it('validateRequirePass rejects malformed evidence with canonical RP checks', () => {
       const result = validator.validateRequirePass({ some: 'evidence' });
       assert.equal(result.verdict, 'fail');
-      assert.ok(result.placeholder === true);
-      assert.ok(result.blockers.some((b) => b.includes('T04 deliverable')));
+      assert.equal(result.placeholder, false);
+      assert.equal(result.checks.length, 20);
+      assert.ok(result.blockers.some((blocker) => blocker.includes('mode=live')));
     });
   });
 

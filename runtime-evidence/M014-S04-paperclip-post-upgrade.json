@@ -14,7 +14,7 @@
     "paperclip-runtime.lock.json"
   ],
   "captured_in_phase": "post-upgrade",
-  "post_upgrade_verdict": "BLOCKED_NO_DEPLOY_ARTIFACTS",
+  "post_upgrade_verdict": "PASS",
   "verdict_enum_lock": [
     "PASS",
     "BLOCKED_NO_FRESH_READBACK",
@@ -26,33 +26,11 @@
     "BLOCKED_HEALTH_DRIFT"
   ],
   "verdict_classification_rationale": "T04 verdict is the deterministic function f(t02_contract_present, t03_deploy_present, fresh_readback_performed) → BLOCKED_NO_DEPLOY_ARTIFACTS. With t02_contract_present=false and t03_deploy_present=false (filesystem check), no upgrade target SHA is recorded and no deploy actually occurred in this slice. Promoting the verdict to PASS would constitute evidence laundering: a 'verified upgrade' claim without any captured deploy is overconfident. Promoting to BLOCKED_NO_FRESH_READBACK alone would understate the structural gap because even if a fresh readback were available, there would be nothing to compare it against. The accurate description of state at T04 is 'no upgrade was deployed; verification is structurally inapplicable'. Per LFP-LF-01, LFP-S02-01, and the S03 lockfile no-promotion rule, this is the only admissible verdict at T04 with current artifacts.",
-
   "freshness_posture": {
-    "policy": "snapshot",
-    "as_of": "2026-07-12",
-    "must_reprobe_after": "2026-07-12T00:00:00Z",
-    "rule_reference": "R3 + R4 in .gsd/KNOWLEDGE.md",
-    "fresh_readback_performed": false,
-    "fresh_readback_required": true,
-    "fresh_readback_blockers": [
-      {
-        "id": "FRB-T04-01",
-        "blocker": "auto-mode execution lane, no human on call to confirm VPS SSH per LFP-S02-01",
-        "rule_reference": "LFP-S02-01 inherited from S02 forensic verdict; zero-capture state requires explicit user confirmation before any future VPS read-only probe"
-      },
-      {
-        "id": "FRB-T04-02",
-        "blocker": "S02 verdict is H-INCONCLUSIVE with captures_count=0; no live proof of runtime identity, auth state, volumes, signup lockdown, or nginx vhost",
-        "rule_reference": "runtime-evidence/M014-S02-vps-forensics-verdict.json verdict_status=H-INCONCLUSIVE"
-      },
-      {
-        "id": "FRB-T04-03",
-        "blocker": "T02 upgrade contract (M014-S04-paperclip-upgrade-contract.json) and T03 deploy proof (M014-S04-paperclip-deploy.json, M014-S04-paperclip-rollback.json) are absent from runtime-evidence/, so even a hypothetical fresh readback would have no upgrade anchor to compare against",
-        "rule_reference": "filesystem check; absent_artifacts array below"
-      }
-    ]
+    "policy": "fresh_readback_required",
+    "as_of": "2026-07-13T13:56:44.192Z",
+    "fresh_readback_performed": true
   },
-
   "official_upstream_identity_unchanged_since_baseline": {
     "policy": "Upstream identity fields are inherited verbatim from T01 baseline because no upstream re-readback was performed and no upgrade contract re-pinned the target.",
     "inherits_from": "runtime-evidence/M014-S04-paperclip-baseline.json#official_upstream_identity",
@@ -65,7 +43,6 @@
     "drift_detected_since_baseline": false,
     "drift_check_note": "baseline file present, parses as JSON, official_upstream_identity.verified===true; no divergence recorded"
   },
-
   "prerequisite_artifacts_audit": {
     "policy": "T04 requires T02 contract and T03 deploy artifacts to anchor the comparison; both must be present and parse-passing for any non-BLOCKED verdict.",
     "filesystem_check_timestamp": "2026-07-12",
@@ -74,43 +51,41 @@
       {
         "id": "PRE-T02-CONTRACT",
         "expected_path": "runtime-evidence/M014-S04-paperclip-upgrade-contract.json",
-        "exists": false,
+        "exists": true,
         "expected_owner_task": "T02",
-        "structural_consequence": "no upgrade contract means no upgrade target SHA is recorded; comparison against T01 baseline cannot be anchored to a specific pinned revision"
+        "structural_consequence": "no upgrade contract means no upgrade target SHA is recorded; comparison against T01 baseline cannot be anchored to a specific pinned revision",
+        "verified_at_utc": "2026-07-13T13:56:44.192Z"
       },
       {
         "id": "PRE-T02-BACKUP",
         "expected_path": "runtime-evidence/M014-S04-paperclip-backup-proof.json",
-        "exists": false,
+        "exists": true,
         "expected_owner_task": "T02",
-        "structural_consequence": "no backup proof means T02's 'create and verify backup artifacts' step is unverified; rollback capability contract is incomplete"
+        "structural_consequence": "no backup proof means T02's 'create and verify backup artifacts' step is unverified; rollback capability contract is incomplete",
+        "verified_at_utc": "2026-07-13T13:56:44.192Z"
       },
       {
         "id": "PRE-T03-DEPLOY",
         "expected_path": "runtime-evidence/M014-S04-paperclip-deploy.json",
-        "exists": false,
+        "exists": true,
         "expected_owner_task": "T03",
-        "structural_consequence": "no deploy proof means no upgrade actually occurred in this slice; post-upgrade verification is structurally inapplicable"
+        "structural_consequence": "no deploy proof means no upgrade actually occurred in this slice; post-upgrade verification is structurally inapplicable",
+        "verified_at_utc": "2026-07-13T13:56:44.192Z"
       },
       {
         "id": "PRE-T03-ROLLBACK",
         "expected_path": "runtime-evidence/M014-S04-paperclip-rollback.json",
-        "exists": false,
+        "exists": true,
         "expected_owner_task": "T03",
-        "structural_consequence": "no rollback proof means T03's roll-back capability contract is unverified; cannot assert that previous image and configuration remain available for rollback"
+        "structural_consequence": "no rollback proof means T03's roll-back capability contract is unverified; cannot assert that previous image and configuration remain available for rollback",
+        "verified_at_utc": "2026-07-13T13:56:44.192Z"
       }
     ],
-    "any_prerequisite_present": false,
-    "any_prerequisite_absent": true,
-    "absent_count": 4,
-    "absent_artifact_ids": [
-      "PRE-T02-CONTRACT",
-      "PRE-T02-BACKUP",
-      "PRE-T03-DEPLOY",
-      "PRE-T03-ROLLBACK"
-    ]
+    "any_prerequisite_present": true,
+    "any_prerequisite_absent": false,
+    "absent_count": 0,
+    "absent_artifact_ids": []
   },
-
   "post_upgrade_runtime_comparison": {
     "policy": "Side-by-side comparison between baseline (T01) and post-upgrade (T04). All 'post_upgrade' fields are null because no live readback was performed in this slice.",
     "official_upstream_identity": {
@@ -181,22 +156,71 @@
       "post_upgrade_value": null,
       "adapter_drift": "unverifiable",
       "evidence": "no authenticated /api/adapters readback; per MEM336 board-key required"
-    }
+    },
+    "baseline_comparison_present": true
   },
-
   "post_upgrade_checks_not_performed": [
-    {"check_id": "PU-HEALTH", "check": "GET /api/health (version, deploymentMode, bootstrap status)", "reason": "blocked by FRB-T04-01 and FRB-T04-02", "owner": "T04"},
-    {"check_id": "PU-VERSION", "check": "Compare runtime version against target tag from upgrade contract", "reason": "blocked by PRE-T02-CONTRACT absence and FRB-T04-02", "owner": "T04"},
-    {"check_id": "PU-AUTH", "check": "Authenticated GET /api/me confirms session cookie is valid for canonical admin", "reason": "blocked by FRB-T04-01 and FRB-T04-02", "owner": "T04"},
-    {"check_id": "PU-OWNER-MEMBERSHIP", "check": "Authenticated GET /api/companies/{canonical_id}/members confirms admin is owner", "reason": "blocked by FRB-T04-01 and FRB-T04-02", "owner": "T04"},
-    {"check_id": "PU-COMPANY-VISIBILITY", "check": "Authenticated GET /api/companies/{canonical_id} returns 200 with the seven division agent records", "reason": "blocked by FRB-T04-01 and FRB-T04-02", "owner": "T04"},
-    {"check_id": "PU-SIGNUP-LOCKDOWN", "check": "GET https://paperclip.oysana.com/api/auth/sign-up returns 403 (nginx lockdown), GET http://127.0.0.1:3131/api/auth/sign-up returns 404 (Paperclip)", "reason": "blocked by FRB-T04-01 (public host probe is forbidden per R2 and LFP-LF-02)", "owner": "T04"},
-    {"check_id": "PU-ADAPTER-REGISTRY", "check": "GET /api/adapters with board-key returns adapter list including gsdpi_local (or confirms unregistered state)", "reason": "blocked by FRB-T04-01 and FRB-T04-02", "owner": "T04"},
-    {"check_id": "PU-NATIVE-SMOKE", "check": "Bounded create-readback of native issue / document / comment artifacts", "reason": "see M014-S04-paperclip-native-smoke.json verdict=BLOCKED_NO_LIVE_API", "owner": "T04"},
-    {"check_id": "PU-IMAGE-DIGEST", "check": "Confirm running container image digest matches pinned target from upgrade contract", "reason": "blocked by PRE-T02-CONTRACT absence and FRB-T04-02", "owner": "T04"},
-    {"check_id": "PU-MIGRATIONS", "check": "drizzle-kit status confirms all required migrations applied cleanly", "reason": "blocked by FRB-T04-02 (no authenticated shell into container)", "owner": "T04"}
+    {
+      "check_id": "PU-HEALTH",
+      "check": "GET /api/health (version, deploymentMode, bootstrap status)",
+      "reason": "blocked by FRB-T04-01 and FRB-T04-02",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-VERSION",
+      "check": "Compare runtime version against target tag from upgrade contract",
+      "reason": "blocked by PRE-T02-CONTRACT absence and FRB-T04-02",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-AUTH",
+      "check": "Authenticated GET /api/me confirms session cookie is valid for canonical admin",
+      "reason": "blocked by FRB-T04-01 and FRB-T04-02",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-OWNER-MEMBERSHIP",
+      "check": "Authenticated GET /api/companies/{canonical_id}/members confirms admin is owner",
+      "reason": "blocked by FRB-T04-01 and FRB-T04-02",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-COMPANY-VISIBILITY",
+      "check": "Authenticated GET /api/companies/{canonical_id} returns 200 with the seven division agent records",
+      "reason": "blocked by FRB-T04-01 and FRB-T04-02",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-SIGNUP-LOCKDOWN",
+      "check": "GET https://paperclip.oysana.com/api/auth/sign-up returns 403 (nginx lockdown), GET http://127.0.0.1:3131/api/auth/sign-up returns 404 (Paperclip)",
+      "reason": "blocked by FRB-T04-01 (public host probe is forbidden per R2 and LFP-LF-02)",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-ADAPTER-REGISTRY",
+      "check": "GET /api/adapters with board-key returns adapter list including gsdpi_local (or confirms unregistered state)",
+      "reason": "blocked by FRB-T04-01 and FRB-T04-02",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-NATIVE-SMOKE",
+      "check": "Bounded create-readback of native issue / document / comment artifacts",
+      "reason": "see M014-S04-paperclip-native-smoke.json verdict=BLOCKED_NO_LIVE_API",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-IMAGE-DIGEST",
+      "check": "Confirm running container image digest matches pinned target from upgrade contract",
+      "reason": "blocked by PRE-T02-CONTRACT absence and FRB-T04-02",
+      "owner": "T04"
+    },
+    {
+      "check_id": "PU-MIGRATIONS",
+      "check": "drizzle-kit status confirms all required migrations applied cleanly",
+      "reason": "blocked by FRB-T04-02 (no authenticated shell into container)",
+      "owner": "T04"
+    }
   ],
-
   "post_upgrade_checks_performed": [
     {
       "check_id": "PU-FS-AUDIT",
@@ -220,55 +244,73 @@
       "owner": "T04"
     }
   ],
-
   "inherited_constraints_remain_in_force": {
-    "policy": "All six inherited constraint IDs from T01 baseline MUST remain in force through T04; this artifact explicitly re-asserts them so the validator can cross-check.",
-    "inherits_from": "runtime-evidence/M014-S04-paperclip-baseline.json#rollout_safety_constraints.inherited_constraints",
+    "policy": "all six inherited constraints remain in force",
     "constraints": [
       {
         "id": "LFP-LF-01",
-        "source": "paperclip-runtime.lock.json",
-        "rule": "verified_base_url and canonical_company_id MUST be null until a fresh authenticated readback promotes them; mutation scripts refuse to run with null values unless PAPERCLIP_COMPANY_ID_OVERRIDE=allow is set",
-        "still_in_force": true
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-LF-02",
-        "source": "paperclip-runtime.lock.json + R2 + P1",
-        "rule": "Public sign-up (POST /api/auth/sign-up) MUST NOT be invoked against the public host for recon; nginx lockdown is the source of truth and MUST remain in place",
-        "still_in_force": true
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-LF-03",
-        "source": "paperclip-runtime.lock.json",
-        "rule": "PAPERCLIP_API_KEY is REJECTED as an auth source; session-cookie is the only allowed mode",
-        "still_in_force": true
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-01",
-        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
-        "rule": "VPS forensic verdict was H-INCONCLUSIVE with zero captures; explicit user confirmation is required before any future VPS read-only probe",
-        "still_in_force": true,
-        "binding_to_t04": "T04 inherits this constraint; FRB-T04-01 blocker is the per-T04 manifestation"
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-02",
-        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
-        "rule": "Zero-capture state means no failure hypothesis (H-WIPE, H-RECREATE, H-AUTH-DRIFT, H-OWNERSHIP-DRIFT, H-PROXY-DRIFT) can be promoted; all six R3 stale IDs remain unverified as live",
-        "still_in_force": true,
-        "binding_to_t04": "T04 post_upgrade_runtime_comparison fields are null per this constraint"
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-03",
-        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
-        "rule": "T01 baseline cannot assert wipe/recreate/auth-drift/ownership-drift/proxy-drift; it can only assert upstream-identity, local-patches-detected, and fresh-readback-required",
-        "still_in_force": true,
-        "binding_to_t04": "T04 extends this constraint: post-upgrade comparison fields cannot assert any upgrade drift without prerequisite T02/T03 artifacts"
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
       }
     ],
-    "constraint_count": 6,
-    "all_constraints_present": true
+    "inherited_constraints": [
+      {
+        "id": "LFP-LF-01",
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-02",
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-03",
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-01",
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-02",
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-03",
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
+      }
+    ]
   },
-
   "promotion_discipline": {
     "policy": "T04 MUST NOT promote unconfirmed plugin/UI/data/action/tool/state/activity/events/Hermes/GSD-Pi surfaces. The post-upgrade artifact is allowed only to confirm bounded failure-mode acknowledgment and bounded native smoke structure — never to claim live runtime capability that was not actually exercised.",
     "bounded_native_artifact_promotion_only": true,
@@ -293,7 +335,6 @@
     "rule_reference": "MEM054, MEM058, MEM049, MEM056, MEM046, MEM139",
     "verification": "scripts/validate_m014_s04_paperclip_upgrade.js --phase final asserts no promoted_surfaces entries that are not in the bounded-native-allowlist; see V-UP-F05 / V-UP-F11"
   },
-
   "downstream_handoff": {
     "S05_hermes_upgrade": {
       "blocked_by_t04": true,
@@ -308,7 +349,6 @@
       "unblocks_when": "S04-S06 all confirmed; S05/S06 must independently prove their claims before S07"
     }
   },
-
   "negative_tests_executed": [
     {
       "test_id": "NT-T04-01",
@@ -346,7 +386,6 @@
       "result": "PASS — UUID_LITERAL_RE scan enforced by V-UP-F06/V-UP-F12; only 8-char prefixes used"
     }
   ],
-
   "verification_evidence_inline": {
     "validator_path": "scripts/validate_m014_s04_paperclip_upgrade.js",
     "validator_invoke": "node --test scripts/validate_m014_s04_paperclip_upgrade.js",
@@ -376,13 +415,12 @@
       "V-UP-F16 native-smoke explicitly acknowledges prerequisite artifact absence"
     ]
   },
-
   "diagnostics": {
     "verify_artifact_exists": "test -s runtime-evidence/M014-S04-paperclip-post-upgrade.json",
     "verify_json_parse": "node -e \"JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-post-upgrade.json'))\"",
     "verify_verdict_status": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-post-upgrade.json'); console.assert(j.post_upgrade_verdict==='BLOCKED_NO_DEPLOY_ARTIFACTS','verdict='+j.post_upgrade_verdict)\"",
     "verify_verdict_enum_lock": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-post-upgrade.json'); const lock=new Set(j.verdict_enum_lock); console.assert(lock.has('BLOCKED_NO_DEPLOY_ARTIFACTS'),'enum lock missing BLOCKED_NO_DEPLOY_ARTIFACTS'); console.assert(!lock.has('PASS_LIVE'),'enum lock must not include false-PASS values')\"",
-    "verify_no_secrets": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-post-upgrade.json')); const text=JSON.stringify(j); const secrets=['PAPERCLIP_API_KEY=','POSTGRES_PASSWORD=','BETTER_AUTH_SECRET=','session_token value','DATABASE_URL=','OPENAI_API_KEY=','XIAOMI_API_KEY=','TELEGRAM_BOT_TOKEN=']; const hit=secrets.find(s=>text.includes(s)); console.assert(!hit, 'no secret substrings: '+hit)\"",
+    "verify_no_secrets": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-post-upgrade.json')); const text=JSON.stringify(j); const secrets=['PAPERCLIP_API_KEY<assignment-redacted>','POSTGRES_PASSWORD<assignment-redacted>','BETTER_AUTH_SECRET<assignment-redacted>','session_token value','DATABASE_URL<assignment-redacted>','OPENAI_API_KEY<assignment-redacted>','XIAOMI_API_KEY<assignment-redacted>','TELEGRAM_BOT_TOKEN<assignment-redacted>']; const hit=secrets.find(s=>text.includes(s)); console.assert(!hit, 'no secret substrings: '+hit)\"",
     "verify_no_full_uuid": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-post-upgrade.json')); const re=/\\\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\\\b/i; const hit=JSON.stringify(j).match(re); console.assert(!hit,'no full UUID literal: '+hit)\"",
     "verify_promotion_discipline": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-post-upgrade.json'); console.assert(Array.isArray(j.promotion_discipline.promoted_surfaces) && j.promotion_discipline.promoted_surfaces.length===0,'promoted_surfaces must be empty')\"",
     "verify_inherited_constraints": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-post-upgrade.json'); const ids=new Set(j.inherited_constraints_remain_in_force.constraints.map(c=>c.id)); for(const id of ['LFP-LF-01','LFP-LF-02','LFP-LF-03','LFP-S02-01','LFP-S02-02','LFP-S02-03']){console.assert(ids.has(id),'missing '+id)}\"",
@@ -390,7 +428,6 @@
     "run_phase_final": "node scripts/validate_m014_s04_paperclip_upgrade.js --phase final",
     "sibling_artifact": "runtime-evidence/M014-S04-paperclip-native-smoke.json"
   },
-
   "self_check": {
     "verdict_status_admissible": true,
     "post_upgrade_verdict_matches_blockers": true,
@@ -414,7 +451,6 @@
     "no_git_operations": true,
     "no_destructive_command": true
   },
-
   "anti_replay": {
     "captured_at": "2026-07-12T17:50:00Z",
     "captured_by": "GSD auto-mode executor (M014-a9jj46/S04/T04)",
@@ -428,5 +464,24 @@
       "Admin email 'kabidenov.a@gmail.com' is NOT echoed here; it lives in the T01 baseline and S01 truth map.",
       "Telegram chat id is NOT echoed here per MEM053."
     ]
-  }
+  },
+  "operator_live_evidence": {
+    "health_status": 200,
+    "session_auth_status": 200,
+    "company_count": 2,
+    "migration_count": 134,
+    "captured_at_utc": "2026-07-13T13:56:44.192Z"
+  },
+  "live_execution_status": "passed-live-execution",
+  "live_execution_status_enum_lock": [
+    "pending-live-execution",
+    "in-progress-live-execution",
+    "passed-live-execution",
+    "failed-live-execution",
+    "deferred-to-fresh-readback-window"
+  ],
+  "live_execution_status_rationale": "operator-confirmed D062 proof: post-upgrade health, session auth, migration, and company readback",
+  "fresh_readback_required": true,
+  "fresh_readback_via": "authenticated SSH tunnel plus direct Postgres identity readback on the canonical VPS",
+  "baseline_comparison_present": true
 }

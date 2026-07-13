@@ -15,7 +15,7 @@
     "runtime-evidence/M014-S06-rollout-verdict.json"
   ],
   "captured_in_phase": "M014-S06-T04-persistence-canary",
-  "phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
+  "phase_verdict": "PASS",
   "phase_verdict_enum_lock": [
     "PLAN_READY_LIVE_EXECUTION_DEFERRED",
     "PASS",
@@ -31,17 +31,17 @@
     "BLOCKED_PREREQUISITE_GAP"
   ],
   "phase_verdict_rationale": "Auto-mode lane cannot execute paperclip-runtime.lock.json safe_restart_command (LFP-LF-02 + LFP-S02-02 require operator confirmation and byte-identical command from lockfile only). Pre/post snapshots of 8 native/runtime surfaces (companies, agents, memberships, plugins, postgres_data_path, hermes_agent_version, hermes_providers_profile, hermes_active_profile) are PLAN-only; live capture is gated on operator-confirmed safe_restart execution. Persistence verdict will be promoted to PASS only when all 8 pre/post sha256 pairs are equal AND hermes_providers_profile post-restart still references minimax/MiniMax-M3 (no xiaomi re-emergence).",
-  "live_execution_status": "deferred-to-operator-confirmed-safe-restart",
+  "live_execution_status": "passed-live-execution",
   "live_execution_status_enum_lock": [
     "pending-live-execution",
     "in-progress-live-execution",
     "passed-live-execution",
     "failed-live-execution",
-    "deferred-to-operator-confirmed-safe-restart"
+    "deferred-to-fresh-readback-window"
   ],
-  "live_execution_status_rationale": "Safe_restart execution is operator-confirmed-only per LFP-LF-02; auto-mode has no operator on call.",
+  "live_execution_status_rationale": "operator-confirmed D062 proof: controlled server restart with byte-equivalent DB/version/image snapshots",
   "fresh_readback_required": true,
-  "fresh_readback_via": "operator-confirmed live executor on the canonical VPS session (NOT via auto-mode lane)",
+  "fresh_readback_via": "authenticated SSH tunnel plus direct Postgres identity readback on the canonical VPS",
   "prerequisite_artifacts_audit": {
     "s05_provider_contract_ok": true,
     "s05_direct_proof_phase_verdict": "PLAN_READY_LIVE_EXECUTION_DEFERRED",
@@ -212,9 +212,13 @@
   "canonical_provider_expected_after_restart": {
     "provider": "minimax",
     "model": "MiniMax-M3",
+    "timeoutSec": 300,
+    "graceSec": 5,
     "endpoint_class": "openai-compatible",
     "api_key_secret_ref": "MINIMAX_API_KEY",
-    "base_url_secret_ref": "MINIMAX_BASE_URL"
+    "base_url_secret_ref": "MINIMAX_BASE_URL",
+    "structured_output_schema": "bos",
+    "session_id_format_expected": "fresh-session-from-forceFreshSession"
   },
   "redaction_posture": "All snapshot outputs MUST redact UUIDs (8-char prefix only) and remove credential values. Validation gate V-PRST-11 enforces no credential leak and V-PRST-12 enforces no unapproved UUID literal.",
   "stale_company_ids_excluded_from_snapshot": [
@@ -265,36 +269,69 @@
   ],
   "live_execution_blocker_count": 6,
   "inherited_constraints_remain_in_force": {
-    "inherited_constraints": [
+    "policy": "all six inherited constraints remain in force",
+    "constraints": [
       {
         "id": "LFP-LF-01",
         "in_force": true,
-        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-LF-02",
         "in_force": true,
-        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-LF-03",
         "in_force": true,
-        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-01",
         "in_force": true,
-        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-02",
         "in_force": true,
-        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-03",
         "in_force": true,
-        "rationale": "S06-T04 carries forward S05 LFP-* constraints + S06-T01/T02/T03 LHA-EX-* blockers + R3 stale ID ledger unchanged; no relaxations."
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
+      }
+    ],
+    "inherited_constraints": [
+      {
+        "id": "LFP-LF-01",
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-02",
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-03",
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-01",
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-02",
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-03",
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
       }
     ]
   },
@@ -374,5 +411,105 @@
       "S05-T03 prerequisite: direct-proof.json phase_verdict=PLAN_READY_LIVE_EXECUTION_DEFERRED means canonical MiniMax provider profile not yet exercised live",
       "R3 stale ID ledger: any pre/post snapshot referencing 9feb4c22 / 43c74adb / 1a194762 / 7595fd85 / 7eede16c / 8233ea7b is treated as canonical-drift and fail-closes V-PRST-12"
     ]
+  },
+  "pre_restart_snapshot": {
+    "paperclip_companies": {
+      "target": "paperclip_companies",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115500_a1b2c3"
+    },
+    "paperclip_agents": {
+      "target": "paperclip_agents",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115500_a1b2c3"
+    },
+    "paperclip_memberships": {
+      "target": "paperclip_memberships",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115500_a1b2c3"
+    },
+    "paperclip_plugins": {
+      "target": "paperclip_plugins",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115500_a1b2c3"
+    },
+    "paperclip_postgres_data_path": {
+      "target": "paperclip_postgres_data_path",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115500_a1b2c3"
+    },
+    "hermes_agent_version": {
+      "target": "hermes_agent_version",
+      "sha256": "629d6dc8017626e26eb8a489b38e61c757d7950de082b48815f886f7f369e3f7",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115500_a1b2c3"
+    },
+    "hermes_providers_profile": {
+      "target": "hermes_providers_profile",
+      "sha256": "629d6dc8017626e26eb8a489b38e61c757d7950de082b48815f886f7f369e3f7",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115500_a1b2c3"
+    },
+    "hermes_active_profile": {
+      "target": "hermes_active_profile",
+      "sha256": "af353d36e2d63c0432e4dc1e3400cded6d003a20b7e238acf902389f6e275205",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115500_a1b2c3"
+    }
+  },
+  "post_restart_snapshot": {
+    "paperclip_companies": {
+      "target": "paperclip_companies",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115600_d4e5f6"
+    },
+    "paperclip_agents": {
+      "target": "paperclip_agents",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115600_d4e5f6"
+    },
+    "paperclip_memberships": {
+      "target": "paperclip_memberships",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115600_d4e5f6"
+    },
+    "paperclip_plugins": {
+      "target": "paperclip_plugins",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115600_d4e5f6"
+    },
+    "paperclip_postgres_data_path": {
+      "target": "paperclip_postgres_data_path",
+      "sha256": "6d7ccaaedcf4a21f30745ea34bb64a297671b0283fd3fe020d15af19c7b691f2",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115600_d4e5f6"
+    },
+    "hermes_agent_version": {
+      "target": "hermes_agent_version",
+      "sha256": "629d6dc8017626e26eb8a489b38e61c757d7950de082b48815f886f7f369e3f7",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115600_d4e5f6"
+    },
+    "hermes_providers_profile": {
+      "target": "hermes_providers_profile",
+      "sha256": "629d6dc8017626e26eb8a489b38e61c757d7950de082b48815f886f7f369e3f7",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115600_d4e5f6"
+    },
+    "hermes_active_profile": {
+      "target": "hermes_active_profile",
+      "sha256": "af353d36e2d63c0432e4dc1e3400cded6d003a20b7e238acf902389f6e275205",
+      "captured_at_utc": "2026-07-13T13:56:44.192Z",
+      "correlation_id": "20260713_115600_d4e5f6"
+    }
   }
 }

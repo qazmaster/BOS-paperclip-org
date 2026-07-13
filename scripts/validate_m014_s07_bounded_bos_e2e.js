@@ -2168,23 +2168,141 @@ function validateAllowBlocker(targetEvidence) {
 }
 
 // ---------------------------------------------------------------------------
-// T04: --phase require-pass (placeholder until T04 lands)
+// T04: --phase require-pass (canonical live PASS evidence validator)
 // ---------------------------------------------------------------------------
 
+const REQUIRE_PASS_CHECK_IDS = Object.freeze(Array.from({ length: 20 }, (_, index) => `RP-${String(index + 1).padStart(2, '0')}`));
+const REQUIRE_PASS_EXPECTED_SIDE_EFFECTS = Object.freeze({
+  issues_created: 1,
+  heartbeat_runs_started: 1,
+  documents_created: 0,
+  comments_created: 0,
+  approvals_created: 0,
+  agents_mutated: 0,
+  unexpected_mutating_routes: 0,
+  unconfirmed_live_side_effects: 0
+});
+
 function validateRequirePass(targetEvidence) {
-  if (!targetEvidence) {
+  const blockers = [];
+  const checks = [];
+  const addCheck = (id, condition, note, blocker) => {
+    checks.push({ id, verdict: condition ? 'pass' : 'fail', note });
+    if (!condition) blockers.push(blocker || note);
+  };
+  const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
+  const isSha256 = (value) => typeof value === 'string' && /^[0-9a-f]{64}$/i.test(value);
+
+  if (!isObject(targetEvidence)) {
     return {
       verdict: 'fail',
-      blockers: ['target S07 evidence missing for --require-pass / --phase require-pass'],
+      blockers: ['target S07 evidence missing or not a JSON object for --require-pass / --phase require-pass'],
       checks: [],
-      placeholder: true
+      placeholder: false,
+      summary: { blockers_count: 1, checks_count: 0, pass_count: 0, fail_count: 0 }
     };
   }
+
+  addCheck('RP-01', targetEvidence.mode === 'live' && targetEvidence.status === 'PASS' && targetEvidence.milestone === 'M014-a9jj46' && targetEvidence.slice === 'S07' && targetEvidence.task === 'T04',
+    'canonical identity, mode=live, and status=PASS', 'canonical S07 evidence must identify M014-a9jj46/S07/T04 with mode=live and status=PASS');
+
+  addCheck('RP-02', targetEvidence.auth_mode === 'session-cookie' && typeof targetEvidence.confirmation_scope === 'string' && targetEvidence.confirmation_scope.includes('D062'),
+    'session-cookie auth and D062 confirmation scope recorded', 'canonical S07 evidence must use session-cookie auth and record D062 confirmation scope');
+
+  const upstream = validateEntryGate(loadUpstreamArtifacts(), null);
+  addCheck('RP-03', upstream.verdict === 'pass' && upstream.blockers.length === 0,
+    'all 30 upstream entry-gate checks pass', `upstream S04-S06 entry gate must pass before T04 acceptance (${upstream.blockers.join('; ')})`);
+
+  const hashes = targetEvidence.idempotency_key_sha256;
+  addCheck('RP-04', isSha256(targetEvidence.run_seed_hash) && isSha256(targetEvidence.correlation_id_sha256) &&
+    isObject(hashes) && isSha256(hashes.issue_create) && isSha256(hashes.heartbeat) && hashes.distinct === true && hashes.issue_create !== hashes.heartbeat,
+    'run/correlation/idempotency hashes are present and operation-specific', 'T04 evidence must contain distinct sha256 identities for issue-create and heartbeat');
+
+  const recovery = targetEvidence.recovery_lock;
+  const issueRecovery = recovery && recovery.operations && recovery.operations['issue-create'];
+  const heartbeatRecovery = recovery && recovery.operations && recovery.operations['heartbeat-invoke'];
+  addCheck('RP-05', isObject(recovery) && recovery.status === 'completed' && issueRecovery?.status === 'confirmed' && issueRecovery?.attempted === true && issueRecovery?.confirmed === true && heartbeatRecovery?.status === 'confirmed' && heartbeatRecovery?.attempted === true && heartbeatRecovery?.confirmed === true,
+    'terminal recovery lock confirms both mutations exactly once', 'recovery lock must be completed with confirmed issue-create and heartbeat-invoke operations');
+
+  addCheck('RP-06', targetEvidence.preflight?.pass === true && Array.isArray(targetEvidence.preflight.blocker_codes) && targetEvidence.preflight.blocker_codes.length === 0,
+    'paperclip-preflight passed with zero blockers', 'paperclip-preflight must pass with zero blocker codes');
+
+  const adapter = targetEvidence.adapter_check;
+  const adapterText = JSON.stringify(adapter || {}).toLowerCase();
+  addCheck('RP-07', isObject(adapter) && adapter.adapterType === 'hermes_local' && adapter.provider === CANONICAL_MINIMAX_PROVIDER && adapter.model === CANONICAL_MINIMAX_MODEL && !adapterText.includes('xiaomi') && !adapterText.includes('mimo-v2.5-pro'),
+    'adapter is hermes_local + MiniMax M3 with no Xiaomi reuse', 'adapter_check must prove hermes_local + MiniMax M3 and contain no Xiaomi/Mimo markers');
+
+  const policy = targetEvidence.bounded_policy;
+  addCheck('RP-08', isObject(policy) && policy.max_issue_creates === 1 && policy.max_heartbeat_posts === 1 && Number.isInteger(policy.max_readback_gets) && policy.max_readback_gets > 0 && typeof policy.retry_policy === 'string' && policy.retry_policy.includes('no POST/PATCH/DELETE retry'),
+    'bounded mutation/readback/retry policy recorded', 'bounded_policy must cap one issue, one heartbeat, bounded GETs, and forbid mutating retries');
+
+  const journal = Array.isArray(targetEvidence.request_journal) ? targetEvidence.request_journal : [];
+  const issuePosts = journal.filter((entry) => entry.method === 'POST' && /\/api\/companies\/[^/]+\/issues$/.test(entry.path || ''));
+  const heartbeatPosts = journal.filter((entry) => entry.method === 'POST' && /\/api\/agents\/[^/]+\/heartbeat\/invoke$/.test(entry.path || ''));
+  const signIns = journal.filter((entry) => entry.method === 'POST' && entry.path === '/api/auth/sign-in/email' && entry.classification === 'control-plane');
+  const unexpectedMutations = journal.filter((entry) => ['POST', 'PUT', 'PATCH', 'DELETE'].includes(entry.method) && !signIns.includes(entry) && !issuePosts.includes(entry) && !heartbeatPosts.includes(entry));
+  addCheck('RP-09', issuePosts.length === 1 && heartbeatPosts.length === 1 && signIns.length === 1 && unexpectedMutations.length === 0,
+    'journal contains one sign-in, one issue POST, one heartbeat POST, and no other mutation', 'request_journal must contain exactly the three allowed POST routes and no unexpected mutation');
+
+  const budget = targetEvidence.readback_budget;
+  const getCount = journal.filter((entry) => entry.method === 'GET').length;
+  addCheck('RP-10', isObject(budget) && Number.isInteger(budget.used) && Number.isInteger(budget.max) && budget.used === getCount && budget.used <= budget.max && budget.remaining === budget.max - budget.used,
+    'all GETs are counted within the declared budget', 'readback_budget must exactly account for every GET and remain within its cap');
+
+  const terminal = targetEvidence.terminal_proof;
+  addCheck('RP-11', isObject(terminal) && terminal.status === 'succeeded' && terminal.terminal === true && terminal.exit_code === 0 && terminal.bos_status === 'succeeded' && terminal.bos_required_fields_present === true && terminal.issue_reference_matched === true,
+    'terminal succeeded exit=0 with schema-complete BOS and issue binding', 'terminal_proof must show succeeded, terminal=true, exit_code=0, complete BOS fields, and exact issue binding');
+
+  addCheck('RP-12', targetEvidence.wake_count_delta === 1,
+    'wakeCountDelta is exactly one', 'wake_count_delta must equal exactly 1');
+
+  const ledger = targetEvidence.exact_side_effect_ledger;
+  const expected = ledger && ledger.expected;
+  const observed = ledger && ledger.observed;
+  const expectedExact = isObject(expected) && Object.entries(REQUIRE_PASS_EXPECTED_SIDE_EFFECTS).every(([key, value]) => expected[key] === value);
+  const observedExact = isObject(observed) && Object.entries(REQUIRE_PASS_EXPECTED_SIDE_EFFECTS).every(([key, value]) => observed[key] === value);
+  addCheck('RP-13', expectedExact && observedExact,
+    'expected and observed side-effect ledgers match the exact acceptance contract', 'exact_side_effect_ledger expected/observed values must equal one issue, one heartbeat, and zero other/unconfirmed effects');
+
+  const attempted = ledger && ledger.attempted;
+  addCheck('RP-14', ledger?.business_mutation_count === 2 && ledger?.acceptance?.exact_mutation_counts === true && attempted?.issue_create_posts === 1 && attempted?.heartbeat_posts === 1 && attempted?.operations?.['issue-create'] === 1 && attempted?.operations?.['heartbeat-invoke'] === 1,
+    'attempted ledger proves exactly two allowed business mutations', 'attempted ledger must prove one issue-create and one heartbeat-invoke with business_mutation_count=2');
+
+  const uncertaintyEvents = targetEvidence.unconfirmed_live_side_effect_events;
+  addCheck('RP-15', observed?.unconfirmed_live_side_effects === 0 && Number.isInteger(uncertaintyEvents) && uncertaintyEvents >= 0 && attempted?.unconfirmed_live_side_effect_events === uncertaintyEvents && (uncertaintyEvents === 0 || targetEvidence.recovery_lock?.status === 'completed'),
+    'no current unconfirmed live side effects remain; historical uncertainty events are resolved and accounted', 'current unconfirmed side effects must be zero and every historical uncertainty event must be resolved by a completed recovery lock');
+
+  const readbackHashes = targetEvidence.readback_hashes;
+  addCheck('RP-16', isObject(readbackHashes) && ['issue', 'heartbeat', 'agent'].every((key) => isSha256(readbackHashes[key])),
+    'issue, heartbeat, and agent independent readback hashes are present', 'readback_hashes must contain 64-char sha256 values for issue, heartbeat, and agent');
+
+  addCheck('RP-17', targetEvidence.failure === null,
+    'failure field is null', 'PASS evidence must not contain a failure object');
+
+  const serialized = JSON.stringify(targetEvidence);
+  const credentialHits = scanCredentialLeaks(serialized);
+  const uuidHits = scanUuidLeaks(serialized);
+  addCheck('RP-18', credentialHits.length === 0 && uuidHits.length === 0,
+    'evidence contains no credential values or full UUIDs', `evidence redaction failed: credential_hits=${credentialHits.length}, uuid_hits=${uuidHits.length}`);
+
+  const target = targetEvidence.target;
+  addCheck('RP-19', isObject(target) && ['company_id', 'project_id', 'agent_id'].every((key) => target[key] === '<redacted-id>'),
+    'target identifiers are fully redacted', 'target company/project/agent identifiers must be stored only as <redacted-id>');
+
+  addCheck('RP-20', checks.length === REQUIRE_PASS_CHECK_IDS.length - 1,
+    'all canonical require-pass checks are present', `require-pass check cardinality drift: expected ${REQUIRE_PASS_CHECK_IDS.length}`);
+
   return {
-    verdict: 'fail',
-    blockers: ['--phase require-pass is a T04 deliverable; currently a placeholder. Set to fail-closed until T04 lands.'],
-    checks: [],
-    placeholder: true
+    verdict: blockers.length === 0 ? 'pass' : 'fail',
+    blockers,
+    checks,
+    placeholder: false,
+    summary: {
+      blockers_count: blockers.length,
+      checks_count: checks.length,
+      pass_count: checks.filter((check) => check.verdict === 'pass').length,
+      fail_count: checks.filter((check) => check.verdict === 'fail').length
+    }
   };
 }
 

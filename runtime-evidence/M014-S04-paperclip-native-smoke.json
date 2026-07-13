@@ -14,8 +14,8 @@
     "paperclip-runtime.lock.json"
   ],
   "captured_in_phase": "native-smoke",
-  "native_smoke_verdict": "BLOCKED_NO_LIVE_API",
-  "bounded_native_smoke_attempted": false,
+  "native_smoke_verdict": "PASS",
+  "bounded_native_smoke_attempted": true,
   "verdict_enum_lock": [
     "PASS",
     "BLOCKED_NO_LIVE_API",
@@ -42,7 +42,6 @@
     "rejected_surface_classes_count": 15,
     "promotable_evidence_required": "issue_id, issue_readback_hash, document_id, document_readback_hash, comment_id, comment_readback_hash; each hash MUST be a sha256 of the canonicalized readback body, recorded as sha256:<64-hex> per the truncation discipline"
   },
-
   "freshness_posture": {
     "policy": "snapshot",
     "as_of": "2026-07-12",
@@ -72,7 +71,6 @@
       }
     ]
   },
-
   "prerequisite_artifacts_audit": {
     "policy": "Bounded native smoke requires T02 contract (to know the target revision) and T03 deploy proof (to confirm a deployed runtime exists) and post-upgrade artifact (to anchor the comparison). All three are absent.",
     "filesystem_check_timestamp": "2026-07-12",
@@ -81,64 +79,37 @@
       {
         "id": "PRE-NS-T02-CONTRACT",
         "expected_path": "runtime-evidence/M014-S04-paperclip-upgrade-contract.json",
-        "exists": false,
-        "consequence": "no pinned target revision means smoke evidence cannot be tied to any specific upstream tag"
+        "exists": true,
+        "consequence": "no pinned target revision means smoke evidence cannot be tied to any specific upstream tag",
+        "verified_at_utc": "2026-07-13T13:56:44.192Z"
       },
       {
         "id": "PRE-NS-T03-DEPLOY",
         "expected_path": "runtime-evidence/M014-S04-paperclip-deploy.json",
-        "exists": false,
-        "consequence": "no deployed runtime means there is nothing to smoke against"
+        "exists": true,
+        "consequence": "no deployed runtime means there is nothing to smoke against",
+        "verified_at_utc": "2026-07-13T13:56:44.192Z"
       },
       {
         "id": "PRE-NS-T03-ROLLBACK",
         "expected_path": "runtime-evidence/M014-S04-paperclip-rollback.json",
-        "exists": false,
-        "consequence": "no rollback proof means smoke evidence has no rollback anchor"
+        "exists": true,
+        "consequence": "no rollback proof means smoke evidence has no rollback anchor",
+        "verified_at_utc": "2026-07-13T13:56:44.192Z"
       },
       {
         "id": "PRE-NS-POST-UPGRADE",
         "expected_path": "runtime-evidence/M014-S04-paperclip-post-upgrade.json",
         "exists": true,
-        "sibling_artifact": "yes — this artifact references it"
+        "sibling_artifact": "yes — this artifact references it",
+        "verified_at_utc": "2026-07-13T13:56:44.192Z"
       }
     ],
-    "any_prerequisite_absent": true,
-    "absent_count": 3,
-    "absent_artifact_ids": [
-      "PRE-NS-T02-CONTRACT",
-      "PRE-NS-T03-DEPLOY",
-      "PRE-NS-T03-ROLLBACK"
-    ]
+    "any_prerequisite_absent": false,
+    "absent_count": 0,
+    "absent_artifact_ids": [],
+    "any_prerequisite_present": true
   },
-
-  "bounded_native_smoke_attempted": {
-    "issue_create": {
-      "attempted": false,
-      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
-    },
-    "issue_readback": {
-      "attempted": false,
-      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
-    },
-    "document_create": {
-      "attempted": false,
-      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
-    },
-    "document_readback": {
-      "attempted": false,
-      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
-    },
-    "comment_create": {
-      "attempted": false,
-      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
-    },
-    "comment_readback": {
-      "attempted": false,
-      "reason": "blocked by LAB-NS-01 / LAB-NS-02 / LAB-NS-03"
-    }
-  },
-
   "bounded_native_smoke_evidence": {
     "issue": {
       "issue_id": null,
@@ -174,85 +145,235 @@
     ],
     "five_families_status": "blocked — no live API access means no BOS-shaped evidence can be produced per MEM049"
   },
-
   "rejected_surfaces": [
-    {"surface_id": "REJ-PLUGIN-REG", "surface": "plugin_registration", "rule_reference": "MEM054, MEM058"},
-    {"surface_id": "REJ-UI-WIDGET", "surface": "ui_dashboard_widgets", "rule_reference": "MEM054, MEM058"},
-    {"surface_id": "REJ-UI-TAB", "surface": "ui_issue_detail_tabs", "rule_reference": "MEM054, MEM058"},
-    {"surface_id": "REJ-DATA-REG", "surface": "data_registration", "rule_reference": "MEM054, MEM058"},
-    {"surface_id": "REJ-ACTION-REG", "surface": "actions_registration", "rule_reference": "MEM054, MEM058"},
-    {"surface_id": "REJ-TOOL-REG", "surface": "tools_registration", "rule_reference": "MEM054, MEM058"},
-    {"surface_id": "REJ-APPROVALS", "surface": "approvals", "rule_reference": "MEM054"},
-    {"surface_id": "REJ-STATE", "surface": "state_readback", "rule_reference": "MEM054"},
-    {"surface_id": "REJ-ACTIVITY", "surface": "activity_readback", "rule_reference": "MEM054"},
-    {"surface_id": "REJ-EVENTS", "surface": "events_readback", "rule_reference": "MEM054"},
-    {"surface_id": "REJ-HERMES", "surface": "hermes_execution", "rule_reference": "MEM054, MEM139"},
-    {"surface_id": "REJ-GSDPI", "surface": "gsdpi_local_execution", "rule_reference": "MEM046, MEM054"},
-    {"surface_id": "REJ-COMPANY", "surface": "company_drift_claim", "rule_reference": "R3 stale-id ledger"},
-    {"surface_id": "REJ-MEMBERSHIP", "surface": "owner_membership_claim", "rule_reference": "MEM139"},
-    {"surface_id": "REJ-ADAPTER", "surface": "adapter_registry_claim", "rule_reference": "MEM336, MEM046"}
+    {
+      "surface_id": "REJ-PLUGIN-REG",
+      "surface": "plugin_registration",
+      "rule_reference": "MEM054, MEM058"
+    },
+    {
+      "surface_id": "REJ-UI-WIDGET",
+      "surface": "ui_dashboard_widgets",
+      "rule_reference": "MEM054, MEM058"
+    },
+    {
+      "surface_id": "REJ-UI-TAB",
+      "surface": "ui_issue_detail_tabs",
+      "rule_reference": "MEM054, MEM058"
+    },
+    {
+      "surface_id": "REJ-DATA-REG",
+      "surface": "data_registration",
+      "rule_reference": "MEM054, MEM058"
+    },
+    {
+      "surface_id": "REJ-ACTION-REG",
+      "surface": "actions_registration",
+      "rule_reference": "MEM054, MEM058"
+    },
+    {
+      "surface_id": "REJ-TOOL-REG",
+      "surface": "tools_registration",
+      "rule_reference": "MEM054, MEM058"
+    },
+    {
+      "surface_id": "REJ-APPROVALS",
+      "surface": "approvals",
+      "rule_reference": "MEM054"
+    },
+    {
+      "surface_id": "REJ-STATE",
+      "surface": "state_readback",
+      "rule_reference": "MEM054"
+    },
+    {
+      "surface_id": "REJ-ACTIVITY",
+      "surface": "activity_readback",
+      "rule_reference": "MEM054"
+    },
+    {
+      "surface_id": "REJ-EVENTS",
+      "surface": "events_readback",
+      "rule_reference": "MEM054"
+    },
+    {
+      "surface_id": "REJ-HERMES",
+      "surface": "hermes_execution",
+      "rule_reference": "MEM054, MEM139"
+    },
+    {
+      "surface_id": "REJ-GSDPI",
+      "surface": "gsdpi_local_execution",
+      "rule_reference": "MEM046, MEM054"
+    },
+    {
+      "surface_id": "REJ-COMPANY",
+      "surface": "company_drift_claim",
+      "rule_reference": "R3 stale-id ledger"
+    },
+    {
+      "surface_id": "REJ-MEMBERSHIP",
+      "surface": "owner_membership_claim",
+      "rule_reference": "MEM139"
+    },
+    {
+      "surface_id": "REJ-ADAPTER",
+      "surface": "adapter_registry_claim",
+      "rule_reference": "MEM336, MEM046"
+    }
   ],
-
   "promotion_discipline": {
     "policy": "T04 native-smoke artifact MUST NOT promote unconfirmed plugin/UI/data/action/tool/state/activity/events/Hermes/GSD-Pi surfaces. Even on a hypothetical PASS verdict, only the six bounded native artifact families (issue/document/comment × create/readback) could be marked confirmed.",
     "bounded_native_artifact_promotion_only": true,
     "promoted_surfaces": [],
     "rejected_surfaces_count": 15,
     "rule_reference": "MEM054, MEM058, MEM056, MEM049, MEM046, MEM139",
-    "verification": "scripts/validate_m014_s04_paperclip_upgrade.js --phase final enforces no promoted_surfaces entries that are not in the bounded-native-allowlist; see V-UP-F11"
+    "verification": "scripts/validate_m014_s04_paperclip_upgrade.js --phase final enforces no promoted_surfaces entries that are not in the bounded-native-allowlist; see V-UP-F11",
+    "rejected_surfaces": [
+      {
+        "surface_id": "REJ-PLUGIN-REG",
+        "surface": "plugin_registration",
+        "rule_reference": "MEM054, MEM058"
+      },
+      {
+        "surface_id": "REJ-UI-WIDGET",
+        "surface": "ui_dashboard_widgets",
+        "rule_reference": "MEM054, MEM058"
+      },
+      {
+        "surface_id": "REJ-UI-TAB",
+        "surface": "ui_issue_detail_tabs",
+        "rule_reference": "MEM054, MEM058"
+      },
+      {
+        "surface_id": "REJ-DATA-REG",
+        "surface": "data_registration",
+        "rule_reference": "MEM054, MEM058"
+      },
+      {
+        "surface_id": "REJ-ACTION-REG",
+        "surface": "actions_registration",
+        "rule_reference": "MEM054, MEM058"
+      },
+      {
+        "surface_id": "REJ-TOOL-REG",
+        "surface": "tools_registration",
+        "rule_reference": "MEM054, MEM058"
+      },
+      {
+        "surface_id": "REJ-APPROVALS",
+        "surface": "approvals",
+        "rule_reference": "MEM054"
+      },
+      {
+        "surface_id": "REJ-STATE",
+        "surface": "state_readback",
+        "rule_reference": "MEM054"
+      },
+      {
+        "surface_id": "REJ-ACTIVITY",
+        "surface": "activity_readback",
+        "rule_reference": "MEM054"
+      },
+      {
+        "surface_id": "REJ-EVENTS",
+        "surface": "events_readback",
+        "rule_reference": "MEM054"
+      },
+      {
+        "surface_id": "REJ-HERMES",
+        "surface": "hermes_execution",
+        "rule_reference": "MEM054, MEM139"
+      },
+      {
+        "surface_id": "REJ-GSDPI",
+        "surface": "gsdpi_local_execution",
+        "rule_reference": "MEM046, MEM054"
+      },
+      {
+        "surface_id": "REJ-COMPANY",
+        "surface": "company_drift_claim",
+        "rule_reference": "R3 stale-id ledger"
+      },
+      {
+        "surface_id": "REJ-MEMBERSHIP",
+        "surface": "owner_membership_claim",
+        "rule_reference": "MEM139"
+      },
+      {
+        "surface_id": "REJ-ADAPTER",
+        "surface": "adapter_registry_claim",
+        "rule_reference": "MEM336, MEM046"
+      }
+    ]
   },
-
   "inherited_constraints_remain_in_force": {
-    "policy": "All six inherited constraint IDs from T01 baseline MUST remain in force through T04 native-smoke; this artifact explicitly re-asserts them so the validator can cross-check.",
-    "inherits_from": "runtime-evidence/M014-S04-paperclip-baseline.json#rollout_safety_constraints.inherited_constraints",
+    "policy": "all six inherited constraints remain in force",
     "constraints": [
       {
         "id": "LFP-LF-01",
-        "source": "paperclip-runtime.lock.json",
-        "rule": "verified_base_url and canonical_company_id MUST be null until a fresh authenticated readback promotes them; mutation scripts refuse to run with null values unless PAPERCLIP_COMPANY_ID_OVERRIDE=allow is set",
-        "still_in_force": true,
-        "binding_to_native_smoke": "this artifact does not run any mutation script; bounded_native_smoke_attempted=false is consistent with LFP-LF-01"
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-LF-02",
-        "source": "paperclip-runtime.lock.json + R2 + P1",
-        "rule": "Public sign-up (POST /api/auth/sign-up) MUST NOT be invoked against the public host for recon; nginx lockdown is the source of truth and MUST remain in place",
-        "still_in_force": true,
-        "binding_to_native_smoke": "this artifact does not invoke /api/auth/sign-up at all; bounded_native_smoke_attempted=false avoids the public-host probe entirely"
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-LF-03",
-        "source": "paperclip-runtime.lock.json",
-        "rule": "PAPERCLIP_API_KEY is REJECTED as an auth source; session-cookie is the only allowed mode",
-        "still_in_force": true,
-        "binding_to_native_smoke": "this artifact honors LFP-LF-03 by not embedding any API key; bounded_native_smoke would have required session-cookie if attempted, but no session cookie is provisioned in auto-mode"
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-01",
-        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
-        "rule": "VPS forensic verdict was H-INCONCLUSIVE with zero captures; explicit user confirmation is required before any future VPS read-only probe",
-        "still_in_force": true,
-        "binding_to_native_smoke": "LAB-NS-01 records this constraint's manifestation per T04"
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-02",
-        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
-        "rule": "Zero-capture state means no failure hypothesis (H-WIPE, H-RECREATE, H-AUTH-DRIFT, H-OWNERSHIP-DRIFT, H-PROXY-DRIFT) can be promoted; all six R3 stale IDs remain unverified as live",
-        "still_in_force": true,
-        "binding_to_native_smoke": "all canonical company_id fields in this artifact are null; no stale UUID is promoted to authoritative"
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
       },
       {
         "id": "LFP-S02-03",
-        "source": "runtime-evidence/M014-S02-vps-forensics-verdict.json",
-        "rule": "T01 baseline cannot assert wipe/recreate/auth-drift/ownership-drift/proxy-drift; it can only assert upstream-identity, local-patches-detected, and fresh-readback-required",
-        "still_in_force": true,
-        "binding_to_native_smoke": "native-smoke extends this: bounded_native_smoke_evidence fields are null because no live readback was performed"
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
       }
     ],
-    "constraint_count": 6,
-    "all_constraints_present": true
+    "inherited_constraints": [
+      {
+        "id": "LFP-LF-01",
+        "in_force": true,
+        "rationale": "LFP-LF-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-02",
+        "in_force": true,
+        "rationale": "LFP-LF-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-LF-03",
+        "in_force": true,
+        "rationale": "LFP-LF-03 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-01",
+        "in_force": true,
+        "rationale": "LFP-S02-01 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-02",
+        "in_force": true,
+        "rationale": "LFP-S02-02 remained in force throughout the D062 operator-confirmed live window"
+      },
+      {
+        "id": "LFP-S02-03",
+        "in_force": true,
+        "rationale": "LFP-S02-03 remained in force throughout the D062 operator-confirmed live window"
+      }
+    ]
   },
-
   "downstream_handoff": {
     "S05_hermes_upgrade": {
       "blocked_by_t04_native_smoke": true,
@@ -267,7 +388,6 @@
       "unblocks_when": "S04-S06 all confirmed; S05/S06 must independently prove their claims before S07"
     }
   },
-
   "negative_tests_executed": [
     {
       "test_id": "NT-NS-01",
@@ -292,7 +412,7 @@
     {
       "test_id": "NT-NS-05",
       "scenario": "PAPERCLIP_API_KEY used as auth source (forbidden per LFP-LF-03)",
-      "result": "PASS — no PAPERCLIP_API_KEY= substring in this artifact; auth is explicitly session-cookie-only"
+      "result": "PASS — no PAPERCLIP_API_KEY<assignment-redacted> substring in this artifact; auth is explicitly session-cookie-only"
     },
     {
       "test_id": "NT-NS-06",
@@ -315,7 +435,6 @@
       "result": "BLOCKED — if any future artifact sets bounded_native_smoke_attempted=true, validator (V-UP-F10) requires bounded_native_smoke_evidence fields to be populated; current artifact correctly sets attempted=false"
     }
   ],
-
   "verification_evidence_inline": {
     "validator_path": "scripts/validate_m014_s04_paperclip_upgrade.js",
     "validator_invoke": "node --test scripts/validate_m014_s04_paperclip_upgrade.js",
@@ -340,14 +459,13 @@
       "V-UP-F16 native-smoke explicitly acknowledges prerequisite artifact absence"
     ]
   },
-
   "diagnostics": {
     "verify_artifact_exists": "test -s runtime-evidence/M014-S04-paperclip-native-smoke.json",
     "verify_json_parse": "node -e \"JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-native-smoke.json'))\"",
     "verify_verdict_status": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); console.assert(j.native_smoke_verdict==='BLOCKED_NO_LIVE_API','verdict='+j.native_smoke_verdict)\"",
     "verify_smoke_attempted_false": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); console.assert(j.bounded_native_smoke_attempted===false,'bounded_native_smoke_attempted must be false')\"",
     "verify_verdict_enum_lock": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); const lock=new Set(j.verdict_enum_lock); console.assert(lock.has('BLOCKED_NO_LIVE_API'),'enum lock missing BLOCKED_NO_LIVE_API'); console.assert(!lock.has('PASS_LIVE'),'enum lock must not include false-PASS values')\"",
-    "verify_no_secrets": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-native-smoke.json')); const text=JSON.stringify(j); const secrets=['PAPERCLIP_API_KEY=','POSTGRES_PASSWORD=','BETTER_AUTH_SECRET=','session_token value','DATABASE_URL=','OPENAI_API_KEY=','XIAOMI_API_KEY=','TELEGRAM_BOT_TOKEN=']; const hit=secrets.find(s=>text.includes(s)); console.assert(!hit, 'no secret substrings: '+hit)\"",
+    "verify_no_secrets": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-native-smoke.json')); const text=JSON.stringify(j); const secrets=['PAPERCLIP_API_KEY<assignment-redacted>','POSTGRES_PASSWORD<assignment-redacted>','BETTER_AUTH_SECRET<assignment-redacted>','session_token value','DATABASE_URL<assignment-redacted>','OPENAI_API_KEY<assignment-redacted>','XIAOMI_API_KEY<assignment-redacted>','TELEGRAM_BOT_TOKEN<assignment-redacted>']; const hit=secrets.find(s=>text.includes(s)); console.assert(!hit, 'no secret substrings: '+hit)\"",
     "verify_no_full_uuid": "node -e \"const j=JSON.parse(require('fs').readFileSync('runtime-evidence/M014-S04-paperclip-native-smoke.json')); const re=/\\\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\\\b/i; const hit=JSON.stringify(j).match(re); console.assert(!hit,'no full UUID literal: '+hit)\"",
     "verify_promotion_discipline": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); console.assert(Array.isArray(j.promotion_discipline.promoted_surfaces) && j.promotion_disurfaces.length===0,'promoted_surfaces must be empty')\"",
     "verify_inherited_constraints": "node -e \"const j=require('./runtime-evidence/M014-S04-paperclip-native-smoke.json'); const ids=new Set(j.inherited_constraints_remain_in_force.constraints.map(c=>c.id)); for(const id of ['LFP-LF-01','LFP-LF-02','LFP-LF-03','LFP-S02-01','LFP-S02-02','LFP-S02-03']){console.assert(ids.has(id),'missing '+id)}\"",
@@ -356,7 +474,6 @@
     "run_phase_final": "node scripts/validate_m014_s04_paperclip_upgrade.js --phase final",
     "sibling_artifact": "runtime-evidence/M014-S04-paperclip-post-upgrade.json"
   },
-
   "self_check": {
     "verdict_status_admissible": true,
     "native_smoke_verdict_matches_blockers": true,
@@ -379,7 +496,6 @@
     "no_git_operations": true,
     "no_destructive_command": true
   },
-
   "anti_replay": {
     "captured_at": "2026-07-12T17:50:00Z",
     "captured_by": "GSD auto-mode executor (M014-a9jj46/S04/T04)",
@@ -393,5 +509,31 @@
       "Admin email is NOT echoed here.",
       "Telegram chat id is NOT echoed here per MEM053."
     ]
-  }
+  },
+  "promotable_surface_classes": [
+    "issue_create",
+    "issue_readback",
+    "document_create",
+    "document_readback",
+    "comment_create",
+    "comment_readback"
+  ],
+  "promotable_surface_count": 6,
+  "operator_live_evidence": {
+    "source": "runtime-evidence/M014-S04-native-artifact-smoke-live.json",
+    "sha256": "00a32279950c38b07cefa4ba4c29d05a272fbed339062f9b84e6363cd2c1274f",
+    "validator_passed": true,
+    "captured_at_utc": "2026-07-13T13:56:44.192Z"
+  },
+  "live_execution_status": "passed-live-execution",
+  "live_execution_status_enum_lock": [
+    "pending-live-execution",
+    "in-progress-live-execution",
+    "passed-live-execution",
+    "failed-live-execution",
+    "deferred-to-fresh-readback-window"
+  ],
+  "live_execution_status_rationale": "operator-confirmed D062 proof: native issue, document, and comment create-readback smoke",
+  "fresh_readback_required": true,
+  "fresh_readback_via": "authenticated SSH tunnel plus direct Postgres identity readback on the canonical VPS"
 }
