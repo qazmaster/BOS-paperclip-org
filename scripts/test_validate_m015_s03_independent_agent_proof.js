@@ -768,9 +768,11 @@ describe('evaluateGate — single failure per dimension', () => {
 
     for (const scenario of cases) {
       const { t01, t02 } = cleanFixture();
-      scenario.mutate(t01.status !== undefined && !('side_effects' in t01) ? t02 : t01);
-      // Re-mutate against whichever side the scenario targets, by reading label.
-      // Each case above explicitly mutates the correct side.
+      // Dispatch by label prefix: t01_* scenarios mutate T01, t02_* mutate T02.
+      // The cases array above is the source of truth — each mutate closure
+      // targets the side indicated by its label.
+      const target = scenario.label.startsWith('t01_') ? t01 : t02;
+      scenario.mutate(target);
       const result = runValidator(t01, t02);
       assert.equal(result.ok, false, `${scenario.label} should have failed`);
       assert.equal(result.evidence.status, 'FAIL_CLOSED');
@@ -844,13 +846,11 @@ describe('writeEvidence — refusal guard', () => {
     );
   });
 
-  it('refuses when serialised output contains a UUID the scrubber missed', () => {
-    // Construct an evidence whose top-level schema field embeds a UUID —
-    // since $schema starts with "$" we use a different leak carrier: an
-    // ARRAY index whose string value contains a UUID. scrubEvidence will
-    // rewrite that UUID to <redacted-id>; to test the guard, we instead
-    // check that scrubEvidence catches UUIDs in string values (negative
-    // test: the function rewrite happens and we DO NOT hit the UUID guard).
+  it('refuses to write when serialised output contains a mixed-case MiMo token', () => {
+    // Belt-and-braces: scrubEvidence rewrites UUIDs/credentials but a
+    // vendor-reuse substring (xiaomi or mimo in any case) survives and
+    // must trip the refusal guard. Use a MIXED-CASE MiMo token to prove
+    // the guard is case-insensitive, mirroring the XIAOMI_RE regex.
     const leaky = {
       $schema: 'x',
       milestone: 'M015-4o8lfw',
@@ -858,12 +858,10 @@ describe('writeEvidence — refusal guard', () => {
       task: 'T03',
       generated: new Date().toISOString(),
       status: 'FAIL_CLOSED',
-      agents: [{ name: 'Div1.HCO', notes: 'mimo inside this string' }],
+      agents: [{ name: 'Div1.HCO', notes: 'MIMO upper-case token appears here' }],
       blockers: [],
       redaction: { full_ids: false, credentials: false, xiaomi_endpoint_reuse: false },
     };
-    // Force the guard to refuse on xiaomi/mimo: use mixed-case mimo.
-    leaky.agents[0].notes = 'MIMO upper-case token appears here';
     assert.throws(
       () => writeEvidence(leaky),
       (err) => err.message.includes(BLOCKER_CODES.GATE_REDACTION),

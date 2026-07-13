@@ -82,7 +82,8 @@ function redacted(text) {
     .replace(UUID_FULL, '<redacted-id>')
     .replace(/\bbearer\s+[A-Za-z0-9._\-]+/gi, 'bearer=<redacted>')
     .replace(/sk-[A-Za-z0-9._\-]+/g, 'sk-<redacted>')
-    .replace(/tp-[A-Za-z0-9._\-]+/g, 'tp-<redacted>');
+    .replace(/tp-[A-Za-z0-9._\-]+/g, 'tp-<redacted>')
+    .replace(CREDENTIAL_ASSIGNMENT, '<redacted-credential-fragment>');
 }
 
 function redactMessageTail(text, maxChars = MAX_MESSAGE_TAIL_CHARS) {
