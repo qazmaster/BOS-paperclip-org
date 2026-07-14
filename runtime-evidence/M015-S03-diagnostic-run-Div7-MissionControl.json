@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T07:05:53.162Z",
+  "generated": "2026-07-14T09:33:20.011Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -40,10 +40,10 @@
   "pass_count": 0,
   "fail_count": 1,
   "status_distribution": {
-    "running": 1
+    "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "60": 1
+    "19": 1
   },
   "side_effects": {
     "before": {
@@ -67,9 +67,9 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 10,
-    "heartbeat_runs_after_total": 11,
-    "heartbeat_runs_delta": 1
+    "heartbeat_runs_before_total": 13,
+    "heartbeat_runs_after_total": 15,
+    "heartbeat_runs_delta": 2
   },
   "agents": [
     {
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "98c3cec4-<redacted>",
+        "run_id_redacted": "e22123fa-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,30 +148,30 @@
         ]
       },
       "poll": {
-        "attempts": 60,
+        "attempts": 19,
         "budget": 60,
-        "terminal_observed": false,
-        "terminal_status": "running",
-        "attempts_to_terminal": 60,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 19,
         "history_tail": [
           {
-            "attempt": 58,
+            "attempt": 17,
             "observed_status": "running"
           },
           {
-            "attempt": 59,
+            "attempt": 18,
             "observed_status": "running"
           },
           {
-            "attempt": 60,
-            "observed_status": "running"
+            "attempt": 19,
+            "observed_status": "succeeded"
           }
         ]
       },
-      "wake_count_delta": 1,
+      "wake_count_delta": 2,
       "wake_counts": {
-        "before": 10,
-        "after": 11
+        "before": 13,
+        "after": 15
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -193,30 +193,29 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div7.MissionControl-POLL-BUDGET-EXHAUSTED",
-        "M15-S03-AGT-Div7.MissionControl-RUN-STATUS-RUNNING",
+        "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-2",
         "M15-S03-AGT-Div7.MissionControl-BOS-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-POLL-BUDGET-EXHAUSTED",
+      "code": "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-2",
       "severity": "blocking",
       "agent": "Div7.MissionControl",
-      "reason": "run did not reach terminal status within 60 poll attempts"
-    },
-    {
-      "code": "M15-S03-AGT-Div7.MissionControl-RUN-STATUS-RUNNING",
-      "severity": "blocking",
-      "agent": "Div7.MissionControl",
-      "reason": "run still non-terminal (running) after 60 poll attempts"
+      "reason": "wake_count_delta=2 (expected exactly 1) from independent heartbeat-runs list"
     },
     {
       "code": "M15-S03-AGT-Div7.MissionControl-BOS-MISSING",
       "severity": "blocking",
       "agent": "Div7.MissionControl",
       "reason": "resultJson.bos missing from heartbeat run readback"
+    },
+    {
+      "code": "M15-S03-HEARTBEAT-RUNS-DELTA-2-EXPECTED-1",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "heartbeat_runs delta=2 (expected exactly 1 — one per agent)"
     }
   ],
   "redaction": {
@@ -224,5 +223,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 373279
+  "elapsed_ms": 104125
 }

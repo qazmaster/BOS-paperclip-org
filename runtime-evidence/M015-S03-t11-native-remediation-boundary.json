@@ -1,0 +1,136 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-t11-native-remediation-boundary.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T11",
+  "generated": "2026-07-14T14:33:00.000Z",
+  "purpose": "Document the native hermes_local/MiniMax-M3 runtime contract gap that prevents S03 / T03 condition t02_bos_result_present from being satisfied, and the native remediation boundary that must be crossed to close it.",
+  "verdict": "native_runtime_contract_gap",
+  "empirical_evidence": {
+    "t11_full_field_inspection": {
+      "artifact": "runtime-evidence/M015-S03-t11-full-field-inspection.json",
+      "runs_inspected": 21,
+      "agents_covered": 7,
+      "candidate_string_fields_examined": 32,
+      "candidate_object_fields_examined": 7,
+      "total_bos_hits": 0,
+      "fields_examined": [
+        "contextSnapshot", "triggerDetail", "stdoutExcerpt", "stderrExcerpt",
+        "usageJson", "livenessReason", "nextAction", "externalRunId",
+        "invocationSource", "sessionIdBefore", "sessionIdAfter", "logRef",
+        "logSha256", "logStore", "error", "errorCode", "signal",
+        "livenessState", "wakeupRequestId", "responsibleUserId",
+        "processGroupId", "processPid", "processLossRetryCount",
+        "scheduledRetryReason", "scheduledRetryAt", "scheduledRetryAttempt",
+        "continuationAttempt", "retryOfRunId", "issueCommentStatus",
+        "issueCommentRetryQueuedAt", "issueCommentSatisfiedByCommentId",
+        "resultJson.summary", "resultJson.result"
+      ],
+      "terminal_statuses_seen": ["succeeded", "cancelled", "timed_out", "running"],
+      "inspector_script": "scripts/diag_m015_s03_t11_full_field_inspect.js"
+    },
+    "div7_isolated_redo": {
+      "artifact": "runtime-evidence/M015-S03-diagnostic-run-Div7-MissionControl.json",
+      "poll_budget": 60,
+      "poll_attempts_to_terminal": 19,
+      "terminal_status": "succeeded",
+      "result_json_bos_redacted": null,
+      "result_json_bos_fields_present": [],
+      "verdict": "fail",
+      "blocker_codes": [
+        "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-2",
+        "M15-S03-AGT-Div7.MissionControl-BOS-MISSING"
+      ]
+    }
+  },
+  "contract": {
+    "s03_required_schema": "bos-light-v1",
+    "s03_required_fields": ["schemaVersion", "runId", "division", "role", "status"],
+    "s03_expected_location": "resultJson.bos",
+    "required_for_t03": "per-agent condition t02_bos_result_present (C7) — 7 of 7 agents must satisfy"
+  },
+  "runtime_observation": {
+    "adapter_type": "hermes_local",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "actual_resultJson_keys": [
+      "summary",
+      "result",
+      "usage",
+      "cost_usd",
+      "session_id",
+      "stopReason",
+      "timeoutFired",
+      "timeoutSource",
+      "configFreshness",
+      "timeoutConfigured",
+      "effectiveTimeoutSec"
+    ],
+    "native_result_shape_is": "hermes_local/MiniMax-M3 reasoning trace — NOT resultJson.bos",
+    "summary_field_is": "text description of the diagnostic outcome (no JSON structure)",
+    "result_field_is": "long-form reasoning trace (no JSON structure)",
+    "contextSnapshot_is": "Paperclip runtime context (does NOT contain bos-light-v1 schema)",
+    "triggerDetail_is": "trigger metadata (does NOT contain bos-light-v1 schema)",
+    "stdoutExcerpt_is": "raw stdout from hermes process (does NOT contain bos-light-v1 schema)",
+    "stderrExcerpt_is": "raw stderr from hermes process (does NOT contain bos-light-v1 schema)",
+    "usageJson_is": "token-usage metadata (does NOT contain bos-light-v1 schema)"
+  },
+  "native_remediation_boundary": {
+    "description": "The bos-light-v1 schema contract requires hermes_local/MiniMax-M3 to emit structured JSON output at resultJson.bos. The native runtime emits a freeform reasoning trace at resultJson.result + resultJson.summary instead. The contract gap is at the adapter/instruction boundary, NOT at the readback or polling boundary.",
+    "must_be_fixed_at": "one or more of the following layers (each is a runtime-side change — out of S03 scope):",
+    "candidate_remediation_sites": [
+      {
+        "layer": "hermes_local adapter",
+        "what_would_change": "post-process MiniMax-M3 output to inject resultJson.bos with schemaVersion, runId, division, role, status before returning to Paperclip",
+        "owned_by": "Paperclip runtime / hermes adapter maintainer",
+        "out_of_s03_scope": true
+      },
+      {
+        "layer": "MiniMax-M3 system prompt / instructions bundle",
+        "what_would_change": "instruct the model to emit resultJson.bos schema in its structured output channel (not in reasoning trace)",
+        "owned_by": "Paperclip agent instructions / MiniMax-M3 prompt engineering",
+        "out_of_s03_scope": true
+      },
+      {
+        "layer": "AGENTS.md / instructionsRootPath content",
+        "what_would_change": "rewrite the agent instructions bundle so hermes_local wraps the model output in resultJson.bos before returning",
+        "owned_by": "Paperclip canonical agent instructions maintainer",
+        "out_of_s03_scope": true
+      },
+      {
+        "layer": "structured output channel configuration",
+        "what_would_change": "configure MiniMax-M3 structured-output API to emit JSON conforming to bos-light-v1 schema",
+        "owned_by": "Paperclip runtime / MiniMax-M3 model provider integration",
+        "out_of_s03_scope": true
+      }
+    ],
+    "s03_cannot_remediate": "S03 is an observation/probe layer. It can only READ state from Paperclip + hermes_local. S03 has no authority to modify adapter code, instruction bundles, or model configuration — those require changes upstream of the readback boundary."
+  },
+  "t03_impact": {
+    "current_state": "FAIL_CLOSED",
+    "per_agent_conditions_failed": 7,
+    "failing_condition": "t02_bos_result_present (C7) on all 7 agents",
+    "global_gates": {
+      "name_drift_pass": true,
+      "upstream_status_pass": false,
+      "redaction_pass": true,
+      "side_effects_pass": true
+    },
+    "upstream_status_fail_reason": "T02.status=FAIL_CLOSED because bos-light-v1 schema is absent",
+    "is_remediable_within_s03": false,
+    "is_remediable_by_t11": false,
+    "is_remediable_by_orchestrator_only": false,
+    "is_remediable_by_runtime_adapter_change": true
+  },
+  "s04_admission_decision": {
+    "gate_s03_49_49": false,
+    "gate_s03_4_4": false,
+    "admit_to_s04": false,
+    "reason": "S03 gate is fail-closed at 40/49 conditions with 3/4 global gates failing on the UPSTREAM-STATUS gate (because T02 status=FAIL_CLOSED). S04 admission requires the S03 49/49 AND 4/4 gates to pass. Native runtime contract must be remediated upstream (see candidate_remediation_sites) before S04 admission is possible. T11 itself cannot pass S03 without weakening the bos-light-v1 schema guard, which is explicitly forbidden by the task plan."
+  },
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false
+  }
+}

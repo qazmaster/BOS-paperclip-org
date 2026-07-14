@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T07:06:01.502Z",
+  "generated": "2026-07-14T09:37:05.643Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -40,15 +40,16 @@
   "pass_count": 0,
   "fail_count": 7,
   "status_distribution": {
-    "running": 2,
-    "succeeded": 5
+    "running": 1,
+    "succeeded": 6
   },
   "poll_attempts_distribution": {
+    "19": 1,
     "23": 2,
     "32": 1,
     "35": 1,
     "42": 1,
-    "60": 2
+    "60": 1
   },
   "side_effects": {
     "before": {
@@ -72,9 +73,9 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 53,
-    "heartbeat_runs_after_total": 60,
-    "heartbeat_runs_delta": 7
+    "heartbeat_runs_before_total": 2,
+    "heartbeat_runs_after_total": 20,
+    "heartbeat_runs_delta": 8
   },
   "agents": [
     {
@@ -845,7 +846,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "98c3cec4-<redacted>",
+        "run_id_redacted": "e22123fa-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -899,30 +900,30 @@
         ]
       },
       "poll": {
-        "attempts": 60,
+        "attempts": 19,
         "budget": 60,
-        "terminal_observed": false,
-        "terminal_status": "running",
-        "attempts_to_terminal": 60,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 19,
         "history_tail": [
           {
-            "attempt": 58,
+            "attempt": 17,
             "observed_status": "running"
           },
           {
-            "attempt": 59,
+            "attempt": 18,
             "observed_status": "running"
           },
           {
-            "attempt": 60,
-            "observed_status": "running"
+            "attempt": 19,
+            "observed_status": "succeeded"
           }
         ]
       },
-      "wake_count_delta": 1,
+      "wake_count_delta": 2,
       "wake_counts": {
-        "before": 10,
-        "after": 11
+        "before": 13,
+        "after": 15
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -944,8 +945,7 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div7.MissionControl-POLL-BUDGET-EXHAUSTED",
-        "M15-S03-AGT-Div7.MissionControl-RUN-STATUS-RUNNING",
+        "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-2",
         "M15-S03-AGT-Div7.MissionControl-BOS-MISSING"
       ]
     }
@@ -1000,22 +1000,22 @@
       "reason": "resultJson.bos missing from heartbeat run readback"
     },
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-POLL-BUDGET-EXHAUSTED",
+      "code": "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-2",
       "severity": "blocking",
       "agent": "Div7.MissionControl",
-      "reason": "run did not reach terminal status within 60 poll attempts"
-    },
-    {
-      "code": "M15-S03-AGT-Div7.MissionControl-RUN-STATUS-RUNNING",
-      "severity": "blocking",
-      "agent": "Div7.MissionControl",
-      "reason": "run still non-terminal (running) after 60 poll attempts"
+      "reason": "wake_count_delta=2 (expected exactly 1) from independent heartbeat-runs list"
     },
     {
       "code": "M15-S03-AGT-Div7.MissionControl-BOS-MISSING",
       "severity": "blocking",
       "agent": "Div7.MissionControl",
       "reason": "resultJson.bos missing from heartbeat run readback"
+    },
+    {
+      "code": "M15-S03-HEARTBEAT-RUNS-DELTA-2-EXPECTED-1",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "heartbeat_runs delta=2 (expected exactly 1 — one per agent)"
     }
   ],
   "redaction": {
@@ -1023,17 +1023,7 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 1837610,
-  "orchestration": {
-    "mode": "per-agent-isolated",
-    "per_agent_files": [
-      "runtime-evidence/M015-S03-diagnostic-run-Div1-HCO.json",
-      "runtime-evidence/M015-S03-diagnostic-run-Div2-MasterPlanner.json",
-      "runtime-evidence/M015-S03-diagnostic-run-Div3-Treasury.json",
-      "runtime-evidence/M015-S03-diagnostic-run-Div4-Production.json",
-      "runtime-evidence/M015-S03-diagnostic-run-Div5-QualificationsLibraryLearning.json",
-      "runtime-evidence/M015-S03-diagnostic-run-Div6-External.json",
-      "runtime-evidence/M015-S03-diagnostic-run-Div7-MissionControl.json"
-    ]
-  }
+  "t11_native_remediation_boundary": "runtime-evidence/M015-S03-t11-native-remediation-boundary.json",
+  "t11_inspection": "runtime-evidence/M015-S03-t11-full-field-inspection.json",
+  "elapsed_ms": 1446497
 }
