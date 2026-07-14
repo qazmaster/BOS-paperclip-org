@@ -1,0 +1,10 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-t18-diagnostic-remediation.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T18",
+  "started_at": "2026-07-14T13:51:54.625Z",
+  "completed_at": "2026-07-14T13:51:54.625Z",
+  "closeout_verdict": "RUNNER_FAILURE",
+  "error": "Cannot read properties of undefined (reading 'replace')"
+}
