@@ -1,0 +1,105 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-t14-native-diagnostic-remediation.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T14",
+  "generated": "2026-07-14T11:38:00.000Z",
+  "status": "FAIL_CLOSED",
+  "remediation_model": "Native contract-preserving bos-light-v1 observe-and-complete fallback (T12) installed in scripts/run_m015_s03_diagnostic_heartbeat.js via extractOrAssembleBos; re-execution attempted via parallel per-agent isolation (M015_ONLY_AGENT) to bypass 7x100-315s cold-start sequential latency that exceeds gsd_exec 600000ms budget.",
+  "guard_compliance": {
+    "canonical_name_guard": "preserved — only the 7 canonical division names were iterated",
+    "fresh_config_guard": "preserved — T01 evidence refreshed 2026-07-14T11:24:34.616Z with PASS 7/7 hermes_local/minimax/MiniMax-M3 testEnvironment status",
+    "redaction_guard": "preserved — findRedactionLeaks sweep over T01 + T02 evidence passes; no UUID / credential / xiaomi-mimo string in evidence string-values",
+    "vendor_reuse_guard": "preserved — no Xiaomi/MiMo reuse; hermes_local/minimax/MiniMax-M3 only",
+    "polling_guard": "preserved — M015_POLL_BUDGET=120 (≤600 hard ceiling 600 polls / 50 min); bounded polling unchanged",
+    "schema_guard": "preserved — bos-light-v1 schema (schemaVersion, runId, division, role, status) assembled from observed runtime + canonical agent metadata, no synthetic fixed-output prompt",
+    "side_effect_guard": "preserved — only heartbeat_runs expected to change; issues/documents/comments/approvals/agents must remain at delta=0",
+    "synthetic_prompt_guard": "preserved — T08 prompt already explicit on bos-light-v1 schema; no new prompt introduced"
+  },
+  "t01_status": {
+    "artifact": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "generated": "2026-07-14T11:24:34.616Z",
+    "status": "PASS",
+    "pass": 7,
+    "fail": 0,
+    "blockers": 0,
+    "note": "T01 refreshed and re-proven PASS 7/7 against live AIP/aipay.kz hermes_local/MiniMax-M3 testEnvironment"
+  },
+  "t02_strategy": {
+    "approach": "parallel per-agent isolation via M015_ONLY_AGENT env var",
+    "rationale": "Sequential 7-agent T02 chain observed cold-start latency 100-315s per agent (T10 measurement), giving 700-2200s total — exceeds gsd_exec 600000ms (10 min) cap by 17-270%. Per-agent isolation allows parallel wall-clock execution; each per-agent run uses its own M015_POLL_BUDGET=120 (10 min) budget.",
+    "spawn_command": "for agent in 7 canonical names; do M015_ONLY_AGENT=$agent M015_POLL_BUDGET=120 node scripts/run_m015_s03_diagnostic_heartbeat.js > /tmp/m015-t14-heartbeats/$agent.log 2>&1 & done; wait",
+    "spawned_via": "async_bash with 7 background subshells, each with redirected stdout/stderr per background-process rule",
+    "wall_clock_observed_seconds": 413.1,
+    "expected_per_agent_outcome": "1 succeeded terminal run per agent with wake_count_delta=1, schema-valid bos-light-v1 readback (assembled via extractOrAssembleBos from observed runtime + canonical agent metadata), zero side-effects"
+  },
+  "t02_observed_outcome": {
+    "wall_clock_seconds": 413.1,
+    "per_agent_results": [
+      {"name": "Div1.HCO", "last_line": "M015_S03_HEARTBEAT=fail pass=0 fail=1 blockers=2 heartbeat_runs_delta=1", "evidence_generated": "2026-07-14T11:30:53.668Z", "evidence_status": "FAIL_CLOSED"},
+      {"name": "Div2.MasterPlanner", "last_line": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429", "evidence_generated": "2026-07-14T06:44:26.773Z (pre-T14 stale)", "evidence_status": "FAIL_CLOSED", "failure": "sign-in rate-limited"},
+      {"name": "Div3.Treasury", "last_line": "M015_S03_HEARTBEAT=fail pass=0 fail=1 blockers=2 heartbeat_runs_delta=1", "evidence_generated": "2026-07-14T11:30:00.198Z", "evidence_status": "FAIL_CLOSED"},
+      {"name": "Div4.Production", "last_line": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429", "evidence_generated": "2026-07-14T06:51:03.878Z (pre-T14 stale)", "evidence_status": "FAIL_CLOSED", "failure": "sign-in rate-limited"},
+      {"name": "Div5.QualificationsLibraryLearning", "last_line": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429", "evidence_generated": "2026-07-14T06:54:40.459Z (pre-T14 stale)", "evidence_status": "FAIL_CLOSED", "failure": "sign-in rate-limited"},
+      {"name": "Div6.External", "last_line": "M015_S03_HEARTBEAT=fail pass=0 fail=1 blockers=2 heartbeat_runs_delta=1", "evidence_generated": "2026-07-14T11:32:02.797Z", "evidence_status": "FAIL_CLOSED"},
+      {"name": "Div7.MissionControl", "last_line": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429", "evidence_generated": "2026-07-14T09:33:20.011Z (pre-T14 stale)", "evidence_status": "FAIL_CLOSED", "failure": "sign-in rate-limited"}
+    ],
+    "summary": {
+      "sign_in_rate_limited_429": 4,
+      "auth_passed_but_blockers_2": 3,
+      "evidence_refreshed_to_t14_timestamp": 3,
+      "evidence_stale_pre_t14": 4,
+      "aggregate_t02_status": "FAIL_CLOSED",
+      "blocker_root_cause": "parallel subshell invocation causes simultaneous POST /api/auth/sign-in across 7 worker processes; the live Paperclip board applies per-IP rate limiting (HTTP 429) on auth, so 4 of 7 subshells fail at the sign-in step before any heartbeat invoke is dispatched"
+    }
+  },
+  "blocker_artifact": {
+    "code": "M15-S03-T14-PARALLEL-AUTH-RATE-LIMIT",
+    "severity": "blocking",
+    "scope": "T14 execution contract — agent in T14-execution lane",
+    "root_cause": "scripts/apply_m015_seven_agent_contract.js#makeBoardClient performs a per-process POST /api/auth/sign-in via session cookie; spawning N parallel subshells each invokes makeBoardClient independently, producing N concurrent sign-ins. The live Paperclip board rate-limits concurrent sign-ins from the same source IP (HTTP 429 Too Many Requests). With N=7, observed rate-limit loss is 4/7 (57%).",
+    "fatal_for_t14": true,
+    "not_remediable_within_t14_contract": true,
+    "rationale_for_not_remediable": "Resolving the rate-limit requires one of: (a) sequential per-agent runs with a shared session cookie persisted to disk between subshells — requires refactoring makeBoardClient to support cookie-file handoff, which is out of T14 scope; (b) 7 distinct Paperclip credentials — violates single-actor/auth discipline and is forbidden by S01/S02 contract; (c) extended gsd_exec budget — forbidden by orchestrator cap (600000ms).",
+    "evidence_proof": {
+      "sign_in_429_observed_agents": ["Div2.MasterPlanner", "Div4.Production", "Div5.QualificationsLibraryLearning", "Div7.MissionControl"],
+      "post_sign_in_blocker_2_observed_agents": ["Div1.HCO", "Div3.Treasury", "Div6.External"],
+      "wall_clock_total_seconds": 413.1,
+      "gsd_exec_budget_seconds": 600,
+      "rate_limit_loss_fraction": 0.5714285714
+    }
+  },
+  "downstream_state_preserved": {
+    "t01_evidence_intact": "runtime-evidence/M015-S03-seven-agent-test-environment.json (PASS 7/7, 2026-07-14T11:24:34.616Z)",
+    "t12_native_fallback_intact": "scripts/run_m015_s03_diagnostic_heartbeat.js — assembleBosFromObservedRuntime + extractOrAssembleBos installed (lines assembleBosFromObservedRuntime, extractOrAssembleBos, buildRunRecord integration)",
+    "t03_validator_intact": "scripts/validate_m015_s03_independent_agent_proof.js — fail-closed 49-per-agent-condition / 4-global-gate validator unchanged",
+    "t04_fixtures_intact": "scripts/test_validate_m015_s03_independent_agent_proof.js — 65 negative-path fixtures unchanged",
+    "t02_combined_evidence_stale": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json — last refreshed 2026-07-14T09:41:42Z (T08 era); not overwritten by T14 because aggregate aggregator was not invoked (no per-agent files were produced to aggregate from)",
+    "t03_combined_evidence_stale": "runtime-evidence/M015-S03-seven-agent-independent-gate.json — last refreshed 2026-07-14T09:41:42Z (T08 era); FAIL_CLOSED 40/49, 4/4 global gates fail (T02 FAIL_CLOSED upstream + heartbeat_runs_delta=8)"
+  },
+  "remediation_options_for_next_executor": [
+    {
+      "id": "A",
+      "label": "Refactor makeBoardClient for session-cookie handoff",
+      "description": "Persist session cookie to a per-process shared file on first sign-in; subsequent per-agent subshells read cookie and skip sign-in. Requires scripts/apply_m015_seven_agent_contract.js change — out of T14 scope but unlocks T14 retry.",
+      "estimated_t12_like_effort": "1-2 hours",
+      "scope_drift": "yes — modifies S01/S02 contract helper used by M015 slice-wide"
+    },
+    {
+      "id": "B",
+      "label": "Sequential per-agent runs with bounded cool-down",
+      "description": "Run 7 per-agent heartbeats sequentially with 30s cool-down between sign-ins to avoid rate-limit. Estimated total 7×(115-315s + 30s) = 1015-2415s — still exceeds 600s gsd_exec budget; needs external scheduler (cron / systemd timer).",
+      "estimated_wall_clock_minutes": 17-40,
+      "scope_drift": "no — only T14 execution ordering changes"
+    },
+    {
+      "id": "C",
+      "label": "Single T02 run, extended budget via async_bash with await_job polling",
+      "description": "Run scripts/run_m015_s03_diagnostic_heartbeat.js (no M015_ONLY_AGENT) via async_bash with periodic await_job polling. Existing pattern from T12 already proved this works at wall-clock ~600s for first 4-5 agents and 600s timeout for the rest. Would still need to address T08/T11 bos-light-v1 schema extraction issue (T12 fallback now addresses that).",
+      "estimated_wall_clock_minutes": 60-90,
+      "scope_drift": "no — same script invocation, different orchestration harness"
+    }
+  ],
+  "t14_verdict": "blocker_discovered — T14 execution contract requires parallel per-agent heartbeats to bypass 600s gsd_exec budget, but parallel sign-in triggers HTTP 429 rate-limit on 4 of 7 agents. Remediation requires either helper refactor (out of scope) or external scheduler (out of executor reach). Fail-closed preserved: no guard weakened, no synthetic prompt introduced, no S04 promotion.",
+  "memory_capture_recommendation": "capture_thought category=gotcha content=\"M015-S03 parallel per-agent heartbeat invocation via M015_ONLY_AGENT triggers HTTP 429 on board sign-in for 4 of 7 subshells (57% loss). Per-IP rate-limit applies to POST /api/auth/sign-in. Sequential per-agent runs with 30s cool-down OR refactored session-cookie handoff in makeBoardClient are required. Do NOT parallel-invoke makeBoardClient-bearing scripts from this executor without explicit rate-limit gate.\""
+}

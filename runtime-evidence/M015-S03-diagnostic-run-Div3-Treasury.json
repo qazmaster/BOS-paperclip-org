@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T06:48:22.332Z",
+  "generated": "2026-07-14T11:30:00.198Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -18,7 +18,7 @@
   "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
   "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
   "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
-  "poll_budget": 60,
+  "poll_budget": 120,
   "poll_interval_ms": 5000,
   "terminal_statuses": [
     "succeeded",
@@ -43,7 +43,7 @@
     "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "35": 1
+    "53": 1
   },
   "side_effects": {
     "before": {
@@ -67,8 +67,8 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 4,
-    "heartbeat_runs_after_total": 5,
+    "heartbeat_runs_before_total": 5,
+    "heartbeat_runs_after_total": 6,
     "heartbeat_runs_delta": 1
   },
   "agents": [
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "4318364b-<redacted>",
+        "run_id_redacted": "a3f76d11-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,32 +148,38 @@
         ]
       },
       "poll": {
-        "attempts": 35,
-        "budget": 60,
+        "attempts": 53,
+        "budget": 120,
         "terminal_observed": true,
         "terminal_status": "succeeded",
-        "attempts_to_terminal": 35,
+        "attempts_to_terminal": 53,
         "history_tail": [
           {
-            "attempt": 33,
+            "attempt": 51,
             "observed_status": "running"
           },
           {
-            "attempt": 34,
+            "attempt": 52,
             "observed_status": "running"
           },
           {
-            "attempt": 35,
+            "attempt": 53,
             "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 4,
-        "after": 5
+        "before": 5,
+        "after": 6
       },
-      "result_json_bos_redacted": null,
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "a3f76d11-<redacted>",
+        "division": null,
+        "role": "general",
+        "status": "succeeded"
+      },
       "result_json_bos_required_fields": [
         "schemaVersion",
         "runId",
@@ -181,10 +187,15 @@
         "role",
         "status"
       ],
-      "result_json_bos_fields_present": [],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "role",
+        "status"
+      ],
       "context_markers": {
         "division_present": false,
-        "role_present": false,
+        "role_present": true,
         "paperclip_context_visible": false
       },
       "leak_flags": {
@@ -193,16 +204,23 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div3.Treasury-BOS-MISSING"
+        "M15-S03-AGT-Div3.Treasury-BOS-FIELD-division-MISSING",
+        "M15-S03-AGT-Div3.Treasury-CONTEXT-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div3.Treasury-BOS-MISSING",
+      "code": "M15-S03-AGT-Div3.Treasury-BOS-FIELD-division-MISSING",
       "severity": "blocking",
       "agent": "Div3.Treasury",
-      "reason": "resultJson.bos missing from heartbeat run readback"
+      "reason": "resultJson.bos.division missing or empty"
+    },
+    {
+      "code": "M15-S03-AGT-Div3.Treasury-CONTEXT-MISSING",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Paperclip context markers missing in resultJson.bos (division=absent, role=present)"
     }
   ],
   "redaction": {
@@ -210,5 +228,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 218051
+  "elapsed_ms": 288861
 }

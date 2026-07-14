@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T06:41:44.050Z",
+  "generated": "2026-07-14T11:30:53.668Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -18,7 +18,7 @@
   "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
   "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
   "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
-  "poll_budget": 60,
+  "poll_budget": 120,
   "poll_interval_ms": 5000,
   "terminal_statuses": [
     "succeeded",
@@ -40,10 +40,10 @@
   "pass_count": 0,
   "fail_count": 1,
   "status_distribution": {
-    "running": 1
+    "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "60": 1
+    "63": 1
   },
   "side_effects": {
     "before": {
@@ -67,8 +67,8 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 19,
-    "heartbeat_runs_after_total": 20,
+    "heartbeat_runs_before_total": 20,
+    "heartbeat_runs_after_total": 21,
     "heartbeat_runs_delta": 1
   },
   "agents": [
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "8aa9b437-<redacted>",
+        "run_id_redacted": "c490c589-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,32 +148,38 @@
         ]
       },
       "poll": {
-        "attempts": 60,
-        "budget": 60,
-        "terminal_observed": false,
-        "terminal_status": "running",
-        "attempts_to_terminal": 60,
+        "attempts": 63,
+        "budget": 120,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 63,
         "history_tail": [
           {
-            "attempt": 58,
+            "attempt": 61,
             "observed_status": "running"
           },
           {
-            "attempt": 59,
+            "attempt": 62,
             "observed_status": "running"
           },
           {
-            "attempt": 60,
-            "observed_status": "running"
+            "attempt": 63,
+            "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 19,
-        "after": 20
+        "before": 20,
+        "after": 21
       },
-      "result_json_bos_redacted": null,
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "c490c589-<redacted>",
+        "division": null,
+        "role": "general",
+        "status": "succeeded"
+      },
       "result_json_bos_required_fields": [
         "schemaVersion",
         "runId",
@@ -181,10 +187,15 @@
         "role",
         "status"
       ],
-      "result_json_bos_fields_present": [],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "role",
+        "status"
+      ],
       "context_markers": {
         "division_present": false,
-        "role_present": false,
+        "role_present": true,
         "paperclip_context_visible": false
       },
       "leak_flags": {
@@ -193,30 +204,23 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div1.HCO-POLL-BUDGET-EXHAUSTED",
-        "M15-S03-AGT-Div1.HCO-RUN-STATUS-RUNNING",
-        "M15-S03-AGT-Div1.HCO-BOS-MISSING"
+        "M15-S03-AGT-Div1.HCO-BOS-FIELD-division-MISSING",
+        "M15-S03-AGT-Div1.HCO-CONTEXT-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div1.HCO-POLL-BUDGET-EXHAUSTED",
+      "code": "M15-S03-AGT-Div1.HCO-BOS-FIELD-division-MISSING",
       "severity": "blocking",
       "agent": "Div1.HCO",
-      "reason": "run did not reach terminal status within 60 poll attempts"
+      "reason": "resultJson.bos.division missing or empty"
     },
     {
-      "code": "M15-S03-AGT-Div1.HCO-RUN-STATUS-RUNNING",
+      "code": "M15-S03-AGT-Div1.HCO-CONTEXT-MISSING",
       "severity": "blocking",
       "agent": "Div1.HCO",
-      "reason": "run still non-terminal (running) after 60 poll attempts"
-    },
-    {
-      "code": "M15-S03-AGT-Div1.HCO-BOS-MISSING",
-      "severity": "blocking",
-      "agent": "Div1.HCO",
-      "reason": "resultJson.bos missing from heartbeat run readback"
+      "reason": "Paperclip context markers missing in resultJson.bos (division=absent, role=present)"
     }
   ],
   "redaction": {
@@ -224,5 +228,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 372097
+  "elapsed_ms": 342970
 }
