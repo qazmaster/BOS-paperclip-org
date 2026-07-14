@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T00:30:40.079Z",
+  "generated": "2026-07-14T06:44:26.773Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -18,7 +18,7 @@
   "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
   "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
   "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
-  "poll_budget": 36,
+  "poll_budget": 60,
   "poll_interval_ms": 5000,
   "terminal_statuses": [
     "succeeded",
@@ -40,21 +40,21 @@
   "pass_count": 0,
   "fail_count": 1,
   "status_distribution": {
-    "unknown": 1
+    "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "exhausted": 1
+    "23": 1
   },
   "side_effects": {
     "before": {
-      "issues_count": 22,
+      "issues_count": 24,
       "documents_count": 0,
       "comments_count": 0,
       "approvals_count": 0,
       "agents_count": 8
     },
     "after": {
-      "issues_count": 22,
+      "issues_count": 24,
       "documents_count": 0,
       "comments_count": 0,
       "approvals_count": 0,
@@ -67,9 +67,9 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 2,
-    "heartbeat_runs_after_total": 2,
-    "heartbeat_runs_delta": 0
+    "heartbeat_runs_before_total": 5,
+    "heartbeat_runs_after_total": 6,
+    "heartbeat_runs_delta": 1
   },
   "agents": [
     {
@@ -93,22 +93,85 @@
         }
       },
       "invoke": {
-        "http_status": 409,
-        "run_id_redacted": null,
-        "raw_response_shape": []
+        "http_status": 200,
+        "run_id_redacted": "d7dca8c2-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
       },
       "poll": {
-        "attempts": 0,
-        "budget": 36,
-        "terminal_observed": false,
-        "terminal_status": null,
-        "attempts_to_terminal": 0,
-        "history_tail": []
+        "attempts": 23,
+        "budget": 60,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 23,
+        "history_tail": [
+          {
+            "attempt": 21,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 22,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 23,
+            "observed_status": "succeeded"
+          }
+        ]
       },
-      "wake_count_delta": 0,
+      "wake_count_delta": 1,
       "wake_counts": {
-        "before": 2,
-        "after": 2
+        "before": 5,
+        "after": 6
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -130,43 +193,16 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div2.MasterPlanner-HTTP-409",
-        "M15-S03-AGT-Div2.MasterPlanner-RESULT-JSON-MISSING",
-        "M15-S03-AGT-Div2.MasterPlanner-WAKE-DELTA-0",
         "M15-S03-AGT-Div2.MasterPlanner-BOS-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div2.MasterPlanner-HTTP-409",
-      "severity": "blocking",
-      "agent": "Div2.MasterPlanner",
-      "reason": "heartbeat invoke HTTP 409"
-    },
-    {
-      "code": "M15-S03-AGT-Div2.MasterPlanner-RESULT-JSON-MISSING",
-      "severity": "blocking",
-      "agent": "Div2.MasterPlanner",
-      "reason": "invoke response did not carry a runId"
-    },
-    {
-      "code": "M15-S03-AGT-Div2.MasterPlanner-WAKE-DELTA-0",
-      "severity": "blocking",
-      "agent": "Div2.MasterPlanner",
-      "reason": "wake_count_delta=0 (expected exactly 1) from independent heartbeat-runs list"
-    },
-    {
       "code": "M15-S03-AGT-Div2.MasterPlanner-BOS-MISSING",
       "severity": "blocking",
       "agent": "Div2.MasterPlanner",
       "reason": "resultJson.bos missing from heartbeat run readback"
-    },
-    {
-      "code": "M15-S03-HEARTBEAT-RUNS-DELTA-0-EXPECTED-1",
-      "severity": "blocking",
-      "agent": null,
-      "reason": "heartbeat_runs delta=0 (expected exactly 1 — one per agent)"
     }
   ],
   "redaction": {
@@ -174,5 +210,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 7162
+  "elapsed_ms": 144318
 }

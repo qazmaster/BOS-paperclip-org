@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T00:38:37.374Z",
+  "generated": "2026-07-14T06:51:03.878Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -18,7 +18,7 @@
   "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
   "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
   "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
-  "poll_budget": 36,
+  "poll_budget": 60,
   "poll_interval_ms": 5000,
   "terminal_statuses": [
     "succeeded",
@@ -40,21 +40,21 @@
   "pass_count": 0,
   "fail_count": 1,
   "status_distribution": {
-    "running": 1
+    "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "36": 1
+    "23": 1
   },
   "side_effects": {
     "before": {
-      "issues_count": 22,
+      "issues_count": 24,
       "documents_count": 0,
       "comments_count": 0,
       "approvals_count": 0,
       "agents_count": 8
     },
     "after": {
-      "issues_count": 22,
+      "issues_count": 24,
       "documents_count": 0,
       "comments_count": 0,
       "approvals_count": 0,
@@ -67,8 +67,8 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 9,
-    "heartbeat_runs_after_total": 10,
+    "heartbeat_runs_before_total": 10,
+    "heartbeat_runs_after_total": 11,
     "heartbeat_runs_delta": 1
   },
   "agents": [
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "97f9d6b6-<redacted>",
+        "run_id_redacted": "a1a890a4-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,30 +148,30 @@
         ]
       },
       "poll": {
-        "attempts": 36,
-        "budget": 36,
-        "terminal_observed": false,
-        "terminal_status": "running",
-        "attempts_to_terminal": 36,
+        "attempts": 23,
+        "budget": 60,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 23,
         "history_tail": [
           {
-            "attempt": 34,
+            "attempt": 21,
             "observed_status": "running"
           },
           {
-            "attempt": 35,
+            "attempt": 22,
             "observed_status": "running"
           },
           {
-            "attempt": 36,
-            "observed_status": "running"
+            "attempt": 23,
+            "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 9,
-        "after": 10
+        "before": 10,
+        "after": 11
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -193,25 +193,11 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div4.Production-POLL-BUDGET-EXHAUSTED",
-        "M15-S03-AGT-Div4.Production-RUN-STATUS-RUNNING",
         "M15-S03-AGT-Div4.Production-BOS-MISSING"
       ]
     }
   ],
   "blockers": [
-    {
-      "code": "M15-S03-AGT-Div4.Production-POLL-BUDGET-EXHAUSTED",
-      "severity": "blocking",
-      "agent": "Div4.Production",
-      "reason": "run did not reach terminal status within 36 poll attempts"
-    },
-    {
-      "code": "M15-S03-AGT-Div4.Production-RUN-STATUS-RUNNING",
-      "severity": "blocking",
-      "agent": "Div4.Production",
-      "reason": "run still non-terminal (running) after 36 poll attempts"
-    },
     {
       "code": "M15-S03-AGT-Div4.Production-BOS-MISSING",
       "severity": "blocking",
@@ -224,5 +210,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 224177
+  "elapsed_ms": 144246
 }

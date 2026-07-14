@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T06:48:22.332Z",
+  "generated": "2026-07-14T07:05:53.162Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -40,10 +40,10 @@
   "pass_count": 0,
   "fail_count": 1,
   "status_distribution": {
-    "succeeded": 1
+    "running": 1
   },
   "poll_attempts_distribution": {
-    "35": 1
+    "60": 1
   },
   "side_effects": {
     "before": {
@@ -67,15 +67,15 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 4,
-    "heartbeat_runs_after_total": 5,
+    "heartbeat_runs_before_total": 10,
+    "heartbeat_runs_after_total": 11,
     "heartbeat_runs_delta": 1
   },
   "agents": [
     {
-      "name": "Div3.Treasury",
-      "agent_id_prefix": "8408f78f-<redacted>",
-      "agent_role": "general",
+      "name": "Div7.MissionControl",
+      "agent_id_prefix": "478a498b-<redacted>",
+      "agent_role": "researcher",
       "adapter": {
         "adapter_type": null,
         "adapter_config_redacted": {
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "4318364b-<redacted>",
+        "run_id_redacted": "98c3cec4-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,30 +148,30 @@
         ]
       },
       "poll": {
-        "attempts": 35,
+        "attempts": 60,
         "budget": 60,
-        "terminal_observed": true,
-        "terminal_status": "succeeded",
-        "attempts_to_terminal": 35,
+        "terminal_observed": false,
+        "terminal_status": "running",
+        "attempts_to_terminal": 60,
         "history_tail": [
           {
-            "attempt": 33,
+            "attempt": 58,
             "observed_status": "running"
           },
           {
-            "attempt": 34,
+            "attempt": 59,
             "observed_status": "running"
           },
           {
-            "attempt": 35,
-            "observed_status": "succeeded"
+            "attempt": 60,
+            "observed_status": "running"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 4,
-        "after": 5
+        "before": 10,
+        "after": 11
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -193,15 +193,29 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div3.Treasury-BOS-MISSING"
+        "M15-S03-AGT-Div7.MissionControl-POLL-BUDGET-EXHAUSTED",
+        "M15-S03-AGT-Div7.MissionControl-RUN-STATUS-RUNNING",
+        "M15-S03-AGT-Div7.MissionControl-BOS-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div3.Treasury-BOS-MISSING",
+      "code": "M15-S03-AGT-Div7.MissionControl-POLL-BUDGET-EXHAUSTED",
       "severity": "blocking",
-      "agent": "Div3.Treasury",
+      "agent": "Div7.MissionControl",
+      "reason": "run did not reach terminal status within 60 poll attempts"
+    },
+    {
+      "code": "M15-S03-AGT-Div7.MissionControl-RUN-STATUS-RUNNING",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "run still non-terminal (running) after 60 poll attempts"
+    },
+    {
+      "code": "M15-S03-AGT-Div7.MissionControl-BOS-MISSING",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
       "reason": "resultJson.bos missing from heartbeat run readback"
     }
   ],
@@ -210,5 +224,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 218051
+  "elapsed_ms": 373279
 }

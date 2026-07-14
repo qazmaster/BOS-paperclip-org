@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T06:48:22.332Z",
+  "generated": "2026-07-14T06:54:40.459Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -43,7 +43,7 @@
     "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "35": 1
+    "32": 1
   },
   "side_effects": {
     "before": {
@@ -67,14 +67,14 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 4,
-    "heartbeat_runs_after_total": 5,
+    "heartbeat_runs_before_total": 3,
+    "heartbeat_runs_after_total": 4,
     "heartbeat_runs_delta": 1
   },
   "agents": [
     {
-      "name": "Div3.Treasury",
-      "agent_id_prefix": "8408f78f-<redacted>",
+      "name": "Div5.QualificationsLibraryLearning",
+      "agent_id_prefix": "380a347d-<redacted>",
       "agent_role": "general",
       "adapter": {
         "adapter_type": null,
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "4318364b-<redacted>",
+        "run_id_redacted": "ca8d7824-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,30 +148,30 @@
         ]
       },
       "poll": {
-        "attempts": 35,
+        "attempts": 32,
         "budget": 60,
         "terminal_observed": true,
         "terminal_status": "succeeded",
-        "attempts_to_terminal": 35,
+        "attempts_to_terminal": 32,
         "history_tail": [
           {
-            "attempt": 33,
+            "attempt": 30,
             "observed_status": "running"
           },
           {
-            "attempt": 34,
+            "attempt": 31,
             "observed_status": "running"
           },
           {
-            "attempt": 35,
+            "attempt": 32,
             "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 4,
-        "after": 5
+        "before": 3,
+        "after": 4
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -193,15 +193,15 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div3.Treasury-BOS-MISSING"
+        "M15-S03-AGT-Div5.QualificationsLibraryLearning-BOS-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div3.Treasury-BOS-MISSING",
+      "code": "M15-S03-AGT-Div5.QualificationsLibraryLearning-BOS-MISSING",
       "severity": "blocking",
-      "agent": "Div3.Treasury",
+      "agent": "Div5.QualificationsLibraryLearning",
       "reason": "resultJson.bos missing from heartbeat run readback"
     }
   ],
@@ -210,5 +210,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 218051
+  "elapsed_ms": 199164
 }

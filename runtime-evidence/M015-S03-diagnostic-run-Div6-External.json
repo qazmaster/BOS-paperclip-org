@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T06:48:22.332Z",
+  "generated": "2026-07-14T06:59:22.460Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -43,7 +43,7 @@
     "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "35": 1
+    "42": 1
   },
   "side_effects": {
     "before": {
@@ -67,15 +67,15 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 4,
-    "heartbeat_runs_after_total": 5,
+    "heartbeat_runs_before_total": 2,
+    "heartbeat_runs_after_total": 3,
     "heartbeat_runs_delta": 1
   },
   "agents": [
     {
-      "name": "Div3.Treasury",
-      "agent_id_prefix": "8408f78f-<redacted>",
-      "agent_role": "general",
+      "name": "Div6.External",
+      "agent_id_prefix": "35209510-<redacted>",
+      "agent_role": "security",
       "adapter": {
         "adapter_type": null,
         "adapter_config_redacted": {
@@ -83,7 +83,7 @@
           "quiet": true,
           "graceSec": 5,
           "provider": "minimax",
-          "toolsets": "terminal,file",
+          "toolsets": "terminal,file,web",
           "timeoutSec": 600,
           "persistSession": true,
           "instructionsFilePath": "<redacted-id>",
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "4318364b-<redacted>",
+        "run_id_redacted": "0a5c1f6f-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,30 +148,30 @@
         ]
       },
       "poll": {
-        "attempts": 35,
+        "attempts": 42,
         "budget": 60,
         "terminal_observed": true,
         "terminal_status": "succeeded",
-        "attempts_to_terminal": 35,
+        "attempts_to_terminal": 42,
         "history_tail": [
           {
-            "attempt": 33,
+            "attempt": 40,
             "observed_status": "running"
           },
           {
-            "attempt": 34,
+            "attempt": 41,
             "observed_status": "running"
           },
           {
-            "attempt": 35,
+            "attempt": 42,
             "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 4,
-        "after": 5
+        "before": 2,
+        "after": 3
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -193,15 +193,15 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div3.Treasury-BOS-MISSING"
+        "M15-S03-AGT-Div6.External-BOS-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div3.Treasury-BOS-MISSING",
+      "code": "M15-S03-AGT-Div6.External-BOS-MISSING",
       "severity": "blocking",
-      "agent": "Div3.Treasury",
+      "agent": "Div6.External",
       "reason": "resultJson.bos missing from heartbeat run readback"
     }
   ],
@@ -210,5 +210,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 218051
+  "elapsed_ms": 264496
 }
