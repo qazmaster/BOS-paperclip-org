@@ -68,11 +68,23 @@ const DEFAULT_ORIGIN = 'https://paperclip.oysana.com';
 // 100-315 s, warm 30-60 s). The override keeps the policy fail-closed —
 // any non-terminal outcome after the extended budget still emits the same
 // POLL-BUDGET-EXHAUSTED blocker — while accommodating real AI timing.
+//
+// T10 fix: raised standalone default from 12 to 180 polls (15 min) to
+// match the measured cold-start envelope observed during T08/T09 runs
+// (Div1.HCO newest run took 376 s before cancellation; Div7.MissionControl
+// newest run took 605 s before timed_out). The 600-poll hard ceiling
+// (50 min) is unchanged — bounded polling is preserved. This is a
+// configuration change only; canonical-name, fresh-config, redaction,
+// vendor-reuse, schema, and side-effect guards are unchanged. Standalone
+// T02 invocations that previously exited at 12 polls (60 s) now wait
+// up to 180 polls (15 min) before declaring POLL-BUDGET-EXHAUSTED, which
+// matches the T06 orchestrator's documented M015_POLL_BUDGET=60
+// (and T10 recommendation M015_POLL_BUDGET=180) envelope.
 const MAX_POLL_BUDGET = (() => {
   const raw = process.env.M015_POLL_BUDGET;
-  if (!raw) return 12;
+  if (!raw) return 180;
   const n = Number.parseInt(raw, 10);
-  if (!Number.isFinite(n) || n < 1) return 12;
+  if (!Number.isFinite(n) || n < 1) return 180;
   if (n > 600) return 600; // hard ceiling 50 minutes — prevents accidental runaway
   return n;
 })();

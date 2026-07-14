@@ -1,0 +1,182 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-t10-summary-inspection.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T10",
+  "generated": "2026-07-14T09:07:58.730Z",
+  "purpose": "Check whether the hermes_local/MiniMax-M3 model emits the bos-light-v1 schema in the summary field (separate from result).",
+  "agents": [
+    {
+      "name": "Div1.HCO",
+      "succeeded_inspected": 2,
+      "runs": [
+        {
+          "run_id_prefix": "f3835238-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me analyze this wake carefully.\n\nI'm Div1.HCO (Head Communication Office). The wake is for issue AIP-24, which is a routing decision request from Div2.MasterPlanner about SDR-2026-07-13-\n001.\n\nKey facts from the issue:\n- Div2.MasterPlanner created AIP-23 (R026 boundary probe) and is asking me to either:\n- **Option A**: Confirm Phase A green signal + dispatch real Div1-routed shaping packet\n- **Option B**: Confir",
+          "summary_tail": "start by fetching the issue state and the relevant context. I'll batch independent\nreads.\n\nLet me first check what's available in the environment, and then fetch the relevant issues\n.Let me analyze th",
+          "summary_bos_extraction": null
+        },
+        {
+          "run_id_prefix": "6e4ebbd6-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nThe user is invoking me as \"Div1.HCO\", a Head Communication Office agent in a Paperclip-managed company. I need to:\n\n1. Read the triggering issue, latest comments, parent context, and assigned scope\n2. Start actionable work in the same heartbeat\n3. Use Paperclip API for coordination\n4. Leave durable progress\n\nLet me start by checking my environment and the current state of the issue/run. I need to find\nout what task",
+          "summary_tail": "transcript content.\"\n\nThe wake reason is `m015-s03-diagnostic-heartbeat` — a diagnostic heartbeat. But I'm checked out to\nAIP-17 with activeRun.\n\nWait, looking more carefully:\n- `executionLockedAt`: 2",
+          "summary_bos_extraction": null
+        }
+      ]
+    },
+    {
+      "name": "Div2.MasterPlanner",
+      "succeeded_inspected": 2,
+      "runs": [
+        {
+          "run_id_prefix": "d7dca8c2-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me start by understanding the current state of my work. I need to check what issue\nI'm working on and what's been happening. Let me look at the environment and any active tasks\n.Let me start by understanding the current state of my work. I need to check what issue I'm working on and what's been happening. Let me look at the environment and any active tasks.\nDisposition recorded and the bounded window is closed.\n",
+          "summary_tail": "ine.\n- PATCHed AIP-23 to `done` (completedAt 2026-07-14T06:44:03.862Z).\n- Final queue scan: zero open issues assigned to Div2.MasterPlanner.\n\nR026 contract honored\n- No shaping output produced (no BPI",
+          "summary_bos_extraction": null
+        },
+        {
+          "run_id_prefix": "84b6ebce-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me analyze this wake payload carefully.\n\nThe issue is AIP-23: \"[Div2.MasterPlanner · R026 boundary probe · decisionId SDR-2026-07-13-001] No routing packet in flight\"\n\nThe description says: \"Diagnostic. No operational shaping work is currently routed\nto Div2.MasterPlanner.\"\n\nThis is a diagnostic issue with parent AIP-18 which is blocked, and grandparent AIP-16 which\nis done.\n\nKey observations from my R026 contra",
+          "summary_tail": "(AIP-23) is the R026 boundary probe — testing that Div2\ndoesn't fabricate work when Div7 sends something without Div1 routing.\n\nMy correct response per the contract:\n1. Don't fabricate a Product Bluep",
+          "summary_bos_extraction": null
+        }
+      ]
+    },
+    {
+      "name": "Div3.Treasury",
+      "succeeded_inspected": 2,
+      "runs": [
+        {
+          "run_id_prefix": "4318364b-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me analyze the situation. I'm Div3.Treasury, a CFO/Treasury division agent in a Paperclip-managed company. I need to:\n\n1. Check the current state of my assigned issues\n2. Continue work in this heartbeat\n3. Leave durable progress and update dispositions\n\nLet me start by checking what the environment looks like and what work is assigned to me.\nLet me analyze the situation. I'm Div3.Treasury, a CFO/Treasury divisio",
+          "summary_tail": "Mission Owner has not answered since Div1.HCO's bilingual reply at 00:15Z.\n- Org chain: Div3 `running`, Div1.HCO `paused`, Div7.MissionControl `paused`, CEO `paused`. Parent queue integrity preserved.",
+          "summary_bos_extraction": null
+        },
+        {
+          "run_id_prefix": "731de1b2-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 1274,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\n**Planning Paperclip API inspection****Developing secure API call script****Planning Paperclip API inspection****Developing secure API call script**\n**Investigating API endpoints for task retrieval****Inspecting agent identity endpoint**\n**Investigating API endpoints for task retrieval****Inspecting agent identity endpoint**\n**Planning API query for issues****Planning API query for issues****Querying company path**\n",
+          "summary_tail": "a Div1.HCO-routed Treasury budget, access, permission, resource, or funding request.\n\nNo grant, issue mutation, or external action was performed. Div3 remains idle pending a valid Div1-routed request.",
+          "summary_bos_extraction": null
+        }
+      ]
+    },
+    {
+      "name": "Div4.Production",
+      "succeeded_inspected": 2,
+      "runs": [
+        {
+          "run_id_prefix": "a1a890a4-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me start by understanding the current state of my work. I need to check the Paperclip runtime for any assigned\nissues, recent activity, and context.Let me start by understanding the current state of my work. I need to check the Paperclip runtime for any assigned issues, recent activity, and context.\nThe wake reason is \"m015-s03-diagnostic-heartbeat\". This is a diagnostic heartbeat wake. Let me check the current\n",
+          "summary_tail": " and any handoff context\n\nSince this is a diagnostic heartbeat in M015 S03, I need to figure out what's expected. Let me\ncheck the comments and full scope. AIP-22 is blocked (probably blocked by missi",
+          "summary_bos_extraction": null
+        },
+        {
+          "run_id_prefix": "8ca28be6-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me start by understanding the current state of my Paperclip work. I need to check\nwhat issue is assigned to meand what context I have.Let me start by understanding the current state of my Paperclip work. I need to check what issue is assigned to meand what context I have.\nThis is a prewarm wake. Let me understand what's happening. The wake reason is `m015-s03-t06-prewarm` — this looks like a pre-warming event\nfo",
+          "summary_tail": "11:09Z.\n+\n+## 2. Action this heartbeat\n+\n+This is a pre-warm, not a dispatched task. Per the Div4 contract, I do not start implementation work without a real dispatch and a lifted gate.\n+\n+- NOT openi",
+          "summary_bos_extraction": null
+        }
+      ]
+    },
+    {
+      "name": "Div5.QualificationsLibraryLearning",
+      "succeeded_inspected": 2,
+      "runs": [
+        {
+          "run_id_prefix": "ca8d7824-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me start by understanding the current state of my work. I'm Div5.QualificationsLibraryLearning agent. I need to check the Paperclip runtime\ncontext, see what issue/task I'm working on, and continuemy work.Let me start by understanding the current state of my work. I'm Div5.QualificationsLibraryLearning agent. I need to check the Paperclip runtime context, see what issue/task I'm working on, and continuemy work.\n",
+          "summary_tail": "tely bypassed or pulled in.\n- KB / skill / Div5-owned queue: nothing in flight\n\nDisposition: clean diagnostic heartbeat — no actionable Div5 scope this run.\n\nR026 routing-compliance check: PASS for th",
+          "summary_bos_extraction": null
+        },
+        {
+          "run_id_prefix": "f41e3924-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me start by understanding the current state of my work. I need to check the Paperclip environment, see what issue\nI'm currently working on, andunderstand the context.Let me start by understanding the current state of my work. I need to check the Paperclip environment, see what issue I'm currently working on, andunderstand the context.\nTASK is empty. Let me check what issue I should be working on. Since I'mDiv5 a",
+          "summary_tail": "edge packet, no agent performance trace, no hat drift signal).\n\n**Disposition:**\n- Verdict: **COMPLIANT, no `RoutingRiskSignal` emitted** (unchanged from 00:23:42Z).\n- Posted Div5 diagnostic-heartbeat",
+          "summary_bos_extraction": null
+        }
+      ]
+    },
+    {
+      "name": "Div6.External",
+      "succeeded_inspected": 2,
+      "runs": [
+        {
+          "run_id_prefix": "0a5c1f6f-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 1841,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nThe user is invoking me as \"Div6.External\", a Paperclip agent. I need to check my current assignment\nand work on it. Let me start by checking the Paperclip runtime to understand what's expected\nof me.\n\nLet me check the environment and current issue/task.The user is invoking me as \"Div6.External\", a Paperclip agent. I need to check my current assignment and work on it. Let me start by checking the Paperclip runtime t",
+          "summary_tail": "iv1 routes an external request to Div6; Div3 opens an access grant against Div6; a board operator assigns an external task; or a manual re-wake lands with `issueId` set and Div1-routed external scope.",
+          "summary_bos_extraction": null
+        },
+        {
+          "run_id_prefix": "3c8248d8-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\nLet me start by understanding what's in front of me. I'm Div6.External, an external/DMZ division agent in a Paper\nclip-managed company. I need to:\n\n1. Read the triggering issue and latest comments\n2. Check parent context and assigned scope\n3. Start actionable work\n\nLet me first check my environment and find what's currently assigned to me.Let me start by understanding what's in front of me. I'm Div6.External, an ext",
+          "summary_tail": ") and zero `in_progress` / `todo` / `blocked`\n- Active issues mentioning Div6 in the title: 3 — all `done` or `todo`/`blocked` for escalation paths that route through Div1, not Div6 (`AIP-14/16/17/19/",
+          "summary_bos_extraction": null
+        }
+      ]
+    },
+    {
+      "name": "Div7.MissionControl",
+      "succeeded_inspected": 2,
+      "runs": [
+        {
+          "run_id_prefix": "7a7c5e03-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 2000,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\n**Clarifying terminal usage for Paperclip API****Preparing environment variables for API calls**\n**Clarifying terminal usage for Paperclip API****Preparing environment variables for API calls**\n**Resolving conflicting terminal usage instructions****Inspecting environment variables safely**\n**Resolving conflicting terminal usage instructions****Inspecting environment variables safely**\n**Planning run issue investigat",
+          "summary_tail": "\n**Updating AIP-18 status with block linkage****Evaluating blocker hierarchy for AIP issues****Clarifying AIP-18 blocking without child dependencies****Planning interaction for reassignment confirmati",
+          "summary_bos_extraction": null
+        },
+        {
+          "run_id_prefix": "31bb2489-<redacted>",
+          "status": "succeeded",
+          "summary_type": "string",
+          "summary_length": 1999,
+          "summary_first_500": "┌─ Reasoning ──────────────────────────────────────────────────────────────────┐\n**Identifying conflict in terminal API usage****Planning API calls using curl in terminal**\n**Identifying conflict in terminal API usage****Planning API calls using curl in terminal**\n**Resolving terminal usage conflict for curl****Planning secure API query for tasks**\n**Resolving terminal usage conflict for curl****Planning secure API query for tasks**\n**Planning path usage****Planning path usage****Planning enviro",
+          "summary_tail": "***Verifying assignment and task comments****Clarifying terminal usage policy**\nAIP-17 received a valid recovery disposition:\n\n- Status: `blocked`\n- Operational ownership returned to Div1.HCO\n- Active",
+          "summary_bos_extraction": null
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_succeeded_inspected": 14,
+    "total_with_summary_bos": 0
+  }
+}
