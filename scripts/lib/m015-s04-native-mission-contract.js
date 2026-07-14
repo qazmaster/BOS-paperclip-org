@@ -581,10 +581,28 @@ function buildProtocolEvidence({ admission, missionRun, gates, blockers, diagnos
   const admissionIsBlocked = !admissionSummary
     || admissionSummary.admitted === false
     || (admissionStatus && admissionStatus.startsWith('BLOCKED'));
+  // Status resolution order under blocked admission:
+  //   1. Caller-overridden `status` argument wins (escape hatch for tests).
+  //   2. `admissionIsBlocked && safeBlockDeclared` → MISSION_BLOCKED_SAFE,
+  //      regardless of whether the run file is present. The T04 runner
+  //      always writes a run artifact under BLOCKED_ON_S03_FAIL_CLOSED
+  //      (with `mission_run: null` inside), so this branch is the
+  //      canonical current S04 state. The diagnostic admission-blocker
+  //      carry-forward is preserved in `blockers` so callers can still
+  //      inspect why the mission was not promoted; only the top-level
+  //      status honours the explicit operator acceptance.
+  //   3. `admissionIsBlocked && !missionRun && !safeBlockDeclared` →
+  //      MISSION_BLOCKED_NO_RUN. CI gates without the explicit flag
+  //      must fail-closed (the documented T02 verdict for the
+  //      "admission blocked + no run" combination).
+  //   4. Otherwise defer to `deriveProtocolStatus`, which honours gate
+  //      failures and full pass-through blockers.
   const computedStatus = status
-    || (admissionIsBlocked && !missionRun
-      ? (safeBlockDeclared ? 'MISSION_BLOCKED_SAFE' : 'MISSION_BLOCKED_NO_RUN')
-      : deriveProtocolStatus(gates, blockers, options));
+    || (admissionIsBlocked && safeBlockDeclared
+      ? 'MISSION_BLOCKED_SAFE'
+      : admissionIsBlocked && !missionRun
+        ? 'MISSION_BLOCKED_NO_RUN'
+        : deriveProtocolStatus(gates, blockers, options));
 
   return {
     $schema: 'https://gsd.local/schemas/runtime-evidence/m015-s04-native-mission-protocol.v1.json',

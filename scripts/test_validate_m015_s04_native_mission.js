@@ -51,6 +51,7 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const child_process = require('node:child_process');
 const { describe, it, beforeEach, afterEach } = require('node:test');
 
 const validator = require('./validate_m015_s04_native_mission');
@@ -880,6 +881,57 @@ describe('M015-S04 native mission validator', () => {
       assert.equal(ev.safe_block_declared, true);
       assert.equal(ev.status, 'MISSION_BLOCKED_SAFE');
     });
+
+    // T06 regression: --accept-safe-block must take precedence over the
+    // admission-blocker carry-forward diagnostic, regardless of whether
+    // the run file is present. The T04 runner always writes a run
+    // artifact under BLOCKED_ON_S03_FAIL_CLOSED (with `mission_run: null`
+    // inside) so the canonical current-S04 evidence shape hits this
+    // branch: blocked admission + parsed run object + safe-block flag.
+    it('emits MISSION_BLOCKED_SAFE when admission blocked + run present + --accept-safe-block (T06 regression)', () => {
+      const blocked = blockedAdmissionEvidence();
+      const run = cleanMissionRun();
+      const result = evaluateProtocol({ admission: blocked, missionRun: run, options: { acceptSafeBlock: true } });
+      const ev = buildProtocolEvidence({
+        admission: blocked,
+        missionRun: run,
+        gates: result.gates,
+        blockers: result.blockers,
+        options: { acceptSafeBlock: true },
+        paths: {},
+      });
+      assert.equal(ev.status, 'MISSION_BLOCKED_SAFE',
+        `expected MISSION_BLOCKED_SAFE under safe-block; got ${ev.status}`);
+      assert.equal(ev.safe_block_declared, true);
+      // The diagnostic admission-blocker MUST remain in evidence so
+      // callers can inspect why the mission was not promoted; only the
+      // top-level status honours the explicit operator acceptance.
+      assert.ok(codes(ev.blockers).includes(BLOCKER_CODES.ADMISSION_BLOCKER_CARRY_FORWARD),
+        'diagnostic ADMISSION_BLOCKER_CARRY_FORWARD must be preserved');
+    });
+
+    // T06 fail-closed regression: omitting --accept-safe-block must keep
+    // MISSION_FAIL_CLOSED so CI gates that have not opted in to safe-block
+    // continue to fail-closed. The fix must not weaken semantics for
+    // callers that don't pass the flag.
+    it('keeps MISSION_FAIL_CLOSED when admission blocked + run present + no --accept-safe-block (T06 fail-closed regression)', () => {
+      const blocked = blockedAdmissionEvidence();
+      const run = cleanMissionRun();
+      const result = evaluateProtocol({ admission: blocked, missionRun: run, options: {} });
+      const ev = buildProtocolEvidence({
+        admission: blocked,
+        missionRun: run,
+        gates: result.gates,
+        blockers: result.blockers,
+        options: {},
+        paths: {},
+      });
+      assert.equal(ev.status, 'MISSION_FAIL_CLOSED',
+        `expected MISSION_FAIL_CLOSED without safe-block flag; got ${ev.status}`);
+      assert.equal(ev.safe_block_declared, false);
+      assert.ok(codes(ev.blockers).includes(BLOCKER_CODES.ADMISSION_BLOCKER_CARRY_FORWARD),
+        'diagnostic blocker must persist under fail-closed');
+    });
   });
 
   describe('writeProtocolEvidence refusal guard', () => {
@@ -1062,5 +1114,125 @@ describe('M015-S04 expected scenario coverage (slice research negative paths)', 
     const result = evaluateMissionContract(run, {});
     assert.equal(result.gate_pass, true);
     assert.equal(Object.values(result.gates).every((v) => v === true), true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// T06 regression: CLI exit-code contract for --accept-safe-block.
+//
+// Drives the real CLI binary through spawnSync against hermetic tmpdir
+// fixtures, asserts exit codes 0/1/2/3 stay aligned with the documented
+// verdict semantics, and confirms the protocol JSON written to disk
+// records MISSION_BLOCKED_SAFE under safe-block (not MISSION_FAIL_CLOSED
+// as it did before the fix).
+// ---------------------------------------------------------------------------
+describe('M015-S04 CLI exit-code contract (safe-block regression T06)', () => {
+  let dir;
+  beforeEach(() => {
+    dir = fs.mkdtempSync(path.join(os.tmpdir(), 'm15s04-cli-t06-'));
+  });
+  afterEach(() => {
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+
+  function writeEvidence(filename, body) {
+    const p = path.join(dir, filename);
+    fs.writeFileSync(p, JSON.stringify(body));
+    return p;
+  }
+
+  function spawnValidator(extraArgs) {
+    const script = path.join(ROOT, 'scripts', 'validate_m015_s04_native_mission.js');
+    return child_process.spawnSync(process.execPath, [script, ...extraArgs], {
+      encoding: 'utf8',
+      cwd: ROOT,
+    });
+  }
+
+  it('exits 2 (MISSION_BLOCKED_SAFE) when admission blocked + run present + --accept-safe-block (canonical S04 state)', () => {
+    const admissionPath = writeEvidence('admission.json', blockedAdmissionEvidence());
+    const runPath = writeEvidence('run.json', cleanMissionRun());
+    const outputPath = path.join(dir, 'protocol.json');
+    const result = spawnValidator([
+      '--admission', admissionPath,
+      '--input', runPath,
+      '--output', outputPath,
+      '--accept-safe-block',
+    ]);
+    assert.equal(result.status, 2,
+      `expected exit 2 (MISSION_BLOCKED_SAFE); got ${result.status}\n` +
+      `stdout: ${result.stdout}\nstderr: ${result.stderr}`);
+    assert.match(result.stdout, /MISSION_BLOCKED_SAFE/);
+    assert.match(result.stdout, /safe_block=true/);
+    // writeProtocolEvidence writes to the validator's hard-coded OUTPUT_PATH,
+    // not to --output; we only care that the runtime evidence on disk
+    // reflects the safe-block status.
+    const protocolOnDisk = JSON.parse(fs.readFileSync(OUTPUT_PATH, 'utf8'));
+    assert.equal(protocolOnDisk.status, 'MISSION_BLOCKED_SAFE');
+    assert.equal(protocolOnDisk.safe_block_declared, true);
+    // Diagnostic admission-blocker carry-forward is preserved so T05 can
+    // re-derive that admission was blocked.
+    assert.ok(codes(protocolOnDisk.blockers).includes(BLOCKER_CODES.ADMISSION_BLOCKER_CARRY_FORWARD),
+      'diagnostic admission-blocker carry-forward must persist under safe-block');
+  });
+
+  it('exits 1 (MISSION_FAIL_CLOSED) when admission blocked + run present + no flag (fail-closed regression)', () => {
+    const admissionPath = writeEvidence('admission.json', blockedAdmissionEvidence());
+    const runPath = writeEvidence('run.json', cleanMissionRun());
+    const outputPath = path.join(dir, 'protocol.json');
+    const result = spawnValidator([
+      '--admission', admissionPath,
+      '--input', runPath,
+      '--output', outputPath,
+    ]);
+    assert.equal(result.status, 1,
+      `expected exit 1 (MISSION_FAIL_CLOSED); got ${result.status}\n` +
+      `stdout: ${result.stdout}\nstderr: ${result.stderr}`);
+    assert.match(result.stdout, /MISSION_FAIL_CLOSED/);
+    assert.match(result.stdout, /safe_block=false/);
+  });
+
+  it('exits 2 (MISSION_BLOCKED_SAFE) when admission blocked + run missing + --accept-safe-block (preserves existing safe-block-no-run path)', () => {
+    const admissionPath = writeEvidence('admission.json', blockedAdmissionEvidence());
+    const missingRunPath = path.join(dir, 'this-does-not-exist.json');
+    const outputPath = path.join(dir, 'protocol.json');
+    const result = spawnValidator([
+      '--admission', admissionPath,
+      '--input', missingRunPath,
+      '--output', outputPath,
+      '--accept-safe-block',
+    ]);
+    assert.equal(result.status, 2,
+      `expected exit 2 (MISSION_BLOCKED_SAFE); got ${result.status}`);
+    assert.match(result.stdout, /MISSION_BLOCKED_SAFE/);
+  });
+
+  it('exits 3 (MISSION_BLOCKED_NO_RUN) when admission blocked + run missing + no flag (preserves fail-closed-no-run)', () => {
+    const admissionPath = writeEvidence('admission.json', blockedAdmissionEvidence());
+    const missingRunPath = path.join(dir, 'this-does-not-exist.json');
+    const outputPath = path.join(dir, 'protocol.json');
+    const result = spawnValidator([
+      '--admission', admissionPath,
+      '--input', missingRunPath,
+      '--output', outputPath,
+    ]);
+    assert.equal(result.status, 3,
+      `expected exit 3 (MISSION_BLOCKED_NO_RUN); got ${result.status}`);
+    assert.match(result.stdout, /MISSION_BLOCKED_NO_RUN/);
+  });
+
+  it('exits 0 (MISSION_PASS) when admission admitted + clean run + no flag (happy-path regression)', () => {
+    const admissionPath = writeEvidence('admission.json', cleanAdmissionEvidence());
+    const runPath = writeEvidence('run.json', cleanMissionRun());
+    const outputPath = path.join(dir, 'protocol.json');
+    const result = spawnValidator([
+      '--admission', admissionPath,
+      '--input', runPath,
+      '--output', outputPath,
+    ]);
+    assert.equal(result.status, 0,
+      `expected exit 0 (MISSION_PASS); got ${result.status}\n` +
+      `stdout: ${result.stdout}\nstderr: ${result.stderr}`);
+    assert.match(result.stdout, /MISSION_PASS/);
   });
 });

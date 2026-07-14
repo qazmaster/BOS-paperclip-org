@@ -217,9 +217,9 @@ async function run() {
   );
   // exit codes:
   //   0 = MISSION_PASS
-  //   1 = MISSION_FAIL_CLOSED (default; explicit fail-closed)
-  //   2 = MISSION_BLOCKED_SAFE (admission blocked, run missing/empty, --accept-safe-block)
-  //   3 = MISSION_BLOCKED_NO_RUN (admission blocked, run missing/empty, no --accept-safe-block)
+  //   1 = MISSION_FAIL_CLOSED (gate failure OR admission blocked + run present + no --accept-safe-block)
+  //   2 = MISSION_BLOCKED_SAFE (admission blocked + --accept-safe-block declared, regardless of run presence)
+  //   3 = MISSION_BLOCKED_NO_RUN (admission blocked + run missing/empty + no --accept-safe-block)
   if (evidence.status === 'MISSION_PASS') process.exit(0);
   if (evidence.status === 'MISSION_BLOCKED_SAFE') process.exit(2);
   if (evidence.status === 'MISSION_BLOCKED_NO_RUN') process.exit(3);
