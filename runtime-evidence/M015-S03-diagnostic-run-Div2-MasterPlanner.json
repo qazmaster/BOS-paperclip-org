@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T00:08:15.335Z",
+  "generated": "2026-07-14T00:30:40.079Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -35,7 +35,7 @@
     "role",
     "status"
   ],
-  "agent_count_expected": 7,
+  "agent_count_expected": 1,
   "agent_count_observed": 1,
   "pass_count": 0,
   "fail_count": 1,
@@ -67,15 +67,15 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 7,
-    "heartbeat_runs_after_total": 7,
+    "heartbeat_runs_before_total": 2,
+    "heartbeat_runs_after_total": 2,
     "heartbeat_runs_delta": 0
   },
   "agents": [
     {
-      "name": "Div7.MissionControl",
-      "agent_id_prefix": "478a498b-<redacted>",
-      "agent_role": "researcher",
+      "name": "Div2.MasterPlanner",
+      "agent_id_prefix": "327adf88-<redacted>",
+      "agent_role": "general",
       "adapter": {
         "adapter_type": null,
         "adapter_config_redacted": {
@@ -107,8 +107,8 @@
       },
       "wake_count_delta": 0,
       "wake_counts": {
-        "before": 7,
-        "after": 7
+        "before": 2,
+        "after": 2
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -130,43 +130,43 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div7.MissionControl-HTTP-409",
-        "M15-S03-AGT-Div7.MissionControl-RESULT-JSON-MISSING",
-        "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-0",
-        "M15-S03-AGT-Div7.MissionControl-BOS-MISSING"
+        "M15-S03-AGT-Div2.MasterPlanner-HTTP-409",
+        "M15-S03-AGT-Div2.MasterPlanner-RESULT-JSON-MISSING",
+        "M15-S03-AGT-Div2.MasterPlanner-WAKE-DELTA-0",
+        "M15-S03-AGT-Div2.MasterPlanner-BOS-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-HTTP-409",
+      "code": "M15-S03-AGT-Div2.MasterPlanner-HTTP-409",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
+      "agent": "Div2.MasterPlanner",
       "reason": "heartbeat invoke HTTP 409"
     },
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-RESULT-JSON-MISSING",
+      "code": "M15-S03-AGT-Div2.MasterPlanner-RESULT-JSON-MISSING",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
+      "agent": "Div2.MasterPlanner",
       "reason": "invoke response did not carry a runId"
     },
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-0",
+      "code": "M15-S03-AGT-Div2.MasterPlanner-WAKE-DELTA-0",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
+      "agent": "Div2.MasterPlanner",
       "reason": "wake_count_delta=0 (expected exactly 1) from independent heartbeat-runs list"
     },
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-BOS-MISSING",
+      "code": "M15-S03-AGT-Div2.MasterPlanner-BOS-MISSING",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
+      "agent": "Div2.MasterPlanner",
       "reason": "resultJson.bos missing from heartbeat run readback"
     },
     {
-      "code": "M15-S03-HEARTBEAT-RUNS-DELTA-0-EXPECTED-7",
+      "code": "M15-S03-HEARTBEAT-RUNS-DELTA-0-EXPECTED-1",
       "severity": "blocking",
       "agent": null,
-      "reason": "heartbeat_runs delta=0 (expected exactly 7 — one per agent)"
+      "reason": "heartbeat_runs delta=0 (expected exactly 1 — one per agent)"
     }
   ],
   "redaction": {
@@ -174,5 +174,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 7094
+  "elapsed_ms": 7162
 }

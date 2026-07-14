@@ -62,7 +62,20 @@ const OUTPUT_PATH = path.join(ROOT, 'runtime-evidence/M015-S03-seven-agent-diagn
 const DEFAULT_BASE_URL = 'http://127.0.0.1:43131';
 const DEFAULT_ORIGIN = 'https://paperclip.oysana.com';
 
-const MAX_POLL_BUDGET = 12;
+// T06 orchestrator allows extending the bounded poll budget for cold-start
+// latency of the Hermes/MiniMax-M3 AI. The slice-plan default of 12 (60 s)
+// assumes AI responses faster than real measured latency (cold start
+// 100-315 s, warm 30-60 s). The override keeps the policy fail-closed —
+// any non-terminal outcome after the extended budget still emits the same
+// POLL-BUDGET-EXHAUSTED blocker — while accommodating real AI timing.
+const MAX_POLL_BUDGET = (() => {
+  const raw = process.env.M015_POLL_BUDGET;
+  if (!raw) return 12;
+  const n = Number.parseInt(raw, 10);
+  if (!Number.isFinite(n) || n < 1) return 12;
+  if (n > 600) return 600; // hard ceiling 50 minutes — prevents accidental runaway
+  return n;
+})();
 const POLL_INTERVAL_MS = 5000;
 const TERMINAL_STATUSES = new Set(['succeeded', 'failed', 'cancelled', 'expired', 'timed_out']);
 const SUCCESS_TERMINAL_STATUS = 'succeeded';
@@ -479,6 +492,7 @@ function buildEvidence({
   sideEffectsBefore,
   sideEffectsAfter,
   startedAt,
+  expectedHeartbeatRuns,
 }) {
   const sideEffectsDelta = {
     issues: sideEffectsAfter.issues_count - sideEffectsBefore.issues_count,
@@ -493,7 +507,7 @@ function buildEvidence({
 
   const statusDistribution = summarizeStatusDistribution(records);
   const pollAttemptsDistribution = summarizePollAttempts(records);
-  const expected = CANONICAL_DIVISION_NAMES.length;
+  const expected = typeof expectedHeartbeatRuns === 'number' ? expectedHeartbeatRuns : CANONICAL_DIVISION_NAMES.length;
   const observed = heartbeatRunsDelta;
 
   // Side-effect integrity — fail-closed if anything other than heartbeat
@@ -642,8 +656,23 @@ async function run() {
   // BEFORE side-effect readback — single bounded snapshot.
   const sideEffectsBefore = await readSideEffectSlices(request, discovery.companyId);
 
+  // T06 orchestrator can isolate a single agent via M015_ONLY_AGENT so that
+  // background heartbeats from other agents do not contaminate the
+  // S03 side-effect readback. The orchestrator is expected to have paused
+  // every OTHER agent before invoking T02 in single-agent mode.
+  const iterationOrder = (() => {
+    const only = process.env.M015_ONLY_AGENT;
+    if (only && typeof only === 'string' && only.length > 0) {
+      if (!CANONICAL_DIVISION_NAMES.includes(only)) {
+        throw new Error(`M015_ONLY_AGENT=${only} is not a canonical division name`);
+      }
+      return [only];
+    }
+    return contract.mutation_gate.mutation_order;
+  })();
+
   const records = [];
-  for (const name of contract.mutation_gate.mutation_order) {
+  for (const name of iterationOrder) {
     const agentMeta = discovery.found[name];
     if (!agentMeta) continue;
     let adapterConfig = null;
@@ -728,8 +757,20 @@ async function run() {
     sideEffectsBefore,
     sideEffectsAfter,
     startedAt,
+    expectedHeartbeatRuns: iterationOrder.length,
   });
-  writeEvidence(evidence);
+  // When the orchestrator isolates a single agent, write the per-agent
+  // evidence to a separate file so 7 sequential runs do not clobber each
+  // other. The orchestrator aggregates the seven per-agent files into the
+  // combined M015-S03-seven-agent-diagnostic-runs.json consumed by T03.
+  const only = process.env.M015_ONLY_AGENT;
+  if (only && typeof only === 'string' && only.length > 0) {
+    const perAgentPath = OUTPUT_PATH.replace(/seven-agent-diagnostic-runs\.json$/, `diagnostic-run-${only.replace(/\./g, '-')}.json`);
+    const originalWrite = writeEvidence;
+    fs.writeFileSync(perAgentPath, JSON.stringify(scrubEvidence(evidence), null, 2) + '\n');
+  } else {
+    writeEvidence(evidence);
+  }
   const ok = evidence.status === 'PASS';
   process.stdout.write(`M015_S03_HEARTBEAT=${ok ? 'pass' : 'fail'} pass=${evidence.pass_count} fail=${evidence.fail_count} blockers=${evidence.blockers.length} heartbeat_runs_delta=${evidence.side_effects.heartbeat_runs_delta}\n`);
   process.exit(ok ? 0 : 1);

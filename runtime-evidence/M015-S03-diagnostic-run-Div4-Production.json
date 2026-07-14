@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T00:08:15.335Z",
+  "generated": "2026-07-14T00:38:37.374Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -35,15 +35,15 @@
     "role",
     "status"
   ],
-  "agent_count_expected": 7,
+  "agent_count_expected": 1,
   "agent_count_observed": 1,
   "pass_count": 0,
   "fail_count": 1,
   "status_distribution": {
-    "unknown": 1
+    "running": 1
   },
   "poll_attempts_distribution": {
-    "exhausted": 1
+    "36": 1
   },
   "side_effects": {
     "before": {
@@ -67,15 +67,15 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 7,
-    "heartbeat_runs_after_total": 7,
-    "heartbeat_runs_delta": 0
+    "heartbeat_runs_before_total": 9,
+    "heartbeat_runs_after_total": 10,
+    "heartbeat_runs_delta": 1
   },
   "agents": [
     {
-      "name": "Div7.MissionControl",
-      "agent_id_prefix": "478a498b-<redacted>",
-      "agent_role": "researcher",
+      "name": "Div4.Production",
+      "agent_id_prefix": "999490c8-<redacted>",
+      "agent_role": "general",
       "adapter": {
         "adapter_type": null,
         "adapter_config_redacted": {
@@ -93,22 +93,85 @@
         }
       },
       "invoke": {
-        "http_status": 409,
-        "run_id_redacted": null,
-        "raw_response_shape": []
+        "http_status": 200,
+        "run_id_redacted": "97f9d6b6-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
       },
       "poll": {
-        "attempts": 0,
+        "attempts": 36,
         "budget": 36,
         "terminal_observed": false,
-        "terminal_status": null,
-        "attempts_to_terminal": 0,
-        "history_tail": []
+        "terminal_status": "running",
+        "attempts_to_terminal": 36,
+        "history_tail": [
+          {
+            "attempt": 34,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 35,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 36,
+            "observed_status": "running"
+          }
+        ]
       },
-      "wake_count_delta": 0,
+      "wake_count_delta": 1,
       "wake_counts": {
-        "before": 7,
-        "after": 7
+        "before": 9,
+        "after": 10
       },
       "result_json_bos_redacted": null,
       "result_json_bos_required_fields": [
@@ -130,43 +193,30 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div7.MissionControl-HTTP-409",
-        "M15-S03-AGT-Div7.MissionControl-RESULT-JSON-MISSING",
-        "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-0",
-        "M15-S03-AGT-Div7.MissionControl-BOS-MISSING"
+        "M15-S03-AGT-Div4.Production-POLL-BUDGET-EXHAUSTED",
+        "M15-S03-AGT-Div4.Production-RUN-STATUS-RUNNING",
+        "M15-S03-AGT-Div4.Production-BOS-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-HTTP-409",
+      "code": "M15-S03-AGT-Div4.Production-POLL-BUDGET-EXHAUSTED",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
-      "reason": "heartbeat invoke HTTP 409"
+      "agent": "Div4.Production",
+      "reason": "run did not reach terminal status within 36 poll attempts"
     },
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-RESULT-JSON-MISSING",
+      "code": "M15-S03-AGT-Div4.Production-RUN-STATUS-RUNNING",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
-      "reason": "invoke response did not carry a runId"
+      "agent": "Div4.Production",
+      "reason": "run still non-terminal (running) after 36 poll attempts"
     },
     {
-      "code": "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-0",
+      "code": "M15-S03-AGT-Div4.Production-BOS-MISSING",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
-      "reason": "wake_count_delta=0 (expected exactly 1) from independent heartbeat-runs list"
-    },
-    {
-      "code": "M15-S03-AGT-Div7.MissionControl-BOS-MISSING",
-      "severity": "blocking",
-      "agent": "Div7.MissionControl",
+      "agent": "Div4.Production",
       "reason": "resultJson.bos missing from heartbeat run readback"
-    },
-    {
-      "code": "M15-S03-HEARTBEAT-RUNS-DELTA-0-EXPECTED-7",
-      "severity": "blocking",
-      "agent": null,
-      "reason": "heartbeat_runs delta=0 (expected exactly 7 — one per agent)"
     }
   ],
   "redaction": {
@@ -174,5 +224,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 7094
+  "elapsed_ms": 224177
 }
