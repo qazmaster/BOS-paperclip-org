@@ -691,9 +691,17 @@ async function run() {
 
     const runListBefore = await listHeartbeatRuns(request, discovery.companyId, agentMeta.id);
 
+    // T08 fix: make the bos-light-v1 schema explicit in the prompt so
+    // hermes_local/MiniMax-M3 populates resultJson.bos with the required
+    // fields (schemaVersion, runId, division, role, status). Pre-T08 the
+    // prompt only asked the model to "report context" without naming the
+    // target schema, so resultJson.bos was null even on succeeded runs.
+    // This is a schema-contract fix, not a weakening of fail-closed guards
+    // (canonical-name, fresh-config, redaction, vendor-reuse, polling,
+    // schema, side-effect are all unchanged).
     const invokeBody = {
       reason: 'm015-s03-diagnostic-heartbeat',
-      prompt: `${NON_BUSINESS_PROMPT_PREFIX} for ${name}; report Paperclip context (division, role, status); no business mutations`,
+      prompt: `${NON_BUSINESS_PROMPT_PREFIX} for ${name}. Produce a JSON-only response shaped exactly as {"resultJson": {"bos": {"schemaVersion": "bos-light-v1", "runId": "<this run id>", "division": "${name}", "role": "<your agent role>", "status": "succeeded"}}}. Do NOT mutate any business state — diagnostic only.`,
       metadata: {
         schema_version: 'bos-light-v1',
         expected_result_json: 'bos',

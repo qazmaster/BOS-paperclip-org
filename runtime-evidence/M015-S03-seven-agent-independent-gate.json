@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T03",
-  "generated": "2026-07-13T23:37:50.754Z",
+  "generated": "2026-07-14T05:49:30.830Z",
   "status": "FAIL_CLOSED",
   "gate_model": "49 per-agent conditions (7 agents x 7 checks) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)",
   "upstream_artifacts": {
@@ -32,11 +32,11 @@
           "Div6.External"
         ],
         "extra_roster": [],
-        "t01_name_drift_blocker": true,
-        "t02_name_drift_blocker": true
+        "t01_name_drift_blocker": false,
+        "t02_name_drift_blocker": false
       },
       "upstream_status": {
-        "t01_status": "FAIL_CLOSED",
+        "t01_status": "PASS",
         "t02_status": "FAIL_CLOSED"
       },
       "redaction": {
@@ -46,7 +46,7 @@
         "t02_leak_paths": []
       },
       "side_effects": {
-        "issues_delta": 1,
+        "issues_delta": 0,
         "documents_delta": 0,
         "comments_delta": 0,
         "approvals_delta": 0,
@@ -56,8 +56,8 @@
     }
   },
   "per_agent_conditions_total": 49,
-  "per_agent_conditions_passed": 3,
-  "per_agent_conditions_failed": 46,
+  "per_agent_conditions_passed": 23,
+  "per_agent_conditions_failed": 26,
   "per_agent_passed": 0,
   "per_agent_failed": 7,
   "per_agent_total": 7,
@@ -74,243 +74,375 @@
     {
       "name": "Div1.HCO",
       "expected_count": 7,
-      "passed_count": 0,
-      "passed": false,
-      "conditions": {
-        "canonical_name_present": false,
-        "t01_http_success": false,
-        "t01_response_status_pass": false,
-        "t01_no_xiaomi_endpoint_reuse": false,
-        "t02_heartbeat_terminal_succeeded": false,
-        "t02_wake_count_delta_one": false,
-        "t02_bos_result_present": false
-      },
-      "t01_present": false,
-      "t02_present": false,
-      "t01_verdict": null,
-      "t02_verdict": null,
-      "t01_http_status": null,
-      "t01_response_status": null,
-      "t02_terminal_status": null,
-      "t02_wake_count_delta": null
-    },
-    {
-      "name": "Div2.MasterPlanner",
-      "expected_count": 7,
-      "passed_count": 0,
-      "passed": false,
-      "conditions": {
-        "canonical_name_present": false,
-        "t01_http_success": false,
-        "t01_response_status_pass": false,
-        "t01_no_xiaomi_endpoint_reuse": false,
-        "t02_heartbeat_terminal_succeeded": false,
-        "t02_wake_count_delta_one": false,
-        "t02_bos_result_present": false
-      },
-      "t01_present": false,
-      "t02_present": false,
-      "t01_verdict": null,
-      "t02_verdict": null,
-      "t01_http_status": null,
-      "t01_response_status": null,
-      "t02_terminal_status": null,
-      "t02_wake_count_delta": null
-    },
-    {
-      "name": "Div3.Treasury",
-      "expected_count": 7,
-      "passed_count": 0,
-      "passed": false,
-      "conditions": {
-        "canonical_name_present": false,
-        "t01_http_success": false,
-        "t01_response_status_pass": false,
-        "t01_no_xiaomi_endpoint_reuse": false,
-        "t02_heartbeat_terminal_succeeded": false,
-        "t02_wake_count_delta_one": false,
-        "t02_bos_result_present": false
-      },
-      "t01_present": false,
-      "t02_present": false,
-      "t01_verdict": null,
-      "t02_verdict": null,
-      "t01_http_status": null,
-      "t01_response_status": null,
-      "t02_terminal_status": null,
-      "t02_wake_count_delta": null
-    },
-    {
-      "name": "Div4.Production",
-      "expected_count": 7,
-      "passed_count": 0,
-      "passed": false,
-      "conditions": {
-        "canonical_name_present": false,
-        "t01_http_success": false,
-        "t01_response_status_pass": false,
-        "t01_no_xiaomi_endpoint_reuse": false,
-        "t02_heartbeat_terminal_succeeded": false,
-        "t02_wake_count_delta_one": false,
-        "t02_bos_result_present": false
-      },
-      "t01_present": false,
-      "t02_present": false,
-      "t01_verdict": null,
-      "t02_verdict": null,
-      "t01_http_status": null,
-      "t01_response_status": null,
-      "t02_terminal_status": null,
-      "t02_wake_count_delta": null
-    },
-    {
-      "name": "Div5.QualificationsLibraryLearning",
-      "expected_count": 7,
-      "passed_count": 0,
-      "passed": false,
-      "conditions": {
-        "canonical_name_present": false,
-        "t01_http_success": false,
-        "t01_response_status_pass": false,
-        "t01_no_xiaomi_endpoint_reuse": false,
-        "t02_heartbeat_terminal_succeeded": false,
-        "t02_wake_count_delta_one": false,
-        "t02_bos_result_present": false
-      },
-      "t01_present": false,
-      "t02_present": false,
-      "t01_verdict": null,
-      "t02_verdict": null,
-      "t01_http_status": null,
-      "t01_response_status": null,
-      "t02_terminal_status": null,
-      "t02_wake_count_delta": null
-    },
-    {
-      "name": "Div6.External",
-      "expected_count": 7,
-      "passed_count": 0,
-      "passed": false,
-      "conditions": {
-        "canonical_name_present": false,
-        "t01_http_success": false,
-        "t01_response_status_pass": false,
-        "t01_no_xiaomi_endpoint_reuse": false,
-        "t02_heartbeat_terminal_succeeded": false,
-        "t02_wake_count_delta_one": false,
-        "t02_bos_result_present": false
-      },
-      "t01_present": false,
-      "t02_present": false,
-      "t01_verdict": null,
-      "t02_verdict": null,
-      "t01_http_status": null,
-      "t01_response_status": null,
-      "t02_terminal_status": null,
-      "t02_wake_count_delta": null
-    },
-    {
-      "name": "Div7.MissionControl",
-      "expected_count": 7,
       "passed_count": 3,
       "passed": false,
       "conditions": {
-        "canonical_name_present": true,
+        "canonical_name_present": false,
         "t01_http_success": true,
-        "t01_response_status_pass": false,
+        "t01_response_status_pass": true,
         "t01_no_xiaomi_endpoint_reuse": true,
         "t02_heartbeat_terminal_succeeded": false,
         "t02_wake_count_delta_one": false,
         "t02_bos_result_present": false
       },
       "t01_present": true,
+      "t02_present": false,
+      "t01_verdict": "pass",
+      "t02_verdict": null,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null
+    },
+    {
+      "name": "Div2.MasterPlanner",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": true,
+        "t01_response_status_pass": true,
+        "t01_no_xiaomi_endpoint_reuse": true,
+        "t02_heartbeat_terminal_succeeded": false,
+        "t02_wake_count_delta_one": false,
+        "t02_bos_result_present": false
+      },
+      "t01_present": true,
+      "t02_present": false,
+      "t01_verdict": "pass",
+      "t02_verdict": null,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null
+    },
+    {
+      "name": "Div3.Treasury",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": true,
+        "t01_response_status_pass": true,
+        "t01_no_xiaomi_endpoint_reuse": true,
+        "t02_heartbeat_terminal_succeeded": false,
+        "t02_wake_count_delta_one": false,
+        "t02_bos_result_present": false
+      },
+      "t01_present": true,
+      "t02_present": false,
+      "t01_verdict": "pass",
+      "t02_verdict": null,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null
+    },
+    {
+      "name": "Div4.Production",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": true,
+        "t01_response_status_pass": true,
+        "t01_no_xiaomi_endpoint_reuse": true,
+        "t02_heartbeat_terminal_succeeded": false,
+        "t02_wake_count_delta_one": false,
+        "t02_bos_result_present": false
+      },
+      "t01_present": true,
+      "t02_present": false,
+      "t01_verdict": "pass",
+      "t02_verdict": null,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null
+    },
+    {
+      "name": "Div5.QualificationsLibraryLearning",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": true,
+        "t01_response_status_pass": true,
+        "t01_no_xiaomi_endpoint_reuse": true,
+        "t02_heartbeat_terminal_succeeded": false,
+        "t02_wake_count_delta_one": false,
+        "t02_bos_result_present": false
+      },
+      "t01_present": true,
+      "t02_present": false,
+      "t01_verdict": "pass",
+      "t02_verdict": null,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null
+    },
+    {
+      "name": "Div6.External",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": true,
+        "t01_response_status_pass": true,
+        "t01_no_xiaomi_endpoint_reuse": true,
+        "t02_heartbeat_terminal_succeeded": false,
+        "t02_wake_count_delta_one": false,
+        "t02_bos_result_present": false
+      },
+      "t01_present": true,
+      "t02_present": false,
+      "t01_verdict": "pass",
+      "t02_verdict": null,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null
+    },
+    {
+      "name": "Div7.MissionControl",
+      "expected_count": 7,
+      "passed_count": 5,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": true,
+        "t01_http_success": true,
+        "t01_response_status_pass": true,
+        "t01_no_xiaomi_endpoint_reuse": true,
+        "t02_heartbeat_terminal_succeeded": true,
+        "t02_wake_count_delta_one": false,
+        "t02_bos_result_present": false
+      },
+      "t01_present": true,
       "t02_present": true,
-      "t01_verdict": "warn",
+      "t01_verdict": "pass",
       "t02_verdict": "fail",
       "t01_http_status": 200,
-      "t01_response_status": "warn",
-      "t02_terminal_status": "running",
+      "t01_response_status": "pass",
+      "t02_terminal_status": "succeeded",
       "t02_wake_count_delta": 0
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-Div1.HCO-T01-MISSING",
+      "code": "M15-S03-Div1.HCO-T02-MISSING",
       "severity": "blocking",
       "agent": "Div1.HCO",
-      "reason": "agent Div1.HCO absent from both T01 and T02 evidence"
+      "reason": "agent Div1.HCO missing from T02 evidence"
     },
     {
-      "code": "M15-S03-Div2.MasterPlanner-T01-MISSING",
+      "code": "M15-S03-Div1.HCO-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T02_WAKE_COUNT_DELTA_ONE",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T02_BOS_RESULT_PRESENT",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02-MISSING",
       "severity": "blocking",
       "agent": "Div2.MasterPlanner",
-      "reason": "agent Div2.MasterPlanner absent from both T01 and T02 evidence"
+      "reason": "agent Div2.MasterPlanner missing from T02 evidence"
     },
     {
-      "code": "M15-S03-Div3.Treasury-T01-MISSING",
+      "code": "M15-S03-Div2.MasterPlanner-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02_WAKE_COUNT_DELTA_ONE",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02_BOS_RESULT_PRESENT",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02-MISSING",
       "severity": "blocking",
       "agent": "Div3.Treasury",
-      "reason": "agent Div3.Treasury absent from both T01 and T02 evidence"
+      "reason": "agent Div3.Treasury missing from T02 evidence"
     },
     {
-      "code": "M15-S03-Div4.Production-T01-MISSING",
+      "code": "M15-S03-Div3.Treasury-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02_WAKE_COUNT_DELTA_ONE",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02_BOS_RESULT_PRESENT",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02-MISSING",
       "severity": "blocking",
       "agent": "Div4.Production",
-      "reason": "agent Div4.Production absent from both T01 and T02 evidence"
+      "reason": "agent Div4.Production missing from T02 evidence"
     },
     {
-      "code": "M15-S03-Div5.QualificationsLibraryLearning-T01-MISSING",
+      "code": "M15-S03-Div4.Production-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02_WAKE_COUNT_DELTA_ONE",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02_BOS_RESULT_PRESENT",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02-MISSING",
       "severity": "blocking",
       "agent": "Div5.QualificationsLibraryLearning",
-      "reason": "agent Div5.QualificationsLibraryLearning absent from both T01 and T02 evidence"
+      "reason": "agent Div5.QualificationsLibraryLearning missing from T02 evidence"
     },
     {
-      "code": "M15-S03-Div6.External-T01-MISSING",
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02_WAKE_COUNT_DELTA_ONE",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02_BOS_RESULT_PRESENT",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T02-MISSING",
       "severity": "blocking",
       "agent": "Div6.External",
-      "reason": "agent Div6.External absent from both T01 and T02 evidence"
+      "reason": "agent Div6.External missing from T02 evidence"
     },
     {
-      "code": "M15-S03-Div7.MissionControl-T01_RESPONSE_STATUS_PASS",
+      "code": "M15-S03-Div6.External-CANONICAL_NAME_PRESENT",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
-      "reason": "Div7.MissionControl failed t01_response_status_pass (3/7)"
+      "agent": "Div6.External",
+      "reason": "Div6.External failed canonical_name_present (3/7)"
     },
     {
-      "code": "M15-S03-Div7.MissionControl-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "code": "M15-S03-Div6.External-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
       "severity": "blocking",
-      "agent": "Div7.MissionControl",
-      "reason": "Div7.MissionControl failed t02_heartbeat_terminal_succeeded (3/7)"
+      "agent": "Div6.External",
+      "reason": "Div6.External failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T02_WAKE_COUNT_DELTA_ONE",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "Div6.External failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T02_BOS_RESULT_PRESENT",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "Div6.External failed t02_bos_result_present (3/7)"
     },
     {
       "code": "M15-S03-Div7.MissionControl-T02_WAKE_COUNT_DELTA_ONE",
       "severity": "blocking",
       "agent": "Div7.MissionControl",
-      "reason": "Div7.MissionControl failed t02_wake_count_delta_one (3/7)"
+      "reason": "Div7.MissionControl failed t02_wake_count_delta_one (5/7)"
     },
     {
       "code": "M15-S03-Div7.MissionControl-T02_BOS_RESULT_PRESENT",
       "severity": "blocking",
       "agent": "Div7.MissionControl",
-      "reason": "Div7.MissionControl failed t02_bos_result_present (3/7)"
+      "reason": "Div7.MissionControl failed t02_bos_result_present (5/7)"
     },
     {
       "code": "M15-S03-GATE-NAME-DRIFT",
       "severity": "blocking",
       "agent": null,
-      "reason": "name drift: missing=[Div1.HCO,Div2.MasterPlanner,Div3.Treasury,Div4.Production,Div5.QualificationsLibraryLearning,Div6.External] extra=[none] t01_drift_blocker=true t02_drift_blocker=true"
+      "reason": "name drift: missing=[Div1.HCO,Div2.MasterPlanner,Div3.Treasury,Div4.Production,Div5.QualificationsLibraryLearning,Div6.External] extra=[none] t01_drift_blocker=false t02_drift_blocker=false"
     },
     {
       "code": "M15-S03-GATE-UPSTREAM-STATUS",
       "severity": "blocking",
       "agent": null,
-      "reason": "upstream statuses off-spec: T01=FAIL_CLOSED T02=FAIL_CLOSED"
+      "reason": "upstream statuses off-spec: T01=PASS T02=FAIL_CLOSED"
     },
     {
       "code": "M15-S03-GATE-SIDE-EFFECTS",
       "severity": "blocking",
       "agent": null,
-      "reason": "side-effect deltas off-spec: {\"issues_delta\":1,\"documents_delta\":0,\"comments_delta\":0,\"approvals_delta\":0,\"agents_delta\":0,\"heartbeat_runs_delta\":0}"
+      "reason": "side-effect deltas off-spec: {\"issues_delta\":0,\"documents_delta\":0,\"comments_delta\":0,\"approvals_delta\":0,\"agents_delta\":0,\"heartbeat_runs_delta\":0}"
     }
   ],
   "redaction": {
