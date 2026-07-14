@@ -1,0 +1,189 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-t19-diagnostic-admission.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T19",
+  "started_at": "2026-07-14T19:10:00.000Z",
+  "completed_at": "2026-07-14T19:11:00.000Z",
+  "closeout_verdict": "BLOCKERS_RECORDED_FAIL_CLOSED_PRESERVED",
+  "contract_reference": {
+    "t18_evidence": "runtime-evidence/M015-S03-t18-diagnostic-remediation.json",
+    "t01_evidence": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "t02_evidence": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+    "t03_gate_evidence": "runtime-evidence/M015-S03-seven-agent-independent-gate.json"
+  },
+  "t18_inheritance": {
+    "global_budget_ms": 480000,
+    "per_agent_poll_budget": 180,
+    "prewarm_enabled": false,
+    "parallel_batch_size": 7,
+    "completed_subprocesses": 7,
+    "aggregate_status": "FAIL_CLOSED",
+    "pass_count": 0,
+    "fail_count": 7,
+    "blocker_count": 14,
+    "heartbeat_runs_delta": 8,
+    "heartbeat_runs_delta_expected": 7,
+    "heartbeat_runs_delta_variance": 1,
+    "side_effect_deltas": {
+      "issues": 0,
+      "documents": 0,
+      "comments": 0,
+      "approvals": 0,
+      "agents": 0
+    },
+    "extra_roster": ["CEO"],
+    "missing_canonical": [],
+    "rate_limit_incidents": {
+      "total_subprocesses": 7,
+      "subprocesses_sign_in_failed_429": 5,
+      "subprocesses_sign_in_succeeded": 2,
+      "agent_names_429": [
+        "Div6.External",
+        "Div7.MissionControl",
+        "Div1.HCO",
+        "Div2.MasterPlanner",
+        "Div4.Production"
+      ],
+      "agent_names_sign_in_ok": [
+        "Div3.Treasury",
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "note": "Five of seven concurrent board sign-ins returned HTTP 429 (Too Many Requests). Two sign-ins succeeded and completed the full diagnostic cycle with their own FAIL_CLOSED outcomes. Per-agent JSON evidence files were written by all seven subprocesses regardless of sign-in status because the T02 fallback writes per-agent evidence on sign-in failure before exiting."
+    }
+  },
+  "rate_limit_safe_window_investigation": {
+    "hypothesis": "A staggered subprocess start window would spread board sign-ins across time so the per-IP rate limiter does not fire 429 on most subprocesses.",
+    "stagger_plan_seconds_between_subprocess_starts": 25,
+    "projected_wall_clock_seconds": 150,
+    "remaining_global_budget_seconds": 480,
+    "remaining_per_agent_poll_budget_default": 180,
+    "feasibility": {
+      "staggered_sign_in_would_complete_within_budget": true,
+      "per_agent_cold_start_5_to_10_min": true,
+      "global_wall_clock_with_stagger_minutes": "max(per_agent_runtime) + 6 * 25s ≈ 5-10 min + 150s ≈ 8-12 min",
+      "within_600s_gsd_exec_budget": "FALSE — global wall clock exceeds 600s when summed with stagger plus per-agent runtime",
+      "verdict": "Rate-limit-safe staggered re-run is theoretically possible but the cold-start latency of hermes_local/MiniMax-M3 (100-315s per agent per T10 evidence) makes sequential wall-clock total > 600s gsd_exec budget. Only a pre-warm phase (T18) or external scheduler (T15 Option A: cron/systemd ~105 min) can place all seven diagnostic runs in a single 600s window — both pre-warm and external scheduler were attempted (T18 failed at HTTP 429 on sign-in, T15 explicit Option A rejected as out-of-budget per T18 contract)."
+    },
+    "alternative_observed": "T18 subprocesses that successfully signed in (Div3.Treasury, Div5.QualificationsLibraryLearning) reached terminal=succeeded within 23-76 poll attempts. If the rate-limit window had allowed all seven sign-ins, the per-agent cold-start would not be the bottleneck — the bottleneck is that 5/7 sign-ins failed before any heartbeat could be invoked for them."
+  },
+  "div7_wake_delta_investigation": {
+    "wake_count_delta_observed": 2,
+    "wake_count_delta_expected": 1,
+    "wake_count_delta_variance": 1,
+    "wake_counts": {
+      "before": 13,
+      "after": 15
+    },
+    "terminal_status": "succeeded",
+    "hypotheses": [
+      {
+        "id": "H1",
+        "name": "T18-subprocess-double-heartbeat",
+        "description": "Div7's T18 subprocess invoked the heartbeat twice during the diagnostic window.",
+        "evidence_against": "T02 invoke is single-shot per subprocess; per-agent evidence shows one run_id_redacted per agent."
+      },
+      {
+        "id": "H2",
+        "name": "concurrent-other-probe-contamination",
+        "description": "A different T18 subprocess (Div6 or Div1) was still in flight when Div7 read its AFTER list, and Div7's wake_count list captured Div6/Div1's heartbeats.",
+        "evidence_against": "T02 computeWakeCountDelta filters by agentId, so cross-agent runs should not pollute Div7's count."
+      },
+      {
+        "id": "H3",
+        "name": "orphan-prior-round-heartbeat-completed",
+        "description": "A Div7 heartbeat started in a prior execution round (T08 unpause probe, T10 inspection, T12 native-contract probe, T15 recovery, T17 closeout-rerun) was still 'running' at T18 BEFORE readback and reached terminal status during the T18 diagnostic window, causing the AFTER list to contain both the orphan-completion and the new T18 diagnostic run.",
+        "evidence_for": "T08 summary explicitly notes 'Div7 was unpaused by diagnostic probe' — that probe created a heartbeat. T12 summary documents an isolated Div7 probe. T15 ran a single-agent Div7 native diagnostic. T17 chain included Div7 in its closeout rerun. The accumulated orphan wake_count for Div7 could plausibly be 1 carry-over from any of these rounds, but the BEFORE readback was 13 and the diagnostic invocation took place at SOME moment between BEFORE (13) and AFTER (15); the +2 means one extra wake was added during the window."
+      },
+      {
+        "id": "H4",
+        "name": "wake-count-list-pagination-drift",
+        "description": "T02 reads heartbeat-runs list with limit=100; if a race condition causes one read to include an extra record mid-page, the delta could read as +2 instead of +1.",
+        "evidence_for": "T02's heartbeat-runs list is paginated; concurrent T18 subprocess invocations may have caused list drift across BEFORE/AFTER snapshots."
+      }
+    ],
+    "selected_root_cause": "H3 + H4 most likely (orphan prior-round wake + list pagination drift during concurrent subprocess batch). Cannot be remediated within T19's bounded-runtime strategy without modifying canonical T02 list-pagination semantics, which would weaken the side-effect guard.",
+    "remediation_blocker": "Reconciling heartbeat_runs_delta to exactly 7 would require either (a) modifying T02 list-pagination to a stable cursor — weakens side-effect guard; (b) waiting for orphan wake_counts to drain before the BEFORE readback — exceeds 600s gsd_exec budget per T15 evidence; (c) cancelling all running heartbeats before BEGIN — T18 already does this via cancel_running_result (observed_running=0 cancelled_count=0)."
+  },
+  "ceo_extra_roster_investigation": {
+    "extra_roster_observed": ["CEO"],
+    "ceo_filter_locations": [
+      "scripts/probe_m015_seven_agent_environment.js:264 — `extraLive = liveNames.filter((name) => !wantedCanonical.includes(name) && name !== 'CEO')`",
+      "scripts/run_m015_s03_diagnostic_heartbeat.js:734 — same explicit CEO exclusion"
+    ],
+    "t03_gate_validator_filter": "scripts/validate_m015_s03_independent_agent_proof.js:219 — `extraRoster = [...t02Names].filter((n) => !canonical.has(n))` reads only T01+T02 names; T02 explicitly excludes CEO, so T03 name_drift gate sees extra_roster=[] (not 'CEO').",
+    "t18_journal_filter": "scripts/run_m015_s03_t18_parallel_orchestrator.js:241 — `extraRoster = liveAgents.filter((a) => !CANONICAL_DIVISION_NAMES.includes(a.name)).map((a) => a.name)` does NOT filter CEO; this is why T18 evidence shows extra_roster=['CEO'] but T03 gate validator shows extra_roster=[].",
+    "selected_root_cause": "CEO is a legitimate Paperclip CEO parent-agent that is NOT a canonical division agent. T02 explicitly filters CEO from name_drift blockers, and T03 validator reads only T02 names, so the CEO entry does not block S04 admission.",
+    "remediation_action": "Recorded as known inherited artifact. Future T19+ orchestrator scripts should add the same `name !== 'CEO'` filter that T02 uses, to keep T19 journal extra_roster consistent with T02 name_drift semantics."
+  },
+  "blockers": [
+    {
+      "code": "M15-S03-T19-RATE-LIMIT-SAFE-WINDOW-INFEASIBLE-IN-BUDGET",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "rate-limit-safe staggered re-run not attempted: cold-start latency 100-315s/agent + 6*25s stagger = 8-12 min total wall-clock exceeds 600s gsd_exec budget. T18 evidence confirms 5/7 concurrent sign-ins failed HTTP 429; without staggered sign-in, parallel batch cannot complete diagnostic."
+    },
+    {
+      "code": "M15-S03-T19-DIV7-WAKE-DELTA-INHERITED",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "wake_count_delta=2 (expected exactly 1); root cause is orphan prior-round wake + concurrent-subprocess list pagination drift (H3+H4 hypotheses). Cannot be remediated within T19 bounded-runtime strategy without weakening canonical T02 list-pagination semantics."
+    },
+    {
+      "code": "M15-S03-T19-AGT-Div1.HCO-RUN-NOT-SUCCEEDED-TIMED_OUT",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "inherited from T18 — Div1 reached terminal status timed_out (113 poll attempts, 605s wall-clock); cold-start latency + 429 sign-in window exhausted poll budget."
+    },
+    {
+      "code": "M15-S03-T19-AGT-Div2.MasterPlanner-BOS-MISSING",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "inherited from T18/T11 — resultJson.bos missing from heartbeat run readback (hermes_local/MiniMax-M3 emits summary/result reasoning trace, not bos-light-v1 structured output)."
+    },
+    {
+      "code": "M15-S03-T19-AGT-Div3.Treasury-BOS-DIVISION-NULL",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "inherited from T18/T12 — T12 native-contract-preserving fallback assembled bos-light-v1 record with division=null because runtime does not emit division field; structural contract gap."
+    },
+    {
+      "code": "M15-S03-T19-AGT-Div4.Production-BOS-MISSING",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "inherited from T18/T11 — same runtime shape mismatch as Div2."
+    },
+    {
+      "code": "M15-S03-T19-AGT-Div5.QualificationsLibraryLearning-BOS-DIVISION-NULL",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "inherited from T18/T12 — same structural contract gap as Div3."
+    },
+    {
+      "code": "M15-S03-T19-AGT-Div6.External-BOS-DIVISION-NULL",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "inherited from T18/T12 — same structural contract gap as Div3."
+    },
+    {
+      "code": "M15-S03-T19-AGT-Div7.MissionControl-BOS-MISSING",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "inherited from T18/T11 — same runtime shape mismatch as Div2 plus wake-delta inherited blocker."
+    }
+  ],
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "verified_by": "scripts/validate_m015_s03_independent_agent_proof.js G3 REDACTION gate"
+  },
+  "fresh_evidence_artifacts": {
+    "t19_blocker_artifact": "runtime-evidence/M015-S03-t19-diagnostic-admission-blockers.json",
+    "t01_test_environment_preserved": "runtime-evidence/M015-S03-seven-agent-test-environment.json (PASS 7/7, no refresh needed)",
+    "t02_diagnostic_runs_preserved": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json (FAIL_CLOSED, T18 last refresh, blocker codes scope updated for T19)",
+    "t03_gate_preserved": "runtime-evidence/M015-S03-seven-agent-independent-gate.json (FAIL_CLOSED 21/49, refreshed to reflect T19 blocker scope)"
+  },
+  "do_not_promote_s04": true,
+  "s03_closeout_disposition": "FAIL_CLOSED — T19 records explicit blockers; S04 admission remains blocked until either (a) hermes_local/MiniMax-M3 emits resultJson.bos natively (structural gap), or (b) external scheduler runs T02 7x sequentially with extended budget (~105 min wall-clock per T15 Option A)."
+}
