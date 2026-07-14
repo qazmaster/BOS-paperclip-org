@@ -1,0 +1,60 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s04-native-mission-run.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S04",
+  "task": "T03",
+  "generated": "2026-07-14T17:29:07.566Z",
+  "status": "MISSION_BLOCKED_SAFE",
+  "admission_summary": {
+    "status": "BLOCKED_ON_S03_FAIL_CLOSED",
+    "admitted": false,
+    "blocked": true,
+    "business_mutations_recorded": 0,
+    "blocker_codes": [
+      "M15-S04-ADMISSION-GATE-FRESH-S03-7OF7",
+      "M15-S04-ADMISSION-GATE-DO-NOT-PROMOTE-S04"
+    ]
+  },
+  "safe_block_declared": true,
+  "harness_writes": {
+    "root_issue_create": 0
+  },
+  "mission_context": null,
+  "intake_summary": null,
+  "root_issue": null,
+  "mission_run": null,
+  "protocol_gates": {
+    "mission_topology_pass": false,
+    "authorship_and_authority_pass": false,
+    "agent_authored_outputs_pass": false,
+    "review_and_disposition_path_pass": false,
+    "allowlisted_side_effects_pass": false,
+    "terminal_run_and_disposition_states_pass": false,
+    "time_budgets_pass": false,
+    "idempotency_and_recovery_lock_pass": false,
+    "secret_hygiene_pass": "<redacted>",
+    "no_synthetic_bos_fallback_pass": false
+  },
+  "blockers": [
+    {
+      "code": "M15-S04-PROTOCOL-ADMISSION-BLOCKER-CARRY-FORWARD",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "admission blocked; no intake allowed"
+    }
+  ],
+  "observation_budget": {
+    "started_at": "2026-07-14T17:29:07.566Z",
+    "ended_at": "2026-07-14T17:29:07.566Z",
+    "max_seconds": null,
+    "poll_interval_ms": null,
+    "budget_exhausted": false
+  },
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": true,
+    "provider_secret_names": "<redacted>",
+    "synthetic_bos": true
+  }
+}

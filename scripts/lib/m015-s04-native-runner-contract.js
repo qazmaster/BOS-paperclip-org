@@ -96,8 +96,16 @@ function slugify(value) {
 
 function loadRunnerInput({ admissionPath, intakePath } = {}) {
   const admission = loadAdmissionEvidence(admissionPath);
+  // S04-T04 fix: when admission is BLOCKED, the harness MUST NOT require
+  // an intake file on disk — it is the operator's safe-stop branch and
+  // `runOnce` will short-circuit before touching intake regardless.
+  // Requiring intake here would force the runner into a MISSION_RUNNER_FAILURE
+  // path (exit 4) instead of the documented MISSION_BLOCKED_SAFE (exit 2).
+  // Matches T03 key decision FAIL-CLOSED-FOR-CURRENT-S03-STATE and the T03
+  // part2 unit test "admission blocked + no intake → MISSION_BLOCKED_SAFE/exit 2".
+  const admissionAdmitted = !!admission && admission.status === 'ADMITTED';
   let intake = null;
-  if (intakePath) {
+  if (intakePath && admissionAdmitted) {
     intake = readJsonOrThrow(intakePath, 'S04-po-intake');
   }
   return { admission, intake };
