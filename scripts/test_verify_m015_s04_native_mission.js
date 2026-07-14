@@ -825,7 +825,58 @@ test('cli.writeValidationEvidence: writes JSON file with required top-level keys
 // 15. End-to-end integration against real S04 evidence (no fixtures)
 // ===========================================================================
 
+const { spawnSync } = require('node:child_process');
+
+// __dirname here is `<project>/scripts/`, so `..` (one level up) is the project root.
+const ROOT = path.resolve(__dirname, '..');
+const T01_VALIDATOR = path.join(ROOT, 'scripts', 'validate_m015_s04_admission.js');
+const T02_VALIDATOR = path.join(ROOT, 'scripts', 'validate_m015_s04_native_mission.js');
+
+// T07 regression: ensure the runtime-evidence triple is in the canonical
+// BLOCKED state for the integration test. Other S04 test suites may have
+// unlinked or rewritten the runtime-evidence files (e.g., T01 admission
+// validator tests `unlinkSync(OUTPUT_PATH)` after exercising scrub paths;
+// T02 protocol validator spawns a "happy-path" test that writes
+// MISSION_PASS to the hard-coded OUTPUT_PATH). Self-healing keeps the
+// integration regression deterministic without touching the other suites.
+function ensureRuntimeEvidenceConsistent() {
+  // 1. admission evidence: regenerate via T01 CLI if missing.
+  if (!fs.existsSync(cli.ADMISSION_PATH)) {
+    const r = spawnSync(process.execPath, [T01_VALIDATOR], { encoding: 'utf8', cwd: ROOT });
+    assert.equal(r.status, 1,
+      `T01 admission CLI must exit 1 (BLOCKED) under current S03 FAIL_CLOSED; got ${r.status}\n` +
+      `stdout: ${r.stdout}\nstderr: ${r.stderr}`);
+    assert.match(r.stdout, /BLOCKED_ON_S03_FAIL_CLOSED/,
+      `T01 CLI stdout must declare BLOCKED_ON_S03_FAIL_CLOSED; got: ${r.stdout}`);
+  }
+  // 2. protocol evidence: regenerate via T02 CLI if missing or
+  //    inconsistent with the admission state.
+  let protocolAdmissionStatus = null;
+  let protocolExists = fs.existsSync(cli.DEFAULT_PROTOCOL_PATH);
+  if (protocolExists) {
+    try {
+      const p = JSON.parse(fs.readFileSync(cli.DEFAULT_PROTOCOL_PATH, 'utf8'));
+      protocolAdmissionStatus = p && p.admission_summary && p.admission_summary.status;
+    } catch (_) {
+      protocolExists = false;
+    }
+  }
+  const admission = JSON.parse(fs.readFileSync(cli.ADMISSION_PATH, 'utf8'));
+  const admissionStatus = admission && admission.status;
+  if (!protocolExists || protocolAdmissionStatus !== admissionStatus) {
+    const r = spawnSync(process.execPath, [
+      T02_VALIDATOR,
+      '--input', cli.DEFAULT_RUN_PATH,
+      '--accept-safe-block',
+    ], { encoding: 'utf8', cwd: ROOT });
+    assert.equal(r.status, 2,
+      `T02 protocol CLI must exit 2 (MISSION_BLOCKED_SAFE) under BLOCKED admission + --accept-safe-block; got ${r.status}\n` +
+      `stdout: ${r.stdout}\nstderr: ${r.stderr}`);
+  }
+}
+
 test('integration: real evidence files on disk yield MISSION_FAIL_CLOSED_ADMISSION_BLOCKED with --accept-safe-block', () => {
+  ensureRuntimeEvidenceConsistent();
   const result = cli.runValidation({
     admissionPath: cli.ADMISSION_PATH,
     inputPath: cli.DEFAULT_RUN_PATH,
@@ -833,7 +884,9 @@ test('integration: real evidence files on disk yield MISSION_FAIL_CLOSED_ADMISSI
     outputPath: cli.OUTPUT_PATH,
     acceptSafeBlock: true,
   });
-  assert.equal(result.verdict, data.VERDICT_CODES.MISSION_FAIL_CLOSED_ADMISSION_BLOCKED);
+  assert.equal(result.verdict, data.VERDICT_CODES.MISSION_FAIL_CLOSED_ADMISSION_BLOCKED,
+    `S03 FAIL_CLOSED state must yield MISSION_FAIL_CLOSED_ADMISSION_BLOCKED, not ${result.verdict}. ` +
+    `Check that runtime-evidence/M015-S04-{admission,native-mission-protocol}.json agree on admission_summary.status.`);
   for (const id of data.VALIDATION_GATE_IDS) {
     assert.equal(result.gates[id], true, `gate ${id} must pass on real evidence`);
   }
@@ -846,4 +899,113 @@ test('integration: real evidence files on disk yield MISSION_FAIL_CLOSED_ADMISSI
   assert.ok(parsed.safe_block_evidence);
   assert.equal(parsed.safe_block_evidence.admission_status, 'BLOCKED_ON_S03_FAIL_CLOSED');
   assert.equal(parsed.safe_block_evidence.harness_root_issue_create, 0);
+});
+
+test('integration regression: without --accept-safe-block, MISSION_FAIL_CLOSED (exit 1) — not VALIDATION_ERROR', () => {
+  ensureRuntimeEvidenceConsistent();
+  const result = cli.runValidation({
+    admissionPath: cli.ADMISSION_PATH,
+    inputPath: cli.DEFAULT_RUN_PATH,
+    protocolPath: cli.DEFAULT_PROTOCOL_PATH,
+    outputPath: cli.OUTPUT_PATH,
+    acceptSafeBlock: false,
+  });
+  // Lock in: blocked admission without --accept-safe-block yields
+  // MISSION_FAIL_CLOSED, never MISSION_VALIDATION_ERROR (the validation
+  // contract is healthy; the verdict is fail-closed).
+  assert.equal(result.verdict, data.VERDICT_CODES.MISSION_FAIL_CLOSED,
+    `BLOCKED admission without --accept-safe-block must be MISSION_FAIL_CLOSED, got ${result.verdict}`);
+  assert.notEqual(result.verdict, data.VERDICT_CODES.MISSION_VALIDATION_ERROR,
+    'BLOCKED admission with healthy evidence must NOT collapse to MISSION_VALIDATION_ERROR');
+  assert.equal(cli.exitCodeFor(result.verdict, false), 1,
+    'MISSION_FAIL_CLOSED without --accept-safe-block must exit 1 (fail-closed)');
+});
+
+test('integration regression: protocol evidence claiming ADMITTED under BLOCKED admission → MISSION_FAIL_CLOSED_PROTOCOL_MISMATCH (not VALIDATION_ERROR)', () => {
+  // Simulate the observed corruption: someone re-ran T02 against
+  // cleanAdmissionEvidence() (a T02 happy-path test pollutes the hard-coded
+  // OUTPUT_PATH). The validator must catch the inconsistency via VG2 and
+  // surface it as a fail-closed verdict, not collapse to VALIDATION_ERROR.
+  ensureRuntimeEvidenceConsistent();
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'm015-s04-t07-'));
+  const tamperedProtocol = path.join(tmpDir, 'protocol.json');
+  const drift = makeBlockedProtocol({
+    status: 'MISSION_PASS',
+    admission_summary: { status: 'ADMITTED', admitted: true, blocked: false },
+    gates: Object.assign({}, makeBlockedProtocol().gates, {
+      mission_topology_pass: true,
+      authorship_and_authority_pass: true,
+      agent_authored_outputs_pass: true,
+      review_and_disposition_path_pass: true,
+      allowlisted_side_effects_pass: true,
+      terminal_run_and_disposition_states_pass: true,
+      time_budgets_pass: true,
+      idempotency_and_recovery_lock_pass: true,
+      no_synthetic_bos_fallback_pass: true,
+    }),
+  });
+  fs.writeFileSync(tamperedProtocol, JSON.stringify(drift), 'utf8');
+  try {
+    const result = cli.runValidation({
+      admissionPath: cli.ADMISSION_PATH,
+      inputPath: cli.DEFAULT_RUN_PATH,
+      protocolPath: tamperedProtocol,
+      outputPath: path.join(tmpDir, 'out.json'),
+      acceptSafeBlock: true,
+    });
+    assert.equal(result.verdict, data.VERDICT_CODES.MISSION_FAIL_CLOSED_PROTOCOL_MISMATCH,
+      `inconsistent protocol evidence (ADMITTED under BLOCKED admission) must yield ` +
+      `MISSION_FAIL_CLOSED_PROTOCOL_MISMATCH, got ${result.verdict}`);
+    assert.notEqual(result.verdict, data.VERDICT_CODES.MISSION_VALIDATION_ERROR,
+      'corrupted-but-parseable protocol evidence must not collapse to MISSION_VALIDATION_ERROR');
+    assert.equal(result.gates.admission_correlation_pass, false,
+      'VG2 ADMISSION_CORRELATION must fail when admission_summary.status disagrees across surfaces');
+    // Protocol mismatch is exit 1 (fail-closed), NOT exit 2 (validation_error)
+    assert.equal(cli.exitCodeFor(result.verdict, true), 1,
+      'MISSION_FAIL_CLOSED_PROTOCOL_MISMATCH must exit 1, not 2');
+  } finally {
+    try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch (_) {}
+  }
+});
+
+test('integration regression: missing admission evidence → MISSION_VALIDATION_ERROR (exit 2) — distinct from blocked-admission path', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'm015-s04-t07-'));
+  const missingAdmission = path.join(tmpDir, 'missing.json');
+  fs.writeFileSync(path.join(tmpDir, 'mr.json'), JSON.stringify(makeBlockedMissionRun()), 'utf8');
+  fs.writeFileSync(path.join(tmpDir, 'pr.json'), JSON.stringify(makeBlockedProtocol()), 'utf8');
+  try {
+    const result = cli.runValidation({
+      admissionPath: missingAdmission,
+      inputPath: path.join(tmpDir, 'mr.json'),
+      protocolPath: path.join(tmpDir, 'pr.json'),
+      outputPath: path.join(tmpDir, 'out.json'),
+      acceptSafeBlock: true,
+    });
+    assert.equal(result.verdict, data.VERDICT_CODES.MISSION_VALIDATION_ERROR,
+      'missing admission evidence must yield MISSION_VALIDATION_ERROR');
+    assert.ok(result.blockers.some((b) => b.code.startsWith('M15-S04-VALIDATION-EVIDENCE-MISSING-admission')),
+      'EVIDENCE_MISSING-admission blocker must be present');
+    assert.equal(cli.exitCodeFor(result.verdict, true), 2,
+      'MISSION_VALIDATION_ERROR must exit 2 (distinct from blocked-admission exit 0/1)');
+  } finally {
+    try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch (_) {}
+  }
+});
+
+test('integration regression: all six VG gates pass under canonical S03 FAIL_CLOSED state', () => {
+  // Lock in: under the canonical S03 FAIL_CLOSED state, every VG gate
+  // must independently pass. If any gate ever regresses, this test
+  // surfaces the specific gate that broke the contract.
+  ensureRuntimeEvidenceConsistent();
+  const result = cli.runValidation({
+    admissionPath: cli.ADMISSION_PATH,
+    inputPath: cli.DEFAULT_RUN_PATH,
+    protocolPath: cli.DEFAULT_PROTOCOL_PATH,
+    outputPath: cli.OUTPUT_PATH,
+    acceptSafeBlock: true,
+  });
+  for (const id of data.VALIDATION_GATE_IDS) {
+    assert.equal(result.gates[id], true,
+      `VG gate ${id} must pass under S03 FAIL_CLOSED; regressed? check VG${data.VALIDATION_GATE_IDS.indexOf(id) + 1} contract.`);
+  }
 });

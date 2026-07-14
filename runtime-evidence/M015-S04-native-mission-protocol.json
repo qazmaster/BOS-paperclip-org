@@ -3,8 +3,8 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T02",
-  "generated": "2026-07-14T17:31:01.667Z",
-  "status": "MISSION_FAIL_CLOSED",
+  "generated": "2026-07-14T18:34:32.419Z",
+  "status": "MISSION_BLOCKED_SAFE",
   "safe_block_declared": true,
   "admission_summary": {
     "status": "BLOCKED_ON_S03_FAIL_CLOSED",
