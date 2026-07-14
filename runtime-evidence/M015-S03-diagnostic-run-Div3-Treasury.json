@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T11:30:00.198Z",
+  "generated": "2026-07-14T14:00:54.871Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -18,7 +18,7 @@
   "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
   "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
   "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
-  "poll_budget": 120,
+  "poll_budget": 180,
   "poll_interval_ms": 5000,
   "terminal_statuses": [
     "succeeded",
@@ -43,7 +43,7 @@
     "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "53": 1
+    "23": 1
   },
   "side_effects": {
     "before": {
@@ -67,8 +67,8 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 5,
-    "heartbeat_runs_after_total": 6,
+    "heartbeat_runs_before_total": 7,
+    "heartbeat_runs_after_total": 8,
     "heartbeat_runs_delta": 1
   },
   "agents": [
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "a3f76d11-<redacted>",
+        "run_id_redacted": "de8af1de-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,34 +148,34 @@
         ]
       },
       "poll": {
-        "attempts": 53,
-        "budget": 120,
+        "attempts": 23,
+        "budget": 180,
         "terminal_observed": true,
         "terminal_status": "succeeded",
-        "attempts_to_terminal": 53,
+        "attempts_to_terminal": 23,
         "history_tail": [
           {
-            "attempt": 51,
+            "attempt": 21,
             "observed_status": "running"
           },
           {
-            "attempt": 52,
+            "attempt": 22,
             "observed_status": "running"
           },
           {
-            "attempt": 53,
+            "attempt": 23,
             "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 5,
-        "after": 6
+        "before": 7,
+        "after": 8
       },
       "result_json_bos_redacted": {
         "schemaVersion": "bos-light-v1",
-        "runId": "a3f76d11-<redacted>",
+        "runId": "de8af1de-<redacted>",
         "division": null,
         "role": "general",
         "status": "succeeded"
@@ -228,5 +228,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 288861
+  "elapsed_ms": 127855
 }

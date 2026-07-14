@@ -472,12 +472,23 @@ async function run() {
   const batchBudgetMs = Math.max(30000, GLOBAL_BUDGET_MS - (batchStartedAt - startedAt) - 30000);
   const settledResults = await settleAllWithinBudget(batchPromises, batchBudgetMs);
   const batchEndedAt = Date.now();
-  const stillRunning = canonicalAgents.length - settledResults.length;
+  const completedResults = settledResults.map((settled) => {
+    if (settled.status === 'fulfilled') return settled.value;
+    return {
+      agent: canonicalAgents[settled.index] ? canonicalAgents[settled.index].name : `unknown-agent-${settled.index}`,
+      exit_status: null,
+      signal: null,
+      error: settled.error,
+      stdout: '',
+      stderr: '',
+    };
+  });
+  const stillRunning = canonicalAgents.length - completedResults.length;
 
   // Record stdout/stderr tails from each settled subprocess as bounded
   // forensic evidence. We deliberately do not parse stdout — T02 always
   // writes its per-agent JSON evidence, which is the canonical artifact.
-  for (const result of settledResults) {
+  for (const result of completedResults) {
     const perAgentFile = perAgentEvidencePath(result.agent);
     const perAgentExists = fs.existsSync(perAgentFile);
     const perAgentEvidence = perAgentExists
@@ -501,7 +512,7 @@ async function run() {
   }
   if (stillRunning > 0) {
     for (const agent of canonicalAgents) {
-      if (!settledResults.find((r) => r.agent === agent.name)) {
+      if (!completedResults.find((r) => r.agent === agent.name)) {
         const perAgentFile = perAgentEvidencePath(agent.name);
         const perAgentExists = fs.existsSync(perAgentFile);
         const perAgentEvidence = perAgentExists
@@ -578,8 +589,7 @@ async function run() {
   writeT18Evidence();
 
   process.stdout.write(
-    `M015_S03_T18=${journal.closeout_verdict} batch=${settledResults.length}/${canonicalAgents.length} ` +
-    `combined=${combined.status} pass=${combined.pass_count} fail=${combined.fail_count} ` +
+    `M015_S03_T18=${journal.closeout_verdict} batch=${completedResults.length}/${canonicalAgents.length} ` +    `combined=${combined.status} pass=${combined.pass_count} fail=${combined.fail_count} ` +
     `blockers=${combined.blockers.length} heartbeat_runs_delta=${combined.side_effects.heartbeat_runs_delta} ` +
     `elapsed=${journal.parallel_batch_elapsed_ms}ms\n`,
   );

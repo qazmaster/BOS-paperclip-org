@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T06:54:40.459Z",
+  "generated": "2026-07-14T14:05:40.673Z",
   "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
@@ -18,7 +18,7 @@
   "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
   "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
   "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
-  "poll_budget": 60,
+  "poll_budget": 180,
   "poll_interval_ms": 5000,
   "terminal_statuses": [
     "succeeded",
@@ -43,7 +43,7 @@
     "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "32": 1
+    "76": 1
   },
   "side_effects": {
     "before": {
@@ -67,8 +67,8 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 3,
-    "heartbeat_runs_after_total": 4,
+    "heartbeat_runs_before_total": 4,
+    "heartbeat_runs_after_total": 5,
     "heartbeat_runs_delta": 1
   },
   "agents": [
@@ -94,7 +94,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "ca8d7824-<redacted>",
+        "run_id_redacted": "f574bccc-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -148,32 +148,38 @@
         ]
       },
       "poll": {
-        "attempts": 32,
-        "budget": 60,
+        "attempts": 76,
+        "budget": 180,
         "terminal_observed": true,
         "terminal_status": "succeeded",
-        "attempts_to_terminal": 32,
+        "attempts_to_terminal": 76,
         "history_tail": [
           {
-            "attempt": 30,
+            "attempt": 74,
             "observed_status": "running"
           },
           {
-            "attempt": 31,
+            "attempt": 75,
             "observed_status": "running"
           },
           {
-            "attempt": 32,
+            "attempt": 76,
             "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 3,
-        "after": 4
+        "before": 4,
+        "after": 5
       },
-      "result_json_bos_redacted": null,
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "f574bccc-<redacted>",
+        "division": null,
+        "role": "general",
+        "status": "succeeded"
+      },
       "result_json_bos_required_fields": [
         "schemaVersion",
         "runId",
@@ -181,10 +187,15 @@
         "role",
         "status"
       ],
-      "result_json_bos_fields_present": [],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "role",
+        "status"
+      ],
       "context_markers": {
         "division_present": false,
-        "role_present": false,
+        "role_present": true,
         "paperclip_context_visible": false
       },
       "leak_flags": {
@@ -193,16 +204,23 @@
       },
       "verdict": "fail",
       "blocker_codes": [
-        "M15-S03-AGT-Div5.QualificationsLibraryLearning-BOS-MISSING"
+        "M15-S03-AGT-Div5.QualificationsLibraryLearning-BOS-FIELD-division-MISSING",
+        "M15-S03-AGT-Div5.QualificationsLibraryLearning-CONTEXT-MISSING"
       ]
     }
   ],
   "blockers": [
     {
-      "code": "M15-S03-AGT-Div5.QualificationsLibraryLearning-BOS-MISSING",
+      "code": "M15-S03-AGT-Div5.QualificationsLibraryLearning-BOS-FIELD-division-MISSING",
       "severity": "blocking",
       "agent": "Div5.QualificationsLibraryLearning",
-      "reason": "resultJson.bos missing from heartbeat run readback"
+      "reason": "resultJson.bos.division missing or empty"
+    },
+    {
+      "code": "M15-S03-AGT-Div5.QualificationsLibraryLearning-CONTEXT-MISSING",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Paperclip context markers missing in resultJson.bos (division=absent, role=present)"
     }
   ],
   "redaction": {
@@ -210,5 +228,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 199164
+  "elapsed_ms": 413288
 }

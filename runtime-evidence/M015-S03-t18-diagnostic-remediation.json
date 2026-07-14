@@ -3,8 +3,130 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T18",
-  "started_at": "2026-07-14T13:51:54.625Z",
-  "completed_at": "2026-07-14T13:51:54.625Z",
-  "closeout_verdict": "RUNNER_FAILURE",
-  "error": "Cannot read properties of undefined (reading 'replace')"
+  "started_at": "2026-07-14T13:58:43.127Z",
+  "global_budget_ms": 480000,
+  "per_agent_poll_budget": 180,
+  "prewarm_requested": false,
+  "prewarm_results": [],
+  "cancel_running_result": {
+    "observed_running": 0,
+    "cancelled_count": 0
+  },
+  "side_effects_before": {
+    "issues_count": 24,
+    "documents_count": 0,
+    "comments_count": 0,
+    "approvals_count": 0,
+    "agents_count": 8
+  },
+  "side_effects_after": {
+    "issues_count": 24,
+    "documents_count": 0,
+    "comments_count": 0,
+    "approvals_count": 0,
+    "agents_count": 8
+  },
+  "parallel_batch": [
+    {
+      "agent": "Div6.External",
+      "exit_status": 2,
+      "signal": null,
+      "error": null,
+      "stdout_tail": null,
+      "stderr_tail": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429\n",
+      "per_agent_evidence_file": "runtime-evidence/M015-S03-diagnostic-run-Div6-External.json",
+      "per_agent_evidence_status": "FAIL_CLOSED",
+      "per_agent_terminal_status": "succeeded"
+    },
+    {
+      "agent": "Div7.MissionControl",
+      "exit_status": 2,
+      "signal": null,
+      "error": null,
+      "stdout_tail": null,
+      "stderr_tail": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429\n",
+      "per_agent_evidence_file": "runtime-evidence/M015-S03-diagnostic-run-Div7-MissionControl.json",
+      "per_agent_evidence_status": "FAIL_CLOSED",
+      "per_agent_terminal_status": "succeeded"
+    },
+    {
+      "agent": "Div1.HCO",
+      "exit_status": 2,
+      "signal": null,
+      "error": null,
+      "stdout_tail": null,
+      "stderr_tail": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429\n",
+      "per_agent_evidence_file": "runtime-evidence/M015-S03-diagnostic-run-Div1-HCO.json",
+      "per_agent_evidence_status": "FAIL_CLOSED",
+      "per_agent_terminal_status": "timed_out"
+    },
+    {
+      "agent": "Div2.MasterPlanner",
+      "exit_status": 2,
+      "signal": null,
+      "error": null,
+      "stdout_tail": null,
+      "stderr_tail": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429\n",
+      "per_agent_evidence_file": "runtime-evidence/M015-S03-diagnostic-run-Div2-MasterPlanner.json",
+      "per_agent_evidence_status": "FAIL_CLOSED",
+      "per_agent_terminal_status": "succeeded"
+    },
+    {
+      "agent": "Div4.Production",
+      "exit_status": 2,
+      "signal": null,
+      "error": null,
+      "stdout_tail": null,
+      "stderr_tail": "M015_S03_HEARTBEAT_FAIL=board sign-in failed HTTP 429\n",
+      "per_agent_evidence_file": "runtime-evidence/M015-S03-diagnostic-run-Div4-Production.json",
+      "per_agent_evidence_status": "FAIL_CLOSED",
+      "per_agent_terminal_status": "succeeded"
+    },
+    {
+      "agent": "Div3.Treasury",
+      "exit_status": 1,
+      "signal": null,
+      "error": null,
+      "stdout_tail": "M015_S03_HEARTBEAT=fail pass=0 fail=1 blockers=2 heartbeat_runs_delta=1\n",
+      "stderr_tail": null,
+      "per_agent_evidence_file": "runtime-evidence/M015-S03-diagnostic-run-Div3-Treasury.json",
+      "per_agent_evidence_status": "FAIL_CLOSED",
+      "per_agent_terminal_status": "succeeded"
+    },
+    {
+      "agent": "Div5.QualificationsLibraryLearning",
+      "exit_status": 1,
+      "signal": null,
+      "error": null,
+      "stdout_tail": "M015_S03_HEARTBEAT=fail pass=0 fail=1 blockers=2 heartbeat_runs_delta=1\n",
+      "stderr_tail": null,
+      "per_agent_evidence_file": "runtime-evidence/M015-S03-diagnostic-run-Div5-QualificationsLibraryLearning.json",
+      "per_agent_evidence_status": "FAIL_CLOSED",
+      "per_agent_terminal_status": "succeeded"
+    }
+  ],
+  "aggregate": {
+    "combined_status": "FAIL_CLOSED",
+    "pass_count": 0,
+    "fail_count": 7,
+    "blocker_count": 14,
+    "agent_count_expected": 7,
+    "agent_count_observed": 7,
+    "heartbeat_runs_delta": 8,
+    "side_effect_deltas": {
+      "issues": 0,
+      "documents": 0,
+      "comments": 0,
+      "approvals": 0,
+      "agents": 0
+    }
+  },
+  "closeout_verdict": "STRUCTURAL_BLOCKERS_PRESERVED_FAIL_CLOSED",
+  "blocking_blockers": 14,
+  "completed_at": "2026-07-14T14:05:42.914Z",
+  "parallel_batch_elapsed_ms": 414891,
+  "missing_canonical": [],
+  "extra_roster": [
+    "CEO"
+  ]
 }
