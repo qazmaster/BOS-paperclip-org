@@ -1,0 +1,245 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-t17-closeout-rerun.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T17",
+  "title": "M015-S03 T17 — In-checkout skill activation precondition + S03 closeout rerun",
+  "generated": "2026-07-14T13:35:01.102Z",
+  "verdict": "PRECONDITION_RESTORED_FAIL_CLOSED_PRESERVED",
+  "summary": "T17 restored the in-checkout skill activation precondition by adding 16 byte-equivalent project-local skill stubs (.agents/skills/<10>/SKILL.md + .gsd/agent/skills/<6>/SKILL.md), verified 16/16 via scripts/verify_m015_s03_t17_skill_paths.js. Reran the S03 closeout verification chain T01->T02->T03->T04 through gsd_exec: T01 PASS 7/7, T02 FAIL_CLOSED with bounded M015_POLL_BUDGET=6 (pass=0 fail=1 blockers=5 heartbeat_runs_delta=1), T03 FAIL_CLOSED 23/49 conditions (consistent with T15/T16 inheritance), T04 65/65 fixtures pass. No source scripts modified, no business side-effects, no redaction leaks.",
+  "preflight": {
+    "missing_paths_identified": 16,
+    "stubs_added": 16,
+    "verifier": "scripts/verify_m015_s03_t17_skill_paths.js",
+    "verifier_verdict": "PASS",
+    "verifier_observed": "16/16",
+    "verifier_complete": true,
+    "verifier_failures": 0,
+    "evidence_path": "runtime-evidence/M015-S03-t17-skill-paths.json",
+    "newly_added_paths": [
+      {
+        "path": ".agents/skills/android-development/SKILL.md",
+        "frontmatter_name": "android-development",
+        "size_bytes": 5361,
+        "byte_copied_from": "/home/qazanik/.agents/skills/android-development/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/android-performance/SKILL.md",
+        "frontmatter_name": "android-performance",
+        "size_bytes": 5239,
+        "byte_copied_from": "/home/qazanik/.agents/skills/android-performance/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/android-qa/SKILL.md",
+        "frontmatter_name": "android-qa",
+        "size_bytes": 4541,
+        "byte_copied_from": "/home/qazanik/.agents/skills/android-qa/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/expo-mobile/SKILL.md",
+        "frontmatter_name": "expo-mobile",
+        "size_bytes": 6022,
+        "byte_copied_from": "/home/qazanik/.agents/skills/expo-mobile/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/go-linter-specialist/SKILL.md",
+        "frontmatter_name": "go-linter-specialist",
+        "size_bytes": 1253,
+        "byte_copied_from": "/home/qazanik/.agents/skills/go-linter-specialist/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/grpc-patterns/SKILL.md",
+        "frontmatter_name": "grpc-patterns",
+        "size_bytes": 1809,
+        "byte_copied_from": "/home/qazanik/.agents/skills/grpc-patterns/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/nodejs-best-practices/SKILL.md",
+        "frontmatter_name": "nodejs-best-practices",
+        "size_bytes": 8266,
+        "byte_copied_from": "/home/qazanik/.agents/skills/nodejs-best-practices/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/parallel-agents/SKILL.md",
+        "frontmatter_name": "parallel-agents",
+        "size_bytes": 6895,
+        "byte_copied_from": "/home/qazanik/.agents/skills/parallel-agents/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/rust-pro/SKILL.md",
+        "frontmatter_name": "rust-pro",
+        "size_bytes": 7617,
+        "byte_copied_from": "/home/qazanik/.agents/skills/rust-pro/SKILL.md"
+      },
+      {
+        "path": ".agents/skills/vercel/SKILL.md",
+        "frontmatter_name": "vercel",
+        "size_bytes": 1148,
+        "byte_copied_from": "/home/qazanik/.agents/skills/vercel/SKILL.md"
+      },
+      {
+        "path": ".gsd/agent/skills/handoff/SKILL.md",
+        "frontmatter_name": "handoff",
+        "size_bytes": 6016,
+        "byte_copied_from": "/home/qazanik/.gsd/agent/skills/handoff/SKILL.md"
+      },
+      {
+        "path": ".gsd/agent/skills/observability/SKILL.md",
+        "frontmatter_name": "observability",
+        "size_bytes": 8030,
+        "byte_copied_from": "/home/qazanik/.gsd/agent/skills/observability/SKILL.md"
+      },
+      {
+        "path": ".gsd/agent/skills/review/SKILL.md",
+        "frontmatter_name": "review",
+        "size_bytes": 8580,
+        "byte_copied_from": "/home/qazanik/.gsd/agent/skills/review/SKILL.md"
+      },
+      {
+        "path": ".gsd/agent/skills/security-review/SKILL.md",
+        "frontmatter_name": "security-review",
+        "size_bytes": 7829,
+        "byte_copied_from": "/home/qazanik/.gsd/agent/skills/security-review/SKILL.md"
+      },
+      {
+        "path": ".gsd/agent/skills/test/SKILL.md",
+        "frontmatter_name": "test",
+        "size_bytes": 7352,
+        "byte_copied_from": "/home/qazanik/.gsd/agent/skills/test/SKILL.md"
+      },
+      {
+        "path": ".gsd/agent/skills/write-docs/SKILL.md",
+        "frontmatter_name": "write-docs",
+        "size_bytes": 5421,
+        "byte_copied_from": "/home/qazanik/.gsd/agent/skills/write-docs/SKILL.md"
+      }
+    ]
+  },
+  "rerun_chain": {
+    "T01_test_environment": {
+      "script": "scripts/probe_m015_seven_agent_environment.js",
+      "command": "node scripts/probe_m015_seven_agent_environment.js",
+      "status": "PASS",
+      "pass_count": 7,
+      "fail_count": 0,
+      "blocker_count": 0,
+      "duration_ms": 10799,
+      "evidence": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+      "generated": "2026-07-14T13:31:29.176Z"
+    },
+    "T02_diagnostic_heartbeat": {
+      "script": "scripts/run_m015_s03_diagnostic_heartbeat.js",
+      "command": "M015_POLL_BUDGET=6 node scripts/run_m015_s03_diagnostic_heartbeat.js",
+      "env_override": "M015_POLL_BUDGET=6 (within supported override contract, bounded to 30s/agent)",
+      "status": "FAIL_CLOSED",
+      "pass_count": 0,
+      "fail_count": 1,
+      "blocker_count": 5,
+      "heartbeat_runs_delta": 1,
+      "duration_ms": 34941,
+      "evidence": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+      "generated": "2026-07-14T13:32:10.901Z",
+      "rationale": "Bounded M015_POLL_BUDGET=6 keeps total chain under gsd_exec 600s budget. T02 stop-on-first-blocker fires after 5 blockers on the first agent (Div1.HCO), preserving inherited non-auth structural blockers (cold-start latency + bos-light-v1 division null + T02 aggregate incomplete)."
+    },
+    "T03_independent_validator": {
+      "script": "scripts/validate_m015_s03_independent_agent_proof.js",
+      "command": "node scripts/validate_m015_s03_independent_agent_proof.js",
+      "status": "FAIL_CLOSED",
+      "per_agent_conditions_passed": 23,
+      "per_agent_conditions_total": 49,
+      "per_agent_passed": 0,
+      "per_agent_total": 7,
+      "global_gates": {
+        "name_drift_pass": false,
+        "upstream_status_pass": false,
+        "redaction_pass": true,
+        "side_effects_pass": false,
+        "labels": {
+          "name_drift_pass": "G1  NAME-DRIFT: roster contains no extra agents and no missing canonical division names",
+          "upstream_status_pass": "G2  UPSTREAM-STATUS: T01.status === \"PASS\" AND T02.status === \"PASS\"",
+          "redaction_pass": "G3  REDACTION: no UUIDs, credential assignments, or vendor-reuse marker strings (caught by the upstream regex set) in evidence string-values",
+          "side_effects_pass": "G4  SIDE-EFFECTS: heartbeat_runs_delta === 7 AND issues/documents/comments/approvals/agents deltas all === 0"
+        },
+        "diagnostics": {
+          "name_drift": {
+            "missing_canonical": [
+              "Div1.HCO",
+              "Div2.MasterPlanner",
+              "Div3.Treasury",
+              "Div4.Production",
+              "Div5.QualificationsLibraryLearning",
+              "Div6.External"
+            ],
+            "extra_roster": [],
+            "t01_name_drift_blocker": false,
+            "t02_name_drift_blocker": false
+          },
+          "upstream_status": {
+            "t01_status": "PASS",
+            "t02_status": "FAIL_CLOSED"
+          },
+          "redaction": {
+            "t01_leak_count": 0,
+            "t02_leak_count": 0,
+            "t01_leak_paths": [],
+            "t02_leak_paths": []
+          },
+          "side_effects": {
+            "issues_delta": 0,
+            "documents_delta": 0,
+            "comments_delta": 0,
+            "approvals_delta": 0,
+            "agents_delta": 0,
+            "heartbeat_runs_delta": 1
+          }
+        }
+      },
+      "blocker_count": 35,
+      "evidence": "runtime-evidence/M015-S03-seven-agent-independent-gate.json",
+      "generated": "2026-07-14T13:33:45.666Z"
+    },
+    "T04_negative_path_fixtures": {
+      "script": "scripts/test_validate_m015_s03_independent_agent_proof.js",
+      "command": "node --test scripts/test_validate_m015_s03_independent_agent_proof.js",
+      "tests": 65,
+      "suites": 14,
+      "pass": 65,
+      "fail": 0,
+      "duration_ms": 120,
+      "evidence": "node --test reporter output (in-memory)"
+    }
+  },
+  "fail_closed_preservation": {
+    "inherited_blockers": [
+      "cold-start latency (100-315s per agent per T10) makes 7 sequential bounded-chain completion impossible under gsd_exec 600s budget",
+      "bos-light-v1 division-field contract gap (T11: 0 hits across 21 runs x 32 candidate fields x 7 agents)",
+      "T02 aggregate incomplete — only Div1.HCO attempted under bounded budget; remaining 6 agents stop-on-first-blocker"
+    ],
+    "preserved_by": [
+      "T08 unpause remediation (preserves hermes_local/minimax/MiniMax-M3 adapter config)",
+      "T10 MAX_POLL_BUDGET 12->180 (still bounded by 600 cap)",
+      "T12 assembleBosFromObservedRuntime fallback (assembles bos-light-v1 record from observed runtime + canonical roster)",
+      "T15 auth boundary recovery confirmed",
+      "T16 revalidation snapshot"
+    ],
+    "preserved_in_T17_rerun": true
+  },
+  "side_effects": {
+    "heartbeat_runs_delta": 1,
+    "business_artifacts_created": 0,
+    "redaction_leak_count": 0
+  },
+  "source_scripts_modified": false,
+  "external_checkout_used": false,
+  "operational_readiness_gate": "FAIL_CLOSED_PRESERVED — T01 healthy, T02/T03 structural blockers preserved, T04 fixtures green, slice does NOT promote to S04",
+  "uat_content_prepared": "n/a (M015-S03 is a non-UI runtime proof; browser UAT not applicable per M002/S04 contrast)",
+  "upstream_artifacts": {
+    "test_environment": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "diagnostic_runs": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+    "independent_gate": "runtime-evidence/M015-S03-seven-agent-independent-gate.json",
+    "t13_skill_paths": "runtime-evidence/M015-S03-t13-skill-paths.json",
+    "t17_skill_paths": "runtime-evidence/M015-S03-t17-skill-paths.json",
+    "t16_revalidation": "runtime-evidence/M015-S03-t16-independent-gate-revalidation.json",
+    "t15_recovery": "runtime-evidence/M015-S03-t15-native-diagnostic-recovery.json"
+  }
+}

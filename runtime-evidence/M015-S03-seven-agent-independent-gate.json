@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T03",
-  "generated": "2026-07-14T12:38:59.729Z",
+  "generated": "2026-07-14T13:33:45.666Z",
   "status": "FAIL_CLOSED",
   "gate_model": "49 per-agent conditions (7 agents x 7 checks) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)",
   "upstream_artifacts": {
@@ -51,7 +51,7 @@
         "comments_delta": 0,
         "approvals_delta": 0,
         "agents_delta": 0,
-        "heartbeat_runs_delta": 0
+        "heartbeat_runs_delta": 1
       }
     }
   },
@@ -219,8 +219,8 @@
         "t01_http_success": true,
         "t01_response_status_pass": true,
         "t01_no_xiaomi_endpoint_reuse": true,
-        "t02_heartbeat_terminal_succeeded": true,
-        "t02_wake_count_delta_one": false,
+        "t02_heartbeat_terminal_succeeded": false,
+        "t02_wake_count_delta_one": true,
         "t02_bos_result_present": false
       },
       "t01_present": true,
@@ -229,8 +229,8 @@
       "t02_verdict": "fail",
       "t01_http_status": 200,
       "t01_response_status": "pass",
-      "t02_terminal_status": "succeeded",
-      "t02_wake_count_delta": 0
+      "t02_terminal_status": "running",
+      "t02_wake_count_delta": 1
     }
   ],
   "blockers": [
@@ -415,10 +415,10 @@
       "reason": "Div6.External failed t02_bos_result_present (3/7)"
     },
     {
-      "code": "M15-S03-Div7.MissionControl-T02_WAKE_COUNT_DELTA_ONE",
+      "code": "M15-S03-Div7.MissionControl-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
       "severity": "blocking",
       "agent": "Div7.MissionControl",
-      "reason": "Div7.MissionControl failed t02_wake_count_delta_one (5/7)"
+      "reason": "Div7.MissionControl failed t02_heartbeat_terminal_succeeded (5/7)"
     },
     {
       "code": "M15-S03-Div7.MissionControl-T02_BOS_RESULT_PRESENT",
@@ -442,7 +442,7 @@
       "code": "M15-S03-GATE-SIDE-EFFECTS",
       "severity": "blocking",
       "agent": null,
-      "reason": "side-effect deltas off-spec: {\"issues_delta\":0,\"documents_delta\":0,\"comments_delta\":0,\"approvals_delta\":0,\"agents_delta\":0,\"heartbeat_runs_delta\":0}"
+      "reason": "side-effect deltas off-spec: {\"issues_delta\":0,\"documents_delta\":0,\"comments_delta\":0,\"approvals_delta\":0,\"agents_delta\":0,\"heartbeat_runs_delta\":1}"
     }
   ],
   "redaction": {
