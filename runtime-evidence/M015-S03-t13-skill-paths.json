@@ -1,0 +1,110 @@
+{
+  "schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-t13-skill-paths.v1.json",
+  "generatedAt": "2026-07-14T11:17:07.837Z",
+  "cwd": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff",
+  "requiredSkills": [
+    "e2e-testing-patterns",
+    "audit-v2",
+    "zero-trust",
+    "verify-before-complete"
+  ],
+  "requiredRelativeDirs": [
+    ".agents/skills",
+    ".gsd/agent/skills"
+  ],
+  "paths": [
+    {
+      "skill": "e2e-testing-patterns",
+      "dir": ".agents/skills",
+      "relativePath": ".agents/skills/e2e-testing-patterns/SKILL.md",
+      "exists": true,
+      "readable": true,
+      "sizeBytes": 3214,
+      "frontmatterName": "e2e-testing-patterns",
+      "ok": true,
+      "error": null
+    },
+    {
+      "skill": "audit-v2",
+      "dir": ".agents/skills",
+      "relativePath": ".agents/skills/audit-v2/SKILL.md",
+      "exists": true,
+      "readable": true,
+      "sizeBytes": 2184,
+      "frontmatterName": "audit-v2",
+      "ok": true,
+      "error": null
+    },
+    {
+      "skill": "zero-trust",
+      "dir": ".agents/skills",
+      "relativePath": ".agents/skills/zero-trust/SKILL.md",
+      "exists": true,
+      "readable": true,
+      "sizeBytes": 2628,
+      "frontmatterName": "zero-trust",
+      "ok": true,
+      "error": null
+    },
+    {
+      "skill": "verify-before-complete",
+      "dir": ".agents/skills",
+      "relativePath": ".agents/skills/verify-before-complete/SKILL.md",
+      "exists": true,
+      "readable": true,
+      "sizeBytes": 2820,
+      "frontmatterName": "verify-before-complete",
+      "ok": true,
+      "error": null
+    },
+    {
+      "skill": "e2e-testing-patterns",
+      "dir": ".gsd/agent/skills",
+      "relativePath": ".gsd/agent/skills/e2e-testing-patterns/SKILL.md",
+      "exists": true,
+      "readable": true,
+      "sizeBytes": 3214,
+      "frontmatterName": "e2e-testing-patterns",
+      "ok": true,
+      "error": null
+    },
+    {
+      "skill": "audit-v2",
+      "dir": ".gsd/agent/skills",
+      "relativePath": ".gsd/agent/skills/audit-v2/SKILL.md",
+      "exists": true,
+      "readable": true,
+      "sizeBytes": 2184,
+      "frontmatterName": "audit-v2",
+      "ok": true,
+      "error": null
+    },
+    {
+      "skill": "zero-trust",
+      "dir": ".gsd/agent/skills",
+      "relativePath": ".gsd/agent/skills/zero-trust/SKILL.md",
+      "exists": true,
+      "readable": true,
+      "sizeBytes": 2628,
+      "frontmatterName": "zero-trust",
+      "ok": true,
+      "error": null
+    },
+    {
+      "skill": "verify-before-complete",
+      "dir": ".gsd/agent/skills",
+      "relativePath": ".gsd/agent/skills/verify-before-complete/SKILL.md",
+      "exists": true,
+      "readable": true,
+      "sizeBytes": 2820,
+      "frontmatterName": "verify-before-complete",
+      "ok": true,
+      "error": null
+    }
+  ],
+  "failures": [],
+  "verdict": "PASS",
+  "observed": 8,
+  "expectedTotal": 8,
+  "complete": true
+}
