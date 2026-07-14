@@ -3,20 +3,243 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T11:25:11.034Z",
+  "generated": "2026-07-14T12:30:13.810Z",
   "status": "FAIL_CLOSED",
-  "reason": "board sign-in failed HTTP 429",
+  "company": {
+    "issue_prefix": "AIP",
+    "name": "aipay.kz"
+  },
+  "source_contract": "runtime-evidence/M015-S01-seven-agent-target-contract.json",
+  "cross_reference": "runtime-evidence/M015-S02-seven-agent-after.json",
+  "upstream_test_environment": {
+    "artifact": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "status": "PASS"
+  },
+  "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
+  "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
+  "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
+  "poll_budget": 180,
+  "poll_interval_ms": 5000,
+  "terminal_statuses": [
+    "succeeded",
+    "failed",
+    "cancelled",
+    "expired",
+    "timed_out"
+  ],
+  "expected_success_terminal": "succeeded",
+  "required_bos_diagnostic_fields": [
+    "schemaVersion",
+    "runId",
+    "division",
+    "role",
+    "status"
+  ],
+  "agent_count_expected": 7,
+  "agent_count_observed": 1,
+  "pass_count": 0,
+  "fail_count": 1,
+  "status_distribution": {
+    "succeeded": 1
+  },
+  "poll_attempts_distribution": {
+    "9": 1
+  },
+  "side_effects": {
+    "before": {
+      "issues_count": 24,
+      "documents_count": 0,
+      "comments_count": 0,
+      "approvals_count": 0,
+      "agents_count": 8
+    },
+    "after": {
+      "issues_count": 24,
+      "documents_count": 0,
+      "comments_count": 0,
+      "approvals_count": 0,
+      "agents_count": 8
+    },
+    "deltas": {
+      "issues": 0,
+      "documents": 0,
+      "comments": 0,
+      "approvals": 0,
+      "agents": 0
+    },
+    "heartbeat_runs_before_total": 19,
+    "heartbeat_runs_after_total": 19,
+    "heartbeat_runs_delta": 0
+  },
+  "agents": [
+    {
+      "name": "Div7.MissionControl",
+      "agent_id_prefix": "478a498b-<redacted>",
+      "agent_role": "researcher",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "ad7b4eec-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 9,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 9,
+        "history_tail": [
+          {
+            "attempt": 7,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 8,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 9,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 0,
+      "wake_counts": {
+        "before": 19,
+        "after": 19
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "ad7b4eec-<redacted>",
+        "division": null,
+        "role": "researcher",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "role",
+        "status"
+      ],
+      "context_markers": {
+        "division_present": false,
+        "role_present": true,
+        "paperclip_context_visible": false
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "fail",
+      "blocker_codes": [
+        "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-0",
+        "M15-S03-AGT-Div7.MissionControl-BOS-FIELD-division-MISSING",
+        "M15-S03-AGT-Div7.MissionControl-CONTEXT-MISSING"
+      ]
+    }
+  ],
   "blockers": [
     {
-      "code": "M15-S03-RUNNER-FAILURE",
+      "code": "M15-S03-AGT-Div7.MissionControl-WAKE-DELTA-0",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "wake_count_delta=0 (expected exactly 1) from independent heartbeat-runs list"
+    },
+    {
+      "code": "M15-S03-AGT-Div7.MissionControl-BOS-FIELD-division-MISSING",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "resultJson.bos.division missing or empty"
+    },
+    {
+      "code": "M15-S03-AGT-Div7.MissionControl-CONTEXT-MISSING",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "Paperclip context markers missing in resultJson.bos (division=absent, role=present)"
+    },
+    {
+      "code": "M15-S03-HEARTBEAT-RUNS-DELTA-0-EXPECTED-7",
       "severity": "blocking",
       "agent": null,
-      "reason": "board sign-in failed HTTP 429"
+      "reason": "heartbeat_runs delta=0 (expected exactly 7 — one per agent)"
     }
   ],
   "redaction": {
     "full_ids": false,
     "credentials": false,
     "xiaomi_endpoint_reuse": false
-  }
+  },
+  "elapsed_ms": 49689
 }
