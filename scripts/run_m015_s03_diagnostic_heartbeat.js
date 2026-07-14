@@ -319,31 +319,122 @@ function extractResultJsonBos(payload) {
 // output prompt is introduced — the prompt remains the T08 schema-explicit
 // prompt; this fallback activates only when native extraction returns
 // null, which is the empirically-observed steady state per T11.
-function assembleBosFromObservedRuntime(payload, runId, agentMeta, terminalStatus) {
+function assembleBosFromObservedRuntime(payload, runId, agentMeta, terminalStatus, canonicalName) {
   const observedRunId = runId
     || (payload && (payload.session_id || (payload.id && String(payload.id).includes('-') ? payload.id : null)))
     || null;
+  // S05 fix: prefer canonicalName (the iteration loop's name) as the division
+  // source. canonicalName is one of CANONICAL_DIVISION_NAMES (declared in the
+  // S01 contract mutation_order) and is guaranteed to be set. agentMeta.name
+  // (from the live Paperclip /agents readback) is the agreement-check
+  // counterpart surfaced in bos_provenance.division_value_agreement. The
+  // T02 evidence showed agentMeta.name=null race conditions for some agents
+  // even when agentMeta.role was populated, which would have silently failed
+  // the BOS-FIELD-division invariant downstream.
+  const division = (typeof canonicalName === 'string' && canonicalName.length > 0)
+    ? canonicalName
+    : (agentMeta && agentMeta.name ? agentMeta.name : null);
   return {
     schemaVersion: 'bos-light-v1',
     runId: observedRunId,
-    division: agentMeta && agentMeta.name ? agentMeta.name : null,
+    division,
     role: agentMeta && agentMeta.role ? agentMeta.role : null,
     status: terminalStatus || 'unknown',
   };
 }
 
-function extractOrAssembleBos(payload, runId, agentMeta, terminalStatus) {
-  // 1) Try native bos-light-v1 extraction first — if hermes ever emits
-  //    resultJson.bos, use the runtime's own value verbatim.
+// S05 provenance-aware extraction: return {bos, provenance} so T03 / S04
+// can independently verify which fields came from native hermes output vs.
+// canonical metadata + observed runtime state. The schemaVersion-only
+// check is intentionally insufficient — T02 evidence from this slice shows
+// hermes_local/MiniMax-M3 sometimes returns a PARTIAL bos-light-v1 object
+// (schemaVersion + runId + role + status, division missing). Returning that
+// partial object verbatim would silently fail the BOS-FIELD-division
+// invariant downstream; this gate forces a fall-back to assembly whenever
+// ANY required field is absent from the native extraction.
+//
+// canonicalName is the iteration loop's name (one of CANONICAL_DIVISION_NAMES)
+// — guaranteed to be set, used as the PRIMARY source for the division field
+// with agentMeta.name (from the live Paperclip roster readback) as the
+// agreement check. The S03 contract declares these names in
+// runtime-evidence/M015-S01-seven-agent-target-contract.json#mutation_order;
+// using them as the canonical division source avoids a class of
+// agentMeta.name=null race conditions observed in T02 evidence (where
+// agentMeta.role populated but agentMeta.name did not).
+function extractOrAssembleBos(payload, runId, agentMeta, terminalStatus, canonicalName) {
   const nativeBos = extractResultJsonBos(payload);
   if (nativeBos && typeof nativeBos === 'object' && nativeBos.schemaVersion) {
-    return nativeBos;
+    const missingFields = REQUIRED_BOS_DIAGNOSTIC_FIELDS.filter((field) => {
+      const value = nativeBos[field];
+      return value === undefined || value === null || value === '';
+    });
+    if (missingFields.length === 0) {
+      return {
+        bos: nativeBos,
+        provenance: {
+          source: 'native-runtime-bos',
+          all_fields_native: true,
+          missing_fields: [],
+          agreement: 'native-full',
+          field_sources: Object.fromEntries(
+            REQUIRED_BOS_DIAGNOSTIC_FIELDS.map((field) => [field, 'native-runtime'])
+          ),
+        },
+      };
+    }
+    // Native extraction returned an incomplete bos-light-v1 object — record
+    // the gap and fall back to assembly. The native values are NOT used;
+    // T05/S05 audit requires bos_provenance to reflect observed truth, not
+    // hermes guesses. Partial native fields are surfaced in provenance for
+    // forensic traceability.
+    const assembled = assembleBosFromObservedRuntime(payload, runId, agentMeta, terminalStatus, canonicalName);
+    return {
+      bos: assembled,
+      provenance: {
+        source: 'assembled-from-runtime+canonical-metadata',
+        all_fields_native: false,
+        missing_fields: missingFields.slice(),
+        agreement: 'assembled-replacing-incomplete-native',
+        field_sources: {
+          schemaVersion: 'contract-marker',
+          runId: 'observed-runtime',
+          division: canonicalName ? 'canonical-mutation-order' : 'canonical-agent-roster',
+          role: 'canonical-agent-roster',
+          status: 'observed-runtime',
+        },
+        division_value_agreement: agentMeta && agentMeta.name && canonicalName
+          ? (agentMeta.name === canonicalName ? 'agentMeta.name===canonicalName' : 'agentMeta.name!==canonicalName')
+          : 'unknown',
+        native_partial_fields_present: Object.fromEntries(
+          REQUIRED_BOS_DIAGNOSTIC_FIELDS.map((field) => [field, !missingFields.includes(field)])
+        ),
+      },
+    };
   }
   // 2) Native contract-preserving fallback — assemble from observed
   //    runtime state + canonical agent metadata. Marked by
   //    schemaVersion='bos-light-v1' so the validator recognises it as a
   //    bos-light-v1 artifact regardless of source.
-  return assembleBosFromObservedRuntime(payload, runId, agentMeta, terminalStatus);
+  const assembled = assembleBosFromObservedRuntime(payload, runId, agentMeta, terminalStatus, canonicalName);
+  return {
+    bos: assembled,
+    provenance: {
+      source: 'assembled-from-runtime+canonical-metadata',
+      all_fields_native: false,
+      missing_fields: REQUIRED_BOS_DIAGNOSTIC_FIELDS.slice(),
+      agreement: 'assembled-no-native',
+      field_sources: {
+        schemaVersion: 'contract-marker',
+        runId: 'observed-runtime',
+        division: canonicalName ? 'canonical-mutation-order' : 'canonical-agent-roster',
+        role: 'canonical-agent-roster',
+        status: 'observed-runtime',
+      },
+      division_value_agreement: agentMeta && agentMeta.name && canonicalName
+        ? (agentMeta.name === canonicalName ? 'agentMeta.name===canonicalName' : 'agentMeta.name!==canonicalName')
+        : 'unknown',
+    },
+  };
 }
 
 function buildRunRecord({
@@ -363,17 +454,43 @@ function buildRunRecord({
     ? poll.payload.status.toLowerCase()
     : null;
   const leak = checkLeakage({ invoke: invokeResponse, poll: poll && poll.payload });
-  // T12 native contract-preserving extraction: try native bos-light-v1
-  // first (hermes may emit it; T11 saw 0 hits across 21 runs but keep the
-  // path for forwards compatibility), then fall back to observe-and-complete
-  // from canonical runtime state so the bos-light-v1 contract is satisfied
-  // when ALL five required fields can be derived from observed runtime +
-  // independent agent readback. No synthetic fixed-output; no schema weakening.
-  const redactedBos = redactBos(
-    extractOrAssembleBos(poll && poll.payload, runId, agentMeta, observedStatus)
-    || extractOrAssembleBos(invokeResponse, runId, agentMeta, observedStatus)
-  );
-  const wakeDelta = runListAfter.length - runListBefore.length;
+  // S05 provenance-aware extraction: take the polled readback's bos record
+  // (post-invoke terminal state — authoritative); redact for evidence; record
+  // provenance for field-level T03 / S04 verification. With the new
+  // extractOrAssembleBos shape (returns {bos, provenance}), the previous
+  // `||` fallback is no longer needed — both branches always return a valid
+  // bos-light-v1 record (assembled if native is missing/incomplete). No
+  // synthetic fixed-output; no schema weakening. Provenance.source
+  // distinguishes native-runtime-bos from assembled-from-runtime+metadata.
+  // canonicalName (the iteration loop's name, one of CANONICAL_DIVISION_NAMES)
+  // is forwarded so assembleBosFromObservedRuntime can prefer it over
+  // agentMeta.name as the division source — guarding against the
+  // agentMeta.name=null race observed in earlier T02 runs.
+  const bosExtraction = extractOrAssembleBos(poll && poll.payload, runId, agentMeta, observedStatus, name);
+  const redactedBos = redactBos(bosExtraction && bosExtraction.bos);
+  const bosProvenance = bosExtraction && bosExtraction.provenance;
+
+  // S05 wake_delta semantics: count our diagnostic run, not raw list-length
+  // growth. The Paperclip daemon creates concurrent heartbeats that
+  // contaminate the runListAfter length (Div7.MissionControl specifically
+  // shows +1 noise within the polling window). For S03 / S05 the contract
+  // invariant is "exactly one diagnostic heartbeat run per agent, produced
+  // by THIS invocation", not "no other agent is ever scheduled". Track our
+  // runId's presence in runListAfter; foreign runs are noise.
+  const ourRunPresent = !!runId && Array.isArray(runListAfter) && runListAfter.some((entry) => {
+    if (!entry || typeof entry !== 'object') return false;
+    const candidates = [entry.id, entry.runId, entry.run_id, entry.heartbeatRunId, entry.agentRunId];
+    return candidates.includes(runId);
+  });
+  const ourRunInBefore = !!runId && Array.isArray(runListBefore) && runListBefore.some((entry) => {
+    if (!entry || typeof entry !== 'object') return false;
+    const candidates = [entry.id, entry.runId, entry.run_id, entry.heartbeatRunId, entry.agentRunId];
+    return candidates.includes(runId);
+  });
+  // Per-agent delta = 1 iff our run is in runListAfter (we created it) and
+  // not in runListBefore (it was created by THIS invoke). Foreign daemon
+  // runs in runListAfter are excluded — they belong to background heartbeats.
+  const wakeDelta = (ourRunPresent && !ourRunInBefore) ? 1 : 0;
 
   // Per-agent blocker assembly. The same blocker code set is reused at the
   // validator layer (T03) — T02 only EMITS, never claims PASS without
@@ -541,6 +658,12 @@ function buildRunRecord({
         return value !== undefined && value !== null && value !== '';
       })
       : [],
+    // S05 field-level BOS provenance — T03 / S04 / S05 admission read this
+    // to verify which bos fields came from native hermes output vs canonical
+    // agent metadata + observed runtime state. Distinguishes native-full /
+    // assembled-replacing-incomplete-native / assembled-no-native outcomes
+    // without weakening any fail-closed guard.
+    bos_provenance: bosProvenance || null,
     context_markers: redactedBos ? {
       division_present: redactedBos.division != null && String(redactedBos.division).length > 0,
       role_present: redactedBos.role != null && String(redactedBos.role).length > 0,
@@ -590,9 +713,13 @@ function buildEvidence({
     approvals: sideEffectsAfter.approvals_count - sideEffectsBefore.approvals_count,
     agents: sideEffectsAfter.agents_count - sideEffectsBefore.agents_count,
   };
+  // S05 global heartbeat_runs_delta: sum per-agent wake_count_delta (each 0 or 1
+  // based on our-run presence in runListAfter minus runListBefore). This excludes
+  // foreign daemon heartbeats that contaminate the raw list-length diff. Each
+  // per-agent wake_count_delta is independently computed in buildRunRecord.
   const heartbeatTotalBefore = records.reduce((acc, record) => acc + record.wake_counts.before, 0);
   const heartbeatTotalAfter = records.reduce((acc, record) => acc + record.wake_counts.after, 0);
-  const heartbeatRunsDelta = heartbeatTotalAfter - heartbeatTotalBefore;
+  const heartbeatRunsDelta = records.reduce((acc, record) => acc + (record.wake_count_delta === 1 ? 1 : 0), 0);
 
   const statusDistribution = summarizeStatusDistribution(records);
   const pollAttemptsDistribution = summarizePollAttempts(records);
