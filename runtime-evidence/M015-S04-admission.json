@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T01",
-  "generated": "2026-07-14T18:34:32.373Z",
+  "generated": "2026-07-14T18:49:31.678Z",
   "status": "BLOCKED_ON_S03_FAIL_CLOSED",
   "admission_model": "4 admission gates (fresh_s03_7of7_invokability, no_do_not_promote_s04, no_drift, no_leaks)",
   "upstream_artifacts": {
