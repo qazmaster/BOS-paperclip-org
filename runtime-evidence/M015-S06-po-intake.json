@@ -1,0 +1,52 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s06-po-intake.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S06",
+  "task": "T02",
+  "kind": "PO_ROOT_MISSION_INTAKE",
+  "title": "M015-S06 bounded native seven-division mission: one admission through the INTAKE->OBSERVER harness",
+  "description": "S06 T02 runs ONE bounded native seven-division Paperclip mission via the S04 T03 bounded intake + read-only observer harness. The harness issues exactly one root PO mission (assignee=Div7.MissionControl, parent_issue_id=null) and refuses all subsequent non-GET transport calls until the observer window closes. The 7 native divisions (Div7.MissionControl, Div1.HCO, Div2.MasterPlanner, Div3.Treasury, Div4.Production, Div5.QualificationsLibraryLearning, Div6.External) are expected to author exactly one child issue each (root + 6 children = 7), bounded comments, 2 documents (Div2 + Div4 only), and exactly 7 separate heartbeat runs (one per division). The observer polls every 5s for up to 3600s, with no parallel mission fan-out. The mission is read-only after intake; all child/comment/document/disposition mutations are produced natively by the canonical agents, not the harness.",
+  "confirmation": {
+    "explicit": true,
+    "reason": "S06 T02 plan must-have: exactly one bounded native mission through the S04 T03 INTAKE->OBSERVER harness. The intake is the only mutation the harness performs; all 6 children + 2 documents + 7 runs + bounded comments are produced natively by the 7 canonical division agents (no harness fan-out, no parallel missions, no second root)."
+  },
+  "assignee": "Div7.MissionControl",
+  "parent_issue_id": null,
+  "priority": "normal",
+  "desired_outcome": "MISSION_PASS with all 10 MG gates green on the bounded readback, exactly 7 separate native runs (one per division), all terminal=succeeded, all 7 divisions with disposition comments, Div5 review of Div4 present, Div1 routing + Div7 final disposition + root final disposition all observed.",
+  "mission_key": "s04-mission-M015-S06-T02-bounded-native-seven-division",
+  "idempotency_key": "s04-mission-M015-S06-T02-bounded-native-seven-division::pending-root-issue-id",
+  "recovery_lock": "replay-blocked-on:s04-mission-M015-S06-T02-bounded-native-seven-division",
+  "mission_topology": {
+    "root_assignee": "Div7.MissionControl",
+    "delegation_chain": [
+      { "step": 1, "from": "Div7.MissionControl", "to": "Div1.HCO" },
+      { "step": 2, "from": "Div1.HCO", "to": "Div2.MasterPlanner" },
+      { "step": 3, "from": "Div1.HCO", "to": "Div3.Treasury" },
+      { "step": 4, "from": "Div1.HCO", "to": "Div4.Production" },
+      { "step": 5, "from": "Div1.HCO", "to": "Div5.QualificationsLibraryLearning" },
+      { "step": 6, "from": "Div1.HCO", "to": "Div6.External" }
+    ]
+  },
+  "allowlisted_side_effects": {
+    "root_issue_create": 1,
+    "div7_to_div1_child": 1,
+    "div1_to_operating_children": 5,
+    "agent_authored_documents": 2,
+    "heartbeat_runs_expected": 7,
+    "heartbeat_runs_max": 7
+  },
+  "observation_budget": {
+    "max_seconds": 3600,
+    "poll_interval_ms": 5000,
+    "observer_ceiling_seconds": 3600,
+    "polling_pattern": "5s polling, no parallel mission fan-out"
+  },
+  "derivation": {
+    "built_at": "2026-07-15T16:30:00.000Z",
+    "derived_from": "M015-S04-T03 bounded intake + read-only observer harness",
+    "deterministic": true,
+    "no_synthetic_bos_fallback": true,
+    "evidence_path_intended": "runtime-evidence/M015-S06-native-mission-run.json"
+  }
+}
