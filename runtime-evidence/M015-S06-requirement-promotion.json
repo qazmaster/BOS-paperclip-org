@@ -1,0 +1,621 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s06-requirement-promotion.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S06",
+  "task": "T05",
+  "generated": "2026-07-15T20:43:07.835Z",
+  "canonical_verdict": "M015_S06_PROMOTION",
+  "verdict": "PROMOTION_DENIED_BLOCKED_UPSTREAM",
+  "verdict_code": "PROMOTION_DENIED_BLOCKED_UPSTREAM",
+  "status": "PROMOTION_DENIED",
+  "safe_block_declared": true,
+  "joint_proof_evaluation": {
+    "safe_block_declared": true,
+    "gates": {
+      "preflight_admitted": {
+        "label": "JP1 PREFLIGHT_ADMITTED — preflight verdict is ADMITTED (not BLOCKED_ON_*); preflight single-write boundary is GREEN",
+        "passed": false,
+        "detail": "preflight evidence missing"
+      },
+      "mission_pass": {
+        "label": "JP2 MISSION_PASS — mission status is MISSION_PASS with MG1-MG10 all green and root_issue+mission_run present",
+        "passed": false,
+        "detail": "mission status=MISSION_BLOCKED_NO_RUN (expected MISSION_PASS)",
+        "status": "MISSION_BLOCKED_NO_RUN",
+        "mg_all_green": true,
+        "root_issue": null,
+        "mission_run": null,
+        "mg_gates_observed": []
+      },
+      "validation_pass": {
+        "label": "JP3 VALIDATION_PASS — validation status is MISSION_PASS with VG1-VG6 all green (VG7/VG8 boundary provenance as supporting)",
+        "passed": false,
+        "detail": "validation status=MISSION_FAIL_CLOSED_LEDGER_VIOLATION (expected MISSION_PASS)",
+        "status": "MISSION_FAIL_CLOSED_LEDGER_VIOLATION",
+        "vg1to6_all_green": false,
+        "gates": {
+          "readback_integrity_pass": false,
+          "preflight_correlation_pass": true,
+          "zero_business_mutation_ledger_pass": false,
+          "protocol_ledger_correlation_pass": false,
+          "autonomy_and_no_synthetic_bos_pass": false,
+          "orchestrator_provenance_pass": true,
+          "r026_boundary_classification_pass": true,
+          "safe_block_not_promoted_pass": true
+        }
+      },
+      "ui_pass_no_safe_block": {
+        "label": "JP4 UI_PASS_NO_SAFE_BLOCK — public UI verdict is PASS_AUTH_NO_LEAK AND upstream safe_block_declared=false (no upstream safe-block)",
+        "passed": false,
+        "detail": "ui verdict=PASS_AUTH_NO_LEAK safe_block_declared=true",
+        "verdict": "PASS_AUTH_NO_LEAK",
+        "safe_block_declared": true,
+        "no_safe_block": false
+      },
+      "leak_scans_clean": {
+        "label": "JP5 LEAK_SCANS_CLEAN — 0 blocking findings (UUID_FULL/CREDENTIAL_ASSIGNMENT/xiaomi/credential-headers) across all 4 upstream evidence + their diagnostic summaries",
+        "passed": true,
+        "detail": "0 blocking findings across 5 upstream evidence files (0 informational hits)",
+        "blocking_count": 0,
+        "informational_count": 0,
+        "blocking_hits": [],
+        "all_hits_count": 0
+      },
+      "r_id_allowlist_ok": {
+        "label": "JP6 R_ID_ALLOWLIST_OK — every owned R-ID is contained in OWNED_RID_ALLOWLIST (no scope expansion beyond R019/R022/R023/R026/R030/R031/R032/R035/R037)",
+        "passed": true,
+        "detail": "all 9 owned R-IDs are in allowlist R019/R022/R023/R026/R030/R031/R032/R035/R037",
+        "owned_count": 9,
+        "allowlist_count": 9,
+        "out_of_allowlist": []
+      },
+      "business_mutations_clean": {
+        "label": "JP7 BUSINESS_MUTATIONS_CLEAN — preflight.business_mutations_recorded=0 AND mission.harness_root_issue_create=0 AND mission.mission_context/intake_summary/root_issue/mission_run nullity satisfies zero-mutation invariant",
+        "passed": false,
+        "detail": "business mutation invariant violated (pf=null, harness=0)",
+        "preflight_business_mutations_recorded": null,
+        "harness_root_issue_create": 0,
+        "safe_block_mission_run_null": true
+      },
+      "do_not_promote_clean": {
+        "label": "JP8 DO_NOT_PROMOTE_CLEAN — S04 admission.do_not_promote_s04=false AND no upstream do_not_promote_s04=true",
+        "passed": true,
+        "detail": "do_not_promote_s04=false across 2 upstream file(s)",
+        "any_true": false,
+        "sources_observed": 2
+      },
+      "mission_run_present": {
+        "label": "JP9 MISSION_RUN_PRESENT — mission_run is a non-null object containing children_count, durable_documents_count, terminal_runs_count, all_agents_terminal=true",
+        "passed": false,
+        "detail": "mission_run absent or null (mission is BLOCKED upstream)",
+        "present": false,
+        "children_count": null,
+        "all_agents_terminal": null
+      }
+    },
+    "all_pass": false,
+    "blocking_reasons": [
+      {
+        "gate": "preflight_admitted",
+        "label": "JP1 PREFLIGHT_ADMITTED — preflight verdict is ADMITTED (not BLOCKED_ON_*); preflight single-write boundary is GREEN",
+        "detail": "preflight evidence missing"
+      },
+      {
+        "gate": "mission_pass",
+        "label": "JP2 MISSION_PASS — mission status is MISSION_PASS with MG1-MG10 all green and root_issue+mission_run present",
+        "detail": "mission status=MISSION_BLOCKED_NO_RUN (expected MISSION_PASS)"
+      },
+      {
+        "gate": "validation_pass",
+        "label": "JP3 VALIDATION_PASS — validation status is MISSION_PASS with VG1-VG6 all green (VG7/VG8 boundary provenance as supporting)",
+        "detail": "validation status=MISSION_FAIL_CLOSED_LEDGER_VIOLATION (expected MISSION_PASS)"
+      },
+      {
+        "gate": "ui_pass_no_safe_block",
+        "label": "JP4 UI_PASS_NO_SAFE_BLOCK — public UI verdict is PASS_AUTH_NO_LEAK AND upstream safe_block_declared=false (no upstream safe-block)",
+        "detail": "ui verdict=PASS_AUTH_NO_LEAK safe_block_declared=true"
+      },
+      {
+        "gate": "business_mutations_clean",
+        "label": "JP7 BUSINESS_MUTATIONS_CLEAN — preflight.business_mutations_recorded=0 AND mission.harness_root_issue_create=0 AND mission.mission_context/intake_summary/root_issue/mission_run nullity satisfies zero-mutation invariant",
+        "detail": "business mutation invariant violated (pf=null, harness=0)"
+      },
+      {
+        "gate": "mission_run_present",
+        "label": "JP9 MISSION_RUN_PRESENT — mission_run is a non-null object containing children_count, durable_documents_count, terminal_runs_count, all_agents_terminal=true",
+        "detail": "mission_run absent or null (mission is BLOCKED upstream)"
+      }
+    ],
+    "jp_count": 9,
+    "jp_pass_count": 3
+  },
+  "requirement_readback": [
+    {
+      "rid": "R019",
+      "label": "Hermes native invokability — 7/7 canonical division agents via MiniMax M3",
+      "status": "DIAGNOSTIC_PROVEN",
+      "promoted_to_mission": false,
+      "previous_tier": "DIAGNOSTIC_PROVEN",
+      "proposed_tier": "DIAGNOSTIC_PROVEN",
+      "evidence_refs": [
+        "mission-run.orchestrator",
+        "preflight.s06_provenance"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    },
+    {
+      "rid": "R022",
+      "label": "Canonical seven-division agents + bounded mission harness",
+      "status": "DIAGNOSTIC_PROVEN",
+      "promoted_to_mission": false,
+      "previous_tier": "DIAGNOSTIC_PROVEN",
+      "proposed_tier": "DIAGNOSTIC_PROVEN",
+      "evidence_refs": [
+        "mission-run.mission_context",
+        "validation.gates.readback_integrity_pass"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    },
+    {
+      "rid": "R023",
+      "label": "Native issue/document/comment graph + readback",
+      "status": "DIAGNOSTIC_PROVEN",
+      "promoted_to_mission": false,
+      "previous_tier": "DIAGNOSTIC_PROVEN",
+      "proposed_tier": "DIAGNOSTIC_PROVEN",
+      "evidence_refs": [
+        "mission-run.root_issue",
+        "mission-run.mission_run",
+        "public-ui.page_evidence"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    },
+    {
+      "rid": "R026",
+      "label": "Routing ordering audit/observability — Div7→Div1 decision delegation",
+      "status": "DIAGNOSTIC_PROVEN",
+      "promoted_to_mission": false,
+      "previous_tier": "DIAGNOSTIC_PROVEN",
+      "proposed_tier": "DIAGNOSTIC_PROVEN",
+      "evidence_refs": [
+        "mission-run.s06_provenance.audit_trail_records",
+        "validation.gates.r026_boundary_classification_pass"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    },
+    {
+      "rid": "R030",
+      "label": "Useful human deliverable — launch-readiness decision package (not POC)",
+      "status": "NOT_PROMOTED",
+      "promoted_to_mission": false,
+      "previous_tier": "NOT_PROMOTED",
+      "proposed_tier": "NOT_PROMOTED",
+      "evidence_refs": [
+        "mission-run.mission_run.durable_artifacts",
+        "public-ui.diagnostics_summary"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    },
+    {
+      "rid": "R031",
+      "label": "Seven differentiating division roles + handoffs",
+      "status": "NOT_PROMOTED",
+      "promoted_to_mission": false,
+      "previous_tier": "NOT_PROMOTED",
+      "proposed_tier": "NOT_PROMOTED",
+      "evidence_refs": [
+        "mission-run.s06_provenance.orchestrator.canonical_aggregate_pass_count",
+        "validation.gates.preflight_correlation_pass"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    },
+    {
+      "rid": "R032",
+      "label": "Terminal completion + dispositions on root/children",
+      "status": "DIAGNOSTIC_PROVEN",
+      "promoted_to_mission": false,
+      "previous_tier": "DIAGNOSTIC_PROVEN",
+      "proposed_tier": "DIAGNOSTIC_PROVEN",
+      "evidence_refs": [
+        "mission-run.mission_run.terminal_dispositions",
+        "validation.gates.zero_business_mutation_ledger_pass"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    },
+    {
+      "rid": "R035",
+      "label": "Public UI proof — authenticated loopback with no leak",
+      "status": "DIAGNOSTIC_PROVEN",
+      "promoted_to_mission": false,
+      "previous_tier": "DIAGNOSTIC_PROVEN",
+      "proposed_tier": "DIAGNOSTIC_PROVEN",
+      "evidence_refs": [
+        "public-ui.verdict",
+        "public-ui.browser_assertions",
+        "public-ui.leak_scan"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    },
+    {
+      "rid": "R037",
+      "label": "MiniMax M3 runtime mission — no Xiaomi/Mimo fallback",
+      "status": "DIAGNOSTIC_PROVEN",
+      "promoted_to_mission": false,
+      "previous_tier": "DIAGNOSTIC_PROVEN",
+      "proposed_tier": "DIAGNOSTIC_PROVEN",
+      "evidence_refs": [
+        "preflight.s06_provenance",
+        "mission-run.s06_provenance.no_unsupported_capability_promotion"
+      ],
+      "evidence_files": [
+        "runtime-evidence/M015-S06-preflight.json",
+        "runtime-evidence/M015-S06-native-mission-run.json",
+        "runtime-evidence/M015-S06-native-mission-validation.json",
+        "runtime-evidence/M015-S06-public-ui-proof.json"
+      ],
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "capability_constraints_excluded": [
+        "approvals",
+        "plugin_registration",
+        "piko_tools",
+        "data_provider",
+        "action_surfaces",
+        "dashboard_widget",
+        "state_persistence",
+        "activity_events",
+        "gsdpi_execution",
+        "hermes_execution",
+        "bos_light_adapters",
+        "admin_support",
+        "compliance_secrets"
+      ],
+      "joint_pass_required": true
+    }
+  ],
+  "non_promotions": [
+    "Joint runtime+independent+browser proof is NOT all-pass (3/9 gates green); per S06 plan must-have, requirements remain at previous proof tier",
+    "Blocking gates: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R019 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R022 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R023 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R026 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R030 remains at NOT_PROMOTED (proposed: NOT_PROMOTED) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R031 remains at NOT_PROMOTED (proposed: NOT_PROMOTED) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R032 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R035 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "R037 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "Capability surfaces explicitly excluded from promotion: approvals, plugin_registration, piko_tools, data_provider, action_surfaces, dashboard_widget, state_persistence, activity_events, gsdpi_execution, hermes_execution, bos_light_adapters, admin_support, compliance_secrets"
+  ],
+  "capability_promotions": {
+    "explicitly_excluded_count": 13,
+    "promoted_count": 0,
+    "items": [
+      {
+        "surface": "approvals",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, approvals is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "plugin_registration",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, plugin_registration is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "piko_tools",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, piko_tools is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "data_provider",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, data_provider is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "action_surfaces",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, action_surfaces is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "dashboard_widget",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, dashboard_widget is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "state_persistence",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, state_persistence is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "activity_events",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, activity_events is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "gsdpi_execution",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, gsdpi_execution is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "hermes_execution",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, hermes_execution is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "bos_light_adapters",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, bos_light_adapters is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "admin_support",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, admin_support is out of scope for mission-level promotion regardless of joint proof outcome"
+      },
+      {
+        "surface": "compliance_secrets",
+        "promoted": false,
+        "status": "EXPLICITLY_UNPROMOTED",
+        "rationale": "Per S06 plan must-have, compliance_secrets is out of scope for mission-level promotion regardless of joint proof outcome"
+      }
+    ],
+    "no_unsupported_capability_promotion": true
+  },
+  "db_readback_payload": {
+    "tool": "gsd_requirement_update",
+    "will_execute": false,
+    "reason": "joint proof not all-pass; DB readback deferred until joint proof passes",
+    "calls": [],
+    "joint_proof_summary": {
+      "all_pass": false,
+      "blocking_gate_count": 6
+    }
+  },
+  "evidence_hashes": {
+    "preflight": {
+      "sha256": null,
+      "exists": false,
+      "path": "runtime-evidence/M015-S06-preflight.json"
+    },
+    "missionRun": {
+      "sha256": "12c33eb749fed8b7113a2989426d9e72d4b944c0885757257f498ffcee09ccd2",
+      "size_bytes": 6252,
+      "path": "runtime-evidence/M015-S06-native-mission-run.json"
+    },
+    "validation": {
+      "sha256": "830f9e735392efee5bbb317a06c5d552500d1517f8c7d623b3dcd3eac190c1ff",
+      "size_bytes": 11206,
+      "path": "runtime-evidence/M015-S06-native-mission-validation.json"
+    },
+    "publicUi": {
+      "sha256": "f708150c8b478d240ab666170d2fdd35e81f0ed7fd348f5cd330c068e665662b",
+      "size_bytes": 45908,
+      "path": "runtime-evidence/M015-S06-public-ui-proof.json"
+    },
+    "s05Remediation": {
+      "sha256": "998f45a88ba26e328d31102560122e00ef1aef29107b56adc2c0915b628aec2c",
+      "size_bytes": 22991,
+      "path": "runtime-evidence/M015-S05-remediation-evidence.json"
+    },
+    "s04Admission": {
+      "sha256": "afd4a1dfb5cb17bf4d99b3193a74e0280771152478be28ba7c4fc21cbe79d7ce",
+      "size_bytes": 3327,
+      "path": "runtime-evidence/M015-S04-admission.json"
+    },
+    "this_file": {
+      "sha256": null,
+      "pending": true,
+      "path": "runtime-evidence/M015-S06-requirement-promotion.json"
+    }
+  },
+  "evidence_files_loaded": {
+    "preflight": false,
+    "mission_run": true,
+    "validation": true,
+    "public_ui": true,
+    "s05_remediation": true,
+    "s04_admission": true
+  },
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "provider_secret_names": "<redacted>",
+    "synthetic_bos": false
+  },
+  "paths": {
+    "preflight": "runtime-evidence/M015-S06-preflight.json",
+    "missionRun": "runtime-evidence/M015-S06-native-mission-run.json",
+    "validation": "runtime-evidence/M015-S06-native-mission-validation.json",
+    "publicUi": "runtime-evidence/M015-S06-public-ui-proof.json",
+    "s05Remediation": "runtime-evidence/M015-S05-remediation-evidence.json",
+    "s04Admission": "runtime-evidence/M015-S04-admission.json",
+    "output": "runtime-evidence/M015-S06-requirement-promotion.json"
+  }
+}

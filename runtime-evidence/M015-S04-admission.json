@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T01",
-  "generated": "2026-07-15T15:54:16.439Z",
+  "generated": "2026-07-15T16:06:55.418Z",
   "status": "BLOCKED_ON_S03_FAIL_CLOSED",
   "admission_model": "4 admission gates (fresh_s03_7of7_invokability, no_do_not_promote_s04, no_drift, no_leaks)",
   "upstream_artifacts": {
@@ -19,16 +19,16 @@
     "no_leaks_pass": "AG4 NO-LEAKS: aggregate findRedactionLeaks() over T01+T02+T03+T19 returns [] (UUIDs, credential assignments, vendor-reuse strings are scrubbing-safe)"
   },
   "gates": {
-    "fresh_s03_7of7_invokability_pass": true,
+    "fresh_s03_7of7_invokability_pass": false,
     "no_do_not_promote_s04_pass": true,
     "no_drift_pass": false,
     "no_leaks_pass": true,
     "diagnostics": {
       "fresh_s03_7of7_invokability": {
-        "t03_status": "PASS",
-        "t03_per_agent_passed": 7,
+        "t03_status": "FAIL_CLOSED",
+        "t03_per_agent_passed": 0,
         "t03_per_agent_total": 7,
-        "t03_per_agent_failed": 0
+        "t03_per_agent_failed": 7
       },
       "no_do_not_promote_s04": {
         "t19_do_not_promote_s04": false,
@@ -61,6 +61,12 @@
   },
   "business_mutations_recorded": 0,
   "blockers": [
+    {
+      "code": "M15-S04-ADMISSION-GATE-FRESH-S03-7OF7",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "fresh S03 7/7 invokability not proven: T03.status=FAIL_CLOSED T03.per_agent_passed=0/7 (failed=7)"
+    },
     {
       "code": "M15-S04-ADMISSION-GATE-NO-DRIFT",
       "severity": "blocking",
