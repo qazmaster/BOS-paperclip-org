@@ -3,16 +3,15 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T02",
-  "generated": "2026-07-15T11:25:26.146Z",
-  "status": "MISSION_BLOCKED_SAFE",
-  "safe_block_declared": true,
+  "generated": "2026-07-15T15:54:16.445Z",
+  "status": "MISSION_FAIL_CLOSED",
+  "safe_block_declared": false,
   "admission_summary": {
     "status": "BLOCKED_ON_S03_FAIL_CLOSED",
     "admitted": false,
     "blocked": true,
     "blocker_codes": [
-      "M15-S04-ADMISSION-GATE-FRESH-S03-7OF7",
-      "M15-S04-ADMISSION-GATE-DO-NOT-PROMOTE-S04"
+      "M15-S04-ADMISSION-GATE-NO-DRIFT"
     ]
   },
   "protocol": {

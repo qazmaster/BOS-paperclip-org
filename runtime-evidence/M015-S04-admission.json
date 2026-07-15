@@ -3,8 +3,8 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T01",
-  "generated": "2026-07-15T12:23:06.167Z",
-  "status": "ADMITTED",
+  "generated": "2026-07-15T15:54:16.439Z",
+  "status": "BLOCKED_ON_S03_FAIL_CLOSED",
   "admission_model": "4 admission gates (fresh_s03_7of7_invokability, no_do_not_promote_s04, no_drift, no_leaks)",
   "upstream_artifacts": {
     "s03_t01_test_environment": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
@@ -21,7 +21,7 @@
   "gates": {
     "fresh_s03_7of7_invokability_pass": true,
     "no_do_not_promote_s04_pass": true,
-    "no_drift_pass": true,
+    "no_drift_pass": false,
     "no_leaks_pass": true,
     "diagnostics": {
       "fresh_s03_7of7_invokability": {
@@ -36,7 +36,15 @@
       },
       "no_drift": {
         "canonical_required_count": 7,
-        "missing_canonical": [],
+        "missing_canonical": [
+          "Div1.HCO",
+          "Div2.MasterPlanner",
+          "Div3.Treasury",
+          "Div4.Production",
+          "Div5.QualificationsLibraryLearning",
+          "Div6.External",
+          "Div7.MissionControl"
+        ],
         "extra_roster": [],
         "t01_xiaomi_detected": false,
         "t02_agents_delta": 0
@@ -52,7 +60,14 @@
     }
   },
   "business_mutations_recorded": 0,
-  "blockers": [],
+  "blockers": [
+    {
+      "code": "M15-S04-ADMISSION-GATE-NO-DRIFT",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "drift detected: missing=[Div1.HCO,Div2.MasterPlanner,Div3.Treasury,Div4.Production,Div5.QualificationsLibraryLearning,Div6.External,Div7.MissionControl] extra=[none] t01_endpoint_reuse_detected=false t02_agents_delta=0"
+    }
+  ],
   "redaction": {
     "full_ids": false,
     "credentials": false,
