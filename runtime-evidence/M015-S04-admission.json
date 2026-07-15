@@ -3,8 +3,8 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T01",
-  "generated": "2026-07-15T11:57:11.948Z",
-  "status": "BLOCKED_ON_S03_FAIL_CLOSED",
+  "generated": "2026-07-15T12:23:06.167Z",
+  "status": "ADMITTED",
   "admission_model": "4 admission gates (fresh_s03_7of7_invokability, no_do_not_promote_s04, no_drift, no_leaks)",
   "upstream_artifacts": {
     "s03_t01_test_environment": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
@@ -19,20 +19,20 @@
     "no_leaks_pass": "AG4 NO-LEAKS: aggregate findRedactionLeaks() over T01+T02+T03+T19 returns [] (UUIDs, credential assignments, vendor-reuse strings are scrubbing-safe)"
   },
   "gates": {
-    "fresh_s03_7of7_invokability_pass": false,
-    "no_do_not_promote_s04_pass": false,
+    "fresh_s03_7of7_invokability_pass": true,
+    "no_do_not_promote_s04_pass": true,
     "no_drift_pass": true,
     "no_leaks_pass": true,
     "diagnostics": {
       "fresh_s03_7of7_invokability": {
-        "t03_status": "FAIL_CLOSED",
+        "t03_status": "PASS",
         "t03_per_agent_passed": 7,
         "t03_per_agent_total": 7,
         "t03_per_agent_failed": 0
       },
       "no_do_not_promote_s04": {
-        "t19_do_not_promote_s04": true,
-        "t19_closeout_verdict": "BLOCKERS_RECORDED_FAIL_CLOSED_PRESERVED"
+        "t19_do_not_promote_s04": false,
+        "t19_closeout_verdict": "BLOCKERS_REFRESHED_FOR_S05_R026_AWARE_PASS"
       },
       "no_drift": {
         "canonical_required_count": 7,
@@ -52,20 +52,7 @@
     }
   },
   "business_mutations_recorded": 0,
-  "blockers": [
-    {
-      "code": "M15-S04-ADMISSION-GATE-FRESH-S03-7OF7",
-      "severity": "blocking",
-      "agent": null,
-      "reason": "fresh S03 7/7 invokability not proven: T03.status=FAIL_CLOSED T03.per_agent_passed=7/7 (failed=0)"
-    },
-    {
-      "code": "M15-S04-ADMISSION-GATE-DO-NOT-PROMOTE-S04",
-      "severity": "blocking",
-      "agent": null,
-      "reason": "T19.do_not_promote_s04=true is explicitly true; S04 admission must be blocked until upstream remediation (closeout_verdict=BLOCKERS_RECORDED_FAIL_CLOSED_PRESERVED)"
-    }
-  ],
+  "blockers": [],
   "redaction": {
     "full_ids": false,
     "credentials": false,
