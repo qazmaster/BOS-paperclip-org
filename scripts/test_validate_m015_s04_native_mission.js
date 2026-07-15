@@ -183,6 +183,32 @@ function makeSideEffect(kind, actor, extra) {
   return Object.assign({ kind, actor }, extra || {});
 }
 
+// ---------------------------------------------------------------------------
+// T04 v2: native-bos-assembled provenance-backed record factory.
+// Mirrors the S03 C7′ BOS record shape. Each entry carries bos_provenance
+// with a 'native:' source AND field_sources covering runId/division/role/
+// status. The clean fixture wires one record per canonical division so the
+// happy-path test verifies MG10 v2 green for all 7 agents.
+// ---------------------------------------------------------------------------
+function makeBosProvenanceBackedRecord(division, terminalStatus = 'succeeded') {
+  const idx = CANONICAL_DIVISION_NAMES.indexOf(division);
+  return {
+    runId: `run-${division.toLowerCase().replace(/\W+/g, '-')}-001`,
+    division,
+    role: division.split('.')[1] || 'agent',
+    status: terminalStatus,
+    bos_provenance: {
+      source: 'native:bos-light-v1',
+      field_sources: {
+        runId: `heartbeat_runs[${idx}].id`,
+        division: `heartbeat_runs[${idx}].division`,
+        role: 'agent_role_observed',
+        status: `heartbeat_runs[${idx}].terminal_status`,
+      },
+    },
+  };
+}
+
 function cleanMissionRun() {
   const root = makeRootIssue();
   const div1 = makeDiv1Child(root.id);
@@ -232,6 +258,7 @@ function cleanMissionRun() {
     dispositions,
     reviews,
     side_effects,
+    bos_assembled: CANONICAL_DIVISION_NAMES.map((name) => makeBosProvenanceBackedRecord(name, 'succeeded')),
   };
 }
 
@@ -653,6 +680,125 @@ describe('M015-S04 native mission contract library', () => {
       run.documents[0].title = 'synthetic bos light plan';
       const result = evaluateMissionContract(run, {});
       assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+    });
+  });
+
+  describe('MG10 native-bos-assembled provenance (T04 v2)', () => {
+    it('passes when bos_assembled[] is absent (current S04 state preserves tag-only contract)', () => {
+      const run = cleanMissionRun();
+      delete run.bos_assembled;
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, true);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_assembled_count, 0);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_assembled_absence_ok, true);
+    });
+
+    it('passes when bos_assembled[] has all 7 entries with native provenance (clean fixture)', () => {
+      const run = cleanMissionRun();
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, true);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_assembled_count, 7);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_missing_provenance.length, 0);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_fixed_output_source.length, 0);
+    });
+
+    it('fails when bos_assembled[0] is missing bos_provenance object', () => {
+      const run = cleanMissionRun();
+      delete run.bos_assembled[0].bos_provenance;
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_missing_provenance.length, 1);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_missing_provenance[0].index, 0);
+    });
+
+    it('fails when bos_assembled[0].bos_provenance.source is empty string', () => {
+      const run = cleanMissionRun();
+      run.bos_assembled[0].bos_provenance.source = '';
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_missing_provenance.length, 1);
+    });
+
+    it('fails when bos_assembled[0].bos_provenance.source is "fixed:bos-light-v1" (hardcoded non-native)', () => {
+      const run = cleanMissionRun();
+      run.bos_assembled[0].bos_provenance.source = 'fixed:bos-light-v1';
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_fixed_output_source.length, 1);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_fixed_output_source[0].source, 'fixed:bos-light-v1');
+    });
+
+    it('fails when bos_assembled[0].bos_provenance.field_sources is null', () => {
+      const run = cleanMissionRun();
+      run.bos_assembled[0].bos_provenance.field_sources = null;
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+    });
+
+    it('fails when bos_assembled[0].bos_provenance.field_sources is missing required field (runId)', () => {
+      const run = cleanMissionRun();
+      delete run.bos_assembled[0].bos_provenance.field_sources.runId;
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+      assert.match(result.diagnostics.no_synthetic_bos_fallback.bos_records_missing_provenance[0].reason, /runId/);
+    });
+
+    it('fails when bos_assembled[0].bos_provenance.field_sources.runId is empty string', () => {
+      const run = cleanMissionRun();
+      run.bos_assembled[0].bos_provenance.field_sources.runId = '';
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+    });
+
+    it('fails when bos_assembled[0] is a string (not an object)', () => {
+      const run = cleanMissionRun();
+      run.bos_assembled[0] = 'invalid';
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+    });
+
+    it('still fails when synthetic bos light tag coexists with provenance-backed bos_assembled (hardcoded rejector takes precedence)', () => {
+      const run = cleanMissionRun();
+      run.documents[0].title = 'synthetic bos light plan';
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.gates.no_synthetic_bos_fallback_pass, false);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.synthetic_bos_tag_absent, false);
+      const blockers = compileProtocolBlockers(result.diagnostics, result.gates);
+      assert.ok(blockers.some((b) => b.code === 'M15-S04-PROTOCOL-LEAK-SYNTHETIC-BOS'));
+    });
+
+    it('emits M15-S04-PROTOCOL-BOS-PROVENANCE-MISSING when provenance metadata is absent', () => {
+      const run = cleanMissionRun();
+      delete run.bos_assembled[0].bos_provenance;
+      const result = evaluateMissionContract(run, {});
+      const blockers = compileProtocolBlockers(result.diagnostics, result.gates);
+      assert.ok(blockers.some((b) => b.code === 'M15-S04-PROTOCOL-BOS-PROVENANCE-MISSING'));
+    });
+
+    it('emits M15-S04-PROTOCOL-BOS-FIXED-OUTPUT-SOURCE when provenance source declares a non-native prompt', () => {
+      const run = cleanMissionRun();
+      run.bos_assembled[0].bos_provenance.source = 'fixed:bos-light-v1';
+      const result = evaluateMissionContract(run, {});
+      const blockers = compileProtocolBlockers(result.diagnostics, result.gates);
+      assert.ok(blockers.some((b) => b.code === 'M15-S04-PROTOCOL-BOS-FIXED-OUTPUT-SOURCE'));
+    });
+
+    it('blocker codes are M15-S04-PROTOCOL-* namespace', () => {
+      const run = cleanMissionRun();
+      delete run.bos_assembled[0].bos_provenance;
+      const result = evaluateMissionContract(run, {});
+      const blockers = compileProtocolBlockers(result.diagnostics, result.gates);
+      for (const b of blockers) {
+        assert.ok(b.code.startsWith('M15-S04-PROTOCOL-'), `bad code: ${b.code}`);
+      }
+    });
+
+    it('per-entry diagnostics: index identifies which bos_assembled entry failed', () => {
+      const run = cleanMissionRun();
+      run.bos_assembled[3].bos_provenance.source = 'fixed:bad';
+      const result = evaluateMissionContract(run, {});
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_fixed_output_source.length, 1);
+      assert.equal(result.diagnostics.no_synthetic_bos_fallback.bos_records_fixed_output_source[0].index, 3);
     });
   });
 

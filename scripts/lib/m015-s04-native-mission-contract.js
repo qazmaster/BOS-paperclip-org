@@ -69,6 +69,25 @@ const {
 const ROOT = path.resolve(__dirname, '..', '..');
 
 // ---------------------------------------------------------------------------
+// MG10 provenance-aware (v2) constants.
+//
+// Defined locally rather than in ./m015-s04-native-mission-data.js because
+// data.BLOCKER_CODES is Object.freeze'd and these codes are specific to the
+// MG10 native-bos-assembled provenance contract introduced in T04. The
+// legacy `LEAK_SYNTHETIC_BOS` code is preserved untouched for backward
+// compatibility with downstream consumers that grep for it.
+// ---------------------------------------------------------------------------
+const MG10_BOS_PROVENANCE_MISSING = 'M15-S04-PROTOCOL-BOS-PROVENANCE-MISSING';
+const MG10_BOS_FIXED_OUTPUT_SOURCE = 'M15-S04-PROTOCOL-BOS-FIXED-OUTPUT-SOURCE';
+// A bos_assembled record is "provenance-backed" iff its bos_provenance.source
+// begins with this prefix. Any other prefix (or none) is treated as a
+// fixed-output / non-native BOS prompt and fails MG10.
+const BOS_PROVENANCE_NATIVE_PREFIX = 'native:';
+// The four canonical BOS fields whose field_sources entries must be present
+// and non-empty strings. Mirrors the S03 C7′ contract.
+const BOS_PROVENANCE_REQUIRED_FIELD_SOURCES = Object.freeze(['runId', 'division', 'role', 'status']);
+
+// ---------------------------------------------------------------------------
 // Small helpers.
 // ---------------------------------------------------------------------------
 
@@ -347,9 +366,77 @@ function evaluateMissionContract(missionRun, options) {
   const allHits = [...leakHits, ...secretHits];
   const mg9_secretHygienePass = allHits.length === 0;
 
-  // MG10: NO_SYNTHETIC_BOS_FALLBACK
+  // MG10: NO_SYNTHETIC_BOS_FALLBACK (provenance-aware v2).
+  //
+  // Three sub-checks:
+  //   1. synthetic_bos_tag_absent — no "synthetic bos light" tag substring
+  //      anywhere in the run. This is the hardcoded-output rejector and
+  //      preserves the existing fail-closed behaviour.
+  //   2. bos_assembled_absence_ok OR bos_assembled_provenance_complete —
+  //      if the run carries bos_assembled records, every record must be
+  //      provenance-backed (bos_provenance.source is a non-empty string
+  //      beginning with 'native:' AND bos_provenance.field_sources is a
+  //      non-null object covering the four canonical fields).
+  //   3. bos_assembled_no_fixed_output_source — rejects any record whose
+  //      provenance source declares a non-native (fixed/hardcoded) prompt.
+  //
+  // Sub-check 1 alone was the original MG10. Subs 2-3 are the T04
+  // provenance-aware addition that distinguishes a native BOS prompt
+  // (which assembled the bos-light-v1 values from observed run / division
+  // / role / status fields) from a fixed-output BOS prompt (which emits
+  // the same payload regardless of inputs).
   const syntheticBosHits = leakHits.filter((h) => h.kind === 'synthetic_bos');
-  const mg10_noSyntheticBosPass = syntheticBosHits.length === 0;
+  const mg10_syntheticTagAbsent = syntheticBosHits.length === 0;
+
+  const bosAssembled = run && Array.isArray(run.bos_assembled) ? run.bos_assembled : null;
+  const bosRecordsMissingProvenance = [];
+  const bosRecordsFixedOutputSource = [];
+  let bosAssembledCount = 0;
+
+  if (bosAssembled && bosAssembled.length > 0) {
+    bosAssembledCount = bosAssembled.length;
+    for (let i = 0; i < bosAssembled.length; i++) {
+      const rec = bosAssembled[i];
+      if (!rec || typeof rec !== 'object' || Array.isArray(rec)) {
+        bosRecordsMissingProvenance.push({ index: i, reason: 'bos_assembled entry is not an object' });
+        continue;
+      }
+      const prov = rec.bos_provenance;
+      if (!prov || typeof prov !== 'object' || Array.isArray(prov)) {
+        bosRecordsMissingProvenance.push({ index: i, reason: 'bos_provenance missing or not an object' });
+        continue;
+      }
+      if (typeof prov.source !== 'string' || prov.source.length === 0) {
+        bosRecordsMissingProvenance.push({ index: i, reason: 'bos_provenance.source missing or empty' });
+        continue;
+      }
+      if (prov.source.indexOf(BOS_PROVENANCE_NATIVE_PREFIX) !== 0) {
+        bosRecordsFixedOutputSource.push({ index: i, source: prov.source });
+        continue;
+      }
+      if (!prov.field_sources || typeof prov.field_sources !== 'object' || Array.isArray(prov.field_sources)) {
+        bosRecordsMissingProvenance.push({ index: i, reason: 'bos_provenance.field_sources missing or not an object' });
+        continue;
+      }
+      const missingFields = [];
+      for (const f of BOS_PROVENANCE_REQUIRED_FIELD_SOURCES) {
+        if (typeof prov.field_sources[f] !== 'string' || prov.field_sources[f].length === 0) {
+          missingFields.push(f);
+        }
+      }
+      if (missingFields.length > 0) {
+        bosRecordsMissingProvenance.push({
+          index: i,
+          reason: `bos_provenance.field_sources missing non-empty entries for: ${missingFields.join(',')}`,
+        });
+      }
+    }
+  }
+
+  const mg10_bosAssembledProvenanceComplete =
+    bosRecordsMissingProvenance.length === 0 && bosRecordsFixedOutputSource.length === 0;
+
+  const mg10_noSyntheticBosPass = mg10_syntheticTagAbsent && mg10_bosAssembledProvenanceComplete;
 
   const gates = {
     mission_topology_pass: mg1_rootAssigneeOk && mg1_rootCountOk && mg1_eachDivisionHasOneChild,
@@ -417,6 +504,15 @@ function evaluateMissionContract(missionRun, options) {
     secret_hygiene: {
       leak_count: allHits.length,
       leak_paths: allHits.map((h) => `${h.path || h.name || '$'}(${h.kind || h.name})`),
+    },
+    no_synthetic_bos_fallback: {
+      synthetic_bos_tag_absent: mg10_syntheticTagAbsent,
+      synthetic_bos_tag_hits: syntheticBosHits.map((h) => `${h.path || h.name || '$'}(${h.kind || h.name})`),
+      bos_assembled_count: bosAssembledCount,
+      bos_assembled_absence_ok: bosAssembledCount === 0,
+      bos_records_missing_provenance: bosRecordsMissingProvenance,
+      bos_records_fixed_output_source: bosRecordsFixedOutputSource,
+      provenance_aware_v2: true,
     },
   };
 
@@ -549,7 +645,45 @@ function compileProtocolBlockers(diagnostics, gates) {
   }
 
   if (!gates.no_synthetic_bos_fallback_pass) {
-    blockers.push({ code: BLOCKER_CODES.LEAK_SYNTHETIC_BOS, agent: null, reason: `synthetic bos light tag found in evidence at ${diagnostics.secret_hygiene.leak_paths.filter((p) => p.includes('(synthetic_bos)')).join(', ') || 'unknown'}` });
+    const d = diagnostics.no_synthetic_bos_fallback;
+    // 1. Hardcoded template rejector (legacy MG10 contract). Preserves the
+    //    M15-S04-PROTOCOL-LEAK-SYNTHETIC-BOS code so downstream consumers
+    //    that grep for the legacy code continue to fire.
+    if (d && Array.isArray(d.synthetic_bos_tag_hits) && d.synthetic_bos_tag_hits.length > 0) {
+      blockers.push({
+        code: BLOCKER_CODES.LEAK_SYNTHETIC_BOS,
+        agent: null,
+        reason: `synthetic bos light tag found in evidence at ${d.synthetic_bos_tag_hits.join(', ') || 'unknown'}`,
+      });
+    }
+    // 2. Provenance-aware (MG10 v2) — bos_assembled entries lack provenance
+    //    metadata. This fires before the fixed-output-source check so that
+    //    a malformed record surfaces its missing-field reason verbatim
+    //    instead of being misclassified as a fixed-output prompt.
+    if (d && Array.isArray(d.bos_records_missing_provenance) && d.bos_records_missing_provenance.length > 0) {
+      const summary = d.bos_records_missing_provenance
+        .map((m) => `[${m.index}] ${m.reason}`)
+        .join('; ');
+      blockers.push({
+        code: MG10_BOS_PROVENANCE_MISSING,
+        agent: null,
+        reason: `bos_assembled entries lack provenance metadata: ${summary}`,
+      });
+    }
+    // 3. Provenance-aware (MG10 v2) — bos_assembled entries declare a
+    //    non-native (fixed-output) provenance source. Any source string
+    //    that does not begin with 'native:' is treated as a hardcoded
+    //    BOS prompt and fails MG10.
+    if (d && Array.isArray(d.bos_records_fixed_output_source) && d.bos_records_fixed_output_source.length > 0) {
+      const summary = d.bos_records_fixed_output_source
+        .map((m) => `[${m.index}] source="${m.source}"`)
+        .join('; ');
+      blockers.push({
+        code: MG10_BOS_FIXED_OUTPUT_SOURCE,
+        agent: null,
+        reason: `bos_assembled entries have non-native (fixed-output) provenance source: ${summary}`,
+      });
+    }
   }
 
   return blockers;
