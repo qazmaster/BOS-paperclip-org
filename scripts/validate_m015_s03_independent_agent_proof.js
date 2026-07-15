@@ -21,6 +21,27 @@
  *       G4 SIDE-EFFECTS   : issues/documents/comments/approvals/agents deltas
  *                           must all be 0; heartbeat_runs_delta must equal 7
  *
+ * S05 / T03 strengthens the C7 per-agent condition into a provenance-backed
+ * BOS-agreement check (C7′). The new C7′ is accepted only when:
+ *   - bosHasAllRequired   : all REQUIRED_BOS_FIELDS are present (legacy C7 part)
+ *   - leakFlagsClean      : xiaomi / credential leak flags are clean (legacy C7)
+ *   - runIdAgrees         : bos.runId === invoke.run_id_redacted
+ *                           (assembled value agrees with the observed run id)
+ *   - divisionAgrees      : bos.division === canonical division name
+ *                           (the iteration key is the canonical roster)
+ *   - roleAgrees          : bos.role === t01.agent_role_observed
+ *                           (assembled value agrees with the independently
+ *                            read canonical role from T01 evidence)
+ *   - statusAgrees        : bos.status === poll.terminal_status
+ *                           (assembled value agrees with observed terminal)
+ *   - provenancePopulated : bos_provenance.source is a non-empty string AND
+ *                           bos_provenance.field_sources is a non-null object
+ *
+ * The 49/49 invariant is preserved: C7′ REPLACES C7 in the same 7th position
+ * (no condition count change). The per-agent output additionally exposes
+ * `t02_bos_provenance_agreement_diagnostics` so T05 / S04 can reason about
+ * which sub-checks passed or failed.
+ *
  * For every failing per-agent condition or global gate the validator emits a
  * single, scoped blocker code (never a generic catch-all) and increments the
  * per-agent failed counter. Exits 0 only when all 49 per-agent checks and all
@@ -73,7 +94,7 @@ const PER_AGENT_CONDITION_LABELS = Object.freeze({
   t01_no_xiaomi_endpoint_reuse: 'C4  T01 probe: aggregate xiaomi_endpoint_reuse_detected === false for this agent',
   t02_heartbeat_terminal_succeeded: 'C5  T02 heartbeat: poll reached terminal_status === "succeeded" within 12 attempts',
   t02_wake_count_delta_one: 'C6  T02 heartbeat: wake_count_delta === 1 from independent heartbeat-runs list',
-  t02_bos_result_present: 'C7  T02 heartbeat: resultJson.bos includes all required fields AND vendor-leak flags are clean',
+  t02_bos_provenance_agreement: "C7' T02 heartbeat: assembled bos-light-v1 values agree with observed run/poll state and independently read canonical name/role; field-level provenance populated; vendor-leak flags clean",
 });
 
 const GLOBAL_GATE_LABELS = Object.freeze({
@@ -139,6 +160,12 @@ function evaluatePerAgentConditions(t01Evidence, t02Evidence) {
       : null;
     const responseStatus = t01 && t01.testEnvironment ? t01.testEnvironment.response_status : null;
     const xiaomiDetectedT01 = !!(t01 && t01.xiaomi_endpoint_reuse_detected === true);
+    // Independent read of the canonical role — comes from T01 only, never from T02.
+    // This is what gives C7′ its provenance independence: the bos.role value
+    // is checked against a name->role mapping that T02 itself cannot influence.
+    const canonicalRoleFromT01 = t01 && typeof t01.agent_role_observed === 'string'
+      ? t01.agent_role_observed
+      : null;
 
     const terminalStatus = t02 && t02.poll ? t02.poll.terminal_status : null;
     const wakeDelta = t02 && typeof t02.wake_count_delta === 'number' ? t02.wake_count_delta : null;
@@ -147,11 +174,51 @@ function evaluatePerAgentConditions(t01Evidence, t02Evidence) {
       : null;
     const leakFlags = t02 && t02.leak_flags && typeof t02.leak_flags === 'object' ? t02.leak_flags : null;
 
+    // Pull the assembled BOS object, the per-field provenance, and the
+    // observed run-id from independent T02 sub-fields. Each agreement
+    // check below cross-validates bos values against a NON-BOS source so
+    // a forged bos-light-v1 cannot pass without forking the rest of T02.
+    const bos = t02 && t02.result_json_bos_redacted && typeof t02.result_json_bos_redacted === 'object'
+      ? t02.result_json_bos_redacted
+      : null;
+    const bosProvenance = t02 && t02.bos_provenance && typeof t02.bos_provenance === 'object'
+      ? t02.bos_provenance
+      : null;
+    const observedRunId = t02 && t02.invoke && typeof t02.invoke.run_id_redacted === 'string'
+      ? t02.invoke.run_id_redacted
+      : null;
+
+    // Legacy C7 sub-checks (preserved so the existing booleans keep working).
     const bosHasAllRequired = !!bosFieldsPresent
       && REQUIRED_BOS_FIELDS.every((field) => bosFieldsPresent.includes(field));
     const leakFlagsClean = !!leakFlags
       && leakFlags.xiaomi_endpoint_reuse_detected === false
       && leakFlags.credential_assignment_detected === false;
+
+    // C7′ provenance agreement sub-checks. Each is computed independently so
+    // the diagnostics object can show which sub-check failed.
+    const runIdAgrees = !!bos && typeof bos.runId === 'string'
+      && typeof observedRunId === 'string'
+      && bos.runId === observedRunId;
+    const divisionAgrees = !!bos && typeof bos.division === 'string'
+      && bos.division === name; // name is the canonical iteration key
+    const roleAgrees = !!bos && typeof bos.role === 'string'
+      && bos.role === canonicalRoleFromT01;
+    const statusAgrees = !!bos && typeof bos.status === 'string'
+      && bos.status === terminalStatus;
+    const provenancePopulated = !!bosProvenance
+      && typeof bosProvenance.source === 'string'
+      && bosProvenance.source.length > 0
+      && typeof bosProvenance.field_sources === 'object'
+      && bosProvenance.field_sources !== null;
+
+    const t02_bos_provenance_agreement = bosHasAllRequired
+      && runIdAgrees
+      && divisionAgrees
+      && roleAgrees
+      && statusAgrees
+      && provenancePopulated
+      && leakFlagsClean;
 
     const conditions = {
       canonical_name_present: !!t01 && !!t02,
@@ -160,7 +227,7 @@ function evaluatePerAgentConditions(t01Evidence, t02Evidence) {
       t01_no_xiaomi_endpoint_reuse: !!t01 && !xiaomiDetectedT01 && t01ByName.has(name),
       t02_heartbeat_terminal_succeeded: terminalStatus === 'succeeded',
       t02_wake_count_delta_one: wakeDelta === 1,
-      t02_bos_result_present: bosHasAllRequired && leakFlagsClean,
+      t02_bos_provenance_agreement: t02_bos_provenance_agreement,
     };
 
     const expected = Object.keys(PER_AGENT_CONDITION_LABELS).length;
@@ -179,8 +246,29 @@ function evaluatePerAgentConditions(t01Evidence, t02Evidence) {
       t02_verdict: t02 ? t02.verdict : null,
       t01_http_status: httpStatus,
       t01_response_status: responseStatus,
+      t01_agent_role_observed: canonicalRoleFromT01,
       t02_terminal_status: terminalStatus,
       t02_wake_count_delta: wakeDelta,
+      t02_bos_run_id_redacted: observedRunId,
+      t02_bos_observed: bos ? {
+        schemaVersion: typeof bos.schemaVersion === 'string' ? bos.schemaVersion : null,
+        runId: typeof bos.runId === 'string' ? bos.runId : null,
+        division: typeof bos.division === 'string' ? bos.division : null,
+        role: typeof bos.role === 'string' ? bos.role : null,
+        status: typeof bos.status === 'string' ? bos.status : null,
+      } : null,
+      t02_bos_provenance_source: bosProvenance && typeof bosProvenance.source === 'string'
+        ? bosProvenance.source
+        : null,
+      t02_bos_provenance_agreement_diagnostics: {
+        bos_fields_present_match: bosHasAllRequired,
+        run_id_match: runIdAgrees,
+        division_match: divisionAgrees,
+        role_match: roleAgrees,
+        status_match: statusAgrees,
+        provenance_source_populated: provenancePopulated,
+        leak_flags_clean: leakFlagsClean,
+      },
     };
   });
 }
@@ -362,7 +450,7 @@ function buildGateEvidence({ perAgent, gates, blockers, t01Path, t02Path, gateMo
     task: 'T03',
     generated: new Date().toISOString(),
     status: overallPass ? 'PASS' : 'FAIL_CLOSED',
-    gate_model: gateModel || '49 per-agent conditions (7 agents x 7 checks) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)',
+    gate_model: gateModel || "49 per-agent conditions (7 agents x 7 checks including C7' provenance-backed BOS agreement) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)",
     upstream_artifacts: {
       test_environment: t01Path ? path.relative(ROOT, t01Path) : null,
       diagnostic_runs: t02Path ? path.relative(ROOT, t02Path) : null,

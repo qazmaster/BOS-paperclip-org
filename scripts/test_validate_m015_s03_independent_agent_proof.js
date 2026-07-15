@@ -78,12 +78,52 @@ const codes = (blockers) => blockers.map((entry) => entry.code);
 // Fixture builders — produce a "clean PASS" T01/T02 baseline, then mutate.
 // ---------------------------------------------------------------------------
 
+// Canonical role per division name — mirrors the live roster observed in T01.
+// Div6.External = security, Div7.MissionControl = researcher, all others = general.
+// Centralized so the clean fixtures stay honest across all negative-path tests.
+const CANONICAL_ROLES = Object.freeze({
+  'Div1.HCO': 'general',
+  'Div2.MasterPlanner': 'general',
+  'Div3.Treasury': 'general',
+  'Div4.Production': 'general',
+  'Div5.QualificationsLibraryLearning': 'general',
+  'Div6.External': 'security',
+  'Div7.MissionControl': 'researcher',
+});
+
+function cleanBosProvenance() {
+  return {
+    source: 'assembled-from-runtime+canonical-metadata',
+    agreement: 'assembled-no-native',
+    all_fields_native: false,
+    field_sources: {
+      schemaVersion: 'contract-marker',
+      runId: 'observed-runtime',
+      division: 'canonical-mutation-order',
+      role: 'canonical-agent-roster',
+      status: 'observed-runtime',
+    },
+    division_value_agreement: 'unknown',
+  };
+}
+
+function cleanBosRedacted(name, role, runId) {
+  return {
+    schemaVersion: 'bos-light-v1',
+    runId,
+    division: name,
+    role,
+    status: 'succeeded',
+  };
+}
+
 function cleanT01() {
   return {
     status: 'PASS',
     agents: CANONICAL_DIVISION_NAMES.map((name) => ({
       name,
       verdict: 'pass',
+      agent_role_observed: CANONICAL_ROLES[name] || 'general',
       xiaomi_endpoint_reuse_detected: false,
       testEnvironment: {
         http_status: 200,
@@ -97,17 +137,24 @@ function cleanT01() {
 function cleanT02() {
   return {
     status: 'PASS',
-    agents: CANONICAL_DIVISION_NAMES.map((name) => ({
-      name,
-      verdict: 'pass',
-      poll: { terminal_status: 'succeeded' },
-      wake_count_delta: 1,
-      result_json_bos_fields_present: REQUIRED_BOS_FIELDS.slice(),
-      leak_flags: {
-        xiaomi_endpoint_reuse_detected: false,
-        credential_assignment_detected: false,
-      },
-    })),
+    agents: CANONICAL_DIVISION_NAMES.map((name, idx) => {
+      const role = CANONICAL_ROLES[name] || 'general';
+      const runId = `run-${String(idx + 1).padStart(2, '0')}-<redacted>`;
+      return {
+        name,
+        verdict: 'pass',
+        invoke: { run_id_redacted: runId, http_status: 200 },
+        poll: { terminal_status: 'succeeded' },
+        wake_count_delta: 1,
+        result_json_bos_redacted: cleanBosRedacted(name, role, runId),
+        result_json_bos_fields_present: REQUIRED_BOS_FIELDS.slice(),
+        bos_provenance: cleanBosProvenance(),
+        leak_flags: {
+          xiaomi_endpoint_reuse_detected: false,
+          credential_assignment_detected: false,
+        },
+      };
+    }),
     blockers: [],
     side_effects: {
       deltas: { issues: 0, documents: 0, comments: 0, approvals: 0, agents: 0 },
@@ -284,10 +331,11 @@ describe('evaluatePerAgentConditions — happy path', () => {
       't01_no_xiaomi_endpoint_reuse',
       't02_heartbeat_terminal_succeeded',
       't02_wake_count_delta_one',
-      't02_bos_result_present',
+      't02_bos_provenance_agreement',
     ]) {
       assert.ok(PER_AGENT_CONDITION_LABELS[key], `missing label for ${key}`);
     }
+    assert.match(PER_AGENT_CONDITION_LABELS.t02_bos_provenance_agreement, /C7'/);
   });
 });
 
@@ -382,30 +430,146 @@ describe('evaluatePerAgentConditions — T02 condition flips', () => {
     assert.equal(entry.conditions.t02_wake_count_delta_one, false);
   });
 
-  it('t02_bos_result_present=false when a required BOS field is missing', () => {
+  it("t02_bos_provenance_agreement=false when a required BOS field is missing from result_json_bos_fields_present", () => {
     const { t01, t02 } = cleanFixture();
-    const bosFields = t02.agents.find((a) => a.name === 'Div4.Production').result_json_bos_fields_present;
-    t02.agents.find((a) => a.name === 'Div4.Production').result_json_bos_fields_present =
-      bosFields.filter((f) => f !== 'schemaVersion');
+    const div4 = t02.agents.find((a) => a.name === 'Div4.Production');
+    div4.result_json_bos_fields_present = div4.result_json_bos_fields_present.filter((f) => f !== 'schemaVersion');
+    // Drop the field from bos_redacted too so the agreement check stays consistent.
+    delete div4.result_json_bos_redacted.schemaVersion;
     const result = evaluatePerAgentConditions(t01, t02);
     const entry = result.find((e) => e.name === 'Div4.Production');
-    assert.equal(entry.conditions.t02_bos_result_present, false);
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.bos_fields_present_match, false);
   });
 
-  it('t02_bos_result_present=false when leak_flags.xiaomi_endpoint_reuse_detected=true', () => {
+  it('t02_bos_provenance_agreement=false when leak_flags.xiaomi_endpoint_reuse_detected=true', () => {
     const { t01, t02 } = cleanFixture();
     t02.agents.find((a) => a.name === 'Div5.QualificationsLibraryLearning').leak_flags.xiaomi_endpoint_reuse_detected = true;
     const result = evaluatePerAgentConditions(t01, t02);
     const entry = result.find((e) => e.name === 'Div5.QualificationsLibraryLearning');
-    assert.equal(entry.conditions.t02_bos_result_present, false);
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.leak_flags_clean, false);
   });
 
-  it('t02_bos_result_present=false when leak_flags.credential_assignment_detected=true', () => {
+  it('t02_bos_provenance_agreement=false when leak_flags.credential_assignment_detected=true', () => {
     const { t01, t02 } = cleanFixture();
     t02.agents.find((a) => a.name === 'Div6.External').leak_flags.credential_assignment_detected = true;
     const result = evaluatePerAgentConditions(t01, t02);
     const entry = result.find((e) => e.name === 'Div6.External');
-    assert.equal(entry.conditions.t02_bos_result_present, false);
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.leak_flags_clean, false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// evaluatePerAgentConditions — C7' provenance agreement sub-checks (S05/T03)
+// ---------------------------------------------------------------------------
+
+describe("evaluatePerAgentConditions — C7' provenance agreement sub-checks", () => {
+  it("run_id_match=false when bos.runId disagrees with invoke.run_id_redacted", () => {
+    const { t01, t02 } = cleanFixture();
+    const div2 = t02.agents.find((a) => a.name === 'Div2.MasterPlanner');
+    div2.result_json_bos_redacted.runId = 'forged-run-id-<redacted>';
+    const result = evaluatePerAgentConditions(t01, t02);
+    const entry = result.find((e) => e.name === 'Div2.MasterPlanner');
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.run_id_match, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.division_match, true);
+  });
+
+  it("division_match=false when bos.division disagrees with the canonical division name", () => {
+    const { t01, t02 } = cleanFixture();
+    const div3 = t02.agents.find((a) => a.name === 'Div3.Treasury');
+    div3.result_json_bos_redacted.division = 'ForgedDivision';
+    const result = evaluatePerAgentConditions(t01, t02);
+    const entry = result.find((e) => e.name === 'Div3.Treasury');
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.division_match, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.run_id_match, true);
+  });
+
+  it("role_match=false when bos.role disagrees with t01.agent_role_observed (independent read)", () => {
+    const { t01, t02 } = cleanFixture();
+    // Div6.External is canonically 'security' in T01; flip bos.role to 'general'.
+    const div6 = t02.agents.find((a) => a.name === 'Div6.External');
+    div6.result_json_bos_redacted.role = 'general';
+    const result = evaluatePerAgentConditions(t01, t02);
+    const entry = result.find((e) => e.name === 'Div6.External');
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.role_match, false);
+    // division still matches (only role disagreed)
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.division_match, true);
+  });
+
+  it('role_match is independent of T02 — flipping t01.agent_role_observed also flips role_match', () => {
+    // The independent-read property: T01 is the source of truth for the role.
+    // If T01 is mutated independently of T02, the agreement fails too.
+    const { t01, t02 } = cleanFixture();
+    const t01Div7 = t01.agents.find((a) => a.name === 'Div7.MissionControl');
+    t01Div7.agent_role_observed = 'general'; // was 'researcher'
+    const result = evaluatePerAgentConditions(t01, t02);
+    const entry = result.find((e) => e.name === 'Div7.MissionControl');
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.role_match, false);
+  });
+
+  it("status_match=false when bos.status disagrees with poll.terminal_status", () => {
+    const { t01, t02 } = cleanFixture();
+    const div1 = t02.agents.find((a) => a.name === 'Div1.HCO');
+    div1.result_json_bos_redacted.status = 'failed';
+    // Keep poll.terminal_status as 'succeeded' so we cross-check disagreement.
+    const result = evaluatePerAgentConditions(t01, t02);
+    const entry = result.find((e) => e.name === 'Div1.HCO');
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.status_match, false);
+  });
+
+  it("provenance_source_populated=false when bos_provenance.source is missing", () => {
+    const { t01, t02 } = cleanFixture();
+    const div5 = t02.agents.find((a) => a.name === 'Div5.QualificationsLibraryLearning');
+    delete div5.bos_provenance.source;
+    const result = evaluatePerAgentConditions(t01, t02);
+    const entry = result.find((e) => e.name === 'Div5.QualificationsLibraryLearning');
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.provenance_source_populated, false);
+  });
+
+  it("provenance_source_populated=false when bos_provenance.field_sources is missing", () => {
+    const { t01, t02 } = cleanFixture();
+    const div4 = t02.agents.find((a) => a.name === 'Div4.Production');
+    delete div4.bos_provenance.field_sources;
+    const result = evaluatePerAgentConditions(t01, t02);
+    const entry = result.find((e) => e.name === 'Div4.Production');
+    assert.equal(entry.conditions.t02_bos_provenance_agreement, false);
+    assert.equal(entry.t02_bos_provenance_agreement_diagnostics.provenance_source_populated, false);
+  });
+
+  it('clean fixture yields all 6 sub-checks true for every canonical agent', () => {
+    const { t01, t02 } = cleanFixture();
+    const result = evaluatePerAgentConditions(t01, t02);
+    for (const entry of result) {
+      const diag = entry.t02_bos_provenance_agreement_diagnostics;
+      assert.equal(diag.bos_fields_present_match, true, `${entry.name} bos_fields_present_match`);
+      assert.equal(diag.run_id_match, true, `${entry.name} run_id_match`);
+      assert.equal(diag.division_match, true, `${entry.name} division_match`);
+      assert.equal(diag.role_match, true, `${entry.name} role_match`);
+      assert.equal(diag.status_match, true, `${entry.name} status_match`);
+      assert.equal(diag.provenance_source_populated, true, `${entry.name} provenance_source_populated`);
+      assert.equal(diag.leak_flags_clean, true, `${entry.name} leak_flags_clean`);
+      assert.equal(entry.conditions.t02_bos_provenance_agreement, true, `${entry.name} C7'`);
+    }
+  });
+
+  it('per-agent diagnostics object exposes observed runId, bos values, and provenance source', () => {
+    const { t01, t02 } = cleanFixture();
+    const result = evaluatePerAgentConditions(t01, t02);
+    const div1 = result.find((e) => e.name === 'Div1.HCO');
+    assert.equal(typeof div1.t02_bos_run_id_redacted, 'string');
+    assert.match(div1.t02_bos_run_id_redacted, /^run-01-/);
+    assert.equal(div1.t02_bos_observed.division, 'Div1.HCO');
+    assert.equal(div1.t02_bos_observed.status, 'succeeded');
+    assert.equal(div1.t02_bos_provenance_source, 'assembled-from-runtime+canonical-metadata');
+    assert.equal(div1.t01_agent_role_observed, 'general');
   });
 });
 
@@ -565,9 +729,10 @@ describe('compileBlockers', () => {
     assert.ok(!div7Codes.includes(BLOCKER_CODES.PER_AGENT_NAME_MISSING_T01('Div7.MissionControl')));
   });
 
-  it('emits per-agent condition blocker with uppercase condition key', () => {
+  it("emits per-agent condition blocker with uppercase condition key including C7'", () => {
     const { t01, t02 } = cleanFixture();
     t01.agents.find((a) => a.name === 'Div2.MasterPlanner').testEnvironment.http_status = 500;
+    t02.agents.find((a) => a.name === 'Div2.MasterPlanner').result_json_bos_redacted.runId = 'forged-run-id-<redacted>';
     const perAgent = evaluatePerAgentConditions(t01, t02);
     const gates = evaluateGlobalGates(t01, t02);
     const blockers = compileBlockers(perAgent, gates);
@@ -575,6 +740,7 @@ describe('compileBlockers', () => {
     const div2Blockers = blockers.filter((b) => b.agent === 'Div2.MasterPlanner');
     const codes_ = div2Blockers.map((b) => b.code);
     assert.ok(codes_.includes('M15-S03-Div2.MasterPlanner-T01_HTTP_SUCCESS'));
+    assert.ok(codes_.includes('M15-S03-Div2.MasterPlanner-T02_BOS_PROVENANCE_AGREEMENT'));
   });
 
   it('every blocker code is unique within a result', () => {
@@ -753,15 +919,34 @@ describe('evaluateGate — single failure per dimension', () => {
         },
       },
       {
-        label: 't02_bos_result_present (missing field)',
+        label: "t02_bos_provenance_agreement (missing field)",
         mutate: (t02) => {
           t02.agents[0].result_json_bos_fields_present = ['runId', 'division', 'role', 'status'];
+          delete t02.agents[0].result_json_bos_redacted.schemaVersion;
         },
       },
       {
-        label: 't02_bos_result_present (leak flag)',
+        label: "t02_bos_provenance_agreement (leak flag)",
         mutate: (t02) => {
           t02.agents[0].leak_flags.credential_assignment_detected = true;
+        },
+      },
+      {
+        label: "t02_bos_provenance_agreement (runId disagreement)",
+        mutate: (t02) => {
+          t02.agents[0].result_json_bos_redacted.runId = 'forged-run-id-<redacted>';
+        },
+      },
+      {
+        label: "t02_bos_provenance_agreement (role disagreement)",
+        mutate: (t02) => {
+          t02.agents[0].result_json_bos_redacted.role = 'forged-role';
+        },
+      },
+      {
+        label: "t02_bos_provenance_agreement (provenance missing)",
+        mutate: (t02) => {
+          delete t02.agents[0].bos_provenance;
         },
       },
     ];
@@ -879,8 +1064,9 @@ describe('blocker code namespace sanity', () => {
     assert.equal(BLOCKER_CODES.PER_AGENT_NAME_MISSING_T02('Div7.MissionControl'), 'M15-S03-Div7.MissionControl-T02-MISSING');
   });
 
-  it('per-agent condition codes use M15-S03-{NAME}-{CONDITION_UPPER} shape', () => {
+  it("per-agent condition codes use M15-S03-{NAME}-{CONDITION_UPPER} shape including C7'", () => {
     assert.equal(BLOCKER_CODES.PER_AGENT_CONDITION('Div1.HCO', 't01_http_success'), 'M15-S03-Div1.HCO-T01_HTTP_SUCCESS');
+    assert.equal(BLOCKER_CODES.PER_AGENT_CONDITION('Div7.MissionControl', 't02_bos_provenance_agreement'), 'M15-S03-Div7.MissionControl-T02_BOS_PROVENANCE_AGREEMENT');
   });
 
   it('gate codes are stable constants', () => {

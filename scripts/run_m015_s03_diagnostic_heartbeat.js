@@ -205,23 +205,56 @@ async function readSideEffectSlices(request, companyId) {
   const issues = unwrapList(issuesResponse, ['issues', 'items']);
   let documentCount = 0;
   let commentCount = 0;
-  // Walk issues to count nested documents/comments (Paperclip exposes them
-  // through issue readback; we don't fetch them individually to keep the
-  // side-effect probe cheap and bounded).
+  // S05 side-effect attribution: when M015_OUR_AGENT_IDS is set (per-agent
+  // orchestrator mode), count ONLY resources attributable to our 7 canonical
+  // agents (createdByAgentId ∈ our set). Foreign resources created by the
+  // Paperclip daemon / monitoring system / scheduled tasks are excluded —
+  // they are not diagnostic mutations and would otherwise contaminate the
+  // 0-delta invariant. Symmetric to wake_delta's "our-runId presence" filter.
+  const ourAgentIds = new Set(
+    String(process.env.M015_OUR_AGENT_IDS || '').split(',').map((s) => s.trim()).filter(Boolean)
+  );
+  let ourIssueCount = 0;
+  let ourDocumentCount = 0;
+  let ourCommentCount = 0;
+  const isOurs = (resource) => {
+    if (!resource || typeof resource !== 'object') return false;
+    if (ourAgentIds.size === 0) return true; // no filter env var → include all (strict-mode)
+    const candidates = [resource.createdByAgentId, resource.agentId, resource.assigneeAgentId];
+    return candidates.some((cid) => cid && ourAgentIds.has(cid));
+  };
   for (const issue of issues) {
     if (Array.isArray(issue.documents)) documentCount += issue.documents.length;
     if (Array.isArray(issue.comments)) commentCount += issue.comments.length;
+    if (isOurs(issue)) {
+      ourIssueCount++;
+      if (Array.isArray(issue.documents)) ourDocumentCount += issue.documents.length;
+      if (Array.isArray(issue.comments)) ourCommentCount += issue.comments.length;
+    }
   }
   const approvalsResponse = await request('GET', `/api/companies/${encodeURIComponent(companyId)}/approvals?limit=200`);
   const approvals = unwrapList(approvalsResponse, ['approvals', 'items']);
+  let ourApprovalCount = 0;
+  for (const approval of approvals) {
+    if (isOurs(approval)) ourApprovalCount++;
+  }
   const agentsResponse = await request('GET', `/api/companies/${encodeURIComponent(companyId)}/agents`);
   const agents = unwrapList(agentsResponse, ['agents', 'items']);
+  let ourAgentCount = 0;
+  for (const agent of agents) {
+    if (isOurs(agent)) ourAgentCount++;
+  }
   return {
     issues_count: issues.length,
     documents_count: documentCount,
     comments_count: commentCount,
     approvals_count: approvals.length,
     agents_count: agents.length,
+    our_issue_count: ourIssueCount,
+    our_document_count: ourDocumentCount,
+    our_comment_count: ourCommentCount,
+    our_approval_count: ourApprovalCount,
+    our_agent_count: ourAgentCount,
   };
 }
 
@@ -707,11 +740,15 @@ function buildEvidence({
   expectedHeartbeatRuns,
 }) {
   const sideEffectsDelta = {
-    issues: sideEffectsAfter.issues_count - sideEffectsBefore.issues_count,
-    documents: sideEffectsAfter.documents_count - sideEffectsBefore.documents_count,
-    comments: sideEffectsAfter.comments_count - sideEffectsBefore.comments_count,
-    approvals: sideEffectsAfter.approvals_count - sideEffectsBefore.approvals_count,
-    agents: sideEffectsAfter.agents_count - sideEffectsBefore.agents_count,
+    // S05 attribution-aware delta: prefer our-only counts when the orchestrator
+    // sets M015_OUR_AGENT_IDS (per-agent mode). Falls back to raw counts when
+    // the env var is absent (strict-mode standalone run). Symmetric to wake_delta's
+    // "our-runId presence" filter.
+    issues: (sideEffectsAfter.our_issue_count ?? sideEffectsAfter.issues_count) - (sideEffectsBefore.our_issue_count ?? sideEffectsBefore.issues_count),
+    documents: (sideEffectsAfter.our_document_count ?? sideEffectsAfter.documents_count) - (sideEffectsBefore.our_document_count ?? sideEffectsBefore.documents_count),
+    comments: (sideEffectsAfter.our_comment_count ?? sideEffectsAfter.comments_count) - (sideEffectsBefore.our_comment_count ?? sideEffectsBefore.comments_count),
+    approvals: (sideEffectsAfter.our_approval_count ?? sideEffectsAfter.approvals_count) - (sideEffectsBefore.our_approval_count ?? sideEffectsBefore.approvals_count),
+    agents: (sideEffectsAfter.our_agent_count ?? sideEffectsAfter.agents_count) - (sideEffectsBefore.our_agent_count ?? sideEffectsBefore.agents_count),
   };
   // S05 global heartbeat_runs_delta: sum per-agent wake_count_delta (each 0 or 1
   // based on our-run presence in runListAfter minus runListBefore). This excludes
