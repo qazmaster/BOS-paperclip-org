@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T01",
-  "generated": "2026-07-14T18:49:31.678Z",
+  "generated": "2026-07-15T09:29:12.573Z",
   "status": "BLOCKED_ON_S03_FAIL_CLOSED",
   "admission_model": "4 admission gates (fresh_s03_7of7_invokability, no_do_not_promote_s04, no_drift, no_leaks)",
   "upstream_artifacts": {
@@ -26,9 +26,9 @@
     "diagnostics": {
       "fresh_s03_7of7_invokability": {
         "t03_status": "FAIL_CLOSED",
-        "t03_per_agent_passed": 0,
+        "t03_per_agent_passed": 7,
         "t03_per_agent_total": 7,
-        "t03_per_agent_failed": 7
+        "t03_per_agent_failed": 0
       },
       "no_do_not_promote_s04": {
         "t19_do_not_promote_s04": true,
@@ -57,7 +57,7 @@
       "code": "M15-S04-ADMISSION-GATE-FRESH-S03-7OF7",
       "severity": "blocking",
       "agent": null,
-      "reason": "fresh S03 7/7 invokability not proven: T03.status=FAIL_CLOSED T03.per_agent_passed=0/7 (failed=7)"
+      "reason": "fresh S03 7/7 invokability not proven: T03.status=FAIL_CLOSED T03.per_agent_passed=7/7 (failed=0)"
     },
     {
       "code": "M15-S04-ADMISSION-GATE-DO-NOT-PROMOTE-S04",
