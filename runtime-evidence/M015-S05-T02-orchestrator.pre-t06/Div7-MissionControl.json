@@ -3,8 +3,8 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-15T10:03:25.861Z",
-  "status": "PASS",
+  "generated": "2026-07-14T22:54:48.178Z",
+  "status": "FAIL_CLOSED",
   "company": {
     "issue_prefix": "AIP",
     "name": "aipay.kz"
@@ -43,49 +43,49 @@
     "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "24": 1
+    "23": 1
   },
   "side_effects": {
     "before": {
-      "issues_count": 29,
+      "issues_count": 27,
       "documents_count": 0,
       "comments_count": 0,
       "approvals_count": 0,
       "agents_count": 8,
-      "our_issue_count": 15,
+      "our_issue_count": 13,
       "our_document_count": 0,
       "our_comment_count": 0,
       "our_approval_count": 0,
       "our_agent_count": 0
     },
     "after": {
-      "issues_count": 29,
+      "issues_count": 28,
       "documents_count": 0,
       "comments_count": 0,
       "approvals_count": 0,
       "agents_count": 8,
-      "our_issue_count": 15,
+      "our_issue_count": 14,
       "our_document_count": 0,
       "our_comment_count": 0,
       "our_approval_count": 0,
       "our_agent_count": 0
     },
     "deltas": {
-      "issues": 0,
+      "issues": 1,
       "documents": 0,
       "comments": 0,
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 9,
-    "heartbeat_runs_after_total": 11,
+    "heartbeat_runs_before_total": 28,
+    "heartbeat_runs_after_total": 29,
     "heartbeat_runs_delta": 1
   },
   "agents": [
     {
-      "name": "Div6.External",
-      "agent_id_prefix": "35209510-<redacted>",
-      "agent_role": "security",
+      "name": "Div7.MissionControl",
+      "agent_id_prefix": "478a498b-<redacted>",
+      "agent_role": "researcher",
       "adapter": {
         "adapter_type": null,
         "adapter_config_redacted": {
@@ -93,7 +93,7 @@
           "quiet": true,
           "graceSec": 5,
           "provider": "minimax",
-          "toolsets": "terminal,file,web",
+          "toolsets": "terminal,file",
           "timeoutSec": 600,
           "persistSession": true,
           "instructionsFilePath": "<redacted-id>",
@@ -104,7 +104,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "46951e75-<redacted>",
+        "run_id_redacted": "ef723a34-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -158,36 +158,36 @@
         ]
       },
       "poll": {
-        "attempts": 24,
+        "attempts": 23,
         "budget": 180,
         "terminal_observed": true,
         "terminal_status": "succeeded",
-        "attempts_to_terminal": 24,
+        "attempts_to_terminal": 23,
         "history_tail": [
+          {
+            "attempt": 21,
+            "observed_status": "running"
+          },
           {
             "attempt": 22,
             "observed_status": "running"
           },
           {
             "attempt": 23,
-            "observed_status": "running"
-          },
-          {
-            "attempt": 24,
             "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 9,
-        "after": 11
+        "before": 28,
+        "after": 29
       },
       "result_json_bos_redacted": {
         "schemaVersion": "bos-light-v1",
-        "runId": "46951e75-<redacted>",
-        "division": "Div6.External",
-        "role": "security",
+        "runId": "ef723a34-<redacted>",
+        "division": "Div7.MissionControl",
+        "role": "researcher",
         "status": "succeeded"
       },
       "result_json_bos_required_fields": [
@@ -237,11 +237,18 @@
       "blocker_codes": []
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "code": "M15-S03-SIDE-EFFECT-issues-DELTA-1",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "side-effect issues delta=1 (expected 0)"
+    }
+  ],
   "redaction": {
     "full_ids": false,
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 150490
+  "elapsed_ms": 145088
 }

@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T02",
-  "generated": "2026-07-14T22:43:10.704Z",
+  "generated": "2026-07-15T09:53:36.058Z",
   "status": "PASS",
   "company": {
     "issue_prefix": "AIP",
@@ -43,28 +43,28 @@
     "succeeded": 1
   },
   "poll_attempts_distribution": {
-    "23": 1
+    "11": 1
   },
   "side_effects": {
     "before": {
-      "issues_count": 26,
+      "issues_count": 28,
       "documents_count": 0,
       "comments_count": 0,
       "approvals_count": 0,
       "agents_count": 8,
-      "our_issue_count": 12,
+      "our_issue_count": 14,
       "our_document_count": 0,
       "our_comment_count": 0,
       "our_approval_count": 0,
       "our_agent_count": 0
     },
     "after": {
-      "issues_count": 26,
+      "issues_count": 28,
       "documents_count": 0,
       "comments_count": 0,
       "approvals_count": 0,
       "agents_count": 8,
-      "our_issue_count": 12,
+      "our_issue_count": 14,
       "our_document_count": 0,
       "our_comment_count": 0,
       "our_approval_count": 0,
@@ -77,8 +77,8 @@
       "approvals": 0,
       "agents": 0
     },
-    "heartbeat_runs_before_total": 8,
-    "heartbeat_runs_after_total": 10,
+    "heartbeat_runs_before_total": 11,
+    "heartbeat_runs_after_total": 12,
     "heartbeat_runs_delta": 1
   },
   "agents": [
@@ -104,7 +104,7 @@
       },
       "invoke": {
         "http_status": 200,
-        "run_id_redacted": "5b2528ae-<redacted>",
+        "run_id_redacted": "6c9ed7a7-<redacted>",
         "raw_response_shape": [
           "agentId",
           "companyId",
@@ -158,34 +158,34 @@
         ]
       },
       "poll": {
-        "attempts": 23,
+        "attempts": 11,
         "budget": 180,
         "terminal_observed": true,
         "terminal_status": "succeeded",
-        "attempts_to_terminal": 23,
+        "attempts_to_terminal": 11,
         "history_tail": [
           {
-            "attempt": 21,
+            "attempt": 9,
             "observed_status": "running"
           },
           {
-            "attempt": 22,
+            "attempt": 10,
             "observed_status": "running"
           },
           {
-            "attempt": 23,
+            "attempt": 11,
             "observed_status": "succeeded"
           }
         ]
       },
       "wake_count_delta": 1,
       "wake_counts": {
-        "before": 8,
-        "after": 10
+        "before": 11,
+        "after": 12
       },
       "result_json_bos_redacted": {
         "schemaVersion": "bos-light-v1",
-        "runId": "5b2528ae-<redacted>",
+        "runId": "6c9ed7a7-<redacted>",
         "division": "Div2.MasterPlanner",
         "role": "general",
         "status": "succeeded"
@@ -243,5 +243,5 @@
     "credentials": false,
     "xiaomi_endpoint_reuse": false
   },
-  "elapsed_ms": 143999
+  "elapsed_ms": 70784
 }

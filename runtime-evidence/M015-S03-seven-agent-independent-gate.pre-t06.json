@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T03",
-  "generated": "2026-07-15T10:21:22.890Z",
+  "generated": "2026-07-15T09:31:50.933Z",
   "status": "FAIL_CLOSED",
   "gate_model": "49 per-agent conditions (7 agents x 7 checks including C7' provenance-backed BOS agreement) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)",
   "upstream_artifacts": {
@@ -39,7 +39,7 @@
         "t02_leak_paths": []
       },
       "side_effects": {
-        "issues_delta": 1,
+        "issues_delta": 2,
         "documents_delta": 0,
         "comments_delta": 0,
         "approvals_delta": 0,
@@ -87,10 +87,10 @@
       "t01_agent_role_observed": "general",
       "t02_terminal_status": "succeeded",
       "t02_wake_count_delta": 1,
-      "t02_bos_run_id_redacted": "43a8b7d8-<redacted>",
+      "t02_bos_run_id_redacted": "31dbc33a-<redacted>",
       "t02_bos_observed": {
         "schemaVersion": "bos-light-v1",
-        "runId": "43a8b7d8-<redacted>",
+        "runId": "31dbc33a-<redacted>",
         "division": "Div1.HCO",
         "role": "general",
         "status": "succeeded"
@@ -129,10 +129,10 @@
       "t01_agent_role_observed": "general",
       "t02_terminal_status": "succeeded",
       "t02_wake_count_delta": 1,
-      "t02_bos_run_id_redacted": "6c9ed7a7-<redacted>",
+      "t02_bos_run_id_redacted": "5b2528ae-<redacted>",
       "t02_bos_observed": {
         "schemaVersion": "bos-light-v1",
-        "runId": "6c9ed7a7-<redacted>",
+        "runId": "5b2528ae-<redacted>",
         "division": "Div2.MasterPlanner",
         "role": "general",
         "status": "succeeded"
@@ -171,10 +171,10 @@
       "t01_agent_role_observed": "general",
       "t02_terminal_status": "succeeded",
       "t02_wake_count_delta": 1,
-      "t02_bos_run_id_redacted": "b4c1fd7e-<redacted>",
+      "t02_bos_run_id_redacted": "2a0bcf75-<redacted>",
       "t02_bos_observed": {
         "schemaVersion": "bos-light-v1",
-        "runId": "b4c1fd7e-<redacted>",
+        "runId": "2a0bcf75-<redacted>",
         "division": "Div3.Treasury",
         "role": "general",
         "status": "succeeded"
@@ -213,10 +213,10 @@
       "t01_agent_role_observed": "general",
       "t02_terminal_status": "succeeded",
       "t02_wake_count_delta": 1,
-      "t02_bos_run_id_redacted": "29169791-<redacted>",
+      "t02_bos_run_id_redacted": "dd344052-<redacted>",
       "t02_bos_observed": {
         "schemaVersion": "bos-light-v1",
-        "runId": "29169791-<redacted>",
+        "runId": "dd344052-<redacted>",
         "division": "Div4.Production",
         "role": "general",
         "status": "succeeded"
@@ -255,10 +255,10 @@
       "t01_agent_role_observed": "general",
       "t02_terminal_status": "succeeded",
       "t02_wake_count_delta": 1,
-      "t02_bos_run_id_redacted": "9199eb60-<redacted>",
+      "t02_bos_run_id_redacted": "6db25655-<redacted>",
       "t02_bos_observed": {
         "schemaVersion": "bos-light-v1",
-        "runId": "9199eb60-<redacted>",
+        "runId": "6db25655-<redacted>",
         "division": "Div5.QualificationsLibraryLearning",
         "role": "general",
         "status": "succeeded"
@@ -297,10 +297,10 @@
       "t01_agent_role_observed": "security",
       "t02_terminal_status": "succeeded",
       "t02_wake_count_delta": 1,
-      "t02_bos_run_id_redacted": "46951e75-<redacted>",
+      "t02_bos_run_id_redacted": "d0313e1d-<redacted>",
       "t02_bos_observed": {
         "schemaVersion": "bos-light-v1",
-        "runId": "46951e75-<redacted>",
+        "runId": "d0313e1d-<redacted>",
         "division": "Div6.External",
         "role": "security",
         "status": "succeeded"
@@ -339,10 +339,10 @@
       "t01_agent_role_observed": "researcher",
       "t02_terminal_status": "succeeded",
       "t02_wake_count_delta": 1,
-      "t02_bos_run_id_redacted": "885e3c47-<redacted>",
+      "t02_bos_run_id_redacted": "ef723a34-<redacted>",
       "t02_bos_observed": {
         "schemaVersion": "bos-light-v1",
-        "runId": "885e3c47-<redacted>",
+        "runId": "ef723a34-<redacted>",
         "division": "Div7.MissionControl",
         "role": "researcher",
         "status": "succeeded"
@@ -370,7 +370,7 @@
       "code": "M15-S03-GATE-SIDE-EFFECTS",
       "severity": "blocking",
       "agent": null,
-      "reason": "side-effect deltas off-spec: {\"issues_delta\":1,\"documents_delta\":0,\"comments_delta\":0,\"approvals_delta\":0,\"agents_delta\":0,\"heartbeat_runs_delta\":7}"
+      "reason": "side-effect deltas off-spec: {\"issues_delta\":2,\"documents_delta\":0,\"comments_delta\":0,\"approvals_delta\":0,\"agents_delta\":0,\"heartbeat_runs_delta\":7}"
     }
   ],
   "redaction": {
