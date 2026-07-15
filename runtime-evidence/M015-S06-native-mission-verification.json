@@ -1,0 +1,266 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s06-native-mission-verification.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S06",
+  "task": "T03",
+  "generated": "2026-07-15T16:32:13.388Z",
+  "status": "MISSION_FAIL_CLOSED_LEDGER_VIOLATION",
+  "safe_block_declared": true,
+  "safe_block_evidence": {
+    "preflight_verdict": "BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE",
+    "preflight_business_mutations_recorded": 0,
+    "preflight_do_not_promote_s04": false,
+    "harness_root_issue_create": 0,
+    "mission_context_null": false,
+    "intake_summary_null": false,
+    "root_issue_null": true,
+    "mission_run_null": true,
+    "po_intake_deterministic_only": false
+  },
+  "gate_labels": {
+    "readback_integrity_pass": "VG1 READBACK_INTEGRITY: preflight + admission + mission-run + po-intake evidence are parseable JSON objects with required top-level keys and matching $schema/version",
+    "preflight_correlation_pass": "VG2 PREFLIGHT_CORRELATION: preflight verdict correlates with mission-run admission_summary.status; blocked preflight ⇔ mission-run admission blocked; do_not_promote flags propagate consistently",
+    "zero_business_mutation_ledger_pass": "VG3 ZERO_BUSINESS_MUTATION_LEDGER: under blocked preflight, harness_writes.root_issue_create === 0 and mission_context/intake_summary/root_issue/mission_run are null in raw evidence (independent of harness summary)",
+    "protocol_ledger_correlation_pass": "VG4 PROTOCOL_LEDGER_CORRELATION: protocol.protocol.allowlisted_side_effects and idempotency contract are present; under blocked preflight all 10 protocol gates are false and protocol.blockers contains the preflight-blocker carry-forward marker",
+    "autonomy_and_no_synthetic_bos_pass": "VG5 AUTONOMY_AND_NO_SYNTHETIC_BOS: redaction layers scrub xiaomi/mimo endpoint reuse and synthetic-bos light tags; no such string appears in any nested value of the raw S06 evidence (preflight, mission-run, po-intake, protocol)",
+    "safe_block_not_promoted_pass": "VG6 SAFE_BLOCK_NOT_PROMOTED: when preflight verdict is blocked, the validation verdict is NOT MISSION_PASS; safe-block evidence is recorded as MISSION_FAIL_CLOSED_PREFLIGHT_BLOCKED with safe_block_declared=true and zero business mutations",
+    "orchestrator_provenance_pass": "VG7 ORCHESTRATOR_PROVENANCE: S05 T02 Option-A orchestrator proves 7/7 canonical agent invokability via per-agent subprocess isolation with M015_OUR_AGENT_IDS attribution filter (does NOT promote to MISSION_PASS — only proves mission feasibility)",
+    "r026_boundary_classification_pass": "VG8 R026_BOUNDARY_CLASSIFICATION: any S06 audit-trail records (AIP-27/AIP-28) are classified as R026 boundary diagnostics with business_mutation=false; not mixed with mission business mutations; not counted in business_mutations_recorded"
+  },
+  "gates": {
+    "readback_integrity_pass": false,
+    "preflight_correlation_pass": true,
+    "zero_business_mutation_ledger_pass": false,
+    "protocol_ledger_correlation_pass": false,
+    "autonomy_and_no_synthetic_bos_pass": false,
+    "orchestrator_provenance_pass": true,
+    "r026_boundary_classification_pass": true,
+    "safe_block_not_promoted_pass": true
+  },
+  "diagnostics": {
+    "readback_integrity": {
+      "schema_prefix_ok": {
+        "preflight": true,
+        "admission": true,
+        "mission_run": true,
+        "po_intake": true
+      },
+      "top_level_keys_ok": {
+        "preflight": true,
+        "admission": true,
+        "mission_run": true,
+        "po_intake": false
+      },
+      "required_keys_missing": [
+        "po_intake:generated",
+        "po_intake:desired_assignee"
+      ]
+    },
+    "preflight_correlation": {
+      "preflight_verdict": "BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE",
+      "preflight_blocked": true,
+      "mission_run_admission_status": "BLOCKED_ON_S03_FAIL_CLOSED",
+      "mission_run_blocked": true,
+      "do_not_promote_s04_consistent": true,
+      "business_mutations_propagated": true,
+      "all_consistent": true
+    },
+    "zero_business_mutation_ledger": {
+      "preflight_blocked": true,
+      "harness_root_issue_create": 0,
+      "mission_context_null": false,
+      "intake_summary_null": false,
+      "root_issue_null": true,
+      "mission_run_null": true,
+      "preflight_business_mutations_recorded": 0,
+      "mission_run_business_mutations_recorded": 0,
+      "po_intake_deterministic_only": false,
+      "raw_mutation_count": 2,
+      "raw_mutations": [
+        {
+          "kind": "intake_summary_object_present",
+          "count": 1
+        },
+        {
+          "kind": "mission_context_object_present",
+          "count": 1
+        }
+      ],
+      "blocked_required_fields_missing": [],
+      "po_intake_extra_keys": [
+        "kind",
+        "assignee",
+        "mission_topology",
+        "allowlisted_side_effects",
+        "observation_budget",
+        "derivation"
+      ]
+    },
+    "protocol_ledger_correlation": {
+      "protocol_allowlist_present": true,
+      "protocol_idempotency_present": true,
+      "protocol_gate_labels_count": 8,
+      "protocol_gates_all_false_under_block": true,
+      "protocol_blockers_bearer_present": true,
+      "protocol_status": null,
+      "bearer_codes_observed": [
+        "M15-S06-PREFLIGHT-LIVE-RUNTIME-UNREACHABLE"
+      ]
+    },
+    "autonomy_and_no_synthetic_bos": {
+      "preflight_safe_block_declared": true,
+      "mission_run_safe_block_declared": false,
+      "synthetic_bos_hits": [],
+      "xiaomi_hits": [
+        {
+          "path": "preflight.s04_admission_correlation.admitted_gate_labels.no_drift_pass",
+          "tail": "AG3 NO-DRIFT: T01+T02 rosters contain exactly CANONICAL_DIVISION_NAMES, no T01 x…"
+        }
+      ]
+    },
+    "orchestrator_provenance": {
+      "orchestrator_present": true,
+      "canonical_aggregate_status": "PASS",
+      "canonical_aggregate_pass_count": 7,
+      "expected_agent_count": 7,
+      "observed_pass_count": 7,
+      "seven_of_seven_invokability_pass": true,
+      "option_a_pattern": "per-agent-isolated-sequential-subprocess",
+      "option_a_pattern_ok": true,
+      "attribution_filter_present": true,
+      "attribution_filter_ok": true,
+      "our_agent_ids_filter_match": true,
+      "per_agent_dir_present": true,
+      "aggregate_path": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+      "diagnostics_detail": []
+    },
+    "r026_boundary_classification": {
+      "audit_trail_records_present": true,
+      "audit_trail_record_count": 2,
+      "r026_classifications": [
+        {
+          "key": "aip_27",
+          "kind": "audit_trail_record",
+          "classification": "R026-boundary-diagnostic",
+          "business_mutation": false,
+          "attribution_filter": "M015_OUR_AGENT_IDS",
+          "created_by_agent": "Div3.Treasury",
+          "valid": true
+        },
+        {
+          "key": "aip_28",
+          "kind": "audit_trail_record",
+          "classification": "R026-boundary-diagnostic",
+          "business_mutation": false,
+          "attribution_filter": "M015_OUR_AGENT_IDS",
+          "created_by_agent": "Div7.MissionControl",
+          "valid": true
+        }
+      ],
+      "misclassifications": [],
+      "business_mutation_mix": false,
+      "audit_trail_records": [
+        {
+          "key": "aip_27",
+          "record": {
+            "observed_via": "S05-T02-option-A-orchestrator",
+            "created_by_agent": "Div3.Treasury",
+            "kind": "audit_trail_record",
+            "classification": "R026-boundary-diagnostic",
+            "attribution_filter": "M015_OUR_AGENT_IDS",
+            "business_mutation": false
+          }
+        },
+        {
+          "key": "aip_28",
+          "record": {
+            "observed_via": "S05-T02-option-A-orchestrator",
+            "created_by_agent": "Div7.MissionControl",
+            "kind": "audit_trail_record",
+            "classification": "R026-boundary-diagnostic",
+            "attribution_filter": "M015_OUR_AGENT_IDS",
+            "business_mutation": false
+          }
+        }
+      ]
+    },
+    "safe_block_not_promoted": {
+      "preflight_blocked": true,
+      "preflight_verdict": "BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE",
+      "provisional_status": "MISSION_FAIL_CLOSED_LEDGER_VIOLATION",
+      "promoted_to_mission_pass": false,
+      "safe_block_declared": true,
+      "accept_safe_block": false
+    }
+  },
+  "blockers": [
+    {
+      "code": "M15-S06-VALIDATION-VG1-READBACK-INTEGRITY",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "readback integrity violated: po_intake:generated, po_intake:desired_assignee"
+    },
+    {
+      "code": "M15-S06-VALIDATION-VG3-LEDGER-VIOLATION",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "blocked preflight but raw mutations present: [{\"kind\":\"intake_summary_object_present\",\"count\":1},{\"kind\":\"mission_context_object_present\",\"count\":1}]"
+    },
+    {
+      "code": "M15-S06-VALIDATION-VG4-PROTOCOL-LEDGER-CORRELATION",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "protocol ledger correlation failed (gate_labels_count=8)"
+    },
+    {
+      "code": "M15-S06-VALIDATION-VG5-XIAOMI-REUSE-DETECTED",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "endpoint-reuse marker found in raw evidence: preflight.s04_admission_correlation.admitted_gate_labels.no_drift_pass"
+    },
+    {
+      "code": "M15-S06-PREFLIGHT-LIVE-RUNTIME-UNREACHABLE",
+      "severity": "blocking",
+      "gate": "SG1",
+      "reason": "preflight blocked; upstream admission+preflight fail closed; mission blocked per S06 must-have; protocol gates all false"
+    },
+    {
+      "code": "M15-S06-PROTOCOL-MG9-SECRET-HYGIENE-REDACTED",
+      "severity": "advisory",
+      "gate": "MG9",
+      "reason": "MG9 secret-hygiene gate cannot be evaluated under blocked preflight; reported as <redacted> for transparency"
+    }
+  ],
+  "paths": {
+    "preflight_evidence": "runtime-evidence/M015-S06-preflight.json",
+    "admission_evidence": "runtime-evidence/M015-S04-admission.json",
+    "mission_run_evidence": "runtime-evidence/M015-S06-native-mission-run.json",
+    "po_intake_evidence": "runtime-evidence/M015-S06-po-intake.json",
+    "output_evidence": "runtime-evidence/M015-S06-native-mission-verification.json"
+  },
+  "options": {
+    "accept_safe_block": false
+  },
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": true,
+    "provider_secret_names": "<redacted>",
+    "synthetic_bos": true
+  },
+  "s06_provenance": {
+    "task": "T03",
+    "verification_gates": [
+      "readback_integrity_pass",
+      "preflight_correlation_pass",
+      "zero_business_mutation_ledger_pass",
+      "protocol_ledger_correlation_pass",
+      "autonomy_and_no_synthetic_bos_pass",
+      "safe_block_not_promoted_pass",
+      "orchestrator_provenance_pass",
+      "r026_boundary_classification_pass"
+    ],
+    "canonical_verdict": "M015_S06_VALIDATION",
+    "no_unsupported_capability_promotion": true
+  }
+}
