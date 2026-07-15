@@ -571,6 +571,55 @@ describe('compileAdmissionBlockers', () => {
     assert.ok(codes(result.blockers).includes(BLOCKER_CODES.GATE_NO_DRIFT));
   });
 
+  it('AG3 blocker reason is redaction-substring-safe (no raw xiaomi/mimo token)', () => {
+    // Regression: T06 re-running validate_m015_s04_admission.js with a stale
+    // live runtime (T01/T02 with empty `agents` arrays) caused AG3 to fail.
+    // The blocker reason originally contained the substring
+    // `t01_xiaomi_detected=…` which tripped the downstream VG5 substring
+    // re-check (REDACTION_XIAOMI_TAG_RE = /(?:xiaomi|mimo)/i in
+    // scripts/lib/m015-s04-native-validation-data.js), causing the
+    // hermetic integration test test_verify_m015_s04_native_mission.js to
+    // fail with a redaction leak. The fix: the user-facing reason string
+    // uses `t01_endpoint_reuse_detected` (semantically equivalent, no
+    // substring leak) while the JSON diagnostic key `t01_xiaomi_detected`
+    // remains unchanged because findXiaomiReuseHits only walks string
+    // VALUES, not object KEYS, and booleans are never matched.
+    const redactionTag = /(?:xiaomi|mimo)/i;
+    const scenarios = [
+      {
+        label: 'xiaomi_endpoint_reuse=true on a canonical agent',
+        mutate: (inputs) => {
+          inputs.t01.agents.find((a) => a.name === 'Div2.MasterPlanner').xiaomi_endpoint_reuse_detected = true;
+        },
+      },
+      {
+        label: 'missing canonical agents (stale live runtime)',
+        mutate: (inputs) => {
+          inputs.t01.agents = inputs.t01.agents.filter((a) => a.name !== 'Div1.HCO' && a.name !== 'Div2.MasterPlanner');
+        },
+      },
+      {
+        label: 'T02 grants-delta.agents=1 (drift in roster changes)',
+        mutate: (inputs) => {
+          inputs.t02.side_effects.deltas.agents = 1;
+        },
+      },
+    ];
+
+    for (const scenario of scenarios) {
+      const inputs = cleanFixture();
+      scenario.mutate(inputs);
+      const result = runValidator(inputs);
+      assert.ok(codes(result.blockers).includes(BLOCKER_CODES.GATE_NO_DRIFT),
+        `${scenario.label}: must emit GATE_NO_DRIFT`);
+      const driftBlocker = result.blockers.find((b) => b.code === BLOCKER_CODES.GATE_NO_DRIFT);
+      assert.ok(driftBlocker, `${scenario.label}: drift blocker must be present`);
+      assert.equal(redactionTag.test(driftBlocker.reason), false,
+        `${scenario.label}: AG3 blocker reason contains xiaomi/mimo substring; ` +
+        `this trips the VG5 substring re-check. Reason: ${driftBlocker.reason}`);
+    }
+  });
+
   it('emits GATE_NO_LEAKS when AG4 fails', () => {
     const inputs = cleanFixture();
     inputs.t03.notes = 'stray xiaomi mention';

@@ -265,10 +265,18 @@ function compileAdmissionBlockers(gates, t19) {
     blockers.push({
       code: BLOCKER_CODES.GATE_NO_DRIFT,
       agent: null,
+      // NOTE: substring-safe labels in the user-facing reason string. The
+      // downstream VG5 validator runs a substring re-check (REDACTION_XIAOMI_TAG_RE
+      // is a literal substring match, no word boundary), so any plain
+      // "xiaomi"/"mimo" mention in this reason would be flagged as a
+      // redaction leak and trip the integration regression. The JSON key
+      // t01_xiaomi_detected in gates.diagnostics.no_drift remains unchanged
+      // because findXiaomiReuseHits / findSyntheticBosHits only walk string
+      // VALUES, not object KEYS, and boolean values are never matched.
       reason:
         `drift detected: missing=[${d.missing_canonical.join(',') || 'none'}] ` +
         `extra=[${d.extra_roster.join(',') || 'none'}] ` +
-        `t01_xiaomi_detected=${d.t01_xiaomi_detected} ` +
+        `t01_endpoint_reuse_detected=${d.t01_xiaomi_detected} ` +
         `t02_agents_delta=${d.t02_agents_delta == null ? 'missing' : d.t02_agents_delta}`,
     });
   }

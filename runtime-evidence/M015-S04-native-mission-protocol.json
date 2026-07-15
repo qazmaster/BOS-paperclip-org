@@ -3,14 +3,17 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T02",
-  "generated": "2026-07-15T10:09:25.303Z",
-  "status": "MISSION_PASS",
-  "safe_block_declared": false,
+  "generated": "2026-07-15T11:25:26.146Z",
+  "status": "MISSION_BLOCKED_SAFE",
+  "safe_block_declared": true,
   "admission_summary": {
-    "status": "ADMITTED",
-    "admitted": true,
-    "blocked": false,
-    "blocker_codes": []
+    "status": "BLOCKED_ON_S03_FAIL_CLOSED",
+    "admitted": false,
+    "blocked": true,
+    "blocker_codes": [
+      "M15-S04-ADMISSION-GATE-FRESH-S03-7OF7",
+      "M15-S04-ADMISSION-GATE-DO-NOT-PROMOTE-S04"
+    ]
   },
   "protocol": {
     "topology_required_root_assignee": "Div7.MissionControl",
@@ -96,29 +99,36 @@
     "no_synthetic_bos_fallback_pass": "MG10 NO_SYNTHETIC_BOS_FALLBACK: zero \"synthetic bos light\" tags in any readback value"
   },
   "gates": {
-    "mission_topology_pass": true,
-    "authorship_and_authority_pass": true,
-    "agent_authored_outputs_pass": true,
-    "review_and_disposition_path_pass": true,
-    "allowlisted_side_effects_pass": true,
-    "terminal_run_and_disposition_states_pass": true,
-    "time_budgets_pass": true,
-    "idempotency_and_recovery_lock_pass": true,
+    "mission_topology_pass": false,
+    "authorship_and_authority_pass": false,
+    "agent_authored_outputs_pass": false,
+    "review_and_disposition_path_pass": false,
+    "allowlisted_side_effects_pass": false,
+    "terminal_run_and_disposition_states_pass": false,
+    "time_budgets_pass": false,
+    "idempotency_and_recovery_lock_pass": false,
     "secret_hygiene_pass": "<redacted>",
-    "no_synthetic_bos_fallback_pass": true
+    "no_synthetic_bos_fallback_pass": false
   },
   "diagnostics": null,
-  "blockers": [],
+  "blockers": [
+    {
+      "code": "M15-S04-PROTOCOL-ADMISSION-BLOCKER-CARRY-FORWARD",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "S04 admission is blocked; mission run evidence is present but cannot be promoted to MISSION_PASS"
+    }
+  ],
   "redaction": {
     "full_ids": false,
     "credentials": false,
-    "xiaomi_endpoint_reuse": true,
+    "xiaomi_endpoint_reuse": false,
     "provider_secret_names": "<redacted>",
-    "synthetic_bos": true
+    "synthetic_bos": false
   },
   "paths": {
-    "admission_evidence": "../../../../../tmp/m15s04-cli-t06-lw1WNt/admission.json",
-    "mission_run_evidence": "../../../../../tmp/m15s04-cli-t06-lw1WNt/run.json",
-    "output_evidence": "../../../../../tmp/m15s04-cli-t06-lw1WNt/protocol.json"
+    "admission_evidence": "runtime-evidence/M015-S04-admission.json",
+    "mission_run_evidence": "runtime-evidence/M015-S04-native-mission-run.json",
+    "output_evidence": "runtime-evidence/M015-S04-native-mission-protocol.json"
   }
 }
