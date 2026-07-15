@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T03",
-  "generated": "2026-07-15T11:17:47.612Z",
+  "generated": "2026-07-15T11:57:08.287Z",
   "status": "FAIL_CLOSED",
   "gate_model": "49 per-agent conditions (7 agents x 7 checks including C7' provenance-backed BOS agreement) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)",
   "upstream_artifacts": {
