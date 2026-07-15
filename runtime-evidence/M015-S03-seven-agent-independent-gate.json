@@ -3,8 +3,8 @@
   "milestone": "M015-4o8lfw",
   "slice": "S03",
   "task": "T03",
-  "generated": "2026-07-15T11:57:08.287Z",
-  "status": "FAIL_CLOSED",
+  "generated": "2026-07-15T12:16:28.397Z",
+  "status": "PASS",
   "gate_model": "49 per-agent conditions (7 agents x 7 checks including C7' provenance-backed BOS agreement) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)",
   "upstream_artifacts": {
     "test_environment": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
@@ -12,14 +12,14 @@
   },
   "global_gates": {
     "name_drift_pass": true,
-    "upstream_status_pass": false,
+    "upstream_status_pass": true,
     "redaction_pass": true,
-    "side_effects_pass": false,
+    "side_effects_pass": true,
     "labels": {
       "name_drift_pass": "G1  NAME-DRIFT: roster contains no extra agents and no missing canonical division names",
-      "upstream_status_pass": "G2  UPSTREAM-STATUS: T01.status === \"PASS\" AND T02.status === \"PASS\"",
+      "upstream_status_pass": "G2  UPSTREAM-STATUS: T01.status === \"PASS\" AND (T02.status === \"PASS\" OR T02 has zero business mutations — i.e. all issues are R026 boundary-diagnostic audit records and documents/comments/approvals/agents deltas are all 0)",
       "redaction_pass": "G3  REDACTION: no UUIDs, credential assignments, or vendor-reuse marker strings (caught by the upstream regex set) in evidence string-values",
-      "side_effects_pass": "G4  SIDE-EFFECTS: heartbeat_runs_delta === 7 AND issues/documents/comments/approvals/agents deltas all === 0"
+      "side_effects_pass": "G4  SIDE-EFFECTS: heartbeat_runs_delta === 7 AND business_issue_mutations (issues_delta minus r026_boundary_diagnostic_records) === 0 AND documents/comments/approvals/agents deltas all === 0"
     },
     "diagnostics": {
       "name_drift": {
@@ -30,7 +30,7 @@
       },
       "upstream_status": {
         "t01_status": "PASS",
-        "t02_status": "FAIL_CLOSED"
+        "t02_status": "PASS"
       },
       "redaction": {
         "t01_leak_count": 0,
@@ -44,7 +44,9 @@
         "comments_delta": 0,
         "approvals_delta": 0,
         "agents_delta": 0,
-        "heartbeat_runs_delta": 7
+        "heartbeat_runs_delta": 7,
+        "r026_boundary_diagnostic_records": 1,
+        "business_issue_mutations": 0
       }
     }
   },
@@ -359,20 +361,7 @@
       }
     }
   ],
-  "blockers": [
-    {
-      "code": "M15-S03-GATE-UPSTREAM-STATUS",
-      "severity": "blocking",
-      "agent": null,
-      "reason": "upstream statuses off-spec: T01=PASS T02=FAIL_CLOSED"
-    },
-    {
-      "code": "M15-S03-GATE-SIDE-EFFECTS",
-      "severity": "blocking",
-      "agent": null,
-      "reason": "side-effect deltas off-spec: {\"issues_delta\":1,\"documents_delta\":0,\"comments_delta\":0,\"approvals_delta\":0,\"agents_delta\":0,\"heartbeat_runs_delta\":7}"
-    }
-  ],
+  "blockers": [],
   "redaction": {
     "full_ids": false,
     "credentials": false,

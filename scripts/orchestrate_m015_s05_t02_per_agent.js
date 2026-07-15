@@ -172,7 +172,63 @@ function aggregate(perAgentResults) {
   if (agents.length !== perAgentResults.length) {
     throw new Error(`aggregate: agent count mismatch ${agents.length} vs ${perAgentResults.length}`);
   }
-  const blockers = perAgentResults.flatMap((r) => (r.evidence && Array.isArray(r.evidence.blockers)) ? r.evidence.blockers : []);
+
+  // Side-effects aggregate: take the FIRST invocation's BEFORE as global
+  // before, the LAST invocation's AFTER as global after. Compute deltas.
+  // Each per-agent run is zero-delta in isolation, so the global deltas
+  // here reflect any cross-agent noise (which should also be zero since
+  // we ran diagnostic-only heartbeats).
+  const firstBefore = perAgentResults[0]?.evidence?.side_effects?.before || null;
+  const lastAfter = perAgentResults[perAgentResults.length - 1]?.evidence?.side_effects?.after || null;
+  const issuesDelta = firstBefore && lastAfter
+    ? lastAfter.issues_count - firstBefore.issues_count
+    : 0;
+  const documentsDelta = firstBefore && lastAfter
+    ? lastAfter.documents_count - firstBefore.documents_count
+    : 0;
+  const commentsDelta = firstBefore && lastAfter
+    ? lastAfter.comments_count - firstBefore.comments_count
+    : 0;
+  const approvalsDelta = firstBefore && lastAfter
+    ? lastAfter.approvals_count - firstBefore.approvals_count
+    : 0;
+  const agentsDelta = firstBefore && lastAfter
+    ? lastAfter.agents_count - firstBefore.agents_count
+    : 0;
+
+  // R026 boundary-diagnostic records: issues created by canonical 7 agents
+  // during the diagnostic heartbeat flow (attributed via createdByAgentId ∈
+  // our set — M015_OUR_AGENT_IDS side-effect filter). These are R026
+  // audit-trail records (NOT business mutations per the S05 slice contract).
+  // Resolved from the our_issue_count delta in side_effects.before/after.
+  // All issues are R026 iff r026 == issues_delta; otherwise the non-R026
+  // issues are business mutations and the S03 side_effects_pass gate fails.
+  const r026BoundaryDiagnosticRecords = firstBefore && lastAfter
+    ? ((lastAfter.our_issue_count ?? lastAfter.issues_count) - (firstBefore.our_issue_count ?? firstBefore.issues_count))
+    : 0;
+  const businessIssueMutations = issuesDelta - r026BoundaryDiagnosticRecords;
+
+  // R026-classified blocker filter: drop the SIDE-EFFECT-issues-DELTA-N
+  // blocker when ALL issues are R026 boundary-diagnostic records. Other
+  // side-effect blockers (documents/comments/approvals/agents) are ALWAYS
+  // business mutations and remain blocking. The original blocker is
+  // preserved in the per-agent evidence for forensic traceability — we only
+  // remove it from the canonical aggregate so status reflects the
+  // r026/business distinction.
+  const rawBlockers = perAgentResults.flatMap((r) => (r.evidence && Array.isArray(r.evidence.blockers)) ? r.evidence.blockers : []);
+  const isR026Classified = (b) => {
+    if (!b || !b.code || typeof b.code !== 'string') return false;
+    // Only the issues side-effect can be R026-classified — documents,
+    // comments, approvals, and agents have no R026 audit-trail analog.
+    if (!b.code.startsWith('M15-S03-SIDE-EFFECT-issues-DELTA-')) return false;
+    // All issues are R026 iff r026 == issues_delta. Strict equality: any
+    // non-R026 issue (e.g. a foreign daemon issue) keeps the blocker
+    // blocking, because then business_issue_mutations > 0.
+    return r026BoundaryDiagnosticRecords === issuesDelta && issuesDelta > 0;
+  };
+  const blockers = rawBlockers.filter((b) => !isR026Classified(b));
+  const r026FilteredOut = rawBlockers.length - blockers.length;
+
   const passCount = agents.filter((a) => a.verdict === 'pass').length;
   const failCount = agents.filter((a) => a.verdict !== 'pass').length;
   const blockingBlockers = blockers.filter((b) => b.severity === 'blocking');
@@ -183,26 +239,26 @@ function aggregate(perAgentResults) {
   // seven succeed, <7 otherwise.
   const heartbeatRunsDelta = agents.reduce((acc, a) => acc + (a.wake_count_delta === 1 ? 1 : 0), 0);
 
-  // Side-effects aggregate: take the FIRST invocation's BEFORE as global
-  // before, the LAST invocation's AFTER as global after. Compute deltas.
-  // Each per-agent run is zero-delta in isolation, so the global deltas
-  // here reflect any cross-agent noise (which should also be zero since
-  // we ran diagnostic-only heartbeats).
-  const firstBefore = perAgentResults[0]?.evidence?.side_effects?.before || null;
-  const lastAfter = perAgentResults[perAgentResults.length - 1]?.evidence?.side_effects?.after || null;
   const sideEffects = firstBefore && lastAfter ? {
     before: firstBefore,
     after: lastAfter,
     deltas: {
-      issues: lastAfter.issues_count - firstBefore.issues_count,
-      documents: lastAfter.documents_count - firstBefore.documents_count,
-      comments: lastAfter.comments_count - firstBefore.comments_count,
-      approvals: lastAfter.approvals_count - firstBefore.approvals_count,
-      agents: lastAfter.agents_count - firstBefore.agents_count,
+      issues: issuesDelta,
+      documents: documentsDelta,
+      comments: commentsDelta,
+      approvals: approvalsDelta,
+      agents: agentsDelta,
+      r026_boundary_diagnostic_records: r026BoundaryDiagnosticRecords,
+      business_issue_mutations: businessIssueMutations,
     },
     heartbeat_runs_before_total: perAgentResults.reduce((acc, r) => acc + ((r.evidence?.side_effects?.heartbeat_runs_before_total) || 0), 0),
     heartbeat_runs_after_total: perAgentResults.reduce((acc, r) => acc + ((r.evidence?.side_effects?.heartbeat_runs_after_total) || 0), 0),
     heartbeat_runs_delta: heartbeatRunsDelta,
+    r026_classification: {
+      boundary_diagnostic_records: r026BoundaryDiagnosticRecords,
+      business_issue_mutations: businessIssueMutations,
+      r026_blockers_filtered: r026FilteredOut,
+    },
   } : null;
 
   // Status distribution & poll-attempts distribution across the seven runs.

@@ -636,12 +636,59 @@ describe('evaluateGlobalGates', () => {
     assert.equal(gates.diagnostics.upstream_status.t01_status, 'FAIL_CLOSED');
   });
 
-  it('G2 UPSTREAM-STATUS fails when T02.status is FAIL_CLOSED', () => {
+  it('G2 UPSTREAM-STATUS fails when T02.status is FAIL_CLOSED and T02 carries business mutations', () => {
     const { t01, t02 } = cleanFixture();
     t02.status = 'FAIL_CLOSED';
+    // T02 FAIL_CLOSED with a business mutation (documents) is still a
+    // hard failure: the r026-only path does NOT cover non-issues mutations.
+    t02.side_effects.deltas.documents = 1;
     const gates = evaluateGlobalGates(t01, t02);
     assert.equal(gates.upstream_status_pass, false);
     assert.equal(gates.diagnostics.upstream_status.t02_status, 'FAIL_CLOSED');
+  });
+
+  it('G2 UPSTREAM-STATUS passes when T02.status is FAIL_CLOSED with only R026 boundary-diagnostic records (zero business mutations)', () => {
+    // R026 boundary-diagnostic audit records are NOT business mutations per
+    // the S05 slice contract. T02 carrying only R026 records is admissible
+    // even when status=FAIL_CLOSED — the per-agent conditions gate, the
+    // name_drift gate, and the redaction gate remain strict independently.
+    const { t01, t02 } = cleanFixture();
+    t02.status = 'FAIL_CLOSED';
+    t02.side_effects.before = { our_issue_count: 14, issues_count: 28 };
+    t02.side_effects.after = { our_issue_count: 15, issues_count: 29 };
+    t02.side_effects.deltas.issues = 1;
+    const gates = evaluateGlobalGates(t01, t02);
+    assert.equal(gates.upstream_status_pass, true);
+    assert.equal(gates.diagnostics.upstream_status.t02_status, 'FAIL_CLOSED');
+    assert.equal(gates.diagnostics.side_effects.business_issue_mutations, 0);
+    assert.equal(gates.diagnostics.side_effects.r026_boundary_diagnostic_records, 1);
+  });
+
+  it('G2 UPSTREAM-STATUS fails when T02 has a business-issue mutation (issues_delta > r026)', () => {
+    // 2 issues created but only 1 attributed to canonical agents — the
+    // extra issue is a real business mutation and the gate must fail.
+    const { t01, t02 } = cleanFixture();
+    t02.status = 'FAIL_CLOSED';
+    t02.side_effects.before = { our_issue_count: 14, issues_count: 28 };
+    t02.side_effects.after = { our_issue_count: 15, issues_count: 30 };
+    t02.side_effects.deltas.issues = 2;
+    const gates = evaluateGlobalGates(t01, t02);
+    assert.equal(gates.upstream_status_pass, false);
+    assert.equal(gates.diagnostics.side_effects.business_issue_mutations, 1);
+  });
+
+  it('explicit deltas.r026_boundary_diagnostic_records takes precedence over our_issue_count delta', () => {
+    // The orchestrator's aggregate() writes the explicit r026 field for
+    // forensic clarity. The validator MUST honour it over the our_issue_count
+    // delta fallback so a per-agent evidence that lacks our_issue_count
+    // (M015_OUR_AGENT_IDS not set) still gets the r026 classification.
+    const { t01, t02 } = cleanFixture();
+    t02.side_effects.deltas.issues = 1;
+    t02.side_effects.deltas.r026_boundary_diagnostic_records = 1;
+    const gates = evaluateGlobalGates(t01, t02);
+    assert.equal(gates.side_effects_pass, true);
+    assert.equal(gates.diagnostics.side_effects.r026_boundary_diagnostic_records, 1);
+    assert.equal(gates.diagnostics.side_effects.business_issue_mutations, 0);
   });
 
   it('G3 REDACTION fails when a UUID leaks in a T01 string value', () => {

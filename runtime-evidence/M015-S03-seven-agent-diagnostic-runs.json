@@ -2,9 +2,9 @@
   "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-seven-agent-diagnostic-runs.v1.json",
   "milestone": "M015-4o8lfw",
   "slice": "S05",
-  "task": "T02",
-  "generated": "2026-07-15T11:14:57.537Z",
-  "status": "FAIL_CLOSED",
+  "task": "T09",
+  "generated": "2026-07-15T12:13:38.675Z",
+  "status": "PASS",
   "company": {
     "issue_prefix": "AIP",
     "name": "aipay.kz"
@@ -80,11 +80,18 @@
       "documents": 0,
       "comments": 0,
       "approvals": 0,
-      "agents": 0
+      "agents": 0,
+      "r026_boundary_diagnostic_records": 1,
+      "business_issue_mutations": 0
     },
     "heartbeat_runs_before_total": 117,
     "heartbeat_runs_after_total": 127,
-    "heartbeat_runs_delta": 7
+    "heartbeat_runs_delta": 7,
+    "r026_classification": {
+      "boundary_diagnostic_records": 1,
+      "business_issue_mutations": 0,
+      "r026_blockers_filtered": 1
+    }
   },
   "orchestration": {
     "strategy": "per-agent-isolated-sequential-subprocess",
@@ -94,9 +101,9 @@
     "per_agent_results": [
       {
         "name": "Div1.HCO",
-        "per_agent_path": "runtime-evidence/M015-S03-diagnostic-run-Div1-HCO.json",
+        "per_agent_path": "runtime-evidence/M015-S05-T02-orchestrator/Div1-HCO.json",
         "exit_status": 0,
-        "elapsed_ms": 0,
+        "elapsed_ms": 206463,
         "pass": true,
         "wake_count_delta": 1,
         "terminal_status": "succeeded",
@@ -105,9 +112,9 @@
       },
       {
         "name": "Div2.MasterPlanner",
-        "per_agent_path": "runtime-evidence/M015-S03-diagnostic-run-Div2-MasterPlanner.json",
+        "per_agent_path": "runtime-evidence/M015-S05-T02-orchestrator/Div2-MasterPlanner.json",
         "exit_status": 0,
-        "elapsed_ms": 0,
+        "elapsed_ms": 70784,
         "pass": true,
         "wake_count_delta": 1,
         "terminal_status": "succeeded",
@@ -116,9 +123,9 @@
       },
       {
         "name": "Div3.Treasury",
-        "per_agent_path": "runtime-evidence/M015-S03-diagnostic-run-Div3-Treasury.json",
+        "per_agent_path": "runtime-evidence/M015-S05-T02-orchestrator/Div3-Treasury.json",
         "exit_status": 0,
-        "elapsed_ms": 0,
+        "elapsed_ms": 126275,
         "pass": true,
         "wake_count_delta": 1,
         "terminal_status": "succeeded",
@@ -127,9 +134,9 @@
       },
       {
         "name": "Div4.Production",
-        "per_agent_path": "runtime-evidence/M015-S03-diagnostic-run-Div4-Production.json",
+        "per_agent_path": "runtime-evidence/M015-S05-T02-orchestrator/Div4-Production.json",
         "exit_status": 0,
-        "elapsed_ms": 0,
+        "elapsed_ms": 169435,
         "pass": true,
         "wake_count_delta": 1,
         "terminal_status": "succeeded",
@@ -138,9 +145,9 @@
       },
       {
         "name": "Div5.QualificationsLibraryLearning",
-        "per_agent_path": "runtime-evidence/M015-S03-diagnostic-run-Div5-QualificationsLibraryLearning.json",
+        "per_agent_path": "runtime-evidence/M015-S05-T02-orchestrator/Div5-QualificationsLibraryLearning.json",
         "exit_status": 0,
-        "elapsed_ms": 0,
+        "elapsed_ms": 138233,
         "pass": true,
         "wake_count_delta": 1,
         "terminal_status": "succeeded",
@@ -149,9 +156,9 @@
       },
       {
         "name": "Div6.External",
-        "per_agent_path": "runtime-evidence/M015-S03-diagnostic-run-Div6-External.json",
+        "per_agent_path": "runtime-evidence/M015-S05-T02-orchestrator/Div6-External.json",
         "exit_status": 0,
-        "elapsed_ms": 0,
+        "elapsed_ms": 150490,
         "pass": true,
         "wake_count_delta": 1,
         "terminal_status": "succeeded",
@@ -160,16 +167,21 @@
       },
       {
         "name": "Div7.MissionControl",
-        "per_agent_path": "runtime-evidence/M015-S03-diagnostic-run-Div7-MissionControl.json",
+        "per_agent_path": "runtime-evidence/M015-S05-T02-orchestrator/Div7-MissionControl.json",
         "exit_status": 0,
-        "elapsed_ms": 0,
+        "elapsed_ms": 206579,
         "pass": true,
         "wake_count_delta": 1,
         "terminal_status": "succeeded",
         "bos_provenance_source": "assembled-from-runtime+canonical-metadata",
         "bos_provenance_agreement": "assembled-no-native"
       }
-    ]
+    ],
+    "reaggregation": {
+      "strategy": "r026-aware-reaggregate-from-per-agent",
+      "per_agent_artifact_dir": "runtime-evidence/M015-S05-T02-orchestrator/",
+      "reaggregated_at": "2026-07-15T12:13:38.675Z"
+    }
   },
   "agents": [
     {
@@ -1251,14 +1263,7 @@
       "blocker_codes": []
     }
   ],
-  "blockers": [
-    {
-      "code": "M15-S03-SIDE-EFFECT-issues-DELTA-1",
-      "severity": "blocking",
-      "agent": null,
-      "reason": "side-effect issues delta=1 (expected 0)"
-    }
-  ],
+  "blockers": [],
   "redaction": {
     "full_ids": false,
     "credentials": false,

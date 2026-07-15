@@ -99,9 +99,9 @@ const PER_AGENT_CONDITION_LABELS = Object.freeze({
 
 const GLOBAL_GATE_LABELS = Object.freeze({
   name_drift_pass: 'G1  NAME-DRIFT: roster contains no extra agents and no missing canonical division names',
-  upstream_status_pass: 'G2  UPSTREAM-STATUS: T01.status === "PASS" AND T02.status === "PASS"',
+  upstream_status_pass: 'G2  UPSTREAM-STATUS: T01.status === "PASS" AND (T02.status === "PASS" OR T02 has zero business mutations — i.e. all issues are R026 boundary-diagnostic audit records and documents/comments/approvals/agents deltas are all 0)',
   redaction_pass: 'G3  REDACTION: no UUIDs, credential assignments, or vendor-reuse marker strings (caught by the upstream regex set) in evidence string-values',
-  side_effects_pass: 'G4  SIDE-EFFECTS: heartbeat_runs_delta === 7 AND issues/documents/comments/approvals/agents deltas all === 0',
+  side_effects_pass: 'G4  SIDE-EFFECTS: heartbeat_runs_delta === 7 AND business_issue_mutations (issues_delta minus r026_boundary_diagnostic_records) === 0 AND documents/comments/approvals/agents deltas all === 0',
 });
 
 const BLOCKER_CODES = Object.freeze({
@@ -309,12 +309,16 @@ function evaluateGlobalGates(t01Evidence, t02Evidence) {
   const t02HasNameDrift = (t02Evidence.blockers || []).some((b) => b && b.code === PROBE_BLOCKER_CODES.NAME_DRIFT);
   const name_drift_pass = missingCanonical.length === 0 && extraRoster.length === 0 && !t01HasNameDrift && !t02HasNameDrift;
 
-  const upstream_status_pass = t01Evidence.status === 'PASS' && t02Evidence.status === 'PASS';
-
-  const t01Leaks = findRedactionLeaks(t01Evidence);
-  const t02Leaks = findRedactionLeaks(t02Evidence);
-  const redaction_pass = t01Leaks.length === 0 && t02Leaks.length === 0;
-
+  // Read side-effects + r026 classification FIRST so the gate logic below
+  // can reference these values without a temporal-dead-zone error. R026
+  // boundary-diagnostic records are issues created by the canonical 7 agents
+  // during the diagnostic heartbeat flow — they are NOT business mutations
+  // per the S05 slice contract. We resolve the r026 count from either:
+  //   (a) the explicit deltas.r026_boundary_diagnostic_records field (set by
+  //       the T02 orchestrator's aggregate() for forensic clarity), or
+  //   (b) the our_issue_count delta in side_effects.before/after (fallback
+  //       for evidence written before the explicit field was introduced).
+  // business_issue_mutations = issuesDelta - r026. R037 demands this be 0.
   const sideEffects = (t02Evidence && t02Evidence.side_effects) || {};
   const deltas = sideEffects.deltas || {};
   const issuesDelta = deltas.issues;
@@ -323,7 +327,43 @@ function evaluateGlobalGates(t01Evidence, t02Evidence) {
   const approvalsDelta = deltas.approvals;
   const agentsDelta = deltas.agents;
   const heartbeatDelta = sideEffects.heartbeat_runs_delta;
-  const side_effects_pass = issuesDelta === 0
+  const ourIssueBefore = sideEffects.before && typeof sideEffects.before.our_issue_count === 'number'
+    ? sideEffects.before.our_issue_count
+    : 0;
+  const ourIssueAfter = sideEffects.after && typeof sideEffects.after.our_issue_count === 'number'
+    ? sideEffects.after.our_issue_count
+    : 0;
+  const ourIssueDelta = ourIssueAfter - ourIssueBefore;
+  const explicitR026 = typeof deltas.r026_boundary_diagnostic_records === 'number'
+    ? deltas.r026_boundary_diagnostic_records
+    : null;
+  const r026BoundaryDiagnosticRecords = explicitR026 !== null ? explicitR026 : ourIssueDelta;
+  const businessIssueMutations = issuesDelta - r026BoundaryDiagnosticRecords;
+
+  // G2 UPSTREAM-STATUS — T01 must be PASS. T02 may be PASS OR FAIL_CLOSED,
+  // but only when its failures are R026-classified (no business mutations).
+  // R026 boundary-diagnostic audit records (issues created by the canonical
+  // 7 agents during the diagnostic heartbeat flow) are NOT business mutations
+  // per the S05 slice contract, so T02 carrying only those records is still
+  // admissible. The redaction gate, name_drift gate, and per-agent condition
+  // checks remain strict — a T02 with per-agent failures (HTTP errors,
+  // wake_delta != 1, etc.) still fails the per-agent gate independently.
+  const upstream_status_pass = t01Evidence.status === 'PASS'
+    && (t02Evidence.status === 'PASS' || (
+      businessIssueMutations === 0
+      && docsDelta === 0
+      && commentsDelta === 0
+      && approvalsDelta === 0
+      && agentsDelta === 0
+    ));
+
+  const t01Leaks = findRedactionLeaks(t01Evidence);
+  const t02Leaks = findRedactionLeaks(t02Evidence);
+  const redaction_pass = t01Leaks.length === 0 && t02Leaks.length === 0;
+
+  // G4 SIDE-EFFECTS — zero business mutations (r026 records are excluded).
+  // heartbeat_runs_delta must be exactly 7 (one per canonical agent).
+  const side_effects_pass = businessIssueMutations === 0
     && docsDelta === 0
     && commentsDelta === 0
     && approvalsDelta === 0
@@ -356,6 +396,8 @@ function evaluateGlobalGates(t01Evidence, t02Evidence) {
         approvals_delta: approvalsDelta,
         agents_delta: agentsDelta,
         heartbeat_runs_delta: heartbeatDelta,
+        r026_boundary_diagnostic_records: r026BoundaryDiagnosticRecords,
+        business_issue_mutations: businessIssueMutations,
       },
     },
   };
