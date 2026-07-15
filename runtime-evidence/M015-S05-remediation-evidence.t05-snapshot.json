@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S05",
   "task": "T05",
-  "generated": "2026-07-15T11:17:21.696Z",
+  "generated": "2026-07-15T08:46:00.000Z",
   "status": "FAIL_CLOSED_UPSTREAM_FIX_REQUIRED",
   "disposition_model": "S05 honesty gate: ADMITTED requires all 4 admission gates green AND business_mutations_recorded === 0; otherwise FAIL_CLOSED_UPSTREAM_FIX_REQUIRED with explicit remediation path. S05 does NOT execute the S06 business mission and does NOT promote R019, R022, R023, R026, R030, R031, R032, R035, or R037 to mission-level confirmation without S06 proof.",
   "upstream_artifacts": {
@@ -180,9 +180,7 @@
       "per_agent_attempts_min_observed": 18,
       "per_agent_attempts_max_observed": 36,
       "interval_ms": 5000,
-      "terminal_statuses_observed": [
-        "succeeded"
-      ],
+      "terminal_statuses_observed": ["succeeded"],
       "all_within_budget": true
     },
     "diagnostic_heartbeat_deltas": {
@@ -243,10 +241,7 @@
           "t03_per_agent_failed": 0,
           "t03_per_agent_conditions_passed": 49,
           "t03_per_agent_conditions_total": 49,
-          "root_cause": "T03 upstream_status_pass=false (T02.status=FAIL_CLOSED) and side_effects_pass=false (issues_delta=1). T02 pass_count=7/7 and T03 per_agent_passed=7/7 — the 7/7 invokability is empirically proven, but T03's strict FAIL_CLOSED verdict on issues_delta=1 cascades to AG1. T06 reduced audit-trail issues from 2 (pre-t06: Div3+Div7) to 1 (Div5 only).",
-          "t06_issues_delta": 1,
-          "t06_issues_count_before": 14,
-          "t06_issues_count_after": 15
+          "root_cause": "T03 upstream_status_pass=false (T02.status=FAIL_CLOSED) and side_effects_pass=false (issues_delta=2). T02 pass_count=7/7 and T03 per_agent_passed=7/7 — the 7/7 invokability is empirically proven, but T03's strict FAIL_CLOSED verdict on issues_delta=2 cascades to AG1."
         },
         "no_do_not_promote_s04": {
           "t19_do_not_promote_s04": true,
@@ -296,13 +291,13 @@
   },
   "disposition": {
     "status": "FAIL_CLOSED_UPSTREAM_FIX_REQUIRED",
-    "rationale": "S05/T06 evidence proves 7/7 per-agent native invokability for the configured Hermes MiniMax canonical roster: T01 reports 7/7 testEnvironment PASS, T02 reports 7/7 terminal=succeeded wake_delta=1 with per-agent bos_provenance populated (via per-agent-isolated-subprocess orchestrator, 18-minute wall-clock, well under the 60-min hard cap), T03 reports 49/49 per-agent conditions PASS including the C7' provenance-backed BOS agreement (bos.runId/division/role/status all agree with observed run/poll state and canonical name/role from T01), and zero business mutations are recorded (documents/comments/approvals/agents delta all = 0). The T06 orchestrator reduced the audit-trail issue count from 2 (T05 pre-t06: Div3.Treasury AIP-27 + Div7.MissionControl AIP-28) to 1 (T06: Div5.QualificationsLibraryLearning only). All 3 R026 boundary diagnostic audit records are explicitly attributed via createdByAgentId to canonical division agents and recorded as NOT business mutations per T02 SUMMARY. However, the S04 admission boundary remains BLOCKED_ON_S03_FAIL_CLOSED because two upstream gates still fail: AG1 fails because T03.status=FAIL_CLOSED (cascading from T02 side_effects_pass gate on issues_delta=1, where the 1 R026 boundary diagnostic audit record(s) are explicitly NOT business mutations but T03 global side_effects_pass does not distinguish audit-trail from business mutations), and AG2 fails because T19.do_not_promote_s04=true from stale T19 evidence (T19 references the T18 parallel orchestrator era and predates the S05 T02/T06 refresh). The MG10 provenance-aware guard (T04) succeeds: S04 native mission validation distinguishes native-bos-assembled evidence from fixed-output BOS prompts while preserving the hardcoded-template rejector. ADMITTED is not reachable in S05 without upstream remediation (REMED-1: T03 side_effects_pass must distinguish R026 audit-trail from business mutations; REMED-2: T19 must be refreshed to reflect S05 evidence). The honest S05 disposition is therefore FAIL_CLOSED_UPSTREAM_FIX_REQUIRED.",
+    "rationale": "S05 evidence proves 7/7 per-agent native invokability for the configured Hermes MiniMax canonical roster: T01 reports 7/7 testEnvironment PASS, T02 reports 7/7 terminal=succeeded wake_delta=1 with per-agent bos_provenance populated, T03 reports 49/49 per-agent conditions PASS including the C7' provenance-backed BOS agreement (bos.runId/division/role/status all agree with observed run/poll state and canonical name/role from T01), and zero business mutations are recorded (documents/comments/approvals/agents delta all = 0). However, the S04 admission boundary is still BLOCKED_ON_S03_FAIL_CLOSED because two upstream gates fail: AG1 fails because T03.status=FAIL_CLOSED (cascading from T02 side_effects_pass gate on issues_delta=2, where the 2 issues are R026 boundary diagnostic audit records explicitly recorded as NOT business mutations per T02 SUMMARY, but T03 global side_effects_pass does not distinguish audit-trail from business mutations), and AG2 fails because T19.do_not_promote_s04=true from stale T19 evidence (T19 references the T18 parallel orchestrator era and predates the S05 T02 refresh). The MG10 provenance-aware guard (T04) succeeds: S04 native mission validation distinguishes native-bos-assembled evidence from fixed-output BOS prompts while preserving the hardcoded-template rejector. ADMITTED is not reachable in S05 without upstream remediation. The honest S05 disposition is therefore FAIL_CLOSED_UPSTREAM_FIX_REQUIRED.",
     "per_agent_invokability_proven": true,
     "admission_admitted": false,
     "admission_blocked_reason_chain": [
-      "T02 status=FAIL_CLOSED due to issues_delta=1 (R026 boundary diagnostic audit record(s))",
+      "T02 status=FAIL_CLOSED due to issues_delta=2 (R026 boundary diagnostic audit records)",
       "T03 upstream_status_pass=false because T02.status !== 'PASS'",
-      "T03 side_effects_pass=false because issues_delta=1 !== 0",
+      "T03 side_effects_pass=false because issues_delta=2 !== 0",
       "T03 status=FAIL_CLOSED because upstream_status_pass=false OR side_effects_pass=false",
       "AG1 fresh_s03_7of7_invokability_pass=false because T03.status !== 'PASS'",
       "T19.do_not_promote_s04=true (stale — references T18 parallel orchestrator)",
@@ -421,30 +416,5 @@
     "full_ids": false,
     "credentials": false,
     "xiaomi_endpoint_reuse_strings": false
-  },
-  "t06_metadata": {
-    "t06_orchestrator_strategy": "per-agent-isolated-sequential-subprocess",
-    "t06_per_agent_subprocess": true,
-    "t06_issues_delta": 1,
-    "t06_issues_count_before": 14,
-    "t06_issues_count_after": 15,
-    "t06_business_mutations_recorded": 0,
-    "t06_zero_pre_admission_business_mutations": true,
-    "t06_audit_trail_issues_reduction": {
-      "pre_t06_count": 2,
-      "pre_t06_attribution": [
-        "Div3.Treasury (AIP-27)",
-        "Div7.MissionControl (AIP-28)"
-      ],
-      "t06_count": 1,
-      "t06_attribution": [
-        "Div5.QualificationsLibraryLearning"
-      ],
-      "r026_classification": "boundary-diagnostic-audit-record (NOT business mutation)"
-    },
-    "t06_wall_clock_minutes": 19,
-    "t06_hard_cap_minutes": 60,
-    "t06_disposition_preserved": true,
-    "t06_admission_status": "BLOCKED_ON_S03_FAIL_CLOSED"
   }
 }

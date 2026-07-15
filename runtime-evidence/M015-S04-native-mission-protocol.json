@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S04",
   "task": "T02",
-  "generated": "2026-07-15T08:42:34.378Z",
+  "generated": "2026-07-15T10:09:25.303Z",
   "status": "MISSION_PASS",
   "safe_block_declared": false,
   "admission_summary": {
@@ -117,8 +117,8 @@
     "synthetic_bos": true
   },
   "paths": {
-    "admission_evidence": "../../../../../tmp/m15s04-cli-t06-OCK4Yj/admission.json",
-    "mission_run_evidence": "../../../../../tmp/m15s04-cli-t06-OCK4Yj/run.json",
-    "output_evidence": "../../../../../tmp/m15s04-cli-t06-OCK4Yj/protocol.json"
+    "admission_evidence": "../../../../../tmp/m15s04-cli-t06-lw1WNt/admission.json",
+    "mission_run_evidence": "../../../../../tmp/m15s04-cli-t06-lw1WNt/run.json",
+    "output_evidence": "../../../../../tmp/m15s04-cli-t06-lw1WNt/protocol.json"
   }
 }
