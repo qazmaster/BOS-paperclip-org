@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S06",
   "task": "T03",
-  "generated": "2026-07-15T16:32:13.387Z",
+  "generated": "2026-07-16T05:15:26.379Z",
   "status": "MISSION_FAIL_CLOSED_LEDGER_VIOLATION",
   "safe_block_declared": true,
   "preflight_correlation": {
@@ -148,7 +148,7 @@
     "output_evidence": "runtime-evidence/M015-S06-native-mission-protocol.json"
   },
   "options": {
-    "accept_safe_block": false
+    "accept_safe_block": true
   },
   "s06_provenance": {
     "task": "T03",

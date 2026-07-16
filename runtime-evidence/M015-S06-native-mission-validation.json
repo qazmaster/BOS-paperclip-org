@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S06",
   "task": "T03",
-  "generated": "2026-07-15T16:32:13.389Z",
+  "generated": "2026-07-16T05:15:26.381Z",
   "status": "MISSION_FAIL_CLOSED_LEDGER_VIOLATION",
   "safe_block_declared": true,
   "safe_block_evidence": {
@@ -109,7 +109,7 @@
     },
     "autonomy_and_no_synthetic_bos": {
       "preflight_safe_block_declared": true,
-      "mission_run_safe_block_declared": false,
+      "mission_run_safe_block_declared": true,
       "synthetic_bos_hits": [],
       "xiaomi_hits": [
         {
@@ -190,7 +190,7 @@
       "provisional_status": "MISSION_FAIL_CLOSED_LEDGER_VIOLATION",
       "promoted_to_mission_pass": false,
       "safe_block_declared": true,
-      "accept_safe_block": false
+      "accept_safe_block": true
     }
   },
   "blockers": [
@@ -239,7 +239,7 @@
     "output_evidence": "runtime-evidence/M015-S06-native-mission-validation.json"
   },
   "options": {
-    "accept_safe_block": false
+    "accept_safe_block": true
   },
   "redaction": {
     "full_ids": false,

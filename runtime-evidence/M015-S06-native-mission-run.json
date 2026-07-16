@@ -3,8 +3,8 @@
   "milestone": "M015-4o8lfw",
   "slice": "S06",
   "task": "T02",
-  "generated": "2026-07-15T16:15:29.474Z",
-  "status": "MISSION_BLOCKED_NO_RUN",
+  "generated": "2026-07-16T05:15:22.643Z",
+  "status": "MISSION_BLOCKED_SAFE",
   "admission_summary": {
     "status": "BLOCKED_ON_S03_FAIL_CLOSED",
     "admitted": false,
@@ -15,7 +15,7 @@
       "M15-S04-ADMISSION-GATE-NO-DRIFT"
     ]
   },
-  "safe_block_declared": false,
+  "safe_block_declared": true,
   "harness_writes": {
     "root_issue_create": 0
   },
@@ -23,7 +23,7 @@
     "mission_key": "s04-mission-M015-S06-T02-bounded-native-seven-division",
     "idempotency_key": "s04-mission-M015-S06-T02-bounded-native-seven-division::pending-root-issue-id",
     "recovery_lock": "replay-blocked-on:s04-mission-M015-S06-T02-bounded-native-seven-division",
-    "derived_at": "2026-07-15T16:15:29.471Z"
+    "derived_at": "2026-07-16T05:15:22.637Z"
   },
   "intake_summary": {
     "title_present": true,
@@ -82,8 +82,8 @@
     }
   ],
   "observation_budget": {
-    "started_at": "2026-07-15T16:15:29.471Z",
-    "ended_at": "2026-07-15T16:15:29.474Z",
+    "started_at": "2026-07-16T05:15:22.637Z",
+    "ended_at": "2026-07-16T05:15:22.642Z",
     "max_seconds": 600,
     "poll_interval_ms": 5000,
     "budget_exhausted": false
