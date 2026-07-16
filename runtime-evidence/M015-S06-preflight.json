@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S06",
   "task": "T01",
-  "generated": "2026-07-16T05:13:14.765Z",
+  "generated": "2026-07-16T05:34:17.002Z",
   "verdict": "BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE",
   "canonical_verdict": "M015_S06_PREFLIGHT",
   "preflight_model": "6 preflight gates (sg1_fresh_s04_admitted, sg2_no_do_not_promote_s04, sg3_s05_disposition_admitted, sg4_no_leaks, sg5_side_effect_baseline_snapshot, sg6_zero_preflight_business_mutations) over six upstream evidence artifacts (T01+T02+T03+T19, S04-admission, S05-evidence)",
@@ -40,8 +40,8 @@
     },
     "s04_admission": {
       "path": "runtime-evidence/M015-S04-admission.json",
-      "sha256": "213a67590a8daab548dbec36d9cee3509991b3374c2152191d81479584121355",
-      "generated": "2026-07-16T05:13:14.742Z",
+      "sha256": "0381c6ca624e8e9b1eeae1ba121cba3b9885d99566e6532934d686c4f8990d5f",
+      "generated": "2026-07-16T05:34:16.979Z",
       "status": "BLOCKED_ON_S03_FAIL_CLOSED",
       "business_mutations_recorded": 0,
       "blockers_count": 2,
@@ -129,7 +129,7 @@
       },
       "sg5": {
         "baseline_source": "forensic_disk_evidence",
-        "baseline_fetched_at": "2026-07-16T05:13:14.762Z",
+        "baseline_fetched_at": "2026-07-16T05:34:16.999Z",
         "baseline_present": true,
         "issues_baseline": 15,
         "documents_baseline": 0,
@@ -153,7 +153,7 @@
     "agents_baseline": 8,
     "heartbeat_runs_baseline": null,
     "source": "forensic_disk_evidence",
-    "fetched_at": "2026-07-16T05:13:14.762Z",
+    "fetched_at": "2026-07-16T05:34:16.999Z",
     "observer_budget": {
       "poll_interval_ms": 5000,
       "observer_ceiling_s": 3600

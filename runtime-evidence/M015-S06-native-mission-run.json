@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S06",
   "task": "T02",
-  "generated": "2026-07-16T05:15:22.643Z",
+  "generated": "2026-07-16T05:34:17.075Z",
   "status": "MISSION_BLOCKED_SAFE",
   "admission_summary": {
     "status": "BLOCKED_ON_S03_FAIL_CLOSED",
@@ -23,7 +23,7 @@
     "mission_key": "s04-mission-M015-S06-T02-bounded-native-seven-division",
     "idempotency_key": "s04-mission-M015-S06-T02-bounded-native-seven-division::pending-root-issue-id",
     "recovery_lock": "replay-blocked-on:s04-mission-M015-S06-T02-bounded-native-seven-division",
-    "derived_at": "2026-07-16T05:15:22.637Z"
+    "derived_at": "2026-07-16T05:34:17.069Z"
   },
   "intake_summary": {
     "title_present": true,
@@ -82,8 +82,8 @@
     }
   ],
   "observation_budget": {
-    "started_at": "2026-07-16T05:15:22.637Z",
-    "ended_at": "2026-07-16T05:15:22.642Z",
+    "started_at": "2026-07-16T05:34:17.069Z",
+    "ended_at": "2026-07-16T05:34:17.073Z",
     "max_seconds": 600,
     "poll_interval_ms": 5000,
     "budget_exhausted": false

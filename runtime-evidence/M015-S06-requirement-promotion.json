@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S06",
   "task": "T05",
-  "generated": "2026-07-16T05:21:00.878Z",
+  "generated": "2026-07-16T05:34:38.192Z",
   "canonical_verdict": "M015_S06_PROMOTION",
   "verdict": "PROMOTION_DENIED_BLOCKED_UPSTREAM",
   "verdict_code": "PROMOTION_DENIED_BLOCKED_UPSTREAM",
@@ -557,23 +557,23 @@
   },
   "evidence_hashes": {
     "preflight": {
-      "sha256": "d0bb70de365a98b8d584f80f6f2a01a0bfa620df954df98f16ead9e74742aa3e",
+      "sha256": "cd5bf991a7bab79dd43303aeebbf62c58bda33a35f1e6cf85ba12567ae589642",
       "size_bytes": 9729,
       "path": "runtime-evidence/M015-S06-preflight.json"
     },
     "missionRun": {
-      "sha256": "ed199b7f6e09e0996bc6a94a6896373512f6ff365209a43f1e272921c963ee63",
+      "sha256": "891a368aba8ce2230f0639b9faa6f192e6a65ea0b53732ef3ae9a73826bf65be",
       "size_bytes": 6249,
       "path": "runtime-evidence/M015-S06-native-mission-run.json"
     },
     "validation": {
-      "sha256": "82ca52d7ea7726b48019cbde0b39b8f1d18fe151a55adbef5c37a94a343c83ee",
+      "sha256": "6e762054327aa495130805f2cddfbea153c06272006136eb4744f8975809463b",
       "size_bytes": 11203,
       "path": "runtime-evidence/M015-S06-native-mission-validation.json"
     },
     "publicUi": {
-      "sha256": "9d2b2741bd4caf9293745236e8ed44a6bcb866b62c25d91983ef9191c8d5d997",
-      "size_bytes": 38347,
+      "sha256": "d6690ada106c355ef44f9cb4cccd07b985fc347d3133f3217f9ecbebd896ba6f",
+      "size_bytes": 42647,
       "path": "runtime-evidence/M015-S06-public-ui-proof.json"
     },
     "s05Remediation": {
@@ -582,7 +582,7 @@
       "path": "runtime-evidence/M015-S05-remediation-evidence.json"
     },
     "s04Admission": {
-      "sha256": "213a67590a8daab548dbec36d9cee3509991b3374c2152191d81479584121355",
+      "sha256": "0381c6ca624e8e9b1eeae1ba121cba3b9885d99566e6532934d686c4f8990d5f",
       "size_bytes": 3327,
       "path": "runtime-evidence/M015-S04-admission.json"
     },
