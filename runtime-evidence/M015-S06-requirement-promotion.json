@@ -3,7 +3,7 @@
   "milestone": "M015-4o8lfw",
   "slice": "S06",
   "task": "T05",
-  "generated": "2026-07-15T20:43:07.835Z",
+  "generated": "2026-07-16T05:21:00.878Z",
   "canonical_verdict": "M015_S06_PROMOTION",
   "verdict": "PROMOTION_DENIED_BLOCKED_UPSTREAM",
   "verdict_code": "PROMOTION_DENIED_BLOCKED_UPSTREAM",
@@ -15,13 +15,16 @@
       "preflight_admitted": {
         "label": "JP1 PREFLIGHT_ADMITTED — preflight verdict is ADMITTED (not BLOCKED_ON_*); preflight single-write boundary is GREEN",
         "passed": false,
-        "detail": "preflight evidence missing"
+        "detail": "preflight verdict=BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE is not ADMITTED",
+        "verdict": "BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE",
+        "admitted": false,
+        "business_mutations_recorded": 0
       },
       "mission_pass": {
         "label": "JP2 MISSION_PASS — mission status is MISSION_PASS with MG1-MG10 all green and root_issue+mission_run present",
         "passed": false,
-        "detail": "mission status=MISSION_BLOCKED_NO_RUN (expected MISSION_PASS)",
-        "status": "MISSION_BLOCKED_NO_RUN",
+        "detail": "mission status=MISSION_BLOCKED_SAFE (expected MISSION_PASS)",
+        "status": "MISSION_BLOCKED_SAFE",
         "mg_all_green": true,
         "root_issue": null,
         "mission_run": null,
@@ -71,18 +74,18 @@
       },
       "business_mutations_clean": {
         "label": "JP7 BUSINESS_MUTATIONS_CLEAN — preflight.business_mutations_recorded=0 AND mission.harness_root_issue_create=0 AND mission.mission_context/intake_summary/root_issue/mission_run nullity satisfies zero-mutation invariant",
-        "passed": false,
-        "detail": "business mutation invariant violated (pf=null, harness=0)",
-        "preflight_business_mutations_recorded": null,
+        "passed": true,
+        "detail": "preflight.business_mutations_recorded=0, harness.root_issue_create=0, safe_block.mission_run_null=true",
+        "preflight_business_mutations_recorded": 0,
         "harness_root_issue_create": 0,
         "safe_block_mission_run_null": true
       },
       "do_not_promote_clean": {
         "label": "JP8 DO_NOT_PROMOTE_CLEAN — S04 admission.do_not_promote_s04=false AND no upstream do_not_promote_s04=true",
         "passed": true,
-        "detail": "do_not_promote_s04=false across 2 upstream file(s)",
+        "detail": "do_not_promote_s04=false across 3 upstream file(s)",
         "any_true": false,
-        "sources_observed": 2
+        "sources_observed": 3
       },
       "mission_run_present": {
         "label": "JP9 MISSION_RUN_PRESENT — mission_run is a non-null object containing children_count, durable_documents_count, terminal_runs_count, all_agents_terminal=true",
@@ -98,12 +101,12 @@
       {
         "gate": "preflight_admitted",
         "label": "JP1 PREFLIGHT_ADMITTED — preflight verdict is ADMITTED (not BLOCKED_ON_*); preflight single-write boundary is GREEN",
-        "detail": "preflight evidence missing"
+        "detail": "preflight verdict=BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE is not ADMITTED"
       },
       {
         "gate": "mission_pass",
         "label": "JP2 MISSION_PASS — mission status is MISSION_PASS with MG1-MG10 all green and root_issue+mission_run present",
-        "detail": "mission status=MISSION_BLOCKED_NO_RUN (expected MISSION_PASS)"
+        "detail": "mission status=MISSION_BLOCKED_SAFE (expected MISSION_PASS)"
       },
       {
         "gate": "validation_pass",
@@ -116,18 +119,13 @@
         "detail": "ui verdict=PASS_AUTH_NO_LEAK safe_block_declared=true"
       },
       {
-        "gate": "business_mutations_clean",
-        "label": "JP7 BUSINESS_MUTATIONS_CLEAN — preflight.business_mutations_recorded=0 AND mission.harness_root_issue_create=0 AND mission.mission_context/intake_summary/root_issue/mission_run nullity satisfies zero-mutation invariant",
-        "detail": "business mutation invariant violated (pf=null, harness=0)"
-      },
-      {
         "gate": "mission_run_present",
         "label": "JP9 MISSION_RUN_PRESENT — mission_run is a non-null object containing children_count, durable_documents_count, terminal_runs_count, all_agents_terminal=true",
         "detail": "mission_run absent or null (mission is BLOCKED upstream)"
       }
     ],
     "jp_count": 9,
-    "jp_pass_count": 3
+    "jp_pass_count": 4
   },
   "requirement_readback": [
     {
@@ -147,7 +145,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -182,7 +180,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -218,7 +216,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -253,7 +251,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -288,7 +286,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -323,7 +321,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -358,7 +356,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -394,7 +392,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -429,7 +427,7 @@
         "runtime-evidence/M015-S06-native-mission-validation.json",
         "runtime-evidence/M015-S06-public-ui-proof.json"
       ],
-      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+      "non_promotion_reason": "joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
       "capability_constraints_excluded": [
         "approvals",
         "plugin_registration",
@@ -449,17 +447,17 @@
     }
   ],
   "non_promotions": [
-    "Joint runtime+independent+browser proof is NOT all-pass (3/9 gates green); per S06 plan must-have, requirements remain at previous proof tier",
-    "Blocking gates: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R019 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R022 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R023 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R026 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R030 remains at NOT_PROMOTED (proposed: NOT_PROMOTED) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R031 remains at NOT_PROMOTED (proposed: NOT_PROMOTED) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R032 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R035 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
-    "R037 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, business_mutations_clean, mission_run_present",
+    "Joint runtime+independent+browser proof is NOT all-pass (4/9 gates green); per S06 plan must-have, requirements remain at previous proof tier",
+    "Blocking gates: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R019 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R022 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R023 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R026 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R030 remains at NOT_PROMOTED (proposed: NOT_PROMOTED) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R031 remains at NOT_PROMOTED (proposed: NOT_PROMOTED) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R032 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R035 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
+    "R037 remains at DIAGNOSTIC_PROVEN (proposed: DIAGNOSTIC_PROVEN) — joint proof failed: preflight_admitted, mission_pass, validation_pass, ui_pass_no_safe_block, mission_run_present",
     "Capability surfaces explicitly excluded from promotion: approvals, plugin_registration, piko_tools, data_provider, action_surfaces, dashboard_widget, state_persistence, activity_events, gsdpi_execution, hermes_execution, bos_light_adapters, admin_support, compliance_secrets"
   ],
   "capability_promotions": {
@@ -554,28 +552,28 @@
     "calls": [],
     "joint_proof_summary": {
       "all_pass": false,
-      "blocking_gate_count": 6
+      "blocking_gate_count": 5
     }
   },
   "evidence_hashes": {
     "preflight": {
-      "sha256": null,
-      "exists": false,
+      "sha256": "d0bb70de365a98b8d584f80f6f2a01a0bfa620df954df98f16ead9e74742aa3e",
+      "size_bytes": 9729,
       "path": "runtime-evidence/M015-S06-preflight.json"
     },
     "missionRun": {
-      "sha256": "12c33eb749fed8b7113a2989426d9e72d4b944c0885757257f498ffcee09ccd2",
-      "size_bytes": 6252,
+      "sha256": "ed199b7f6e09e0996bc6a94a6896373512f6ff365209a43f1e272921c963ee63",
+      "size_bytes": 6249,
       "path": "runtime-evidence/M015-S06-native-mission-run.json"
     },
     "validation": {
-      "sha256": "830f9e735392efee5bbb317a06c5d552500d1517f8c7d623b3dcd3eac190c1ff",
-      "size_bytes": 11206,
+      "sha256": "82ca52d7ea7726b48019cbde0b39b8f1d18fe151a55adbef5c37a94a343c83ee",
+      "size_bytes": 11203,
       "path": "runtime-evidence/M015-S06-native-mission-validation.json"
     },
     "publicUi": {
-      "sha256": "f708150c8b478d240ab666170d2fdd35e81f0ed7fd348f5cd330c068e665662b",
-      "size_bytes": 45908,
+      "sha256": "9d2b2741bd4caf9293745236e8ed44a6bcb866b62c25d91983ef9191c8d5d997",
+      "size_bytes": 38347,
       "path": "runtime-evidence/M015-S06-public-ui-proof.json"
     },
     "s05Remediation": {
@@ -584,7 +582,7 @@
       "path": "runtime-evidence/M015-S05-remediation-evidence.json"
     },
     "s04Admission": {
-      "sha256": "afd4a1dfb5cb17bf4d99b3193a74e0280771152478be28ba7c4fc21cbe79d7ce",
+      "sha256": "213a67590a8daab548dbec36d9cee3509991b3374c2152191d81479584121355",
       "size_bytes": 3327,
       "path": "runtime-evidence/M015-S04-admission.json"
     },
@@ -595,7 +593,7 @@
     }
   },
   "evidence_files_loaded": {
-    "preflight": false,
+    "preflight": true,
     "mission_run": true,
     "validation": true,
     "public_ui": true,

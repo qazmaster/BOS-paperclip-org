@@ -3,10 +3,10 @@
   "milestone": "M015-4o8lfw",
   "slice": "S06",
   "task": "T04",
-  "generated": "2026-07-15T16:45:45.521Z",
-  "started_at": "2026-07-15T16:45:25.357Z",
-  "ended_at": "2026-07-15T16:45:45.521Z",
-  "elapsed_ms": 20164,
+  "generated": "2026-07-16T05:20:53.236Z",
+  "started_at": "2026-07-16T05:20:32.329Z",
+  "ended_at": "2026-07-16T05:20:53.235Z",
+  "elapsed_ms": 20906,
   "canonical_verdict": "M015_S06_UI",
   "verdict": "PASS_AUTH_NO_LEAK",
   "verdict_code": "M15-S06-UI-PASS-AUTH-NO-LEAK",
@@ -31,7 +31,7 @@
   "auth": {
     "ok": true,
     "http_status": 200,
-    "elapsed_ms": 1279,
+    "elapsed_ms": 1311,
     "cookie_names": [
       "__Secure-paperclip-default.session_token"
     ],
@@ -53,13 +53,13 @@
       "--headless=new",
       "--remote-debugging-port=9322",
       "--no-sandbox",
-      "--user-data-dir=/tmp/chrome-s06-t04-c6af9a38a095"
+      "--user-data-dir=/tmp/chrome-s06-t04-bc1073deecc0"
     ],
     "ready": true,
     "browser_ws_url": "<redacted-id>",
     "browser_version": "Chrome/150.0.7871.100",
     "protocol_version": "1.3",
-    "user_data_dir": "/tmp/chrome-s06-t04-c6af9a38a095"
+    "user_data_dir": "/tmp/chrome-s06-t04-bc1073deecc0"
   },
   "trusted_origin": {
     "protocol": "https:",
@@ -78,19 +78,19 @@
       "path": "/",
       "url": "https://paperclip.oysana.com/",
       "expected_kind": "authenticated-ui-page",
-      "started_at": "2026-07-15T16:45:26.731Z",
+      "started_at": "2026-07-16T05:20:33.959Z",
       "navigation": {
-        "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-        "loaderId": "A73838CC8CC685C30563E89EC561A3DE",
+        "frameId": "F16AF573B09AAEC433703890AF02073A",
+        "loaderId": "3C1505469638D2531497A54331B704D5",
         "error": null
       },
       "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/root.png",
       "screenshot_bytes": 5410,
       "screenshot_hash": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
       "diag_summary": {
-        "network_request_count": 12,
+        "network_request_count": 9,
         "console_event_count": 0,
-        "response_status_count": 9
+        "response_status_count": 7
       }
     },
     {
@@ -99,19 +99,19 @@
       "path": "/issues",
       "url": "https://paperclip.oysana.com/issues",
       "expected_kind": "authenticated-ui-page",
-      "started_at": "2026-07-15T16:45:28.652Z",
+      "started_at": "2026-07-16T05:20:35.911Z",
       "navigation": {
-        "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-        "loaderId": "207D3CDE94CCD964F17A9DBE2E35867E",
+        "frameId": "F16AF573B09AAEC433703890AF02073A",
+        "loaderId": "FBF2913751E2C83C428ADEA5F13BF0BE",
         "error": null
       },
       "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/child-div1.png",
-      "screenshot_bytes": 4215,
-      "screenshot_hash": "b6291434b5c06e94112f2199b583d5eae961f24dc822f631ebf1ffbb63cc0bca",
+      "screenshot_bytes": 35399,
+      "screenshot_hash": "674d66ad522263ad660b599525dbf0726c7c8dd2998110342bb982534d2cf0c2",
       "diag_summary": {
-        "network_request_count": 32,
+        "network_request_count": 34,
         "console_event_count": 0,
-        "response_status_count": 16
+        "response_status_count": 15
       }
     },
     {
@@ -120,19 +120,19 @@
       "path": "/agents",
       "url": "https://paperclip.oysana.com/agents",
       "expected_kind": "authenticated-ui-page",
-      "started_at": "2026-07-15T16:45:30.591Z",
+      "started_at": "2026-07-16T05:20:38.210Z",
       "navigation": {
-        "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-        "loaderId": "ABA85A4BF7513D3A93A58A4C5D30CF66",
+        "frameId": "F16AF573B09AAEC433703890AF02073A",
+        "loaderId": "1001AF516AA1A2860AC80CD0910ED855",
         "error": null
       },
       "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/child-div2.png",
       "screenshot_bytes": 5410,
       "screenshot_hash": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
       "diag_summary": {
-        "network_request_count": 30,
+        "network_request_count": 12,
         "console_event_count": 0,
-        "response_status_count": 15
+        "response_status_count": 13
       }
     },
     {
@@ -141,19 +141,19 @@
       "path": "/projects",
       "url": "https://paperclip.oysana.com/projects",
       "expected_kind": "authenticated-ui-page",
-      "started_at": "2026-07-15T16:45:32.860Z",
+      "started_at": "2026-07-16T05:20:40.308Z",
       "navigation": {
-        "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-        "loaderId": "67E3D77028118316084C707CD627F2F6",
+        "frameId": "F16AF573B09AAEC433703890AF02073A",
+        "loaderId": "A01C7563E2E4D535DF1885978B8DF179",
         "error": null
       },
       "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/child-div3.png",
-      "screenshot_bytes": 28584,
-      "screenshot_hash": "6117b293862a514f96a99da9df54db6da7d5a672d8547c4b4870dccace8ddd23",
+      "screenshot_bytes": 5410,
+      "screenshot_hash": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
       "diag_summary": {
-        "network_request_count": 47,
+        "network_request_count": 28,
         "console_event_count": 0,
-        "response_status_count": 17
+        "response_status_count": 13
       }
     },
     {
@@ -162,19 +162,19 @@
       "path": "/goals",
       "url": "https://paperclip.oysana.com/goals",
       "expected_kind": "authenticated-ui-page",
-      "started_at": "2026-07-15T16:45:34.833Z",
+      "started_at": "2026-07-16T05:20:42.242Z",
       "navigation": {
-        "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-        "loaderId": "690D569DAEB5B8DFC1321D2CBFCAFEBA",
+        "frameId": "F16AF573B09AAEC433703890AF02073A",
+        "loaderId": "1277E37C4356F50580D8D632B03A1A26",
         "error": null
       },
       "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/child-div4.png",
-      "screenshot_bytes": 5410,
-      "screenshot_hash": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
+      "screenshot_bytes": 43270,
+      "screenshot_hash": "ac51fb44c7f8aa9800232b85b73b91e5aa15fca3bb7ed31731dc6f532586890a",
       "diag_summary": {
-        "network_request_count": 12,
+        "network_request_count": 44,
         "console_event_count": 0,
-        "response_status_count": 15
+        "response_status_count": 17
       }
     },
     {
@@ -183,19 +183,19 @@
       "path": "/agents?division=Div5",
       "url": "https://paperclip.oysana.com/agents?division=Div5",
       "expected_kind": "authenticated-ui-page",
-      "started_at": "2026-07-15T16:45:37.070Z",
+      "started_at": "2026-07-16T05:20:44.370Z",
       "navigation": {
-        "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-        "loaderId": "81E28DD4D549ED7F80B04F382BF3EE3F",
+        "frameId": "F16AF573B09AAEC433703890AF02073A",
+        "loaderId": "C30F092E2BD8BE2F35DD5CD06AA525D3",
         "error": null
       },
       "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/child-div5.png",
-      "screenshot_bytes": 28063,
-      "screenshot_hash": "b97d6fe14babf4ff5622dc6ac4ac78bfcb65a1e3ffb9767defdbce60d15bb0bc",
+      "screenshot_bytes": 26137,
+      "screenshot_hash": "c1c8841661731fd3ec1286187f36f1bdc5b113bbebf89c99eac31b77a6cac94b",
       "diag_summary": {
-        "network_request_count": 47,
+        "network_request_count": 31,
         "console_event_count": 0,
-        "response_status_count": 17
+        "response_status_count": 19
       }
     },
     {
@@ -204,19 +204,19 @@
       "path": "/issues?search=M015-S06-T04-not-real",
       "url": "https://paperclip.oysana.com/issues?search=M015-S06-T04-not-real",
       "expected_kind": "authenticated-ui-page",
-      "started_at": "2026-07-15T16:45:39.053Z",
+      "started_at": "2026-07-16T05:20:46.649Z",
       "navigation": {
-        "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-        "loaderId": "6CDB20D776A868D122D9ED2D72CE7A87",
+        "frameId": "F16AF573B09AAEC433703890AF02073A",
+        "loaderId": "03AB1D21EAA1CE79EC7B8C082088BC91",
         "error": null
       },
       "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/child-div6.png",
-      "screenshot_bytes": 35399,
-      "screenshot_hash": "674d66ad522263ad660b599525dbf0726c7c8dd2998110342bb982534d2cf0c2",
+      "screenshot_bytes": 5410,
+      "screenshot_hash": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
       "diag_summary": {
-        "network_request_count": 31,
+        "network_request_count": 10,
         "console_event_count": 0,
-        "response_status_count": 19
+        "response_status_count": 13
       }
     },
     {
@@ -225,19 +225,19 @@
       "path": "/",
       "url": "https://paperclip.oysana.com/",
       "expected_kind": "authenticated-ui-page",
-      "started_at": "2026-07-15T16:45:41.320Z",
+      "started_at": "2026-07-16T05:20:48.838Z",
       "navigation": {
-        "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-        "loaderId": "40AFB30FDCE6AAE57613214B63F674A2",
+        "frameId": "F16AF573B09AAEC433703890AF02073A",
+        "loaderId": "47E5C9BA7D5F3E488C085CF2A36FFC28",
         "error": null
       },
       "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/root-final.png",
-      "screenshot_bytes": 5410,
-      "screenshot_hash": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
+      "screenshot_bytes": 30382,
+      "screenshot_hash": "6841fa571218fe8df5f8bf2d1733372bef8616b945cfbf85ee4f2b36ef6aaf58",
       "diag_summary": {
-        "network_request_count": 12,
+        "network_request_count": 31,
         "console_event_count": 0,
-        "response_status_count": 11
+        "response_status_count": 19
       }
     }
   ],
@@ -246,70 +246,61 @@
     "path": "/issues/s06-mission-M015-S06-T04-not-exists",
     "url": "https://paperclip.oysana.com/issues/s06-mission-M015-S06-T04-not-exists",
     "expected_kind": "404-or-not-found",
-    "started_at": "2026-07-15T16:45:43.551Z",
+    "started_at": "2026-07-16T05:20:50.857Z",
     "navigation": {
-      "frameId": "00CBB98BA1331D38946CCF1660CFE126",
-      "loaderId": "77584EBF01DC39278C04372E0FE5F507",
+      "frameId": "F16AF573B09AAEC433703890AF02073A",
+      "loaderId": "8E19143838C875EE33AE0CB52E0379EB",
       "error": null
     },
     "screenshot_path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-public-ui-screenshots/negative-issue-probe.png",
     "screenshot_bytes": 35020,
     "screenshot_hash": "f296cbbdbb8f64b50b23e20c080c6313c78d157110c644d2a1db81c6d0cc1f71",
     "diag_summary": {
-      "network_request_count": 58,
+      "network_request_count": 40,
       "console_event_count": 0,
-      "response_status_count": 17
+      "response_status_count": 18
     },
     "expected_behavior": "404-or-not-found-for-s06-mission-key"
   },
   "diagnostics_summary": {
     "root": {
-      "network_request_count": 12,
+      "network_request_count": 9,
       "console_event_count": 0,
-      "response_status_count": 9,
+      "response_status_count": 7,
       "response_status_codes": [
         200
       ],
       "network_failure_count": 0
     },
     "child-div1": {
-      "network_request_count": 32,
+      "network_request_count": 34,
       "console_event_count": 0,
-      "response_status_count": 16,
+      "response_status_count": 15,
       "response_status_codes": [
         200
       ],
       "network_failure_count": 0
     },
     "child-div2": {
-      "network_request_count": 30,
+      "network_request_count": 12,
       "console_event_count": 0,
-      "response_status_count": 15,
+      "response_status_count": 13,
       "response_status_codes": [
         200
       ],
       "network_failure_count": 0
     },
     "child-div3": {
-      "network_request_count": 47,
+      "network_request_count": 28,
       "console_event_count": 0,
-      "response_status_count": 17,
+      "response_status_count": 13,
       "response_status_codes": [
         200
       ],
       "network_failure_count": 0
     },
     "child-div4": {
-      "network_request_count": 12,
-      "console_event_count": 0,
-      "response_status_count": 15,
-      "response_status_codes": [
-        200
-      ],
-      "network_failure_count": 0
-    },
-    "child-div5": {
-      "network_request_count": 47,
+      "network_request_count": 44,
       "console_event_count": 0,
       "response_status_count": 17,
       "response_status_codes": [
@@ -317,7 +308,7 @@
       ],
       "network_failure_count": 0
     },
-    "child-div6": {
+    "child-div5": {
       "network_request_count": 31,
       "console_event_count": 0,
       "response_status_count": 19,
@@ -326,19 +317,28 @@
       ],
       "network_failure_count": 0
     },
-    "root-final": {
-      "network_request_count": 12,
+    "child-div6": {
+      "network_request_count": 10,
       "console_event_count": 0,
-      "response_status_count": 11,
+      "response_status_count": 13,
+      "response_status_codes": [
+        200
+      ],
+      "network_failure_count": 0
+    },
+    "root-final": {
+      "network_request_count": 31,
+      "console_event_count": 0,
+      "response_status_count": 19,
       "response_status_codes": [
         200
       ],
       "network_failure_count": 0
     },
     "negative-issue-probe": {
-      "network_request_count": 58,
+      "network_request_count": 40,
       "console_event_count": 0,
-      "response_status_count": 17,
+      "response_status_count": 18,
       "response_status_codes": [
         200
       ],
@@ -347,959 +347,742 @@
   },
   "screenshot_hashes": {
     "root": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
-    "child-div1": "b6291434b5c06e94112f2199b583d5eae961f24dc822f631ebf1ffbb63cc0bca",
+    "child-div1": "674d66ad522263ad660b599525dbf0726c7c8dd2998110342bb982534d2cf0c2",
     "child-div2": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
-    "child-div3": "6117b293862a514f96a99da9df54db6da7d5a672d8547c4b4870dccace8ddd23",
-    "child-div4": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
-    "child-div5": "b97d6fe14babf4ff5622dc6ac4ac78bfcb65a1e3ffb9767defdbce60d15bb0bc",
-    "child-div6": "674d66ad522263ad660b599525dbf0726c7c8dd2998110342bb982534d2cf0c2",
-    "root-final": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
+    "child-div3": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
+    "child-div4": "ac51fb44c7f8aa9800232b85b73b91e5aa15fca3bb7ed31731dc6f532586890a",
+    "child-div5": "c1c8841661731fd3ec1286187f36f1bdc5b113bbebf89c99eac31b77a6cac94b",
+    "child-div6": "d0d6b144f409fa85d8b6dd12e71fb84e84d200b7c5caa621450e0f053a5bafd2",
+    "root-final": "6841fa571218fe8df5f8bf2d1733372bef8616b945cfbf85ee4f2b36ef6aaf58",
     "negative-issue-probe": "f296cbbdbb8f64b50b23e20c080c6313c78d157110c644d2a1db81c6d0cc1f71"
   },
   "leak_scan": {
-    "total_findings": 135,
+    "total_findings": 104,
     "findings": [
       {
         "kind": "uuid-url",
-        "ref": "1488103.14",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
-        "severity": "advisory",
-        "page_slug": "root"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.15",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
-        "severity": "advisory",
-        "page_slug": "root"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.20",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.21",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.23",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.24",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.25",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.26",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.27",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.28",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.29",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.30",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.32",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/activity?limit=10",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.33",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.34",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/user-directory",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.35",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
-        "severity": "advisory",
-        "page_slug": "child-div1"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.50",
+        "ref": "2298709.14",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
         "severity": "advisory",
         "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.51",
+        "ref": "2298709.15",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
         "severity": "advisory",
         "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.58",
+        "ref": "2298709.30",
+        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
+        "severity": "advisory",
+        "page_slug": "child-div1"
+      },
+      {
+        "kind": "uuid-url",
+        "ref": "2298709.31",
+        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
+        "severity": "advisory",
+        "page_slug": "child-div1"
+      },
+      {
+        "kind": "uuid-url",
+        "ref": "2298709.36",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.59",
+        "ref": "2298709.37",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.61",
+        "ref": "2298709.39",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.62",
+        "ref": "2298709.40",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.63",
+        "ref": "2298709.41",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.64",
+        "ref": "2298709.42",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.65",
+        "ref": "2298709.43",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.66",
+        "ref": "2298709.44",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.67",
+        "ref": "2298709.45",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.68",
+        "ref": "2298709.46",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.70",
+        "ref": "2298709.48",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/user-directory",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.71",
+        "ref": "2298709.49",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/labels",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.72",
+        "ref": "2298709.50",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?includeRoutineExecutions=true&limit=500&offset=0&sortField=updated&sortDir=desc",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.73",
+        "ref": "2298709.51",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
         "severity": "advisory",
-        "page_slug": "child-div2"
+        "page_slug": "child-div1"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.88",
+        "ref": "2298709.66",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
         "severity": "advisory",
         "page_slug": "child-div2"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.89",
+        "ref": "2298709.67",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
         "severity": "advisory",
         "page_slug": "child-div2"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.94",
+        "ref": "2298709.74",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.95",
+        "ref": "2298709.75",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.97",
+        "ref": "2298709.77",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.98",
+        "ref": "2298709.78",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.99",
+        "ref": "2298709.79",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.100",
+        "ref": "2298709.80",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.101",
+        "ref": "2298709.81",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.102",
+        "ref": "2298709.82",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.103",
+        "ref": "2298709.83",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.104",
+        "ref": "2298709.84",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.106",
+        "ref": "2298709.86",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.108",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/org",
-        "severity": "advisory",
-        "page_slug": "child-div3"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.110",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
-        "severity": "advisory",
-        "page_slug": "child-div3"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.124",
+        "ref": "2298709.104",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.125",
+        "ref": "2298709.105",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
         "severity": "advisory",
         "page_slug": "child-div3"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.131",
+        "ref": "2298709.110",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.132",
+        "ref": "2298709.111",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.134",
+        "ref": "2298709.113",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.135",
+        "ref": "2298709.114",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.136",
+        "ref": "2298709.115",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.137",
+        "ref": "2298709.116",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.138",
+        "ref": "2298709.117",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.139",
+        "ref": "2298709.118",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.140",
+        "ref": "2298709.119",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.141",
+        "ref": "2298709.120",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.143",
+        "ref": "2298709.122",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
         "severity": "advisory",
-        "page_slug": "child-div3"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.158",
+        "ref": "2298709.137",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
         "severity": "advisory",
         "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.159",
+        "ref": "2298709.138",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
         "severity": "advisory",
         "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.164",
+        "ref": "2298709.143",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.165",
+        "ref": "2298709.144",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.167",
+        "ref": "2298709.146",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.168",
+        "ref": "2298709.147",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.169",
+        "ref": "2298709.148",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.170",
+        "ref": "2298709.149",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.171",
+        "ref": "2298709.150",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.172",
+        "ref": "2298709.151",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.173",
+        "ref": "2298709.152",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.174",
+        "ref": "2298709.153",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.176",
+        "ref": "2298709.155",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
         "severity": "advisory",
-        "page_slug": "child-div5"
+        "page_slug": "child-div4"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.191",
+        "ref": "2298709.170",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.192",
+        "ref": "2298709.171",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.197",
+        "ref": "2298709.176",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.198",
+        "ref": "2298709.177",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.200",
+        "ref": "2298709.179",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.201",
+        "ref": "2298709.180",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.202",
+        "ref": "2298709.181",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.203",
+        "ref": "2298709.182",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.204",
+        "ref": "2298709.183",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.205",
+        "ref": "2298709.184",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.206",
+        "ref": "2298709.185",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.207",
+        "ref": "2298709.186",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.209",
+        "ref": "2298709.188",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.211",
+        "ref": "2298709.190",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/org",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.213",
+        "ref": "2298709.192",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
         "severity": "advisory",
         "page_slug": "child-div5"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.227",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.228",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.233",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.234",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.236",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.237",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.238",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.239",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.240",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.241",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.242",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.243",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.245",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/user-directory",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.246",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/labels",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.247",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?includeRoutineExecutions=true&limit=500&offset=0&sortField=updated&sortDir=desc",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.248",
-        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
-        "severity": "advisory",
-        "page_slug": "child-div6"
-      },
-      {
-        "kind": "uuid-url",
-        "ref": "1488103.263",
+        "ref": "2298709.219",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
         "severity": "advisory",
         "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.264",
+        "ref": "2298709.220",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
         "severity": "advisory",
         "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.269",
+        "ref": "2298709.227",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.270",
+        "ref": "2298709.228",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.272",
+        "ref": "2298709.230",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.273",
+        "ref": "2298709.231",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.274",
+        "ref": "2298709.232",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.275",
+        "ref": "2298709.233",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.276",
+        "ref": "2298709.234",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.277",
+        "ref": "2298709.235",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.278",
+        "ref": "2298709.236",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.279",
+        "ref": "2298709.237",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.281",
+        "ref": "2298709.239",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/activity?limit=10",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.282",
+        "ref": "2298709.240",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.283",
+        "ref": "2298709.241",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/user-directory",
         "severity": "advisory",
-        "page_slug": "negative-issue-probe"
+        "page_slug": "root-final"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.284",
+        "ref": "2298709.242",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
+        "severity": "advisory",
+        "page_slug": "root-final"
+      },
+      {
+        "kind": "uuid-url",
+        "ref": "2298709.244",
+        "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs?minCount=4",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.299",
+        "ref": "2298709.258",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/skills",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.300",
+        "ref": "2298709.259",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/routines",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.305",
+        "ref": "2298709.264",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/projects",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.306",
+        "ref": "2298709.265",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/resource-memberships/me",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.308",
+        "ref": "2298709.267",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/agents",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.309",
+        "ref": "2298709.268",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/live-runs",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.310",
+        "ref": "2298709.269",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/inbox-dismissals",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.311",
+        "ref": "2298709.270",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/approvals",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.312",
+        "ref": "2298709.271",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/join-requests?status=pending_approval",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.313",
+        "ref": "2298709.272",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/dashboard",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.314",
+        "ref": "2298709.273",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?status=backlog%2Ctodo%2Cin_progress%2Cin_review%2Cblocked%2Cdone&touchedByUserId=me&inboxArchivedByUserId=me&limit=500",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.315",
+        "ref": "2298709.274",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/heartbeat-runs?limit=200&summary=true",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.323",
+        "ref": "2298709.282",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/user-directory",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.324",
+        "ref": "2298709.283",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/issues?limit=100&sortField=updated&sortDir=desc",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
       },
       {
         "kind": "uuid-url",
-        "ref": "1488103.327",
+        "ref": "2298709.286",
         "url": "https://paperclip.oysana.com/api/companies/<redacted-id>/sidebar-preferences/me",
         "severity": "advisory",
         "page_slug": "negative-issue-probe"
@@ -1312,10 +1095,10 @@
     "ok": true
   },
   "safe_block_context": {
-    "preflight_verdict": null,
-    "preflight_business_mutations_recorded": null,
+    "preflight_verdict": "BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE",
+    "preflight_business_mutations_recorded": 0,
     "validation_verdict": "MISSION_FAIL_CLOSED_LEDGER_VIOLATION",
-    "mission_run_status": "MISSION_BLOCKED_NO_RUN",
+    "mission_run_status": "MISSION_BLOCKED_SAFE",
     "mission_root_issue_null": true,
     "mission_run_null": true
   },
