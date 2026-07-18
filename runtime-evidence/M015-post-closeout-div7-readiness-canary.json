@@ -1,0 +1,53 @@
+{
+  "$schema": "gsd/m015-post-closeout-div7-readiness-canary-v1",
+  "milestone": "M015-4o8lfw",
+  "purpose": "Fresh read-only Div7.MissionControl readiness canary before an isolated seven-division native Paperclip mission.",
+  "captured_at": "2026-07-17T12:28:08Z",
+  "live_target": {
+    "paperclip_origin": "https://paperclip.oysana.com",
+    "company": "aipay.kz",
+    "agent": "Div7.MissionControl",
+    "adapter_type": "hermes_local",
+    "provider": "minimax",
+    "model": "MiniMax-M3"
+  },
+  "environment_test": {
+    "http_status": 200,
+    "status": "pass",
+    "hermes_version": "0.18.2",
+    "model_configured": true,
+    "required_api_keys_detected": true,
+    "credentials_persisted": false
+  },
+  "run": {
+    "id": "1e524424-8ee6-45bb-9801-c721eac48ce1",
+    "status": "succeeded",
+    "exit_code": 0,
+    "error_code": null,
+    "error": null,
+    "started_at": "2026-07-17T12:26:45.130Z",
+    "finished_at": "2026-07-17T12:28:07.649Z",
+    "liveness_state": "needs_followup",
+    "liveness_reason": "Run produced useful output but no concrete action evidence",
+    "log_sha256": "c17655b6054d9d6b35c19c70a27548be4b1d740590d812e494ba2907eac59316",
+    "log_bytes": 3239
+  },
+  "result_contract": {
+    "result_json_type": "object",
+    "top_level_keys": ["configFreshness", "cost_usd", "effectiveTimeoutSec", "result", "session_id", "stopReason", "summary", "timeoutConfigured", "timeoutFired", "timeoutSource", "usage"],
+    "bos_present": false,
+    "result_type": "string",
+    "raw_result_persisted_in_this_evidence": false
+  },
+  "mutation_audit_since": "2026-07-17T12:26:45.120Z",
+  "mutation_audit": {
+    "issues": {"created": 0, "business_updated": 0},
+    "documents": {"created": 0, "business_updated": 0},
+    "projects": {"created": 0, "business_updated": 0},
+    "goals": {"created": 0, "business_updated": 0},
+    "plugins": {"created": 0, "updated": 0},
+    "agents": {"created": 0, "operational_updated": 1, "updated_agent": "Div7.MissionControl"},
+    "business_mutations_recorded": 0
+  },
+  "verdict": "DIV7_READY_FOR_BOUNDED_SEVEN_DIVISION_MISSION"
+}
