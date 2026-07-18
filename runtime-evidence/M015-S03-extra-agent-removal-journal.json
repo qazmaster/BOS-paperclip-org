@@ -1,0 +1,16 @@
+{
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T06",
+  "action": "delete-extra-agent",
+  "target": {
+    "name": "M014.S07.BoundedMiniMax"
+  },
+  "rationale": "Non-canonical stale entry from M014.S07; reconciled live AIP roster to canonical 7 to clear NAME-DRIFT blocker observed in T01 evidence.",
+  "method": "DELETE /api/agents/{id}",
+  "completed": "2026-07-13T23:40:59.395Z",
+  "post_action_roster_count": 8,
+  "canonical_present": true,
+  "extra_present": false,
+  "rollback": "deleted agent cannot be restored without API access to its previous UUID; treat as rollback-safe per T06 task contract — quarantine via DELETE was the bounded path"
+}

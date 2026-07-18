@@ -1,0 +1,169 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s06-t10-restore-attempt.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S06",
+  "task": "T10",
+  "generated": "2026-07-16T05:45:54.447364Z",
+  "intent": "Restore live admission and rerun native mission closeout",
+  "result": "RESTORE_INFEASIBLE_IN_SANDBOX_FAIL_CLOSED_PRESERVED",
+  "canonical_verdict": "M015_S06_T10",
+  "canonical_verdict_line": "M015_S06_T10=RESTORE_INFEASIBLE_FAIL_CLOSED_PRESERVED",
+  "inherited_blockers_from_t09": [
+    "M15-S06-PREFLIGHT-LIVE-RUNTIME-UNREACHABLE",
+    "M15-S06-MISSION-PLAN-BLOCKED-UPSTREAM",
+    "M15-S06-VALIDATION-FAIL-CLOSED-LEDGER-VIOLATION",
+    "M15-S06-UI-PASS-AUTH-NO-LEAK-SAFE-BLOCK",
+    "M15-S06-PROMOTION-DENIED-BLOCKED-UPSTREAM"
+  ],
+  "t10_canonical_blocker_codes": {
+    "INHERITED_LIVE_RUNTIME_UNREACHABLE": "M15-S06-T10-INHERITED-LIVE-RUNTIME-UNREACHABLE",
+    "HERMES_SUBSTRATE_MISSING": "M15-S06-T10-HERMES-SUBSTRATE-MISSING-IN-SANDBOX",
+    "PAPERCLIP_AGENT_ROSTER_UPDATE_BLOCKED": "M15-S06-T10-PAPERCLIP-AGENT-ROSTER-UPDATE-BLOCKED-NO-AUTH",
+    "MINIMAX_BACKEND_ONLY": "M15-S06-T10-MINIMAX-BACKEND-LLM-ONLY-NOT-HERMES-SUBSTRATE",
+    "EXTERNAL_SCHEDULER_UNAVAILABLE": "M15-S06-T10-EXTERNAL-SCHEDULER-UNAVAILABLE-IN-CLOSEOUT-LANE",
+    "UPSTREAM_ADAPTER_OUT_OF_SCOPE": "M15-S06-T10-UPSTREAM-HERMES-LOCAL-ADAPTER-FIX-OUT-OF-SCOPE"
+  },
+  "restore_channels_attempted": [
+    {
+      "channel": "hermes_loopback_43131",
+      "result": {
+        "port": 43131,
+        "reachable": false,
+        "error": "ConnectionRefusedError"
+      },
+      "verdict": "unreachable",
+      "consequence": "no local Hermes substrate \u2192 bounded intake cannot be admitted"
+    },
+    {
+      "channel": "gsdpi_loopback_43132",
+      "result": {
+        "port": 43132,
+        "reachable": false,
+        "error": "ConnectionRefusedError"
+      },
+      "verdict": "unreachable",
+      "consequence": "GSD-Pi adapter path not active"
+    },
+    {
+      "channel": "hermes_binary_path",
+      "result": {
+        "path": "/home/qazanik/.local/bin/hermes"
+      },
+      "verdict": "missing",
+      "consequence": "no Hermes CLI/daemon in agent env to launch substrate"
+    },
+    {
+      "channel": "gsdpi_binary_path",
+      "result": {
+        "path": null
+      },
+      "verdict": "missing",
+      "consequence": "no GSD-Pi CLI/daemon"
+    },
+    {
+      "channel": "paperclip_oysana_root",
+      "result": {
+        "url": "https://paperclip.oysana.com/",
+        "status": 200,
+        "ok": true,
+        "elapsed_ms": 0
+      },
+      "verdict": "http_200_reachable_but_unauthenticated",
+      "consequence": "Paperclip cloud reachable but agent roster update requires authenticated session (cookie/secret) \u2014 credential collection out of scope per D062 bounded-ops and not available in this auto-mode session"
+    },
+    {
+      "channel": "minimax_models",
+      "result": null,
+      "verdict": "reachable_if_available",
+      "consequence": "MiniMax-M3 endpoint usable only as LLM backend; without Hermes substrate it cannot satisfy bos-light-v1 resultJson contract (D063 Option A)"
+    },
+    {
+      "channel": "external_scheduler_7x_sequential",
+      "result": null,
+      "verdict": "not_available_in_sandbox",
+      "consequence": "T15 Option A orchestrator requires ~105 min wall-clock (per D063); exceeds gsd_exec 600s cap and would not fit one task budget"
+    },
+    {
+      "channel": "hermes_local_adapter_emits_bos",
+      "result": null,
+      "verdict": "upstream_code_out_of_scope",
+      "consequence": "Fixing hermes_local adapter to emit resultJson.bos is upstream Paperclip code, not in this checkout; per D063 Option A structural fix"
+    }
+  ],
+  "decisions_anchored": [
+    "D059",
+    "D060",
+    "D061",
+    "D062",
+    "D063"
+  ],
+  "d063_relevant_quotes": {
+    "structural_runtime_gap": "Root cause is structural runtime gap between hermes_local adapter (emits reasoning traces {summary, result, usage, stopReason}) and bos-light-v1 contract (requires {schemaVersion, runId, division, role, status})",
+    "remediation_paths": [
+      "Option A: hermes_local/MiniMax-M3 adapter emits resultJson.bos with required bos-light-v1 fields natively",
+      "Option B: external scheduler runs T02 7x sequentially with ~105 min wall-clock budget (T15 Option A)"
+    ]
+  },
+  "upstream_evidence_freshness": {
+    "M015-S03-seven-agent-test-environment.json": {
+      "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S03-seven-agent-test-environment.json",
+      "size": 496,
+      "mtime": "2026-07-15T15:33:56.503728Z"
+    },
+    "M015-S03-seven-agent-diagnostic-runs.json": {
+      "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+      "size": 35393,
+      "mtime": "2026-07-15T12:13:38.678205Z"
+    },
+    "M015-S03-seven-agent-independent-gate.json": {
+      "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S03-seven-agent-independent-gate.json",
+      "size": 23292,
+      "mtime": "2026-07-15T15:54:16.437301Z"
+    },
+    "M015-S03-t19-diagnostic-admission-blockers.json": {
+      "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S03-t19-diagnostic-admission-blockers.json",
+      "size": 14001,
+      "mtime": "2026-07-15T12:19:18.201841Z"
+    },
+    "M015-S04-admission.json": {
+      "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S04-admission.json",
+      "size": 3327,
+      "mtime": "2026-07-16T05:40:40.066710Z"
+    },
+    "M015-S05-remediation-evidence.json": {
+      "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S05-remediation-evidence.json",
+      "size": 22991,
+      "mtime": "2026-07-15T12:20:09.712787Z"
+    },
+    "M015-S06-preflight.json": {
+      "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M015-S06-preflight.json",
+      "size": 9729,
+      "mtime": "2026-07-16T05:40:40.087710Z"
+    }
+  },
+  "baseline_preflight_verdict": "BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE",
+  "baseline_preflight_canonical": "M015_S06_PREFLIGHT=BLOCKED_ON_LIVE_RUNTIME_UNREACHABLE",
+  "baseline_admission_status": "BLOCKED_ON_S03_FAIL_CLOSED",
+  "baseline_admission_blockers_count": 2,
+  "baseline_business_mutations_recorded": 0,
+  "redaction_discipline": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false
+  },
+  "scope_of_t10_attempt": {
+    "in_scope_per_d062": [
+      "best-effort bounded live operations in current Paperclip environment",
+      "re-running existing S06 runners in --accept-safe-block mode against T09 disk state",
+      "regenerating T10-specific provenance evidence"
+    ],
+    "out_of_scope": [
+      "modifying hermes_local adapter source code (upstream)",
+      "deploying a Hermes runtime subprocess inside this sandbox (no binary)",
+      "updating Paperclip agent roster without authenticated session",
+      "promoting any R-requirement readback (D063 fail-closed)"
+    ]
+  },
+  "no_business_mutations_introduced_by_t10": true
+}

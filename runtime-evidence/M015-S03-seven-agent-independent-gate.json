@@ -1,0 +1,643 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-seven-agent-independent-gate.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T03",
+  "generated": "2026-07-15T15:54:16.436Z",
+  "status": "FAIL_CLOSED",
+  "gate_model": "49 per-agent conditions (7 agents x 7 checks including C7' provenance-backed BOS agreement) AND 4 global gates (name_drift, upstream_status, redaction, side_effects)",
+  "upstream_artifacts": {
+    "test_environment": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "diagnostic_runs": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json"
+  },
+  "global_gates": {
+    "name_drift_pass": false,
+    "upstream_status_pass": false,
+    "redaction_pass": true,
+    "side_effects_pass": true,
+    "labels": {
+      "name_drift_pass": "G1  NAME-DRIFT: roster contains no extra agents and no missing canonical division names",
+      "upstream_status_pass": "G2  UPSTREAM-STATUS: T01.status === \"PASS\" AND (T02.status === \"PASS\" OR T02 has zero business mutations — i.e. all issues are R026 boundary-diagnostic audit records and documents/comments/approvals/agents deltas are all 0)",
+      "redaction_pass": "G3  REDACTION: no UUIDs, credential assignments, or vendor-reuse marker strings (caught by the upstream regex set) in evidence string-values",
+      "side_effects_pass": "G4  SIDE-EFFECTS: heartbeat_runs_delta === 7 AND business_issue_mutations (issues_delta minus r026_boundary_diagnostic_records) === 0 AND documents/comments/approvals/agents deltas all === 0"
+    },
+    "diagnostics": {
+      "name_drift": {
+        "missing_canonical": [
+          "Div1.HCO",
+          "Div2.MasterPlanner",
+          "Div3.Treasury",
+          "Div4.Production",
+          "Div5.QualificationsLibraryLearning",
+          "Div6.External",
+          "Div7.MissionControl"
+        ],
+        "extra_roster": [],
+        "t01_name_drift_blocker": false,
+        "t02_name_drift_blocker": false
+      },
+      "upstream_status": {
+        "t01_status": "FAIL_CLOSED",
+        "t02_status": "PASS"
+      },
+      "redaction": {
+        "t01_leak_count": 0,
+        "t02_leak_count": 0,
+        "t01_leak_paths": [],
+        "t02_leak_paths": []
+      },
+      "side_effects": {
+        "issues_delta": 1,
+        "documents_delta": 0,
+        "comments_delta": 0,
+        "approvals_delta": 0,
+        "agents_delta": 0,
+        "heartbeat_runs_delta": 7,
+        "r026_boundary_diagnostic_records": 1,
+        "business_issue_mutations": 0
+      }
+    }
+  },
+  "per_agent_conditions_total": 49,
+  "per_agent_conditions_passed": 14,
+  "per_agent_conditions_failed": 35,
+  "per_agent_passed": 0,
+  "per_agent_failed": 7,
+  "per_agent_total": 7,
+  "condition_labels": {
+    "canonical_name_present": "C1  Agent present in both T01+T02 evidence under a canonical division name",
+    "t01_http_success": "C2  T01 probe: POST /api/companies/{id}/adapters/hermes_local/test-environment returned HTTP 2xx",
+    "t01_response_status_pass": "C3  T01 probe: response_status === \"pass\" (not warn|fail|unknown)",
+    "t01_no_xiaomi_endpoint_reuse": "C4  T01 probe: aggregate xiaomi_endpoint_reuse_detected === false for this agent",
+    "t02_heartbeat_terminal_succeeded": "C5  T02 heartbeat: poll reached terminal_status === \"succeeded\" within 12 attempts",
+    "t02_wake_count_delta_one": "C6  T02 heartbeat: wake_count_delta === 1 from independent heartbeat-runs list",
+    "t02_bos_provenance_agreement": "C7' T02 heartbeat: assembled bos-light-v1 values agree with observed run/poll state and independently read canonical name/role; field-level provenance populated; vendor-leak flags clean"
+  },
+  "per_agent": [
+    {
+      "name": "Div1.HCO",
+      "expected_count": 7,
+      "passed_count": 2,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": false,
+        "t01_response_status_pass": false,
+        "t01_no_xiaomi_endpoint_reuse": false,
+        "t02_heartbeat_terminal_succeeded": true,
+        "t02_wake_count_delta_one": true,
+        "t02_bos_provenance_agreement": false
+      },
+      "t01_present": false,
+      "t02_present": true,
+      "t01_verdict": null,
+      "t02_verdict": "pass",
+      "t01_http_status": null,
+      "t01_response_status": null,
+      "t01_agent_role_observed": null,
+      "t02_terminal_status": "succeeded",
+      "t02_wake_count_delta": 1,
+      "t02_bos_run_id_redacted": "43a8b7d8-<redacted>",
+      "t02_bos_observed": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "43a8b7d8-<redacted>",
+        "division": "Div1.HCO",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+      "t02_bos_provenance_agreement_diagnostics": {
+        "bos_fields_present_match": true,
+        "run_id_match": true,
+        "division_match": true,
+        "role_match": false,
+        "status_match": true,
+        "provenance_source_populated": true,
+        "leak_flags_clean": true
+      }
+    },
+    {
+      "name": "Div2.MasterPlanner",
+      "expected_count": 7,
+      "passed_count": 2,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": false,
+        "t01_response_status_pass": false,
+        "t01_no_xiaomi_endpoint_reuse": false,
+        "t02_heartbeat_terminal_succeeded": true,
+        "t02_wake_count_delta_one": true,
+        "t02_bos_provenance_agreement": false
+      },
+      "t01_present": false,
+      "t02_present": true,
+      "t01_verdict": null,
+      "t02_verdict": "pass",
+      "t01_http_status": null,
+      "t01_response_status": null,
+      "t01_agent_role_observed": null,
+      "t02_terminal_status": "succeeded",
+      "t02_wake_count_delta": 1,
+      "t02_bos_run_id_redacted": "6c9ed7a7-<redacted>",
+      "t02_bos_observed": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "6c9ed7a7-<redacted>",
+        "division": "Div2.MasterPlanner",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+      "t02_bos_provenance_agreement_diagnostics": {
+        "bos_fields_present_match": true,
+        "run_id_match": true,
+        "division_match": true,
+        "role_match": false,
+        "status_match": true,
+        "provenance_source_populated": true,
+        "leak_flags_clean": true
+      }
+    },
+    {
+      "name": "Div3.Treasury",
+      "expected_count": 7,
+      "passed_count": 2,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": false,
+        "t01_response_status_pass": false,
+        "t01_no_xiaomi_endpoint_reuse": false,
+        "t02_heartbeat_terminal_succeeded": true,
+        "t02_wake_count_delta_one": true,
+        "t02_bos_provenance_agreement": false
+      },
+      "t01_present": false,
+      "t02_present": true,
+      "t01_verdict": null,
+      "t02_verdict": "pass",
+      "t01_http_status": null,
+      "t01_response_status": null,
+      "t01_agent_role_observed": null,
+      "t02_terminal_status": "succeeded",
+      "t02_wake_count_delta": 1,
+      "t02_bos_run_id_redacted": "b4c1fd7e-<redacted>",
+      "t02_bos_observed": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "b4c1fd7e-<redacted>",
+        "division": "Div3.Treasury",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+      "t02_bos_provenance_agreement_diagnostics": {
+        "bos_fields_present_match": true,
+        "run_id_match": true,
+        "division_match": true,
+        "role_match": false,
+        "status_match": true,
+        "provenance_source_populated": true,
+        "leak_flags_clean": true
+      }
+    },
+    {
+      "name": "Div4.Production",
+      "expected_count": 7,
+      "passed_count": 2,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": false,
+        "t01_response_status_pass": false,
+        "t01_no_xiaomi_endpoint_reuse": false,
+        "t02_heartbeat_terminal_succeeded": true,
+        "t02_wake_count_delta_one": true,
+        "t02_bos_provenance_agreement": false
+      },
+      "t01_present": false,
+      "t02_present": true,
+      "t01_verdict": null,
+      "t02_verdict": "pass",
+      "t01_http_status": null,
+      "t01_response_status": null,
+      "t01_agent_role_observed": null,
+      "t02_terminal_status": "succeeded",
+      "t02_wake_count_delta": 1,
+      "t02_bos_run_id_redacted": "29169791-<redacted>",
+      "t02_bos_observed": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "29169791-<redacted>",
+        "division": "Div4.Production",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+      "t02_bos_provenance_agreement_diagnostics": {
+        "bos_fields_present_match": true,
+        "run_id_match": true,
+        "division_match": true,
+        "role_match": false,
+        "status_match": true,
+        "provenance_source_populated": true,
+        "leak_flags_clean": true
+      }
+    },
+    {
+      "name": "Div5.QualificationsLibraryLearning",
+      "expected_count": 7,
+      "passed_count": 2,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": false,
+        "t01_response_status_pass": false,
+        "t01_no_xiaomi_endpoint_reuse": false,
+        "t02_heartbeat_terminal_succeeded": true,
+        "t02_wake_count_delta_one": true,
+        "t02_bos_provenance_agreement": false
+      },
+      "t01_present": false,
+      "t02_present": true,
+      "t01_verdict": null,
+      "t02_verdict": "pass",
+      "t01_http_status": null,
+      "t01_response_status": null,
+      "t01_agent_role_observed": null,
+      "t02_terminal_status": "succeeded",
+      "t02_wake_count_delta": 1,
+      "t02_bos_run_id_redacted": "9199eb60-<redacted>",
+      "t02_bos_observed": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "9199eb60-<redacted>",
+        "division": "Div5.QualificationsLibraryLearning",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+      "t02_bos_provenance_agreement_diagnostics": {
+        "bos_fields_present_match": true,
+        "run_id_match": true,
+        "division_match": true,
+        "role_match": false,
+        "status_match": true,
+        "provenance_source_populated": true,
+        "leak_flags_clean": true
+      }
+    },
+    {
+      "name": "Div6.External",
+      "expected_count": 7,
+      "passed_count": 2,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": false,
+        "t01_response_status_pass": false,
+        "t01_no_xiaomi_endpoint_reuse": false,
+        "t02_heartbeat_terminal_succeeded": true,
+        "t02_wake_count_delta_one": true,
+        "t02_bos_provenance_agreement": false
+      },
+      "t01_present": false,
+      "t02_present": true,
+      "t01_verdict": null,
+      "t02_verdict": "pass",
+      "t01_http_status": null,
+      "t01_response_status": null,
+      "t01_agent_role_observed": null,
+      "t02_terminal_status": "succeeded",
+      "t02_wake_count_delta": 1,
+      "t02_bos_run_id_redacted": "46951e75-<redacted>",
+      "t02_bos_observed": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "46951e75-<redacted>",
+        "division": "Div6.External",
+        "role": "security",
+        "status": "succeeded"
+      },
+      "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+      "t02_bos_provenance_agreement_diagnostics": {
+        "bos_fields_present_match": true,
+        "run_id_match": true,
+        "division_match": true,
+        "role_match": false,
+        "status_match": true,
+        "provenance_source_populated": true,
+        "leak_flags_clean": true
+      }
+    },
+    {
+      "name": "Div7.MissionControl",
+      "expected_count": 7,
+      "passed_count": 2,
+      "passed": false,
+      "conditions": {
+        "canonical_name_present": false,
+        "t01_http_success": false,
+        "t01_response_status_pass": false,
+        "t01_no_xiaomi_endpoint_reuse": false,
+        "t02_heartbeat_terminal_succeeded": true,
+        "t02_wake_count_delta_one": true,
+        "t02_bos_provenance_agreement": false
+      },
+      "t01_present": false,
+      "t02_present": true,
+      "t01_verdict": null,
+      "t02_verdict": "pass",
+      "t01_http_status": null,
+      "t01_response_status": null,
+      "t01_agent_role_observed": null,
+      "t02_terminal_status": "succeeded",
+      "t02_wake_count_delta": 1,
+      "t02_bos_run_id_redacted": "885e3c47-<redacted>",
+      "t02_bos_observed": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "885e3c47-<redacted>",
+        "division": "Div7.MissionControl",
+        "role": "researcher",
+        "status": "succeeded"
+      },
+      "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+      "t02_bos_provenance_agreement_diagnostics": {
+        "bos_fields_present_match": true,
+        "run_id_match": true,
+        "division_match": true,
+        "role_match": false,
+        "status_match": true,
+        "provenance_source_populated": true,
+        "leak_flags_clean": true
+      }
+    }
+  ],
+  "blockers": [
+    {
+      "code": "M15-S03-Div1.HCO-T01-MISSING",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "agent Div1.HCO missing from T01 evidence"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed canonical_name_present (2/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T01_HTTP_SUCCESS",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed t01_http_success (2/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T01_RESPONSE_STATUS_PASS",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed t01_response_status_pass (2/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T01_NO_XIAOMI_ENDPOINT_REUSE",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed t01_no_xiaomi_endpoint_reuse (2/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T02_BOS_PROVENANCE_AGREEMENT",
+      "severity": "blocking",
+      "agent": "Div1.HCO",
+      "reason": "Div1.HCO failed t02_bos_provenance_agreement (2/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T01-MISSING",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "agent Div2.MasterPlanner missing from T01 evidence"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed canonical_name_present (2/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T01_HTTP_SUCCESS",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed t01_http_success (2/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T01_RESPONSE_STATUS_PASS",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed t01_response_status_pass (2/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T01_NO_XIAOMI_ENDPOINT_REUSE",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed t01_no_xiaomi_endpoint_reuse (2/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02_BOS_PROVENANCE_AGREEMENT",
+      "severity": "blocking",
+      "agent": "Div2.MasterPlanner",
+      "reason": "Div2.MasterPlanner failed t02_bos_provenance_agreement (2/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T01-MISSING",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "agent Div3.Treasury missing from T01 evidence"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed canonical_name_present (2/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T01_HTTP_SUCCESS",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed t01_http_success (2/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T01_RESPONSE_STATUS_PASS",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed t01_response_status_pass (2/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T01_NO_XIAOMI_ENDPOINT_REUSE",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed t01_no_xiaomi_endpoint_reuse (2/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02_BOS_PROVENANCE_AGREEMENT",
+      "severity": "blocking",
+      "agent": "Div3.Treasury",
+      "reason": "Div3.Treasury failed t02_bos_provenance_agreement (2/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T01-MISSING",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "agent Div4.Production missing from T01 evidence"
+    },
+    {
+      "code": "M15-S03-Div4.Production-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed canonical_name_present (2/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T01_HTTP_SUCCESS",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed t01_http_success (2/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T01_RESPONSE_STATUS_PASS",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed t01_response_status_pass (2/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T01_NO_XIAOMI_ENDPOINT_REUSE",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed t01_no_xiaomi_endpoint_reuse (2/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02_BOS_PROVENANCE_AGREEMENT",
+      "severity": "blocking",
+      "agent": "Div4.Production",
+      "reason": "Div4.Production failed t02_bos_provenance_agreement (2/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T01-MISSING",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "agent Div5.QualificationsLibraryLearning missing from T01 evidence"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed canonical_name_present (2/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T01_HTTP_SUCCESS",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed t01_http_success (2/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T01_RESPONSE_STATUS_PASS",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed t01_response_status_pass (2/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T01_NO_XIAOMI_ENDPOINT_REUSE",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed t01_no_xiaomi_endpoint_reuse (2/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02_BOS_PROVENANCE_AGREEMENT",
+      "severity": "blocking",
+      "agent": "Div5.QualificationsLibraryLearning",
+      "reason": "Div5.QualificationsLibraryLearning failed t02_bos_provenance_agreement (2/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T01-MISSING",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "agent Div6.External missing from T01 evidence"
+    },
+    {
+      "code": "M15-S03-Div6.External-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "Div6.External failed canonical_name_present (2/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T01_HTTP_SUCCESS",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "Div6.External failed t01_http_success (2/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T01_RESPONSE_STATUS_PASS",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "Div6.External failed t01_response_status_pass (2/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T01_NO_XIAOMI_ENDPOINT_REUSE",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "Div6.External failed t01_no_xiaomi_endpoint_reuse (2/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T02_BOS_PROVENANCE_AGREEMENT",
+      "severity": "blocking",
+      "agent": "Div6.External",
+      "reason": "Div6.External failed t02_bos_provenance_agreement (2/7)"
+    },
+    {
+      "code": "M15-S03-Div7.MissionControl-T01-MISSING",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "agent Div7.MissionControl missing from T01 evidence"
+    },
+    {
+      "code": "M15-S03-Div7.MissionControl-CANONICAL_NAME_PRESENT",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "Div7.MissionControl failed canonical_name_present (2/7)"
+    },
+    {
+      "code": "M15-S03-Div7.MissionControl-T01_HTTP_SUCCESS",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "Div7.MissionControl failed t01_http_success (2/7)"
+    },
+    {
+      "code": "M15-S03-Div7.MissionControl-T01_RESPONSE_STATUS_PASS",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "Div7.MissionControl failed t01_response_status_pass (2/7)"
+    },
+    {
+      "code": "M15-S03-Div7.MissionControl-T01_NO_XIAOMI_ENDPOINT_REUSE",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "Div7.MissionControl failed t01_no_xiaomi_endpoint_reuse (2/7)"
+    },
+    {
+      "code": "M15-S03-Div7.MissionControl-T02_BOS_PROVENANCE_AGREEMENT",
+      "severity": "blocking",
+      "agent": "Div7.MissionControl",
+      "reason": "Div7.MissionControl failed t02_bos_provenance_agreement (2/7)"
+    },
+    {
+      "code": "M15-S03-GATE-NAME-DRIFT",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "name drift: missing=[Div1.HCO,Div2.MasterPlanner,Div3.Treasury,Div4.Production,Div5.QualificationsLibraryLearning,Div6.External,Div7.MissionControl] extra=[none] t01_drift_blocker=false t02_drift_blocker=false"
+    },
+    {
+      "code": "M15-S03-GATE-UPSTREAM-STATUS",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "upstream statuses off-spec: T01=FAIL_CLOSED T02=PASS"
+    }
+  ],
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": true
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-seven-agent-diagnostic-runs.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T02",
+  "generated": "2026-07-14T22:40:45.412Z",
+  "status": "PASS",
+  "company": {
+    "issue_prefix": "AIP",
+    "name": "aipay.kz"
+  },
+  "source_contract": "runtime-evidence/M015-S01-seven-agent-target-contract.json",
+  "cross_reference": "runtime-evidence/M015-S02-seven-agent-after.json",
+  "upstream_test_environment": {
+    "artifact": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "status": "PASS"
+  },
+  "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
+  "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
+  "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
+  "poll_budget": 180,
+  "poll_interval_ms": 5000,
+  "terminal_statuses": [
+    "succeeded",
+    "failed",
+    "cancelled",
+    "expired",
+    "timed_out"
+  ],
+  "expected_success_terminal": "succeeded",
+  "required_bos_diagnostic_fields": [
+    "schemaVersion",
+    "runId",
+    "division",
+    "role",
+    "status"
+  ],
+  "agent_count_expected": 1,
+  "agent_count_observed": 1,
+  "pass_count": 1,
+  "fail_count": 0,
+  "status_distribution": {
+    "succeeded": 1
+  },
+  "poll_attempts_distribution": {
+    "36": 1
+  },
+  "side_effects": {
+    "before": {
+      "issues_count": 26,
+      "documents_count": 0,
+      "comments_count": 0,
+      "approvals_count": 0,
+      "agents_count": 8,
+      "our_issue_count": 12,
+      "our_document_count": 0,
+      "our_comment_count": 0,
+      "our_approval_count": 0,
+      "our_agent_count": 0
+    },
+    "after": {
+      "issues_count": 26,
+      "documents_count": 0,
+      "comments_count": 0,
+      "approvals_count": 0,
+      "agents_count": 8,
+      "our_issue_count": 12,
+      "our_document_count": 0,
+      "our_comment_count": 0,
+      "our_approval_count": 0,
+      "our_agent_count": 0
+    },
+    "deltas": {
+      "issues": 0,
+      "documents": 0,
+      "comments": 0,
+      "approvals": 0,
+      "agents": 0
+    },
+    "heartbeat_runs_before_total": 29,
+    "heartbeat_runs_after_total": 30,
+    "heartbeat_runs_delta": 1
+  },
+  "agents": [
+    {
+      "name": "Div1.HCO",
+      "agent_id_prefix": "5f01532c-<redacted>",
+      "agent_role": "general",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "31dbc33a-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 36,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 36,
+        "history_tail": [
+          {
+            "attempt": 34,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 35,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 36,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 1,
+      "wake_counts": {
+        "before": 29,
+        "after": 30
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "31dbc33a-<redacted>",
+        "division": "Div1.HCO",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "bos_provenance": {
+        "source": "assembled-from-runtime+canonical-metadata",
+        "all_fields_native": false,
+        "missing_fields": [
+          "schemaVersion",
+          "runId",
+          "division",
+          "role",
+          "status"
+        ],
+        "agreement": "assembled-no-native",
+        "field_sources": {
+          "schemaVersion": "contract-marker",
+          "runId": "observed-runtime",
+          "division": "canonical-mutation-order",
+          "role": "canonical-agent-roster",
+          "status": "observed-runtime"
+        },
+        "division_value_agreement": "unknown"
+      },
+      "context_markers": {
+        "division_present": true,
+        "role_present": true,
+        "paperclip_context_visible": true
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "pass",
+      "blocker_codes": []
+    }
+  ],
+  "blockers": [],
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false
+  },
+  "elapsed_ms": 225273
+}

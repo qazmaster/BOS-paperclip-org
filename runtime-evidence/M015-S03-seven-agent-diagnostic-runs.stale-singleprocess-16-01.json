@@ -1,0 +1,1177 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-seven-agent-diagnostic-runs.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T02",
+  "generated": "2026-07-15T10:48:53.569Z",
+  "status": "PASS",
+  "company": {
+    "issue_prefix": "AIP",
+    "name": "aipay.kz"
+  },
+  "source_contract": "runtime-evidence/M015-S01-seven-agent-target-contract.json",
+  "cross_reference": "runtime-evidence/M015-S02-seven-agent-after.json",
+  "upstream_test_environment": {
+    "artifact": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "status": "PASS"
+  },
+  "heartbeat_endpoint": "POST /api/agents/{agentId}/heartbeat/invoke",
+  "poll_endpoint": "GET /api/heartbeat-runs/{runId}",
+  "heartbeat_runs_list_endpoint": "GET /api/companies/{companyId}/heartbeat-runs?agentId={agentId}",
+  "poll_budget": 180,
+  "poll_interval_ms": 5000,
+  "terminal_statuses": [
+    "succeeded",
+    "failed",
+    "cancelled",
+    "expired",
+    "timed_out"
+  ],
+  "expected_success_terminal": "succeeded",
+  "required_bos_diagnostic_fields": [
+    "schemaVersion",
+    "runId",
+    "division",
+    "role",
+    "status"
+  ],
+  "agent_count_expected": 7,
+  "agent_count_observed": 7,
+  "pass_count": 7,
+  "fail_count": 0,
+  "status_distribution": {
+    "succeeded": 7
+  },
+  "poll_attempts_distribution": {
+    "9": 1,
+    "11": 1,
+    "17": 1,
+    "21": 1,
+    "22": 1,
+    "48": 1,
+    "54": 1
+  },
+  "side_effects": {
+    "before": {
+      "issues_count": 29,
+      "documents_count": 0,
+      "comments_count": 0,
+      "approvals_count": 0,
+      "agents_count": 8,
+      "our_issue_count": 29,
+      "our_document_count": 0,
+      "our_comment_count": 0,
+      "our_approval_count": 0,
+      "our_agent_count": 8
+    },
+    "after": {
+      "issues_count": 29,
+      "documents_count": 0,
+      "comments_count": 0,
+      "approvals_count": 0,
+      "agents_count": 8,
+      "our_issue_count": 29,
+      "our_document_count": 0,
+      "our_comment_count": 0,
+      "our_approval_count": 0,
+      "our_agent_count": 8
+    },
+    "deltas": {
+      "issues": 0,
+      "documents": 0,
+      "comments": 0,
+      "approvals": 0,
+      "agents": 0
+    },
+    "heartbeat_runs_before_total": 133,
+    "heartbeat_runs_after_total": 141,
+    "heartbeat_runs_delta": 7
+  },
+  "agents": [
+    {
+      "name": "Div7.MissionControl",
+      "agent_id_prefix": "478a498b-<redacted>",
+      "agent_role": "researcher",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "6b68437a-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 11,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 11,
+        "history_tail": [
+          {
+            "attempt": 9,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 10,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 11,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 1,
+      "wake_counts": {
+        "before": 33,
+        "after": 34
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "6b68437a-<redacted>",
+        "division": "Div7.MissionControl",
+        "role": "researcher",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "bos_provenance": {
+        "source": "assembled-from-runtime+canonical-metadata",
+        "all_fields_native": false,
+        "missing_fields": [
+          "schemaVersion",
+          "runId",
+          "division",
+          "role",
+          "status"
+        ],
+        "agreement": "assembled-no-native",
+        "field_sources": {
+          "schemaVersion": "contract-marker",
+          "runId": "observed-runtime",
+          "division": "canonical-mutation-order",
+          "role": "canonical-agent-roster",
+          "status": "observed-runtime"
+        },
+        "division_value_agreement": "unknown"
+      },
+      "context_markers": {
+        "division_present": true,
+        "role_present": true,
+        "paperclip_context_visible": true
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "name": "Div1.HCO",
+      "agent_id_prefix": "5f01532c-<redacted>",
+      "agent_role": "general",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "ada02555-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 54,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 54,
+        "history_tail": [
+          {
+            "attempt": 52,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 53,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 54,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 1,
+      "wake_counts": {
+        "before": 33,
+        "after": 34
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "ada02555-<redacted>",
+        "division": "Div1.HCO",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "bos_provenance": {
+        "source": "assembled-from-runtime+canonical-metadata",
+        "all_fields_native": false,
+        "missing_fields": [
+          "schemaVersion",
+          "runId",
+          "division",
+          "role",
+          "status"
+        ],
+        "agreement": "assembled-no-native",
+        "field_sources": {
+          "schemaVersion": "contract-marker",
+          "runId": "observed-runtime",
+          "division": "canonical-mutation-order",
+          "role": "canonical-agent-roster",
+          "status": "observed-runtime"
+        },
+        "division_value_agreement": "unknown"
+      },
+      "context_markers": {
+        "division_present": true,
+        "role_present": true,
+        "paperclip_context_visible": true
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "name": "Div2.MasterPlanner",
+      "agent_id_prefix": "327adf88-<redacted>",
+      "agent_role": "general",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "1a5f8c6d-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 21,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 21,
+        "history_tail": [
+          {
+            "attempt": 19,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 20,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 21,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 1,
+      "wake_counts": {
+        "before": 14,
+        "after": 15
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "1a5f8c6d-<redacted>",
+        "division": "Div2.MasterPlanner",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "bos_provenance": {
+        "source": "assembled-from-runtime+canonical-metadata",
+        "all_fields_native": false,
+        "missing_fields": [
+          "schemaVersion",
+          "runId",
+          "division",
+          "role",
+          "status"
+        ],
+        "agreement": "assembled-no-native",
+        "field_sources": {
+          "schemaVersion": "contract-marker",
+          "runId": "observed-runtime",
+          "division": "canonical-mutation-order",
+          "role": "canonical-agent-roster",
+          "status": "observed-runtime"
+        },
+        "division_value_agreement": "unknown"
+      },
+      "context_markers": {
+        "division_present": true,
+        "role_present": true,
+        "paperclip_context_visible": true
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "name": "Div3.Treasury",
+      "agent_id_prefix": "8408f78f-<redacted>",
+      "agent_role": "general",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "becc4fd1-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 48,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 48,
+        "history_tail": [
+          {
+            "attempt": 46,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 47,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 48,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 1,
+      "wake_counts": {
+        "before": 15,
+        "after": 17
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "becc4fd1-<redacted>",
+        "division": "Div3.Treasury",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "bos_provenance": {
+        "source": "assembled-from-runtime+canonical-metadata",
+        "all_fields_native": false,
+        "missing_fields": [
+          "schemaVersion",
+          "runId",
+          "division",
+          "role",
+          "status"
+        ],
+        "agreement": "assembled-no-native",
+        "field_sources": {
+          "schemaVersion": "contract-marker",
+          "runId": "observed-runtime",
+          "division": "canonical-mutation-order",
+          "role": "canonical-agent-roster",
+          "status": "observed-runtime"
+        },
+        "division_value_agreement": "unknown"
+      },
+      "context_markers": {
+        "division_present": true,
+        "role_present": true,
+        "paperclip_context_visible": true
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "name": "Div4.Production",
+      "agent_id_prefix": "999490c8-<redacted>",
+      "agent_role": "general",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "62015c03-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 9,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 9,
+        "history_tail": [
+          {
+            "attempt": 7,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 8,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 9,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 1,
+      "wake_counts": {
+        "before": 17,
+        "after": 18
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "62015c03-<redacted>",
+        "division": "Div4.Production",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "bos_provenance": {
+        "source": "assembled-from-runtime+canonical-metadata",
+        "all_fields_native": false,
+        "missing_fields": [
+          "schemaVersion",
+          "runId",
+          "division",
+          "role",
+          "status"
+        ],
+        "agreement": "assembled-no-native",
+        "field_sources": {
+          "schemaVersion": "contract-marker",
+          "runId": "observed-runtime",
+          "division": "canonical-mutation-order",
+          "role": "canonical-agent-roster",
+          "status": "observed-runtime"
+        },
+        "division_value_agreement": "unknown"
+      },
+      "context_markers": {
+        "division_present": true,
+        "role_present": true,
+        "paperclip_context_visible": true
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "name": "Div5.QualificationsLibraryLearning",
+      "agent_id_prefix": "380a347d-<redacted>",
+      "agent_role": "general",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "94325b63-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 22,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 22,
+        "history_tail": [
+          {
+            "attempt": 20,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 21,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 22,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 1,
+      "wake_counts": {
+        "before": 10,
+        "after": 11
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "94325b63-<redacted>",
+        "division": "Div5.QualificationsLibraryLearning",
+        "role": "general",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "bos_provenance": {
+        "source": "assembled-from-runtime+canonical-metadata",
+        "all_fields_native": false,
+        "missing_fields": [
+          "schemaVersion",
+          "runId",
+          "division",
+          "role",
+          "status"
+        ],
+        "agreement": "assembled-no-native",
+        "field_sources": {
+          "schemaVersion": "contract-marker",
+          "runId": "observed-runtime",
+          "division": "canonical-mutation-order",
+          "role": "canonical-agent-roster",
+          "status": "observed-runtime"
+        },
+        "division_value_agreement": "unknown"
+      },
+      "context_markers": {
+        "division_present": true,
+        "role_present": true,
+        "paperclip_context_visible": true
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "name": "Div6.External",
+      "agent_id_prefix": "35209510-<redacted>",
+      "agent_role": "security",
+      "adapter": {
+        "adapter_type": null,
+        "adapter_config_redacted": {
+          "model": "MiniMax-M3",
+          "quiet": true,
+          "graceSec": 5,
+          "provider": "minimax",
+          "toolsets": "terminal,file,web",
+          "timeoutSec": 600,
+          "persistSession": true,
+          "instructionsFilePath": "<redacted-id>",
+          "instructionsRootPath": "<redacted-id>",
+          "instructionsEntryFile": "AGENTS.md",
+          "instructionsBundleMode": "managed"
+        }
+      },
+      "invoke": {
+        "http_status": 200,
+        "run_id_redacted": "5af7022d-<redacted>",
+        "raw_response_shape": [
+          "agentId",
+          "companyId",
+          "contextSnapshot",
+          "continuationAttempt",
+          "createdAt",
+          "error",
+          "errorCode",
+          "exitCode",
+          "externalRunId",
+          "finishedAt",
+          "id",
+          "invocationSource",
+          "issueCommentRetryQueuedAt",
+          "issueCommentSatisfiedByCommentId",
+          "issueCommentStatus",
+          "lastOutputAt",
+          "lastOutputBytes",
+          "lastOutputSeq",
+          "lastOutputStream",
+          "lastUsefulActionAt",
+          "livenessReason",
+          "livenessState",
+          "logBytes",
+          "logCompressed",
+          "logRef",
+          "logSha256",
+          "logStore",
+          "nextAction",
+          "processGroupId",
+          "processLossRetryCount",
+          "processPid",
+          "processStartedAt",
+          "responsibleUserId",
+          "resultJson",
+          "retryOfRunId",
+          "scheduledRetryAt",
+          "scheduledRetryAttempt",
+          "scheduledRetryReason",
+          "sessionIdAfter",
+          "sessionIdBefore",
+          "signal",
+          "startedAt",
+          "status",
+          "stderrExcerpt",
+          "stdoutExcerpt",
+          "triggerDetail",
+          "updatedAt",
+          "usageJson",
+          "wakeupRequestId"
+        ]
+      },
+      "poll": {
+        "attempts": 17,
+        "budget": 180,
+        "terminal_observed": true,
+        "terminal_status": "succeeded",
+        "attempts_to_terminal": 17,
+        "history_tail": [
+          {
+            "attempt": 15,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 16,
+            "observed_status": "running"
+          },
+          {
+            "attempt": 17,
+            "observed_status": "succeeded"
+          }
+        ]
+      },
+      "wake_count_delta": 1,
+      "wake_counts": {
+        "before": 11,
+        "after": 12
+      },
+      "result_json_bos_redacted": {
+        "schemaVersion": "bos-light-v1",
+        "runId": "5af7022d-<redacted>",
+        "division": "Div6.External",
+        "role": "security",
+        "status": "succeeded"
+      },
+      "result_json_bos_required_fields": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "result_json_bos_fields_present": [
+        "schemaVersion",
+        "runId",
+        "division",
+        "role",
+        "status"
+      ],
+      "bos_provenance": {
+        "source": "assembled-from-runtime+canonical-metadata",
+        "all_fields_native": false,
+        "missing_fields": [
+          "schemaVersion",
+          "runId",
+          "division",
+          "role",
+          "status"
+        ],
+        "agreement": "assembled-no-native",
+        "field_sources": {
+          "schemaVersion": "contract-marker",
+          "runId": "observed-runtime",
+          "division": "canonical-mutation-order",
+          "role": "canonical-agent-roster",
+          "status": "observed-runtime"
+        },
+        "division_value_agreement": "unknown"
+      },
+      "context_markers": {
+        "division_present": true,
+        "role_present": true,
+        "paperclip_context_visible": true
+      },
+      "leak_flags": {
+        "xiaomi_endpoint_reuse_detected": false,
+        "credential_assignment_detected": false
+      },
+      "verdict": "pass",
+      "blocker_codes": []
+    }
+  ],
+  "blockers": [],
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false
+  },
+  "elapsed_ms": 965159
+}

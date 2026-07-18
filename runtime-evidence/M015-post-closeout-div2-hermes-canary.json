@@ -1,0 +1,91 @@
+{
+  "$schema": "gsd/m015-post-closeout-div2-hermes-canary-v1",
+  "milestone": "M015-4o8lfw",
+  "purpose": "Fresh post-closeout live canary for Div2.MasterPlanner using hermes_local with MiniMax-M3. Captures runtime readiness, terminal run state, result contract shape, and bounded mutation audit without persisting credentials or raw model output.",
+  "captured_at": "2026-07-17T07:18:00Z",
+  "live_target": {
+    "paperclip_origin": "https://paperclip.oysana.com",
+    "company": "aipay.kz",
+    "agent": "Div2.MasterPlanner",
+    "adapter_type": "hermes_local",
+    "provider": "minimax",
+    "model": "MiniMax-M3"
+  },
+  "environment_test": {
+    "http_status": 200,
+    "status": "pass",
+    "hermes_version": "0.18.2",
+    "hermes_build": "2026.7.7.2",
+    "python_version": "3.13.5",
+    "openai_sdk_version": "2.24.0",
+    "model_configured": true,
+    "required_api_keys_detected": true,
+    "credentials_persisted": false
+  },
+  "run": {
+    "id": "dd349fcc-9277-4078-af77-f5b9493a8bab",
+    "invocation_source": "on_demand",
+    "trigger_detail": "manual",
+    "started_at": "2026-07-17T07:17:33.522Z",
+    "finished_at": "2026-07-17T07:17:52.862Z",
+    "status": "succeeded",
+    "exit_code": 0,
+    "error_code": null,
+    "error": null,
+    "liveness_state": "plan_only",
+    "liveness_reason": "Run described runnable future work without concrete action evidence",
+    "log_sha256": "107b63efbabbf07d1f6549e21f57c8283edaa4a004b5c881f687feedea787a42",
+    "log_bytes": 5427
+  },
+  "result_contract": {
+    "result_json_type": "object",
+    "top_level_keys": [
+      "configFreshness",
+      "cost_usd",
+      "effectiveTimeoutSec",
+      "result",
+      "session_id",
+      "stopReason",
+      "summary",
+      "timeoutConfigured",
+      "timeoutFired",
+      "timeoutSource",
+      "usage"
+    ],
+    "bos_present": false,
+    "bos_type": null,
+    "result_type": "string",
+    "raw_result_persisted_in_this_evidence": false
+  },
+  "mutation_audit_since": "2026-07-17T07:17:33.507Z",
+  "mutation_audit": {
+    "issues": { "created": 0, "business_updated": 0 },
+    "documents": { "created": 0, "business_updated": 0 },
+    "projects": { "created": 0, "business_updated": 0 },
+    "goals": { "created": 0, "business_updated": 0 },
+    "plugins": { "total": 0, "created": 0, "updated": 0 },
+    "agents": {
+      "created": 0,
+      "operational_updated": 1,
+      "updated_agent": "Div2.MasterPlanner",
+      "expected_fields": ["last_heartbeat_at", "updated_at", "status"],
+      "final_status": "idle",
+      "error_reason": null
+    },
+    "business_mutations_recorded": 0
+  },
+  "verdict": {
+    "runtime_reachability": "PASS",
+    "paperclip_board_authentication": "PASS",
+    "hermes_minimax_execution": "PASS",
+    "zero_business_mutations": "PASS",
+    "bos_result_contract": "FAIL_MISSING_RESULT_JSON_BOS",
+    "overall": "RUNTIME_PASS_CONTRACT_REMEDIATION_REQUIRED"
+  },
+  "conclusions": [
+    "hermes_local does not require a separate 127.0.0.1:43131 loopback service for this execution path; the CLI-backed adapter executed successfully.",
+    "Paperclip board authentication is functional through the supported email sign-in session flow; the earlier 401 described an unauthenticated probe, not a general API outage.",
+    "The remaining blocking gap is the result contract: successful MiniMax-M3 runs persist result_json.result as a string and do not emit result_json.bos.",
+    "A Codex fallback is not needed to prove runtime reachability; it remains useful only as an optional control adapter during normalizer remediation."
+  ]
+}

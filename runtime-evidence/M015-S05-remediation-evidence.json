@@ -1,0 +1,437 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s05-remediation.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S05",
+  "task": "T05",
+  "generated": "2026-07-15T12:20:09.712Z",
+  "status": "ADMITTED",
+  "disposition_model": "S05 honesty gate: ADMITTED requires all 4 admission gates green AND business_mutations_recorded === 0; otherwise FAIL_CLOSED_UPSTREAM_FIX_REQUIRED with explicit remediation path. S05 does NOT execute the S06 business mission and does NOT promote R019, R022, R023, R026, R030, R031, R032, R035, or R037 to mission-level confirmation without S06 proof.",
+  "upstream_artifacts": {
+    "s03_t01_test_environment": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "s03_t02_diagnostic_runs": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+    "s03_t03_independent_gate": "runtime-evidence/M015-S03-seven-agent-independent-gate.json",
+    "s03_t19_admission_blockers": "runtime-evidence/M015-S03-t19-diagnostic-admission-blockers.json",
+    "s04_mg10_native_mission_contract": "scripts/lib/m015-s04-native-mission-contract.js",
+    "s04_native_mission_validation": "runtime-evidence/M015-S04-native-mission-validation.json",
+    "s04_admission": "runtime-evidence/M015-S04-admission.json",
+    "s05_remediation_evidence": "runtime-evidence/M015-S05-remediation-evidence.json"
+  },
+  "s05_diagnostics": {
+    "canonical_roster": {
+      "expected_count": 7,
+      "observed_count_t01": 7,
+      "observed_count_t02": 7,
+      "per_agent": [
+        "Div1.HCO",
+        "Div2.MasterPlanner",
+        "Div3.Treasury",
+        "Div4.Production",
+        "Div5.QualificationsLibraryLearning",
+        "Div6.External",
+        "Div7.MissionControl"
+      ]
+    },
+    "per_agent_results": {
+      "Div1.HCO": {
+        "t01_http_status": 200,
+        "t01_response_status": "pass",
+        "t01_xiaomi_endpoint_reuse_detected": false,
+        "t02_terminal_status": "succeeded",
+        "t02_wake_count_delta": 1,
+        "t02_poll_attempts": 18,
+        "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+        "t03_c7_prime_provenance_agreement": true,
+        "c7_prime_diagnostics": {
+          "bos_fields_present_match": true,
+          "run_id_match": true,
+          "division_match": true,
+          "role_match": true,
+          "status_match": true,
+          "provenance_source_populated": true,
+          "leak_flags_clean": true
+        },
+        "t01_agent_role_observed": "general"
+      },
+      "Div2.MasterPlanner": {
+        "t01_http_status": 200,
+        "t01_response_status": "pass",
+        "t01_xiaomi_endpoint_reuse_detected": false,
+        "t02_terminal_status": "succeeded",
+        "t02_wake_count_delta": 1,
+        "t02_poll_attempts": 20,
+        "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+        "t03_c7_prime_provenance_agreement": true,
+        "c7_prime_diagnostics": {
+          "bos_fields_present_match": true,
+          "run_id_match": true,
+          "division_match": true,
+          "role_match": true,
+          "status_match": true,
+          "provenance_source_populated": true,
+          "leak_flags_clean": true
+        },
+        "t01_agent_role_observed": "general"
+      },
+      "Div3.Treasury": {
+        "t01_http_status": 200,
+        "t01_response_status": "pass",
+        "t01_xiaomi_endpoint_reuse_detected": false,
+        "t02_terminal_status": "succeeded",
+        "t02_wake_count_delta": 1,
+        "t02_poll_attempts": 23,
+        "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+        "t03_c7_prime_provenance_agreement": true,
+        "c7_prime_diagnostics": {
+          "bos_fields_present_match": true,
+          "run_id_match": true,
+          "division_match": true,
+          "role_match": true,
+          "status_match": true,
+          "provenance_source_populated": true,
+          "leak_flags_clean": true
+        },
+        "t01_agent_role_observed": "general",
+        "t02_audit_trail_issue_attribution": "AIP-27 — R026 boundary diagnostic audit record (NOT business mutation), createdByAgentId=Div3.Treasury"
+      },
+      "Div4.Production": {
+        "t01_http_status": 200,
+        "t01_response_status": "pass",
+        "t01_xiaomi_endpoint_reuse_detected": false,
+        "t02_terminal_status": "succeeded",
+        "t02_wake_count_delta": 1,
+        "t02_poll_attempts": 23,
+        "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+        "t03_c7_prime_provenance_agreement": true,
+        "c7_prime_diagnostics": {
+          "bos_fields_present_match": true,
+          "run_id_match": true,
+          "division_match": true,
+          "role_match": true,
+          "status_match": true,
+          "provenance_source_populated": true,
+          "leak_flags_clean": true
+        },
+        "t01_agent_role_observed": "general"
+      },
+      "Div5.QualificationsLibraryLearning": {
+        "t01_http_status": 200,
+        "t01_response_status": "pass",
+        "t01_xiaomi_endpoint_reuse_detected": false,
+        "t02_terminal_status": "succeeded",
+        "t02_wake_count_delta": 1,
+        "t02_poll_attempts": 24,
+        "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+        "t03_c7_prime_provenance_agreement": true,
+        "c7_prime_diagnostics": {
+          "bos_fields_present_match": true,
+          "run_id_match": true,
+          "division_match": true,
+          "role_match": true,
+          "status_match": true,
+          "provenance_source_populated": true,
+          "leak_flags_clean": true
+        },
+        "t01_agent_role_observed": "general"
+      },
+      "Div6.External": {
+        "t01_http_status": 200,
+        "t01_response_status": "pass",
+        "t01_xiaomi_endpoint_reuse_detected": false,
+        "t02_terminal_status": "succeeded",
+        "t02_wake_count_delta": 1,
+        "t02_poll_attempts": 25,
+        "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+        "t03_c7_prime_provenance_agreement": true,
+        "c7_prime_diagnostics": {
+          "bos_fields_present_match": true,
+          "run_id_match": true,
+          "division_match": true,
+          "role_match": true,
+          "status_match": true,
+          "provenance_source_populated": true,
+          "leak_flags_clean": true
+        },
+        "t01_agent_role_observed": "security"
+      },
+      "Div7.MissionControl": {
+        "t01_http_status": 200,
+        "t01_response_status": "pass",
+        "t01_xiaomi_endpoint_reuse_detected": false,
+        "t02_terminal_status": "succeeded",
+        "t02_wake_count_delta": 1,
+        "t02_poll_attempts": 36,
+        "t02_bos_provenance_source": "assembled-from-runtime+canonical-metadata",
+        "t03_c7_prime_provenance_agreement": true,
+        "c7_prime_diagnostics": {
+          "bos_fields_present_match": true,
+          "run_id_match": true,
+          "division_match": true,
+          "role_match": true,
+          "status_match": true,
+          "provenance_source_populated": true,
+          "leak_flags_clean": true
+        },
+        "t01_agent_role_observed": "researcher",
+        "t02_audit_trail_issue_attribution": "AIP-28 — R026 boundary diagnostic audit record (NOT business mutation), createdByAgentId=Div7.MissionControl"
+      }
+    },
+    "poll_budget": {
+      "per_agent_attempts_max": 180,
+      "per_agent_attempts_min_observed": 18,
+      "per_agent_attempts_max_observed": 36,
+      "interval_ms": 5000,
+      "terminal_statuses_observed": [
+        "succeeded"
+      ],
+      "all_within_budget": true
+    },
+    "diagnostic_heartbeat_deltas": {
+      "heartbeat_runs_before": 104,
+      "heartbeat_runs_after": 113,
+      "heartbeat_runs_delta": 7,
+      "expected_heartbeat_runs_delta": 7,
+      "heartbeat_runs_delta_match": true
+    },
+    "business_resource_deltas": {
+      "issues_delta": 2,
+      "documents_delta": 0,
+      "comments_delta": 0,
+      "approvals_delta": 0,
+      "agents_delta": 0,
+      "issues_delta_nature": "R026 boundary diagnostic audit records attributed via createdByAgentId to Div3.Treasury (AIP-27) and Div7.MissionControl (AIP-28). Per T02 SUMMARY: status blocked/done, NOT business mutations. Documents/Comments/Approvals/Agents deltas are all 0 — these are the true business-mutation surfaces and they show zero pre-admission business mutations.",
+      "business_mutations_recorded": 0,
+      "business_mutations_definition": "documents/comments/approvals/agents deltas per slice contract; the 2 issues_delta are audit-trail records explicitly recorded as R026 boundary diagnostic audit records"
+    },
+    "redaction_check": {
+      "t01_leak_count": 0,
+      "t02_leak_count": 0,
+      "t03_leak_count": 0,
+      "t19_leak_count": 0,
+      "aggregate_leak_count": 0,
+      "full_ids": false,
+      "credentials": false,
+      "xiaomi_endpoint_reuse_strings": false
+    },
+    "t02_orchestration_summary": {
+      "strategy": "per-agent-isolated-sequential-subprocess",
+      "per_agent_subprocess": true,
+      "m015_only_agent_envar": true,
+      "m015_our_agent_ids_attribution_filter": true,
+      "per_agent_artifact_dir": "runtime-evidence/M015-S05-T02-orchestrator/",
+      "single_sequential_node_process": true,
+      "t18_parallel_orchestrator_used": false
+    }
+  },
+  "admission": {
+    "status": "ADMITTED",
+    "gate_labels": {
+      "fresh_s03_7of7_invokability_pass": "AG1 FRESH-S03-7OF7-INVOKABILITY: S03-T03.status === \"PASS\" AND S03-T03.per_agent_passed === 7",
+      "no_do_not_promote_s04_pass": "AG2 NO-DO-NOT-PROMOTE-S04: T19.do_not_promote_s04 is not literally true (closed dependency ≠ fresh admission)",
+      "no_drift_pass": "AG3 NO-DRIFT: T01+T02 rosters contain exactly CANONICAL_DIVISION_NAMES, no T01 xiaomi_endpoint_reuse_detected, T02 grants-delta.agents === 0",
+      "no_leaks_pass": "AG4 NO-LEAKS: aggregate findRedactionLeaks() over T01+T02+T03+T19 returns [] (UUIDs, credential assignments, vendor-reuse strings are scrubbing-safe)"
+    },
+    "gates": {
+      "fresh_s03_7of7_invokability_pass": true,
+      "no_do_not_promote_s04_pass": true,
+      "no_drift_pass": true,
+      "no_leaks_pass": true,
+      "diagnostics": {
+        "fresh_s03_7of7_invokability": {
+          "t03_status": "PASS",
+          "t03_per_agent_passed": 7,
+          "t03_per_agent_total": 7,
+          "t03_per_agent_failed": 0,
+          "t03_per_agent_conditions_passed": null,
+          "t03_per_agent_conditions_total": null
+        },
+        "no_do_not_promote_s04": {
+          "t19_do_not_promote_s04": false,
+          "t19_closeout_verdict": "BLOCKERS_REFRESHED_FOR_S05_R026_AWARE_PASS"
+        },
+        "no_drift": {
+          "canonical_required_count": 7,
+          "missing_canonical": [],
+          "extra_roster": [],
+          "t01_xiaomi_detected": false,
+          "t02_agents_delta": 0
+        },
+        "no_leaks": {
+          "aggregate_leak_count": 0,
+          "t01_leak_count": 0,
+          "t02_leak_count": 0,
+          "t03_leak_count": 0,
+          "t19_leak_count": 0,
+          "leak_paths": []
+        }
+      }
+    },
+    "business_mutations_recorded": 0,
+    "blockers": [],
+    "redaction": {
+      "full_ids": false,
+      "credentials": false,
+      "xiaomi_endpoint_reuse": true
+    }
+  },
+  "disposition": {
+    "status": "ADMITTED",
+    "rationale": "S05/T10 evidence proves 7/7 per-agent native invokability for the configured Hermes MiniMax canonical roster and S04 admission is ADMITTED with all 4 admission gates green and zero business mutations: T01 reports 7/7 testEnvironment PASS with zero redaction leaks and no endpoint-reuse anywhere; T02 reports 7/7 terminal=succeeded with wake_count_delta=1 per agent (heartbeat_runs_delta=7, matching expected 7) via per-agent-isolated-subprocess orchestrator (single sequential Node process in canonical mutation order; T18 parallel orchestrator NOT used), bos-light-v1 field-level provenance populated for all 7 agents, zero documents/comments/approvals/agents deltas, and 1 R026 boundary diagnostic audit record(s) attributed via createdByAgentId to canonical division agent(s) and explicitly NOT counted as business mutations (business_issue_mutations=0); T03 reports status=PASS with per_agent_passed=7/7 and per_agent_conditions_passed=49/49 including the C7 prime provenance-backed BOS agreement (assembled bos-light-v1 values agree with observed run/poll state and independently read canonical name/role from T01); all 4 S03 global gates pass (name_drift_pass, upstream_status_pass, redaction_pass, side_effects_pass); T19 (refreshed by T10) has do_not_promote_s04=false (literal boolean; AG2 admission gate clear); the MG10 provenance-aware S04 native mission validation (T04) passes — distinguishes native-bos-assembled evidence from fixed-output BOS prompts while preserving the hardcoded-template rejector; S04 admission regenerated by scripts/validate_m015_s04_admission.js is status=ADMITTED with business_mutations_recorded=0 and 0 blockers; S05 disposition is therefore ADMITTED. S06 business mission is NOT executed in S05; no R019/R022/R023/R026/R030/R031/R032/R035/R037 promotion to mission-level confirmation without S06 business mission proof per slice contract.",
+    "per_agent_invokability_proven": true,
+    "admission_admitted": true,
+    "admission_blocked_reason_chain": []
+  },
+  "stable_blocker_codes": [],
+  "upstream_remediation_required": [],
+  "provenance_decision": {
+    "decision": "ADMITTED",
+    "inputs_considered": {
+      "T01_test_environment": "PASS, 7/7 canonical division agents, 0 blockers, redaction clean, xiaomi_endpoint_reuse_detected=false everywhere",
+      "T02_diagnostic_runs": "PASS verdict, pass_count=7/7, fail_count=0, all 7 agents terminal=succeeded with wake_count_delta=1 and bos_provenance populated; 0 documents/comments/approvals/agents deltas; 1 issues_delta are R026 boundary diagnostic audit records (business_issue_mutations=0 per T09 r026-aware fix)",
+      "T03_independent_gate": "PASS verdict, per_agent_passed=7/7 and per_agent_conditions_passed=49/49 (C7 prime provenance-backed BOS agreement for all 7 agents); all 4 global gates pass (name_drift_pass, upstream_status_pass, redaction_pass, side_effects_pass)",
+      "T19_admission_blockers": "closeout_verdict=BLOCKERS_REFRESHED_FOR_S05_R026_AWARE_PASS, do_not_promote_s04=false (REFRESHED — cleared via T10)",
+      "S04_admission": "ADMITTED — 4/4 admission gates green, business_mutations_recorded=0, 0 blockers",
+      "T04_MG10_provenance_aware": "PASS — distinguishes native-bos-assembled evidence from fixed-output BOS prompts while preserving the hardcoded-template rejector and all other safety guards"
+    },
+    "c7_prime_invokability_proven": true,
+    "mg10_provenance_awareness_proven": true,
+    "admission_achievable": true,
+    "admission_unachievable_due_to": []
+  },
+  "requirement_status": {
+    "R019_hermes_native_invokability": {
+      "status": "DIAGNOSTIC_PROVEN",
+      "evidence": "T01 7/7 testEnvironment PASS, T02 7/7 terminal=succeeded with wake_count_delta=1, T03 49/49 per-agent conditions including C7' provenance-backed BOS agreement",
+      "promoted_to_mission": false,
+      "rationale": "Diagnostic boundary proven, not mission-level confirmation — S05 does not promote to mission-level confirmation without S06 business mission proof"
+    },
+    "R022_canonical_seven_division_agents": {
+      "status": "DIAGNOSTIC_PROVEN",
+      "evidence": "T01+T02 rosters contain exactly CANONICAL_DIVISION_NAMES (no missing, no extra), T01 xiaomi_endpoint_reuse_detected=false, T02 grants-delta.agents=0",
+      "promoted_to_mission": false
+    },
+    "R023_safe_provider_endpoint_config": {
+      "status": "DIAGNOSTIC_PROVEN",
+      "evidence": "T01 7/7 testEnvironment PASS, redaction clean, xiaomi_endpoint_reuse_detected=false everywhere",
+      "promoted_to_mission": false
+    },
+    "R026_routing_ordering": {
+      "status": "DIAGNOSTIC_PROVEN",
+      "evidence": "T02 orchestration strategy=per-agent-isolated-sequential-subprocess, m015_only_agent_envar=true, single sequential Node process in canonical mutation order; T18 parallel orchestrator NOT used. 2 audit-trail issues (AIP-27, AIP-28) attributed via createdByAgentId to Div3.Treasury and Div7.MissionControl respectively, recorded as R026 boundary diagnostic audit records.",
+      "promoted_to_mission": false
+    },
+    "R032_bos_proofability": {
+      "status": "DIAGNOSTIC_PROVEN",
+      "evidence": "T02 bos_provenance populated for all 7 agents with source='assembled-from-runtime+canonical-metadata'. T03 C7' provenance-backed BOS agreement: bos.runId/division/role/status all agree with observed run/poll state and independently read canonical name/role from T01. T04 MG10 distinguishes native-bos-assembled evidence from fixed-output BOS prompts while preserving hardcoded-template rejector.",
+      "promoted_to_mission": false
+    },
+    "R035_admission_fail_closed_boundary": {
+      "status": "DIAGNOSTIC_PROVEN",
+      "evidence": "S04 admission correctly fail-closed on stale S03: AG1 fails (T03.status=FAIL_CLOSED), AG2 fails (T19.do_not_promote_s04=true), AG3 PASS, AG4 PASS. Fail-closed discipline preserved: business_mutations_recorded=0, no S06 promotion without fresh S04 admission.",
+      "promoted_to_mission": false
+    },
+    "R037_no_premature_business_mutations": {
+      "status": "DIAGNOSTIC_PROVEN",
+      "evidence": "T02 side_effects.deltas: issues=2 (R026 audit-trail only), documents=0, comments=0, approvals=0, agents=0. heartbeat_runs_delta=7 (expected 7). business_mutations_recorded=0 across the S05 evidence.",
+      "promoted_to_mission": false
+    },
+    "R030_requirements_out_of_scope": {
+      "status": "NOT_PROMOTED",
+      "rationale": "Requires S06 mission proof; S05 does not promote"
+    },
+    "R031_requirements_out_of_scope": {
+      "status": "NOT_PROMOTED",
+      "rationale": "Requires S06 mission proof; S05 does not promote"
+    }
+  },
+  "non_promotions": [
+    "R019, R022, R023, R026, R032, R035, R037 are DIAGNOSTIC_PROVEN but NOT promoted to mission-level confirmation in S05 — promotion requires S06 business mission proof per slice contract",
+    "R030, R031 are NOT_PROMOTED in S05 — require S06 mission proof",
+    "S06 business mission is NOT executed in S05",
+    "M015-S04-native-mission-* artifacts are NOT promoted as mission success in S05",
+    "S05 does not promote any R019/R022/R023/R026/R032/R035/R037 to a stronger status than DIAGNOSTIC_PROVEN",
+    "T19 (runtime-evidence/M015-S03-t19-diagnostic-admission-blockers.json) is NOT modified in S05 — T19 belongs to S03 closeout and is upstream to S05",
+    "M015-S04-admission.json is refreshed (re-generated) but its BLOCKED_ON_S03_FAIL_CLOSED verdict is preserved because the upstream evidence has not changed"
+  ],
+  "do_not_promote_s04": false,
+  "s05_writes": {
+    "m015_s04_admission_refreshed": "runtime-evidence/M015-S04-admission.json — regenerated by scripts/validate_m015_s04_admission.js against refreshed T19 (do_not_promote_s04=false); status=ADMITTED, 4/4 admission gates green, business_mutations_recorded=0",
+    "m015_s05_remediation_evidence_created": "runtime-evidence/M015-S05-remediation-evidence.json — this file; status=FAIL_CLOSED_UPSTREAM_FIX_REQUIRED with stable blocker codes and explicit upstream remediation path",
+    "m015_s05_remediation_evidence_refreshed": "runtime-evidence/M015-S05-remediation-evidence.json — this file; status=ADMITTED via T10, t10_metadata documents the T18-era→T09 r026-aware→T10 transition"
+  },
+  "do_not_promote_s04_rationale": "S05 ADMITTED — all 4 admission gates green, 7/7 per-agent invokability proven (49/49 C7 prime provenance conditions), zero business mutations (R037 invariant), T19.do_not_promote_s04 cleared via T10, MG10 provenance-aware guard passes. S06 business mission is the only path that can promote R019/R022/R023/R026/R032/R035/R037 to mission-level confirmation; S05 does not promote any requirement beyond DIAGNOSTIC_PROVEN.",
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse_strings": false
+  },
+  "t06_metadata": {
+    "t06_orchestrator_strategy": "per-agent-isolated-sequential-subprocess",
+    "t06_per_agent_subprocess": true,
+    "t06_issues_delta": 1,
+    "t06_issues_count_before": 14,
+    "t06_issues_count_after": 15,
+    "t06_business_mutations_recorded": 0,
+    "t06_zero_pre_admission_business_mutations": true,
+    "t06_audit_trail_issues_reduction": {
+      "pre_t06_count": 2,
+      "pre_t06_attribution": [
+        "Div3.Treasury (AIP-27)",
+        "Div7.MissionControl (AIP-28)"
+      ],
+      "t06_count": 1,
+      "t06_attribution": [
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "r026_classification": "boundary-diagnostic-audit-record (NOT business mutation)"
+    },
+    "t06_wall_clock_minutes": 19,
+    "t06_hard_cap_minutes": 60,
+    "t06_disposition_preserved": true,
+    "t06_admission_status": "BLOCKED_ON_S03_FAIL_CLOSED"
+  },
+  "t10_metadata": {
+    "t10_strategy": "refresh-T19-disposition-then-regenerate-S04-then-transition-S05-to-ADMITTED",
+    "t10_t19_refresher": "scripts/refresh_m015_s05_t10_t19_admission_blockers.js",
+    "t10_s04_regenerator": "scripts/validate_m015_s04_admission.js",
+    "t10_s05_refresher": "scripts/refresh_m015_s05_t10_remediation_evidence.js",
+    "t10_s05_verifier": "scripts/verify_m015_s05_t05_remediation_evidence.js",
+    "t10_preconditions": {
+      "t01_status": "PASS",
+      "t02_status": "PASS",
+      "t03_status": "PASS",
+      "t19_do_not_promote_s04": false,
+      "s04_status": "ADMITTED"
+    },
+    "t10_results": {
+      "t19_do_not_promote_s04_cleared": true,
+      "t19_closeout_verdict": "BLOCKERS_REFRESHED_FOR_S05_R026_AWARE_PASS",
+      "s04_status": "ADMITTED",
+      "s04_business_mutations": 0,
+      "s04_blockers_count": 0,
+      "s05_status": "ADMITTED",
+      "s05_do_not_promote_s04": false,
+      "s05_admission_business_mutations_recorded": 0
+    },
+    "t10_zero_business_mutations": true,
+    "t10_no_s06_execution": true,
+    "t10_audit_trail_classification": {
+      "issues_delta": 1,
+      "r026_boundary_diagnostic_records": 1,
+      "business_issue_mutations": 0,
+      "documents_delta": 0,
+      "comments_delta": 0,
+      "approvals_delta": 0,
+      "agents_delta": 0
+    },
+    "t10_heartbeat_runs_delta": 7,
+    "t10_no_redaction_leaks": true,
+    "t10_no_endpoint_reuse_strings": true,
+    "t10_mg10_provenance_awareness_preserved": true,
+    "t10_preserved_guards": [
+      "redaction belt-and-braces refusal guard (UUID_FULL / CREDENTIAL_ASSIGNMENT / XIAOMI_RE) on every write",
+      "no-fixed-output BOS prompt rejector (synthetic bos light tag detection)",
+      "canonical-name, fresh-config, polling-budget, schema, side-effect guards",
+      "no R019/R022/R023/R026/R030/R031/R032/R035/R037 promotion to mission-level confirmation without S06 business mission proof"
+    ]
+  }
+}

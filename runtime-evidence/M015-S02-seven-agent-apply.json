@@ -1,0 +1,198 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-seven-agent-apply.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S02",
+  "task": "T02",
+  "generated": "2026-07-13T17:13:10.253Z",
+  "status": "PASS",
+  "company": {
+    "issue_prefix": "AIP",
+    "name": "aipay.kz"
+  },
+  "target_contract": "runtime-evidence/M015-S01-seven-agent-target-contract.json",
+  "agent_count_expected": 7,
+  "agent_count_confirmed": 7,
+  "failed_agent": null,
+  "operation_journal": [
+    {
+      "agent": "Div7.MissionControl",
+      "operation": "agent-config",
+      "status": "confirmed"
+    },
+    {
+      "agent": "Div7.MissionControl",
+      "operation": "instructions",
+      "status": "confirmed",
+      "instruction_sha256": "cb55ffb0d14c375dd5c76ce7f8ca32e046f2345b4228684eb102a6949dbd25cf"
+    },
+    {
+      "agent": "Div7.MissionControl",
+      "operation": "exact-readback",
+      "status": "confirmed",
+      "title": "Mission Control / Strategy",
+      "reports_to": "CEO",
+      "adapter_type": "hermes_local",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "terminal,file",
+      "instruction_sha256": "cb55ffb0d14c375dd5c76ce7f8ca32e046f2345b4228684eb102a6949dbd25cf"
+    },
+    {
+      "agent": "Div1.HCO",
+      "operation": "agent-config",
+      "status": "confirmed"
+    },
+    {
+      "agent": "Div1.HCO",
+      "operation": "instructions",
+      "status": "confirmed",
+      "instruction_sha256": "3dcec179779256733ff2f71c2bfbe612d98a8ea4e377fb9d84179bb6ed8d5100"
+    },
+    {
+      "agent": "Div1.HCO",
+      "operation": "exact-readback",
+      "status": "confirmed",
+      "title": "Head Communication Office",
+      "reports_to": "Div7.MissionControl",
+      "adapter_type": "hermes_local",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "terminal,file",
+      "instruction_sha256": "3dcec179779256733ff2f71c2bfbe612d98a8ea4e377fb9d84179bb6ed8d5100"
+    },
+    {
+      "agent": "Div2.MasterPlanner",
+      "operation": "agent-config",
+      "status": "confirmed"
+    },
+    {
+      "agent": "Div2.MasterPlanner",
+      "operation": "instructions",
+      "status": "confirmed",
+      "instruction_sha256": "5d506bf4e1221ba0a634b2521eeac1906ced4b17317893af20d4686b2a86929c"
+    },
+    {
+      "agent": "Div2.MasterPlanner",
+      "operation": "exact-readback",
+      "status": "confirmed",
+      "title": "Shaping / Product Planning",
+      "reports_to": "Div1.HCO",
+      "adapter_type": "hermes_local",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "terminal,file",
+      "instruction_sha256": "5d506bf4e1221ba0a634b2521eeac1906ced4b17317893af20d4686b2a86929c"
+    },
+    {
+      "agent": "Div3.Treasury",
+      "operation": "agent-config",
+      "status": "confirmed"
+    },
+    {
+      "agent": "Div3.Treasury",
+      "operation": "instructions",
+      "status": "confirmed",
+      "instruction_sha256": "4d61c2fd5f58ac1b7cd7318537dce8a0d862b8b5de51f3cdd2c07abcb09b45ba"
+    },
+    {
+      "agent": "Div3.Treasury",
+      "operation": "exact-readback",
+      "status": "confirmed",
+      "title": "Treasury / Budget / Access",
+      "reports_to": "Div1.HCO",
+      "adapter_type": "hermes_local",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "terminal,file",
+      "instruction_sha256": "4d61c2fd5f58ac1b7cd7318537dce8a0d862b8b5de51f3cdd2c07abcb09b45ba"
+    },
+    {
+      "agent": "Div4.Production",
+      "operation": "agent-config",
+      "status": "confirmed"
+    },
+    {
+      "agent": "Div4.Production",
+      "operation": "instructions",
+      "status": "confirmed",
+      "instruction_sha256": "e3b9a3986ea7050ce3b88bbadec5869cde262e568878b5d2b97beeb8560ea1ab"
+    },
+    {
+      "agent": "Div4.Production",
+      "operation": "exact-readback",
+      "status": "confirmed",
+      "title": "Production / Build / Delivery",
+      "reports_to": "Div1.HCO",
+      "adapter_type": "hermes_local",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "terminal,file",
+      "instruction_sha256": "e3b9a3986ea7050ce3b88bbadec5869cde262e568878b5d2b97beeb8560ea1ab"
+    },
+    {
+      "agent": "Div5.QualificationsLibraryLearning",
+      "operation": "agent-config",
+      "status": "confirmed"
+    },
+    {
+      "agent": "Div5.QualificationsLibraryLearning",
+      "operation": "instructions",
+      "status": "confirmed",
+      "instruction_sha256": "5a17fb2e58bad3173a48e78640cf0de04c75c17ba100001036320490ebeb4c6e"
+    },
+    {
+      "agent": "Div5.QualificationsLibraryLearning",
+      "operation": "exact-readback",
+      "status": "confirmed",
+      "title": "Qualifications / Library / Learning",
+      "reports_to": "Div1.HCO",
+      "adapter_type": "hermes_local",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "terminal,file",
+      "instruction_sha256": "5a17fb2e58bad3173a48e78640cf0de04c75c17ba100001036320490ebeb4c6e"
+    },
+    {
+      "agent": "Div6.External",
+      "operation": "agent-config",
+      "status": "confirmed"
+    },
+    {
+      "agent": "Div6.External",
+      "operation": "instructions",
+      "status": "confirmed",
+      "instruction_sha256": "9e31d19a00e72947749b2e61967f87db57d36e61f4a1c9dc944c8e39235dd7b4"
+    },
+    {
+      "agent": "Div6.External",
+      "operation": "exact-readback",
+      "status": "confirmed",
+      "title": "External / DMZ",
+      "reports_to": "Div1.HCO",
+      "adapter_type": "hermes_local",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "persist_session": true,
+      "max_turns_per_run": null,
+      "toolsets": "terminal,file,web",
+      "instruction_sha256": "9e31d19a00e72947749b2e61967f87db57d36e61f4a1c9dc944c8e39235dd7b4"
+    }
+  ],
+  "stale_xiaomi_remaining_in_confirmed_readbacks": 0,
+  "redaction": {
+    "full_ids": false,
+    "credentials": false
+  }
+}

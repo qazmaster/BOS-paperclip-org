@@ -1,0 +1,74 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s04-admission.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S04",
+  "task": "T01",
+  "generated": "2026-07-15T09:32:03.924Z",
+  "status": "BLOCKED_ON_S03_FAIL_CLOSED",
+  "admission_model": "4 admission gates (fresh_s03_7of7_invokability, no_do_not_promote_s04, no_drift, no_leaks)",
+  "upstream_artifacts": {
+    "s03_t01_test_environment": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "s03_t02_diagnostic_runs": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+    "s03_t03_independent_gate": "runtime-evidence/M015-S03-seven-agent-independent-gate.json",
+    "s03_t19_admission_blockers": "runtime-evidence/M015-S03-t19-diagnostic-admission-blockers.json"
+  },
+  "gate_labels": {
+    "fresh_s03_7of7_invokability_pass": "AG1 FRESH-S03-7OF7-INVOKABILITY: S03-T03.status === \"PASS\" AND S03-T03.per_agent_passed === 7",
+    "no_do_not_promote_s04_pass": "AG2 NO-DO-NOT-PROMOTE-S04: T19.do_not_promote_s04 is not literally true (closed dependency ≠ fresh admission)",
+    "no_drift_pass": "AG3 NO-DRIFT: T01+T02 rosters contain exactly CANONICAL_DIVISION_NAMES, no T01 xiaomi_endpoint_reuse_detected, T02 grants-delta.agents === 0",
+    "no_leaks_pass": "AG4 NO-LEAKS: aggregate findRedactionLeaks() over T01+T02+T03+T19 returns [] (UUIDs, credential assignments, vendor-reuse strings are scrubbing-safe)"
+  },
+  "gates": {
+    "fresh_s03_7of7_invokability_pass": false,
+    "no_do_not_promote_s04_pass": false,
+    "no_drift_pass": true,
+    "no_leaks_pass": true,
+    "diagnostics": {
+      "fresh_s03_7of7_invokability": {
+        "t03_status": "FAIL_CLOSED",
+        "t03_per_agent_passed": 7,
+        "t03_per_agent_total": 7,
+        "t03_per_agent_failed": 0
+      },
+      "no_do_not_promote_s04": {
+        "t19_do_not_promote_s04": true,
+        "t19_closeout_verdict": "BLOCKERS_RECORDED_FAIL_CLOSED_PRESERVED"
+      },
+      "no_drift": {
+        "canonical_required_count": 7,
+        "missing_canonical": [],
+        "extra_roster": [],
+        "t01_xiaomi_detected": false,
+        "t02_agents_delta": 0
+      },
+      "no_leaks": {
+        "aggregate_leak_count": 0,
+        "t01_leak_count": 0,
+        "t02_leak_count": 0,
+        "t03_leak_count": 0,
+        "t19_leak_count": 0,
+        "leak_paths": []
+      }
+    }
+  },
+  "business_mutations_recorded": 0,
+  "blockers": [
+    {
+      "code": "M15-S04-ADMISSION-GATE-FRESH-S03-7OF7",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "fresh S03 7/7 invokability not proven: T03.status=FAIL_CLOSED T03.per_agent_passed=7/7 (failed=0)"
+    },
+    {
+      "code": "M15-S04-ADMISSION-GATE-DO-NOT-PROMOTE-S04",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "T19.do_not_promote_s04=true is explicitly true; S04 admission must be blocked until upstream remediation (closeout_verdict=BLOCKERS_RECORDED_FAIL_CLOSED_PRESERVED)"
+    }
+  ],
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": true
+  }
+}

@@ -1,0 +1,530 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-t16-independent-gate-revalidation.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T16",
+  "title": "M015-S03 T16 — Independent gate revalidation and side-effect snapshot",
+  "generated": "2026-07-14T12:38:13.630Z",
+  "verdict": "GATE_FAIL_CLOSED_PRESERVED",
+  "summary": "Independent validator reports 23/49 per-agent conditions (T08-era level), three of four global gates fail, 35 blockers, six of seven canonical agents missing from T02 aggregate, heartbeat_runs_delta=0 (target=7). Fail-closed preservation of inherited non-auth structural blockers.",
+  "gate_status": "FAIL_CLOSED",
+  "per_agent_conditions_passed": 23,
+  "per_agent_conditions_total": 49,
+  "per_agent_passed": 0,
+  "per_agent_total": 7,
+  "seven_canonical_represented": 1,
+  "seven_canonical_represented_required": 7,
+  "all_seven_represented": false,
+  "forbidden_resource_deltas_zero": true,
+  "heartbeat_runs_delta_observed": 0,
+  "heartbeat_runs_delta_required": 7,
+  "redaction_clean": true,
+  "redaction_leak_count": 0,
+  "upstream_artifacts": {
+    "test_environment": "runtime-evidence/M015-S03-seven-agent-test-environment.json",
+    "diagnostic_runs": "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+    "independent_gate": "runtime-evidence/M015-S03-seven-agent-independent-gate.json",
+    "t15_native_recovery": "runtime-evidence/M015-S03-t15-native-diagnostic-recovery.json"
+  },
+  "upstream_status_snapshot": {
+    "t01_status": "PASS",
+    "t01_generated": "2026-07-14T11:24:34.616Z",
+    "t01_pass_count": 7,
+    "t01_fail_count": 0,
+    "t01_agents_observed": 7,
+    "t02_status": "FAIL_CLOSED",
+    "t02_generated": "2026-07-14T12:30:13.810Z",
+    "t02_pass_count": 0,
+    "t02_fail_count": 1,
+    "t02_agents_observed": 1,
+    "t02_heartbeat_runs_delta": 0
+  },
+  "global_gates": {
+    "name_drift_pass": false,
+    "upstream_status_pass": false,
+    "redaction_pass": true,
+    "side_effects_pass": false
+  },
+  "side_effects_deltas": {
+    "issues_delta": 0,
+    "documents_delta": 0,
+    "comments_delta": 0,
+    "approvals_delta": 0,
+    "agents_delta": 0,
+    "heartbeat_runs_delta": 0
+  },
+  "per_agent_summary": [
+    {
+      "name": "Div1.HCO",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "t01_present": true,
+      "t02_present": false,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null,
+      "failed_conditions": [
+        "canonical_name_present",
+        "t02_heartbeat_terminal_succeeded",
+        "t02_wake_count_delta_one",
+        "t02_bos_result_present"
+      ]
+    },
+    {
+      "name": "Div2.MasterPlanner",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "t01_present": true,
+      "t02_present": false,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null,
+      "failed_conditions": [
+        "canonical_name_present",
+        "t02_heartbeat_terminal_succeeded",
+        "t02_wake_count_delta_one",
+        "t02_bos_result_present"
+      ]
+    },
+    {
+      "name": "Div3.Treasury",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "t01_present": true,
+      "t02_present": false,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null,
+      "failed_conditions": [
+        "canonical_name_present",
+        "t02_heartbeat_terminal_succeeded",
+        "t02_wake_count_delta_one",
+        "t02_bos_result_present"
+      ]
+    },
+    {
+      "name": "Div4.Production",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "t01_present": true,
+      "t02_present": false,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null,
+      "failed_conditions": [
+        "canonical_name_present",
+        "t02_heartbeat_terminal_succeeded",
+        "t02_wake_count_delta_one",
+        "t02_bos_result_present"
+      ]
+    },
+    {
+      "name": "Div5.QualificationsLibraryLearning",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "t01_present": true,
+      "t02_present": false,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null,
+      "failed_conditions": [
+        "canonical_name_present",
+        "t02_heartbeat_terminal_succeeded",
+        "t02_wake_count_delta_one",
+        "t02_bos_result_present"
+      ]
+    },
+    {
+      "name": "Div6.External",
+      "expected_count": 7,
+      "passed_count": 3,
+      "passed": false,
+      "t01_present": true,
+      "t02_present": false,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": null,
+      "t02_wake_count_delta": null,
+      "failed_conditions": [
+        "canonical_name_present",
+        "t02_heartbeat_terminal_succeeded",
+        "t02_wake_count_delta_one",
+        "t02_bos_result_present"
+      ]
+    },
+    {
+      "name": "Div7.MissionControl",
+      "expected_count": 7,
+      "passed_count": 5,
+      "passed": false,
+      "t01_present": true,
+      "t02_present": true,
+      "t01_http_status": 200,
+      "t01_response_status": "pass",
+      "t02_terminal_status": "succeeded",
+      "t02_wake_count_delta": 0,
+      "failed_conditions": [
+        "t02_wake_count_delta_one",
+        "t02_bos_result_present"
+      ]
+    }
+  ],
+  "blocker_summary": [
+    {
+      "code": "M15-S03-Div1.HCO-T02-MISSING",
+      "count": 1,
+      "agents": [
+        "Div1.HCO"
+      ],
+      "sample_reason": "agent Div1.HCO missing from T02 evidence"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-CANONICAL_NAME_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div1.HCO"
+      ],
+      "sample_reason": "Div1.HCO failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "count": 1,
+      "agents": [
+        "Div1.HCO"
+      ],
+      "sample_reason": "Div1.HCO failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T02_WAKE_COUNT_DELTA_ONE",
+      "count": 1,
+      "agents": [
+        "Div1.HCO"
+      ],
+      "sample_reason": "Div1.HCO failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div1.HCO-T02_BOS_RESULT_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div1.HCO"
+      ],
+      "sample_reason": "Div1.HCO failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02-MISSING",
+      "count": 1,
+      "agents": [
+        "Div2.MasterPlanner"
+      ],
+      "sample_reason": "agent Div2.MasterPlanner missing from T02 evidence"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-CANONICAL_NAME_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div2.MasterPlanner"
+      ],
+      "sample_reason": "Div2.MasterPlanner failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "count": 1,
+      "agents": [
+        "Div2.MasterPlanner"
+      ],
+      "sample_reason": "Div2.MasterPlanner failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02_WAKE_COUNT_DELTA_ONE",
+      "count": 1,
+      "agents": [
+        "Div2.MasterPlanner"
+      ],
+      "sample_reason": "Div2.MasterPlanner failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div2.MasterPlanner-T02_BOS_RESULT_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div2.MasterPlanner"
+      ],
+      "sample_reason": "Div2.MasterPlanner failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02-MISSING",
+      "count": 1,
+      "agents": [
+        "Div3.Treasury"
+      ],
+      "sample_reason": "agent Div3.Treasury missing from T02 evidence"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-CANONICAL_NAME_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div3.Treasury"
+      ],
+      "sample_reason": "Div3.Treasury failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "count": 1,
+      "agents": [
+        "Div3.Treasury"
+      ],
+      "sample_reason": "Div3.Treasury failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02_WAKE_COUNT_DELTA_ONE",
+      "count": 1,
+      "agents": [
+        "Div3.Treasury"
+      ],
+      "sample_reason": "Div3.Treasury failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div3.Treasury-T02_BOS_RESULT_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div3.Treasury"
+      ],
+      "sample_reason": "Div3.Treasury failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02-MISSING",
+      "count": 1,
+      "agents": [
+        "Div4.Production"
+      ],
+      "sample_reason": "agent Div4.Production missing from T02 evidence"
+    },
+    {
+      "code": "M15-S03-Div4.Production-CANONICAL_NAME_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div4.Production"
+      ],
+      "sample_reason": "Div4.Production failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "count": 1,
+      "agents": [
+        "Div4.Production"
+      ],
+      "sample_reason": "Div4.Production failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02_WAKE_COUNT_DELTA_ONE",
+      "count": 1,
+      "agents": [
+        "Div4.Production"
+      ],
+      "sample_reason": "Div4.Production failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div4.Production-T02_BOS_RESULT_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div4.Production"
+      ],
+      "sample_reason": "Div4.Production failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02-MISSING",
+      "count": 1,
+      "agents": [
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "sample_reason": "agent Div5.QualificationsLibraryLearning missing from T02 evidence"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-CANONICAL_NAME_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "sample_reason": "Div5.QualificationsLibraryLearning failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "count": 1,
+      "agents": [
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "sample_reason": "Div5.QualificationsLibraryLearning failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02_WAKE_COUNT_DELTA_ONE",
+      "count": 1,
+      "agents": [
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "sample_reason": "Div5.QualificationsLibraryLearning failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div5.QualificationsLibraryLearning-T02_BOS_RESULT_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div5.QualificationsLibraryLearning"
+      ],
+      "sample_reason": "Div5.QualificationsLibraryLearning failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T02-MISSING",
+      "count": 1,
+      "agents": [
+        "Div6.External"
+      ],
+      "sample_reason": "agent Div6.External missing from T02 evidence"
+    },
+    {
+      "code": "M15-S03-Div6.External-CANONICAL_NAME_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div6.External"
+      ],
+      "sample_reason": "Div6.External failed canonical_name_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T02_HEARTBEAT_TERMINAL_SUCCEEDED",
+      "count": 1,
+      "agents": [
+        "Div6.External"
+      ],
+      "sample_reason": "Div6.External failed t02_heartbeat_terminal_succeeded (3/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T02_WAKE_COUNT_DELTA_ONE",
+      "count": 1,
+      "agents": [
+        "Div6.External"
+      ],
+      "sample_reason": "Div6.External failed t02_wake_count_delta_one (3/7)"
+    },
+    {
+      "code": "M15-S03-Div6.External-T02_BOS_RESULT_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div6.External"
+      ],
+      "sample_reason": "Div6.External failed t02_bos_result_present (3/7)"
+    },
+    {
+      "code": "M15-S03-Div7.MissionControl-T02_WAKE_COUNT_DELTA_ONE",
+      "count": 1,
+      "agents": [
+        "Div7.MissionControl"
+      ],
+      "sample_reason": "Div7.MissionControl failed t02_wake_count_delta_one (5/7)"
+    },
+    {
+      "code": "M15-S03-Div7.MissionControl-T02_BOS_RESULT_PRESENT",
+      "count": 1,
+      "agents": [
+        "Div7.MissionControl"
+      ],
+      "sample_reason": "Div7.MissionControl failed t02_bos_result_present (5/7)"
+    },
+    {
+      "code": "M15-S03-GATE-NAME-DRIFT",
+      "count": 1,
+      "agents": [],
+      "sample_reason": "name drift: missing=[Div1.HCO,Div2.MasterPlanner,Div3.Treasury,Div4.Production,Div5.QualificationsLibraryLearning,Div6.External] extra=[none] t01_drift_blocker=false t02_drift_blocker=false"
+    },
+    {
+      "code": "M15-S03-GATE-UPSTREAM-STATUS",
+      "count": 1,
+      "agents": [],
+      "sample_reason": "upstream statuses off-spec: T01=PASS T02=FAIL_CLOSED"
+    },
+    {
+      "code": "M15-S03-GATE-SIDE-EFFECTS",
+      "count": 1,
+      "agents": [],
+      "sample_reason": "side-effect deltas off-spec: {\"issues_delta\":0,\"documents_delta\":0,\"comments_delta\":0,\"approvals_delta\":0,\"agents_delta\":0,\"heartbeat_runs_delta\":0}"
+    }
+  ],
+  "blocker_total": 35,
+  "inherited_blockers": [
+    {
+      "finding_id": "F-T16-001",
+      "severity": "blocking",
+      "title": "Cold-start latency exceeds bounded poll budget",
+      "evidence_refs": [
+        "runtime-evidence/M015-S03-t10-inspection.json",
+        "runtime-evidence/M015-S03-t12-native-contract-remediation.json",
+        "runtime-evidence/M015-S03-t15-native-diagnostic-recovery.json"
+      ],
+      "summary": "Hermes/MiniMax-M3 cold-start envelope 100-315 s per agent (T10 measurement). T15 used M015_POLL_BUDGET=24 (120 s wall-clock), 1.6-5.0x shorter than cold-start; T10 measurement recorded Div7 newest run took 605 s before timed_out. POLL-BUDGET-EXHAUSTED is structurally predetermined by budget choice, not auth boundary state.",
+      "remediation_gate": "requires longer poll budget or accept-only-already-succeeded runs"
+    },
+    {
+      "finding_id": "F-T16-002",
+      "severity": "blocking",
+      "title": "resultJson.bos.division null - native hermes extraction omits division",
+      "evidence_refs": [
+        "runtime-evidence/M015-S03-t11-full-field-inspection.json",
+        "runtime-evidence/M015-S03-t11-native-remediation-boundary.json",
+        "runtime-evidence/M015-S03-t12-native-contract-remediation.json"
+      ],
+      "summary": "0 hits for bos-light-v1 division field across 21 runs x 32 fields x 7 agents (T11). Native hermes emits bos-light-v1 schema marker but omits division. T12 observe-and-complete fallback should have substituted agentMeta.name, but native bos (schemaVersion=bos-light-v1 present) returned so fallback did not activate.",
+      "remediation_gate": "requires schema-level fix on native hermes adapter or accepting partial bos schema"
+    },
+    {
+      "finding_id": "F-T16-003",
+      "severity": "blocking",
+      "title": "heartbeat_runs_delta != 7 - aggregate seven-agent chain incomplete",
+      "evidence_refs": [
+        "runtime-evidence/M015-S03-seven-agent-diagnostic-runs.json",
+        "runtime-evidence/M015-S03-t15-native-diagnostic-recovery.json"
+      ],
+      "summary": "Aggregate T02 evidence contains 1 of 7 agents (Div7.MissionControl). 6/7 canonical agents are absent from T02; the per-agent diagnostic-run artifacts (Div1..Div7) exist but have not been aggregated into the seven-agent-diagnostic-runs.json (last refresh 2026-07-14T12:30:13.810Z, T15 era).",
+      "remediation_gate": "requires re-running T02 aggregate OR explicit acceptance of single-agent chain as canonical for the slice"
+    }
+  ],
+  "redaction_leaks_observed": [],
+  "revalidation": {
+    "revalidation_id": "M015-S03-T16-1",
+    "revalidation_trigger": "T16 — Revalidate seven-agent independent gate and side effects",
+    "invocation": {
+      "command": "node scripts/validate_m015_s03_independent_agent_proof.js",
+      "duration_ms_observed_class": "sub-second wall clock (deterministic JSON validator)",
+      "expect_exit_zero": false,
+      "actual_exit_zero_path": "exit 1 fail-closed (M015_S03_GATE=fail conditions < 49/49 OR blockers > 0) — inherited non-auth structural blockers preserved"
+    },
+    "t04_regression": {
+      "command": "node --test scripts/test_validate_m015_s03_independent_agent_proof.js",
+      "observed": "65/65 fixtures pass, 0 fail"
+    }
+  },
+  "downstream_s04_admission": {
+    "s04_admission_posture": "block",
+    "rationale": "Inherited non-auth structural blockers preserved: cold-start latency exceeds bounded poll budget (F-T16-001), native bos-light-v1 schema omits division (F-T16-002), T02 aggregate missing 6/7 canonical agents (F-T16-003). T15 confirmed auth boundary recovered (sign-in HTTP 200, heartbeat invoke HTTP 200). S04 admission MUST consult this artifact and the underlying T03 gate evidence; do not promote without re-running T02 aggregate to all 7 canonical agents AND extending poll budget to cover cold-start envelope.",
+    "s04_required_consult": "runtime-evidence/M015-S03-seven-agent-independent-gate.json + runtime-evidence/M015-S03-t16-independent-gate-revalidation.json",
+    "s04_blocking_artifacts": [
+      "runtime-evidence/M015-S03-t11-native-remediation-boundary.json"
+    ]
+  },
+  "do_not_weaken_guards": [
+    "canonical-name guard: only the 7 canonical division names iterated; no new agents created in BOS Light",
+    "fresh-config guard: T01 evidence unchanged since 2026-07-14T11:24:34.616Z; no agent mutations during T16",
+    "redaction guard: redactor scrubbed on every gate write; UUIDs, credentials, and forbidden vendor-reuse marker strings scrubbed",
+    "vendor-reuse guard: hermes_local / minimax / MiniMax-M3 only; leak_flags clean",
+    "polling guard: bounded MAX_POLL_BUDGET cap 600 preserved; no synthetic fixed-output prompts",
+    "side-effect guard: forbidden Paperclip resource deltas all 0; no business artifacts created",
+    "schema guard: bos-light-v1 schema remains required for C7; observed runtime shape is preserved fail-closed"
+  ],
+  "guards_preserved": true,
+  "notes": "T16 is a revalidation step that captures the current gate state. The T15 evidence confirmed auth boundary recovery; T16 confirms the inherited non-auth structural blockers remain fail-closed per the S03 contract. S04 admission MUST consult both this artifact and the underlying T03 gate evidence."
+}

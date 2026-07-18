@@ -1,0 +1,133 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s04-native-mission-protocol.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S04",
+  "task": "T02",
+  "generated": "2026-07-15T15:54:16.445Z",
+  "status": "MISSION_FAIL_CLOSED",
+  "safe_block_declared": false,
+  "admission_summary": {
+    "status": "BLOCKED_ON_S03_FAIL_CLOSED",
+    "admitted": false,
+    "blocked": true,
+    "blocker_codes": [
+      "M15-S04-ADMISSION-GATE-NO-DRIFT"
+    ]
+  },
+  "protocol": {
+    "topology_required_root_assignee": "Div7.MissionControl",
+    "division_requirements": {
+      "Div1.HCO": {
+        "comment_required": true,
+        "document_required": false,
+        "review_required": false,
+        "terminal_disposition_state": "routed"
+      },
+      "Div2.MasterPlanner": {
+        "comment_required": true,
+        "document_required": true,
+        "review_required": false,
+        "terminal_disposition_state": "planned"
+      },
+      "Div3.Treasury": {
+        "comment_required": true,
+        "document_required": false,
+        "review_required": false,
+        "terminal_disposition_state": "budgeted"
+      },
+      "Div4.Production": {
+        "comment_required": true,
+        "document_required": true,
+        "review_required": false,
+        "terminal_disposition_state": "built"
+      },
+      "Div5.QualificationsLibraryLearning": {
+        "comment_required": true,
+        "document_required": false,
+        "review_required": true,
+        "terminal_disposition_state": "reviewed"
+      },
+      "Div6.External": {
+        "comment_required": true,
+        "document_required": false,
+        "review_required": false,
+        "terminal_disposition_state": "external_brief_received"
+      },
+      "Div7.MissionControl": {
+        "comment_required": true,
+        "document_required": false,
+        "review_required": false,
+        "terminal_disposition_state": "finalised"
+      }
+    },
+    "review_path": {
+      "required_reviewer": "Div5.QualificationsLibraryLearning",
+      "review_target": "Div4.Production",
+      "routing_disposition_owner": "Div1.HCO",
+      "final_disposition_owner": "Div7.MissionControl"
+    },
+    "allowlisted_side_effects": {
+      "root_issue_max": 1,
+      "div7_to_div1_max": 1,
+      "div1_to_operating_max": 5,
+      "documents_max": 2,
+      "heartbeat_runs_expected": 7,
+      "heartbeat_runs_max": 7
+    },
+    "time_budgets": {
+      "per_run_timeout_sec": 600,
+      "mission_total_budget_sec": 3600
+    },
+    "idempotency_and_recovery": {
+      "mission_key_required": true,
+      "idempotency_key_required": true,
+      "recovery_lock_required": true,
+      "expected_runs_per_mission": 7
+    }
+  },
+  "gate_labels": {
+    "mission_topology_pass": "MG1 MISSION_TOPOLOGY: root assignee === Div7.MissionControl; parent chain Div7→Div1→Div2..Div6 with one child per division",
+    "authorship_and_authority_pass": "MG2 AUTHORSHIP_AND_AUTHORITY: Div7 creates Div1 child, Div1 creates Div2..Div6 children, harness only writes to Div7",
+    "agent_authored_outputs_pass": "MG3 AGENT_AUTHORED_OUTPUTS: each division emits its required comment/document; only Div2 + Div4 author documents",
+    "review_and_disposition_path_pass": "MG4 REVIEW_AND_DISPOSITION_PATH: Div5 reviews Div4; Div1 routes disposition; Div7 finalises the root mission",
+    "allowlisted_side_effects_pass": "MG5 ALLOWLISTED_SIDE_EFFECTS: only root issue + 6 children + bounded comments + 2 docs + 7 runs; no extras",
+    "terminal_run_and_disposition_states_pass": "MG6 TERMINAL_RUN_AND_DISPOSITION_STATES: exactly 7 runs, all terminal=succeeded; all 7 divisions have disposition comments",
+    "time_budgets_pass": "MG7 TIME_BUDGETS: per_run_timeout_sec=600, mission_total=3600; no run exceeded its window",
+    "idempotency_and_recovery_lock_pass": "MG8 IDEMPOTENCY_AND_RECOVERY_LOCK: mission_key + idempotency_key + recovery_lock all present and unique",
+    "secret_hygiene_pass": "<redacted>",
+    "no_synthetic_bos_fallback_pass": "MG10 NO_SYNTHETIC_BOS_FALLBACK: zero \"synthetic bos light\" tags in any readback value"
+  },
+  "gates": {
+    "mission_topology_pass": false,
+    "authorship_and_authority_pass": false,
+    "agent_authored_outputs_pass": false,
+    "review_and_disposition_path_pass": false,
+    "allowlisted_side_effects_pass": false,
+    "terminal_run_and_disposition_states_pass": false,
+    "time_budgets_pass": false,
+    "idempotency_and_recovery_lock_pass": false,
+    "secret_hygiene_pass": "<redacted>",
+    "no_synthetic_bos_fallback_pass": false
+  },
+  "diagnostics": null,
+  "blockers": [
+    {
+      "code": "M15-S04-PROTOCOL-ADMISSION-BLOCKER-CARRY-FORWARD",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "S04 admission is blocked; mission run evidence is present but cannot be promoted to MISSION_PASS"
+    }
+  ],
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "provider_secret_names": "<redacted>",
+    "synthetic_bos": false
+  },
+  "paths": {
+    "admission_evidence": "runtime-evidence/M015-S04-admission.json",
+    "mission_run_evidence": "runtime-evidence/M015-S04-native-mission-run.json",
+    "output_evidence": "runtime-evidence/M015-S04-native-mission-protocol.json"
+  }
+}

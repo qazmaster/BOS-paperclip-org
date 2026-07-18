@@ -1,0 +1,124 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s04-native-mission-validation.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S04",
+  "task": "T05",
+  "generated": "2026-07-15T12:01:04.069Z",
+  "status": "MISSION_FAIL_CLOSED_ADMISSION_BLOCKED",
+  "safe_block_declared": true,
+  "safe_block_evidence": {
+    "admission_status": "BLOCKED_ON_S03_FAIL_CLOSED",
+    "admission_business_mutations_recorded": 0,
+    "harness_root_issue_create": 0,
+    "mission_context_null": true,
+    "intake_summary_null": true,
+    "root_issue_null": true,
+    "mission_run_null": true
+  },
+  "gate_labels": {
+    "readback_integrity_pass": "VG1 READBACK_INTEGRITY: admission + mission-run + protocol evidence are parseable JSON objects with required top-level keys and matching $schema/version",
+    "admission_correlation_pass": "VG2 ADMISSION_CORRELATION: admission.status, mission-run.admission_summary.status, and protocol.admission_summary.status are equal and internally consistent (blocked ⇔ both subgates false)",
+    "zero_business_mutation_ledger_pass": "VG3 ZERO_BUSINESS_MUTATION_LEDGER: under blocked admission, harness_writes.root_issue_create === 0 and mission_context/intake_summary/root_issue/mission_run are null in raw evidence (independent of harness summary)",
+    "protocol_ledger_correlation_pass": "VG4 PROTOCOL_LEDGER_CORRELATION: protocol.protocol.allowlisted_side_effects and idempotency contract are present; under blocked admission all 10 protocol gates are false and protocol.blockers contains the admission-blocker carry-forward marker",
+    "autonomy_and_no_synthetic_bos_pass": "VG5 AUTONOMY_AND_NO_SYNTHETIC_BOS: redaction layers scrub xiaomi/mimo endpoint reuse and synthetic-bos light tags; no such string appears in any nested value of the raw evidence",
+    "safe_block_not_promoted_pass": "VG6 SAFE_BLOCK_NOT_PROMOTED: when admission is blocked, the verdict is NOT MISSION_PASS; safe-block evidence is recorded as MISSION_FAIL_CLOSED_ADMISSION_BLOCKED with safe_block_declared=true and zero business mutations"
+  },
+  "gates": {
+    "readback_integrity_pass": true,
+    "admission_correlation_pass": true,
+    "zero_business_mutation_ledger_pass": true,
+    "protocol_ledger_correlation_pass": true,
+    "autonomy_and_no_synthetic_bos_pass": true,
+    "safe_block_not_promoted_pass": true
+  },
+  "diagnostics": {
+    "readback_integrity": {
+      "schema_prefix_ok": {
+        "admission": true,
+        "mission_run": true,
+        "protocol": true
+      },
+      "top_level_keys_ok": {
+        "admission": true,
+        "mission_run": true,
+        "protocol": true
+      },
+      "required_keys_missing": []
+    },
+    "admission_correlation": {
+      "admission_status": "BLOCKED_ON_S03_FAIL_CLOSED",
+      "mission_run_admission_status": "BLOCKED_ON_S03_FAIL_CLOSED",
+      "protocol_admission_status": "BLOCKED_ON_S03_FAIL_CLOSED",
+      "all_three_agree": true,
+      "blocked_subgates_consistent": true,
+      "admission_blocked_flag": true
+    },
+    "zero_business_mutation_ledger": {
+      "admission_blocked": true,
+      "harness_root_issue_create": 0,
+      "mission_context_null": true,
+      "intake_summary_null": true,
+      "root_issue_null": true,
+      "mission_run_null": true,
+      "admission_business_mutations_recorded": 0,
+      "raw_mutation_count": 0,
+      "raw_mutations": [],
+      "blocked_required_fields_missing": []
+    },
+    "protocol_ledger_correlation": {
+      "protocol_allowlist_present": true,
+      "protocol_idempotency_present": true,
+      "protocol_gate_labels_count": 10,
+      "protocol_gates_all_false_under_block": true,
+      "protocol_blockers_admission_carry_forward": true,
+      "protocol_status": "MISSION_BLOCKED_SAFE"
+    },
+    "autonomy_and_no_synthetic_bos": {
+      "mission_run_synthetic_bos_redaction_flag": true,
+      "admission_xiaomi_redaction_flag": true,
+      "protocol_redaction_synthetic_bos_flag": false,
+      "synthetic_bos_hits": [],
+      "xiaomi_hits": [],
+      "mission_run_safe_block_declared": true,
+      "protocol_safe_block_declared": true
+    },
+    "safe_block_not_promoted": {
+      "admission_blocked": true,
+      "provisional_status": "MISSION_FAIL_CLOSED",
+      "promoted_to_mission_pass": false,
+      "safe_block_declared_on_mission_run": true,
+      "accept_safe_block": true
+    }
+  },
+  "blockers": [],
+  "paths": {
+    "admission_evidence": "runtime-evidence/M015-S04-admission.json",
+    "mission_run_evidence": "runtime-evidence/M015-S04-native-mission-run.json",
+    "protocol_evidence": "runtime-evidence/M015-S04-native-mission-protocol.json",
+    "output_evidence": "runtime-evidence/M015-S04-native-mission-validation.json"
+  },
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": true,
+    "provider_secret_names": "<redacted>",
+    "synthetic_bos": true
+  },
+  "options": {
+    "accept_safe_block": true
+  },
+  "admission_snapshot": {
+    "status": "BLOCKED_ON_S03_FAIL_CLOSED",
+    "business_mutations_recorded": 0,
+    "blockers": [
+      {
+        "code": "M15-S04-ADMISSION-GATE-FRESH-S03-7OF7",
+        "severity": "blocking"
+      },
+      {
+        "code": "M15-S04-ADMISSION-GATE-DO-NOT-PROMOTE-S04",
+        "severity": "blocking"
+      }
+    ]
+  }
+}

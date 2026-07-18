@@ -1,0 +1,9 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s06-public-ui-proof.v1.json",
+  "milestone": "M015",
+  "slice": "S06",
+  "task": "T04",
+  "generated": "2026-07-16T05:46:58.855Z",
+  "canonical_verdict": "M015_S06_UI",
+  "verdict": "PASS_AUTH_NO_LEAK"
+}

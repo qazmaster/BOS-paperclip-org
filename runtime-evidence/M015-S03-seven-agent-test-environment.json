@@ -1,0 +1,21 @@
+{
+  "$schema": "https://gsd.local/schemas/runtime-evidence/m015-s03-seven-agent-test-environment.v1.json",
+  "milestone": "M015-4o8lfw",
+  "slice": "S03",
+  "task": "T01",
+  "generated": "2026-07-15T14:54:32.645Z",
+  "status": "FAIL_CLOSED",
+  "reason": "fetch failed",
+  "blockers": [
+    {
+      "code": "M15-S03-RUNNER-FAILURE",
+      "severity": "blocking",
+      "agent": null,
+      "reason": "fetch failed"
+    }
+  ],
+  "redaction": {
+    "full_ids": false,
+    "credentials": false
+  }
+}

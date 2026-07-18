@@ -1,0 +1,140 @@
+{
+  "$schema": "gsd/m015-native-seven-division-mission-v1",
+  "milestone": "M015-4o8lfw",
+  "mission_key": "AIP-7D-LR-20260717-001",
+  "purpose": "Fresh isolated native Paperclip mission proving that all seven BOS divisions can execute a useful end-to-end launch-readiness workflow through hermes_local and MiniMax-M3 without the BOS Light plugin and without result_json.bos.",
+  "captured_at": "2026-07-17T12:57:48Z",
+  "live_target": {
+    "paperclip_origin": "https://paperclip.oysana.com",
+    "company": "aipay.kz",
+    "paperclip": {
+      "package_version": "0.3.1",
+      "source_repository": "https://github.com/paperclipai/paperclip.git",
+      "source_commit": "390627b46eb333309d357004384b220ecf8a65af",
+      "source_commit_date": "2026-07-07T09:27:46-05:00",
+      "container_image_id": "sha256:5d162011005c2d2845b45e6762d3107c2ac8d08ad29fe04deb409876c315b793",
+      "container_image_created_at": "2026-07-13T13:26:30.638879747Z"
+    },
+    "paperclip_hermes_adapter_version": "0.3.1",
+    "adapter_type": "hermes_local",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "hermes_version": "0.18.2",
+    "plugin_used": false,
+    "plugin_rows_present": 0
+  },
+  "mission_entities": {
+    "goal": {
+      "id": "45cb883f-32b5-40cd-bf8d-94c40419a1d1",
+      "title": "AIP-7D-LR-20260717-001: Prove native autonomous-company launch readiness",
+      "status": "achieved",
+      "created_at": "2026-07-17T12:38:54.876Z",
+      "closed_at": "2026-07-17T12:57:47.953Z"
+    },
+    "project": {
+      "id": "3623700b-cc05-48e8-8c8e-b55af26f8dbc",
+      "name": "AIP-7D-LR-20260717-001: Seven-division native mission",
+      "status": "completed",
+      "created_at": "2026-07-17T12:39:04.246Z",
+      "closed_at": "2026-07-17T12:57:43.005Z"
+    },
+    "root": {
+      "id": "3118295c-2cac-4908-a448-a3d3b67feaac",
+      "identifier": "AIP-30",
+      "assignee": "Div7.MissionControl",
+      "status": "done",
+      "created_at": "2026-07-17T12:39:13.816Z",
+      "completed_at": "2026-07-17T12:52:54.273Z"
+    },
+    "children": [
+      {"identifier": "AIP-31", "assignee": "Div1.HCO", "status": "done", "deliverable": "Executive communication and stakeholder readiness"},
+      {"identifier": "AIP-32", "assignee": "Div2.MasterPlanner", "status": "done", "deliverable": "Scope, assumptions and decision framework"},
+      {"identifier": "AIP-33", "assignee": "Div3.Treasury", "status": "done", "deliverable": "Budget, cost exposure and financial gates"},
+      {"identifier": "AIP-34", "assignee": "Div4.Production", "status": "done", "deliverable": "Implementation and operational readiness"},
+      {"identifier": "AIP-35", "assignee": "Div5.QualificationsLibraryLearning", "status": "done", "deliverable": "Quality, acceptance and learning readiness"},
+      {"identifier": "AIP-36", "assignee": "Div6.External", "status": "done", "deliverable": "External dependencies, security and compliance"}
+    ]
+  },
+  "execution": {
+    "mission_duration_from_goal_to_root_done_seconds": 840,
+    "distinct_agents_executed": 7,
+    "heartbeat_rows": 9,
+    "successful_runs": 8,
+    "successful_exit_zero_runs": 8,
+    "expected_cancelled_terminal_dedupe_runs": 1,
+    "failed_runs": 0,
+    "timed_out_runs": 0,
+    "bos_results_present": 0,
+    "result_contract": "result_json.result is a string; result_json.bos absent",
+    "dependency_behavior": {
+      "root_initial_state": "blocked",
+      "children_terminal_before_final_review": true,
+      "root_auto_unblocked": true,
+      "div7_final_review_auto_wakeup": true,
+      "root_final_state": "done"
+    },
+    "run_outcomes": [
+      {"agent": "Div7.MissionControl", "role": "initial dependency check", "status": "succeeded", "exit_code": 0, "liveness": "blocked"},
+      {"agent": "Div1.HCO", "status": "succeeded", "exit_code": 0, "liveness": "completed"},
+      {"agent": "Div2.MasterPlanner", "status": "succeeded", "exit_code": 0, "liveness": "completed"},
+      {"agent": "Div3.Treasury", "status": "succeeded", "exit_code": 0, "liveness": "completed"},
+      {"agent": "Div4.Production", "status": "succeeded", "exit_code": 0, "liveness": "completed"},
+      {"agent": "Div5.QualificationsLibraryLearning", "status": "succeeded", "exit_code": 0, "liveness": "completed"},
+      {"agent": "Div6.External", "status": "succeeded", "exit_code": 0, "liveness": "completed"},
+      {"agent": "Div7.MissionControl", "role": "final synthesis", "status": "succeeded", "exit_code": 0, "liveness": "completed"},
+      {"agent": "Div7.MissionControl", "role": "post-terminal duplicate wake", "status": "cancelled", "error_code": "issue_terminal_status", "classification": "expected safe terminal deduplication"}
+    ]
+  },
+  "evidence": {
+    "mission_issue_count": 7,
+    "mission_issues_done": 7,
+    "issue_comments": 16,
+    "issue_activity_events": 40,
+    "mission_documents": 7,
+    "preexisting_documents_updated": 0,
+    "document_creators": [
+      "Div1.HCO",
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External",
+      "Div7.MissionControl"
+    ],
+    "raw_comment_bodies_persisted_in_this_evidence": false,
+    "raw_document_bodies_persisted_in_this_evidence": false,
+    "raw_model_results_persisted_in_this_evidence": false
+  },
+  "isolation_audit": {
+    "preexisting_issues_updated": 0,
+    "out_of_project_issues_created": 0,
+    "out_of_project_comments_created": 0,
+    "preexisting_documents_updated": 0,
+    "other_projects_created_or_updated": 0,
+    "other_goals_created_or_updated": 0,
+    "plugins_installed_or_updated": 0,
+    "allowed_operational_activity": [
+      "mission goal/project creation and closure",
+      "AIP-30 through AIP-36 issue creation and updates",
+      "mission issue comments and activity",
+      "seven mission documents",
+      "heartbeat runs",
+      "environment lease acquire/release events",
+      "agent heartbeat operational fields"
+    ],
+    "scope_boundary": "PASS"
+  },
+  "verdict": {
+    "native_paperclip_mission": "PASS",
+    "seven_division_execution": "PASS",
+    "useful_artifact_generation": "PASS",
+    "dependency_orchestration": "PASS",
+    "final_mission_control_review": "PASS",
+    "zero_out_of_scope_business_mutations": "PASS",
+    "bos_plugin_required": false,
+    "result_json_bos_required_for_execution": false,
+    "bos_grade_contract_proof": "NOT_PROVEN_MISSING_RESULT_JSON_BOS",
+    "overall": "NATIVE_SEVEN_DIVISION_MISSION_PASS_WITHOUT_PLUGIN_OR_BOS_CONTRACT"
+  },
+  "product_conclusion": "The autonomous company can execute a complete seven-division mission natively in Paperclip using Hermes and MiniMax-M3. The BOS Light plugin and result_json.bos are governance and formal-proof enhancements, not execution prerequisites."
+}
