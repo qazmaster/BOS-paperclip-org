@@ -1,0 +1,49 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+  "schema_version": "v1",
+  "milestone": "M016-txa3vu",
+  "slice": "S03",
+  "task": "T04",
+  "generated": "2026-07-19T12:00:00.000Z",
+  "line_class": "M16-S03-DRILL",
+  "canonical_protocol": "PROTOCOL-M16-S03-PROBE-V1",
+  "record_count": 3,
+  "executed_count": 3,
+  "not_proven_count": 0,
+  "fail_closed_count": 0,
+  "gates": {
+    "HG1 SEMANTIC_RULE_COMPLIANCE": "not_proven",
+    "HG2 PROVENANCE_INTEGRITY": "not_proven",
+    "HG3 RECOVERY_EVIDENCE": "not_proven",
+    "HG4 FINANCIAL_PROTECTION": "not_proven",
+    "HG5 SECURITY_POSTURE": "not_proven",
+    "HG6 COMPLIANCE_POSTURE": "not_proven",
+    "HG7 READ_ONLY_BOUNDARY": "not_proven",
+    "HG8 SCRATCH_ISOLATION": "not_proven"
+  },
+  "verdict": "not_proven",
+  "replays_deterministic": true,
+  "protocol_digest": "d10607a4704bc134b95a46291fed32e64b567d543c32a78f2bfe545410937720",
+  "session": {
+    "scratch_root": "/tmp/m016-s03-canonical",
+    "bounded_drill_count": 3,
+    "isolation_violation": false,
+    "residue_detected": false,
+    "stop_reason": null,
+    "drill_started_at": "2026-07-19T12:00:00.000Z",
+    "drills": [
+      {
+        "drill_kind": "restore-drill",
+        "ledger_entries": 6
+      },
+      {
+        "drill_kind": "budget-stop-drill",
+        "ledger_entries": 11
+      },
+      {
+        "drill_kind": "failure-drill",
+        "ledger_entries": 11
+      }
+    ]
+  }
+}
