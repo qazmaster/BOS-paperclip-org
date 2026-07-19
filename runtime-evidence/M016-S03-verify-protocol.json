@@ -6,7 +6,7 @@
   "milestone": "M016-txa3vu",
   "slice": "S03",
   "task": "T06",
-  "generated_at": "2026-07-19T20:43:33.336Z",
+  "generated_at": "2026-07-19T20:49:58.419Z",
   "replay_iterations": 2,
   "line_class": "M16-S03-VERIFY",
   "canonical_protocol": "PROTOCOL-M16-S03-VERIFY-V1",
@@ -430,7 +430,7 @@
   "options": {
     "force": true,
     "iterations": 2,
-    "reference_time": "2026-07-19T20:43:33.336Z"
+    "reference_time": "2026-07-19T20:49:58.419Z"
   },
   "paths": {
     "pack": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
