@@ -1,0 +1,406 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s02-bos-mission-proof.v1.json",
+  "title": "M016-S02 BOS Mission Proof Bundle v1",
+  "description": "Canonical sanitised sidecar proof bundle aggregating bounded M015/S01 evidence into a single fail-closed artifact. The bundle MUST NOT contain full UUIDs, credential/token material, Xiaomi/MiMo vendor-reuse strings, PII, raw reasoning, sensitive body, raw result_json.result, or any embedded launch-promotion verdict. Each source carries raw and sanitised SHA-256 hashes; provenance_hash is a deterministic sha256 of the canonical source list. The embedded classification MUST stay frozen at orchestration=PASS, evidence=PARTIAL, launch=PREPARATION_ONLY with HG3..HG6 NOT_PROVEN. Replay keys record dual-run provenance hashes and a match flag so the verifier can prove byte-identical offline replay.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "bundle_id",
+    "bundle_kind",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "sidecar_id",
+    "provenance_hash",
+    "sources",
+    "indepenence_groups",
+    "redaction_posture",
+    "classification",
+    "sanitised_artifacts",
+    "replay_keys",
+    "blockers"
+  ],
+  "properties": {
+    "schema_id": {
+      "type": "string",
+      "const": "https://gsd.local/schemas/runtime-evidence/m016-s02-bos-mission-proof.v1.json"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "bundle_id": {
+      "type": "string",
+      "description": "Stable, unique-within-mission kebab-case identifier of this sidecar bundle.",
+      "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "bundle_kind": {
+      "type": "string",
+      "description": "Frozen bundle discriminator. Only bos-mission-proof is accepted; other values fail closed.",
+      "const": "bos-mission-proof"
+    },
+    "milestone": {
+      "type": "string",
+      "const": "M016-txa3vu"
+    },
+    "slice": {
+      "type": "string",
+      "const": "S02"
+    },
+    "task": {
+      "type": "string",
+      "description": "Originating task identifier. The schema validator accepts the canonical M016/S02 tasks (T01/T02/T03) so the bundle can be traced back through the task graph.",
+      "pattern": "^[Tt][0-9]{2}$",
+      "enum": ["T01", "T02", "T03", "t01", "t02", "t03"]
+    },
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of bundle generation."
+    },
+    "sidecar_id": {
+      "type": "string",
+      "description": "Stable bundle identity hash, derived from canonical source list and bundle_id. Lowercase hex, 64 chars.",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "provenance_hash": {
+      "type": "string",
+      "description": "sha256 of canonical source list (sorted by source_ref, then raw_sha256). Lowercase hex, 64 chars.",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "sources": {
+      "type": "array",
+      "description": "Allowlisted M015/S01 source references. Each entry binds raw and sanitised SHA-256, kind, independence group, size, and the claim_ids that source contributed.",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": { "$ref": "#/definitions/source" }
+    },
+    "indepenence_groups": {
+      "type": "array",
+      "description": "Declared independence groups across all sources. MUST contain each source's independence_group exactly once.",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+        "minLength": 3,
+        "maxLength": 64
+      },
+      "uniqueItems": true
+    },
+    "redaction_posture": {
+      "type": "object",
+      "description": "Declared redaction posture. Every leak-class flag MUST be false (no full UUIDs, credentials, xiaomi/mimo markers, vendor-reuse strings, raw reasoning, raw body, raw result_json.result). bounded_digests_only and redaction_bounds_loaded MUST be true.",
+      "additionalProperties": false,
+      "required": [
+        "full_ids",
+        "credentials",
+        "xiaomi_endpoint_reuse",
+        "synthetic_bos",
+        "raw_reasoning",
+        "raw_body",
+        "raw_result_json_result",
+        "vendor_reuse_strings",
+        "bounded_digests_only",
+        "redaction_bounds_loaded"
+      ],
+      "properties": {
+        "full_ids": { "type": "boolean", "const": false },
+        "credentials": { "type": "boolean", "const": false },
+        "xiaomi_endpoint_reuse": { "type": "boolean", "const": false },
+        "synthetic_bos": { "type": "boolean", "const": false },
+        "raw_reasoning": { "type": "boolean", "const": false },
+        "raw_body": { "type": "boolean", "const": false },
+        "raw_result_json_result": { "type": "boolean", "const": false },
+        "vendor_reuse_strings": { "type": "boolean", "const": false },
+        "bounded_digests_only": { "type": "boolean", "const": true },
+        "redaction_bounds_loaded": { "type": "boolean", "const": true }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "description": "Embedded S01 classification worksheet. MUST stay frozen at orchestration=PASS, evidence=PARTIAL, launch=PREPARATION_ONLY with HG3..HG6 NOT_PROVEN so the sidecar cannot be repainted into a launch proof.",
+      "additionalProperties": false,
+      "required": [
+        "evaluator",
+        "evaluator_version",
+        "raw_state",
+        "numeric_mapping",
+        "weight",
+        "verdicts",
+        "hard_gates",
+        "worksheet",
+        "completed_at",
+        "completed_by"
+      ],
+      "properties": {
+        "evaluator": {
+          "type": "string",
+          "const": "S01-classification-contract"
+        },
+        "evaluator_version": {
+          "type": "string",
+          "const": "v1"
+        },
+        "raw_state": {
+          "type": "string",
+          "enum": ["PASS", "PARTIAL", "PREPARATION_ONLY", "NOT_PROVEN"]
+        },
+        "numeric_mapping": {
+          "type": "object",
+          "description": "Numeric mapping from S01 worksheet steps to score contributions. Each key is a bounded kebab identifier; each value is a non-negative number capped at 1.0.",
+          "additionalProperties": false,
+          "required": ["orchestration", "evidence", "launch"],
+          "properties": {
+            "orchestration": { "type": "number", "minimum": 0, "maximum": 1 },
+            "evidence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "launch": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "weight": {
+          "type": "number",
+          "description": "Composite weight of the embedded worksheet. MUST be in [0,1].",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "verdicts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["orchestration", "evidence", "launch"],
+          "properties": {
+            "orchestration": { "type": "string", "const": "PASS" },
+            "evidence": { "type": "string", "const": "PARTIAL" },
+            "launch": { "type": "string", "const": "PREPARATION_ONLY" }
+          }
+        },
+        "hard_gates": {
+          "type": "object",
+          "description": "Frozen S01 hard-gate statuses. HG3..HG6 MUST stay NOT_PROVEN; HG1/HG2 may be PASS or NOT_PROVEN but never fail_closed.",
+          "additionalProperties": false,
+          "required": ["HG1", "HG2", "HG3", "HG4", "HG5", "HG6"],
+          "properties": {
+            "HG1": { "type": "string", "enum": ["pass", "not_proven"] },
+            "HG2": { "type": "string", "enum": ["pass", "not_proven"] },
+            "HG3": { "type": "string", "const": "not_proven" },
+            "HG4": { "type": "string", "const": "not_proven" },
+            "HG5": { "type": "string", "const": "not_proven" },
+            "HG6": { "type": "string", "const": "not_proven" }
+          }
+        },
+        "worksheet": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["steps", "completed_at", "completed_by"],
+          "properties": {
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["step_id", "description", "verify_cmd", "observed_status"],
+                "properties": {
+                  "step_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z][A-Za-z0-9._-]{2,63}$",
+                    "minLength": 3,
+                    "maxLength": 64
+                  },
+                  "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+                  },
+                  "verify_cmd": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+                  },
+                  "observed_status": {
+                    "type": "string",
+                    "enum": ["pass", "warn", "fail", "not_proven"]
+                  },
+                  "observed_evidence": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]*$"
+                  }
+                }
+              }
+            },
+            "completed_at": { "type": "string", "format": "date-time" },
+            "completed_by": { "type": "string", "const": "classifier" }
+          }
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_by": {
+          "type": "string",
+          "const": "classifier"
+        }
+      }
+    },
+    "sanitised_artifacts": {
+      "type": "array",
+      "description": "Bounded redacted digests per source. Each entry binds a sanitised_artifact string and sha256; the strings MUST stay in the safe charset and bound lengths so the bundle remains reproducible.",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/definitions/sanitised_artifact" }
+    },
+    "replay_keys": {
+      "type": "object",
+      "description": "Dual-run replay evidence. The collector runs twice in isolated processes; the verifier requires both provenance_hash values to match and the bundle to be byte-identical across the two runs.",
+      "additionalProperties": false,
+      "required": [
+        "first_run_provenance_hash",
+        "second_run_provenance_hash",
+        "match",
+        "byte_identical",
+        "verified_at"
+      ],
+      "properties": {
+        "first_run_provenance_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "second_run_provenance_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "match": { "type": "boolean", "const": true },
+        "byte_identical": { "type": "boolean", "const": true },
+        "verified_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "description": "Bundle-level blockers emitted by the collector. Empty array on a clean bundle; non-empty on fail-closed refusal.",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "severity", "reason"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^M16-S02-(BUNDLE|SOURCE|REDACT|CLASSIFY|LAUNCH|REPLAY|PROVENANCE|ARTIFACT)-[A-Z0-9_-]+$"
+          },
+          "severity": { "type": "string", "enum": ["blocking", "advisory"] },
+          "reason": { "type": "string", "minLength": 1, "maxLength": 400, "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_ref",
+        "kind",
+        "raw_sha256",
+        "sanitised_sha256",
+        "independence_group",
+        "size_bytes",
+        "claim_ids"
+      ],
+      "properties": {
+        "source_ref": {
+          "type": "string",
+          "description": "Bounded relative path to the upstream artifact. MUST be inside runtime-evidence/ or scripts/.",
+          "pattern": "^(runtime-evidence|scripts)/[A-Za-z0-9._/\\-]+$",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "mission_evidence",
+            "agent_run",
+            "regression_fixture",
+            "sidecar_input",
+            "classification_protocol",
+            "classification_verification"
+          ]
+        },
+        "raw_sha256": {
+          "type": "string",
+          "description": "sha256 of the raw upstream artifact, computed before any sanitisation. Lowercase hex, 64 chars.",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sanitised_sha256": {
+          "type": "string",
+          "description": "sha256 of the sanitised projection the sidecar actually stores. Lowercase hex, 64 chars.",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "independence_group": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+          "minLength": 3,
+          "maxLength": 64
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "claim_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+            "minLength": 3,
+            "maxLength": 64
+          },
+          "uniqueItems": true
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "sanitised_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_ref",
+        "claim_id",
+        "sanitised_artifact",
+        "sanitised_hash"
+      ],
+      "properties": {
+        "source_ref": {
+          "type": "string",
+          "pattern": "^(runtime-evidence|scripts)/[A-Za-z0-9._/\\-]+$",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "claim_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+          "minLength": 3,
+          "maxLength": 64
+        },
+        "sanitised_artifact": {
+          "type": "string",
+          "description": "Bounded redacted projection of the source claim. MUST stay in the safe charset so the bundle cannot smuggle raw reasoning or full UUIDs through digests.",
+          "minLength": 8,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+        },
+        "sanitised_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}
