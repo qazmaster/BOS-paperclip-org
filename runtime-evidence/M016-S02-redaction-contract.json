@@ -1,0 +1,60 @@
+{
+  "$schema": "gsd/m016-s02-bos-mission-proof-redaction-contract-v1",
+  "milestone": "M016-txa3vu",
+  "slice": "S02",
+  "task": "T02",
+  "generated": "2026-07-19T13:00:00Z",
+  "redaction_posture": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false,
+    "raw_reasoning": false,
+    "raw_body": false,
+    "raw_result_json_result": false,
+    "vendor_reuse_strings": false,
+    "bounded_digests_only": true,
+    "redaction_bounds_loaded": true
+  },
+  "leak_kinds_checked": [
+    "uuid",
+    "credential_assignment",
+    "bearer_token",
+    "sk_token",
+    "tp_token",
+    "xiaomi_marker",
+    "vendor_reuse_string",
+    "raw_reasoning_marker",
+    "raw_body_marker",
+    "raw_result_json_result"
+  ],
+  "per_source_scan": [
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "hits": 0,
+      "kinds": []
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S01-m015-regression-fixture.json",
+      "hits": 0,
+      "kinds": []
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S01-classification-protocol.json",
+      "hits": 0,
+      "kinds": []
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S01-classification-verification.json",
+      "hits": 0,
+      "kinds": []
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S01-classification-validation.json",
+      "hits": 0,
+      "kinds": []
+    }
+  ],
+  "total_hits": 0,
+  "redaction_safe": true
+}
