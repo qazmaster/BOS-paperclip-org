@@ -1,0 +1,740 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+  "title": "M016-S03 Safe Operational Probe Record v1",
+  "description": "Machine-readable schema for role-specific safe probe records issued by M016-txa3vu/S03. EXECUTED records carry read-only live (GET-only) or bounded isolated scratch-drill evidence with objective fields (exit code, sanitised digest, artifact reference + hash, scope, limitations, source identity, mutation audit, isolation invariant). NOT_PROVEN records are explicit, schema-valid fallback records that acknowledge a missed probe through attempted exit code, observed blocker code and reason. EXECUTED and NOT_PROVEN branches are mutually exclusive — forgeries (missing objective fields, PASS-like NOT_PROVEN, mutation verbs, malformed hashes/timestamps, launch GO injection) are rejected by required, pattern and enum constraints so the downstream S04 evidence canary and S05 seven-division replay cannot promote a partial claim into launch. Role and independence-group values are constrained to the frozen registries in scripts/lib/m016-s03-safe-probe-data.js; production/launch verdicts and methods outside the GET-only allowlist are rejected.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "probe_id",
+    "role_class",
+    "role",
+    "classification",
+    "independence_group",
+    "method",
+    "command",
+    "started_at",
+    "finished_at",
+    "duration_ms",
+    "scope",
+    "limitations",
+    "source_identity",
+    "isolation_invariant",
+    "mutation_audit",
+    "redaction",
+    "verdict",
+    "blocker_codes"
+  ],
+  "properties": {
+    "schema_id": {
+      "type": "string",
+      "const": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "milestone": {
+      "type": "string",
+      "const": "M016-txa3vu"
+    },
+    "slice": {
+      "type": "string",
+      "const": "S03"
+    },
+    "task": {
+      "type": "string",
+      "description": "Originating task identifier. Constrained to T01..T06 of M016/S03 so downstream slices (S04, S05) can trace each record back to a task.",
+      "enum": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06"
+      ]
+    },
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of record generation."
+    },
+    "probe_id": {
+      "type": "string",
+      "description": "Stable, unique-within-role kebab-case identifier of this probe. MUST start with the frozen M16-S03-PROBE prefix so the registry can trace mutations, scratch drills and role probes back to the slice.",
+      "pattern": "^M16-S03-PROBE-[a-z][a-z0-9._-]{2,63}$",
+      "minLength": 18,
+      "maxLength": 80
+    },
+    "role_class": {
+      "type": "string",
+      "description": "Frozen taxonomy. division probes target the seven canonical divisions; infrastructure probes cover hermes/paperclip/secrets/cost/isolation invariants and scratch drills.",
+      "enum": [
+        "division",
+        "infrastructure"
+      ]
+    },
+    "role": {
+      "type": "string",
+      "description": "Frozen role identifier from the S03 registry (Div1..Div7 + nine infrastructure roles). Strings outside this enum are rejected so the schema cannot be tricked into accepting a forged role.",
+      "enum": [
+        "Div1.HCO",
+        "Div2.MasterPlanner",
+        "Div3.Treasury",
+        "Div4.Production",
+        "Div5.QualificationsLibraryLearning",
+        "Div6.External",
+        "Div7.MissionControl",
+        "paperclip_health",
+        "hermes_environment",
+        "secret_posture",
+        "cost_snapshot",
+        "isolation_invariant",
+        "restore_drill",
+        "budget_stop_drill",
+        "failure_drill",
+        "redaction_posture_audit"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "description": "Two mutually exclusive outcomes. EXECUTED carries objective execution evidence; NOT_PROVEN is the explicit fail-closed fallback that never promotes to launch. Used as the discriminator by the conditional allOf branches below.",
+      "enum": [
+        "EXECUTED",
+        "NOT_PROVEN"
+      ]
+    },
+    "independence_group": {
+      "type": "string",
+      "description": "Identifier of the independence group the probe belongs to. Reuse across two EXECUTED records with different artifact_hash is rejected as fail-closed. Frozen kebab pattern; runtime contract enforces uniqueness within EXECUTED-set.",
+      "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "method": {
+      "type": "string",
+      "description": "Bounded probe method. Either a GET-only HTTP method restricted to allowlisted /api paths or a scratch drill kind token (restore-drill / budget-stop-drill / failure-drill). Mutation verbs (POST/PUT/PATCH/DELETE) and bare non-GET verbs are rejected at the schema layer.",
+      "pattern": "^(GET\\s+/api/[A-Za-z0-9._\\-/{}]+|(restore-drill|budget-stop-drill|failure-drill))$",
+      "minLength": 5,
+      "maxLength": 256,
+      "not": {
+        "pattern": "^(?:POST|PUT|PATCH|DELETE|DESTROY)\\b"
+      }
+    },
+    "command": {
+      "type": "string",
+      "description": "Bounded, sanitised reproduction command. MUST stay in safe charset and MUST NOT contain mutation verbs, raw body fragments, raw result_json.result fragments or vendor-reuse strings. Curly braces, equals, question marks, ampersands and percent are allowed so URL templates (e.g. {companyId}) and query-string style commands are accepted.",
+      "minLength": 1,
+      "maxLength": 400,
+      "pattern": "^[A-Za-z0-9 .:;,_<>/\\-{}?&=%@]+$",
+      "not": {
+        "pattern": "^(?:POST|PUT|PATCH|DELETE|DESTROY)\\b|(?:sk-|tp-|bearer\\s+[A-Za-z])"
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of probe start."
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of probe end. MUST be >= started_at (semantic check is enforced at runtime contract; the schema only constrains the format)."
+    },
+    "duration_ms": {
+      "type": "integer",
+      "description": "Wall-clock duration of the probe in milliseconds. MUST be non-negative; bounded at 600000 ms (10 minutes) so a runaway probe cannot stretch the evidence pack.",
+      "minimum": 0,
+      "maximum": 600000
+    },
+    "scope": {
+      "type": "string",
+      "description": "What the probe covered. Sanitised plain text in safe charset; bounded to 200 chars to keep diagnostics compact.",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+    },
+    "limitations": {
+      "type": "array",
+      "description": "Explicit limitations of the probe. MUST contain at least one entry so the schema cannot mask a partial execution with an empty limitations list. Each entry is sanitised plain text; bounded length. Items MUST NOT carry credential/token leaks (sk-/tp-/bearer) so the limitation list cannot smuggle the very data the probe redacted.",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200,
+        "pattern": "^[A-Za-z0-9 .:;,_<>/\\-{}?&=%@]+$",
+        "not": {
+          "pattern": "(?:sk-|tp-|bearer\\s+[A-Za-z])"
+        }
+      }
+    },
+    "source_identity": {
+      "type": "object",
+      "description": "Identity under which the probe was executed. oneOf restricts the shape per kind so a paperclip live probe cannot accidentally wear scratch-drill clothing or vice versa.",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "paperclip_api_readonly",
+            "scratch_drill",
+            "offline_bundle_read",
+            "observed"
+          ]
+        },
+        "company_kind": {
+          "type": "string",
+          "description": "For paperclip_api_readonly: which company was probed. Bounded to safe charset; forbidden stale UUIDs are enforced at runtime contract.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
+        "auth_method": {
+          "type": "string",
+          "description": "For paperclip_api_readonly: auth method observed. Bounded to safe charset; full credentials never allowed.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
+        "scratch_root": {
+          "type": "string",
+          "description": "For scratch_drill: absolute filesystem path of the scratch root. MUST live under /tmp, /private/tmp or /var/folders so containment is fail-closed; runtime contract additionally validates realpath.",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^/[A-Za-z0-9._/\\-]+$",
+          "not": {
+            "pattern": "^/(?!(?:tmp|private/tmp|var/folders|Users/[^/]+/Library/Caches/Temp|run(?:/[^/]+)?/(?:m016-s03|user/[0-9]+/m016-s03))/)[A-Za-z]"
+          }
+        },
+        "drill_kind": {
+          "type": "string",
+          "description": "For scratch_drill: which scratch drill was run.",
+          "enum": [
+            "restore-drill",
+            "budget-stop-drill",
+            "failure-drill"
+          ]
+        },
+        "bundle_ref": {
+          "type": "string",
+          "description": "For offline_bundle_read: bounded relative path to the upstream bundle under runtime-evidence/.",
+          "pattern": "^runtime-evidence/[A-Za-z0-9._/\\-]+$",
+          "minLength": 18,
+          "maxLength": 256
+        }
+      },
+      "oneOf": [
+        {
+          "description": "Paperclip live read-only probes carry company/auth metadata.",
+          "properties": {
+            "kind": {
+              "const": "paperclip_api_readonly"
+            }
+          },
+          "required": [
+            "kind",
+            "company_kind",
+            "auth_method"
+          ]
+        },
+        {
+          "description": "Scratch drills live inside an owned scratch root and declare their drill kind.",
+          "properties": {
+            "kind": {
+              "const": "scratch_drill"
+            }
+          },
+          "required": [
+            "kind",
+            "scratch_root",
+            "drill_kind"
+          ]
+        },
+        {
+          "description": "Offline bundle reads cite the bounded runtime-evidence path.",
+          "properties": {
+            "kind": {
+              "const": "offline_bundle_read"
+            }
+          },
+          "required": [
+            "kind",
+            "bundle_ref"
+          ]
+        },
+        {
+          "description": "Observed probes have no further identity beyond the kind tag.",
+          "properties": {
+            "kind": {
+              "const": "observed"
+            }
+          },
+          "required": [
+            "kind"
+          ]
+        }
+      ]
+    },
+    "isolation_invariant": {
+      "type": "object",
+      "description": "Recorded invariant posture for the probe. read_only_boundary_pass MUST be true for any live probe and any scratch drill that ran without escaping containment; false with a non-null boundary_blocker_code is the documented fail-closed condition for the slice.",
+      "additionalProperties": false,
+      "required": [
+        "read_only_boundary_pass",
+        "scratch_target_used"
+      ],
+      "properties": {
+        "read_only_boundary_pass": {
+          "type": "boolean"
+        },
+        "scratch_target_used": {
+          "type": "boolean"
+        },
+        "boundary_blocker_code": {
+          "description": "Stamped when read_only_boundary_pass is false; null on a clean probe.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$",
+              "minLength": 16,
+              "maxLength": 96
+            }
+          ]
+        }
+      }
+    },
+    "mutation_audit": {
+      "type": "object",
+      "description": "Counters describing what changed during the probe. Live read-only probes MUST keep all counters at zero; scratch drills that legitimately touched scratch files still MUST NOT bump business counters (issues/documents/projects/goals/plugins/agents). Schema accepts any non-negative integer; runtime contract refuses anything > 0 for live probes.",
+      "additionalProperties": false,
+      "required": [
+        "issues_created",
+        "issues_business_updated",
+        "documents_created",
+        "documents_business_updated",
+        "projects_created",
+        "projects_business_updated",
+        "goals_created",
+        "goals_business_updated",
+        "plugins_created",
+        "plugins_updated",
+        "agents_created",
+        "agents_operational_updated",
+        "business_mutations_recorded"
+      ],
+      "properties": {
+        "issues_created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "issues_business_updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "documents_created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "documents_business_updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "projects_created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "projects_business_updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "goals_created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "goals_business_updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "plugins_created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "plugins_updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "agents_created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "agents_operational_updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "business_mutations_recorded": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "description": "Bounded redaction posture. Every leak-class flag MUST be false; bounded_digests_only and redaction_bounds_loaded MUST be true. Const values match the S02 sidecar redaction posture so the bundle and probe records stay consistent.",
+      "additionalProperties": false,
+      "required": [
+        "full_ids",
+        "credentials",
+        "xiaomi_endpoint_reuse",
+        "synthetic_bos",
+        "raw_reasoning",
+        "raw_body",
+        "raw_result_json_result",
+        "vendor_reuse_strings",
+        "bounded_digests_only",
+        "redaction_bounds_loaded"
+      ],
+      "properties": {
+        "full_ids": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials": {
+          "type": "boolean",
+          "const": false
+        },
+        "xiaomi_endpoint_reuse": {
+          "type": "boolean",
+          "const": false
+        },
+        "synthetic_bos": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_reasoning": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_body": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_result_json_result": {
+          "type": "boolean",
+          "const": false
+        },
+        "vendor_reuse_strings": {
+          "type": "boolean",
+          "const": false
+        },
+        "bounded_digests_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "redaction_bounds_loaded": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "verdict": {
+      "type": "string",
+      "description": "Bounded verdict vocabulary. EXECUTED records may emit 'pass' or 'fail_closed'; NOT_PROVEN records MUST emit 'not_proven'. Production/launch verdicts (GO, PASS_AUTOMATIC, READY) are forbidden at this layer — only the S04/S05 launch verdict dimensions can carry them.",
+      "enum": [
+        "pass",
+        "not_proven",
+        "fail_closed"
+      ]
+    },
+    "blocker_codes": {
+      "type": "array",
+      "description": "Stable M16-S03-PROBE-* blocker codes emitted by the probe contract. Empty array on a clean EXECUTED (verdict=pass); non-empty array on NOT_PROVEN or EXECUTED+verdict=fail_closed. Pattern enforces bounded stable codes so downstream S04/S05 can grep and alert on known failure modes.",
+      "minItems": 0,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$",
+        "minLength": 16,
+        "maxLength": 96
+      },
+      "uniqueItems": true
+    },
+    "exit_code": {
+      "type": "integer",
+      "description": "Process exit code observed on the probe. 0 indicates success and gates 'pass'; non-zero values gate 'fail_closed'. Mutually exclusive with attempted_exit_code (NOT_PROVEN branch uses attempted_exit_code instead).",
+      "minimum": -1,
+      "maximum": 255
+    },
+    "sanitised_digest": {
+      "type": "string",
+      "description": "Bounded, redacted digest of the execution output. MUST stay in safe charset; bounded to 256 chars; only present on EXECUTED records.",
+      "minLength": 8,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+    },
+    "artifact_reference": {
+      "type": "string",
+      "description": "Bounded relative path to the artifact the digest was derived from. MUST be inside runtime-evidence/ or scripts/. Only present on EXECUTED records. Path segments MUST NOT contain '..' so the schema cannot be tricked into accepting a traversal attack.",
+      "pattern": "^(runtime-evidence|scripts)/[A-Za-z0-9._/\\-]+$",
+      "minLength": 1,
+      "maxLength": 256,
+      "not": {
+        "pattern": "(?:\\.\\./|^/)"
+      }
+    },
+    "artifact_hash": {
+      "type": "string",
+      "description": "Hex-encoded hash of the artifact contents (sha256 = 64 lowercase hex chars; sha512 = 128 lowercase hex chars). Only present on EXECUTED records.",
+      "pattern": "^[a-f0-9]{64}$|^[a-f0-9]{128}$"
+    },
+    "attempted_exit_code": {
+      "type": "integer",
+      "description": "Process or HTTP exit code observed when the probe gave up. -1 indicates an unrecoverable runner fault; values up to 599 cover the full HTTP status-code range (incl. server 5xx and experimental 6xx). Only present on NOT_PROVEN records.",
+      "minimum": -1,
+      "maximum": 599
+    },
+    "observed_blocker_code": {
+      "type": "string",
+      "description": "Stable M16-S03-PROBE-* code from the frozen registry describing why the probe fell back to NOT_PROVEN. Only present on NOT_PROVEN records.",
+      "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$",
+      "minLength": 16,
+      "maxLength": 96
+    },
+    "observed_blocker_reason": {
+      "type": "string",
+      "description": "Sanitised, bounded reason string. MUST stay in safe charset; raw UUIDs and credentials are forbidden so the diagnostic never leaks the very data the probe tried to redact. Only present on NOT_PROVEN records.",
+      "minLength": 1,
+      "maxLength": 400,
+      "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+    }
+  },
+  "allOf": [
+    {
+      "description": "EXECUTED branch — objective execution evidence (required) and prohibition of NOT_PROVEN-only fields.",
+      "if": {
+        "properties": {
+          "classification": {
+            "const": "EXECUTED"
+          }
+        },
+        "required": [
+          "classification"
+        ]
+      },
+      "then": {
+        "required": [
+          "exit_code",
+          "sanitised_digest",
+          "artifact_reference",
+          "artifact_hash"
+        ],
+        "properties": {
+          "verdict": {
+            "enum": [
+              "pass",
+              "fail_closed"
+            ],
+            "description": "EXECUTED verdict vocabulary. Mutually exclusive with NOT_PROVEN verdict const 'not_proven'."
+          }
+        },
+        "not": {
+          "description": "EXECUTED records MUST NOT carry any NOT_PROVEN-only field.",
+          "anyOf": [
+            {
+              "required": [
+                "attempted_exit_code"
+              ]
+            },
+            {
+              "required": [
+                "observed_blocker_code"
+              ]
+            },
+            {
+              "required": [
+                "observed_blocker_reason"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "NOT_PROVEN branch — explicit fall-back (required) and prohibition of EXECUTED-only fields.",
+      "if": {
+        "properties": {
+          "classification": {
+            "const": "NOT_PROVEN"
+          }
+        },
+        "required": [
+          "classification"
+        ]
+      },
+      "then": {
+        "required": [
+          "attempted_exit_code",
+          "observed_blocker_code",
+          "observed_blocker_reason"
+        ],
+        "properties": {
+          "verdict": {
+            "const": "not_proven",
+            "description": "NOT_PROVEN verdict vocabulary is frozen to one value so the schema cannot be tricked into admitting a PASS-like NOT_PROVEN."
+          }
+        },
+        "not": {
+          "description": "NOT_PROVEN records MUST NOT carry any EXECUTED-only field.",
+          "anyOf": [
+            {
+              "required": [
+                "exit_code"
+              ]
+            },
+            {
+              "required": [
+                "sanitised_digest"
+              ]
+            },
+            {
+              "required": [
+                "artifact_reference"
+              ]
+            },
+            {
+              "required": [
+                "artifact_hash"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "EXECUTED records in failure mode (verdict=fail_closed) MUST emit at least one blocker code so the failure is auditable.",
+      "if": {
+        "properties": {
+          "classification": {
+            "const": "EXECUTED"
+          },
+          "verdict": {
+            "const": "fail_closed"
+          }
+        },
+        "required": [
+          "classification",
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blocker_codes": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "description": "NOT_PROVEN records MUST emit at least one blocker code (the observed one).",
+      "if": {
+        "properties": {
+          "classification": {
+            "const": "NOT_PROVEN"
+          }
+        },
+        "required": [
+          "classification"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blocker_codes": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "description": "Live paperclip_api_readonly probes MUST report scratch_target_used=false and read_only_boundary_pass=true so the schema cannot smuggle a drill under a live classification.",
+      "if": {
+        "properties": {
+          "source_identity": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "paperclip_api_readonly"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "source_identity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "isolation_invariant": {
+            "properties": {
+              "scratch_target_used": {
+                "const": false
+              },
+              "read_only_boundary_pass": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "Scratch drills MUST report scratch_target_used=true and read_only_boundary_pass=true so a containment escape cannot pass the schema.",
+      "if": {
+        "properties": {
+          "source_identity": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "scratch_drill"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "source_identity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "isolation_invariant": {
+            "properties": {
+              "scratch_target_used": {
+                "const": true
+              },
+              "read_only_boundary_pass": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
