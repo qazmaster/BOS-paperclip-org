@@ -3,7 +3,7 @@
   "milestone": "M016-txa3vu",
   "slice": "S01",
   "task": "T02",
-  "generated": "2026-07-19T05:53:18.099Z",
+  "generated": "2026-07-19T06:18:29.342Z",
   "status": "protocol_recorded",
   "hard_gate_ids": [
     "HG1 SEMANTIC_RULE_COMPLIANCE",
@@ -49,7 +49,7 @@
   "paths": {
     "input_evidence": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
     "schema": "schemas/runtime-evidence/m016-s01-evidence-claim.v1.json",
-    "output_dir": "runtime-evidence",
+    "output_dir": "runtime-evidence/.tmp-q4-s01",
     "protocol_output": "runtime-evidence/M016-S01-classification-protocol.json",
     "verification_output": "runtime-evidence/M016-S01-classification-verification.json",
     "validation_output": "runtime-evidence/M016-S01-classification-validation.json"
