@@ -134,22 +134,85 @@ function makeTempMarker(label) {
   // M16-S04-VERIFY-PATH-TRAVERSAL-<ref>. Using ROOT/.tmp-m016-s04-int-<label>-*
   // mirrors the existing S03 pattern (runtime-evidence/.tmp-m016-determinism)
   // and keeps the marker-owned subdirectory out of runtime-evidence/ proper.
-  return fs.mkdtempSync(path.join(ROOT, '.tmp-m016-s04-int-' + label + '-'));
+  //
+  // Returns both the tmpDir AND a sourceRoot that points to a marker-owned
+  // snapshot of all SOURCE_ALLOWLIST files. The integration test forwards
+  // sourceRoot as --source-root to producer and verifier so both subprocesses
+  // read the SAME frozen snapshot rather than ROOT's runtime-evidence/, which
+  // test_produce h3 may temporarily mutate (and restore) mid-flight under
+  // node --test parallel execution.
+  const tmpDir = fs.mkdtempSync(path.join(ROOT, '.tmp-m016-s04-int-' + label + '-'));
+  const snapshot = snapshotAllowlistSources(tmpDir);
+  return { tmpDir: tmpDir, sourceRoot: snapshot.sourceRoot };
+}
+
+function snapshotAllowlistSources(tmpDir) {
+  // Copy all 7 SOURCE_ALLOWLIST files from ROOT/runtime-evidence/... into a
+  // marker-owned snapshot directory <tmpDir>/sources/. The integration test
+  // then passes --source-root <tmpDir>/sources to producer and verifier so
+  // both subprocesses read the SAME frozen snapshot rather than ROOT's
+  // runtime-evidence/, which test_produce h3 may temporarily mutate (and
+  // restore) mid-flight under node --test parallel execution. Without this
+  // isolation, the verifier's raw_sha_reproduction audit reads a post-restore
+  // hash that no longer matches producer's pre-mutation hash and emits
+  // M16-S04-VERIFY-EVIDENCE-CHAIN-BROKEN-raw_sha even on a healthy canary.
+  //
+  // The snapshot copy is retried until the live-probe portion contains the
+  // Div2.MasterPlanner record (proof the snapshot was taken outside any
+  // h3 mutation window). The retry budget mirrors waitForHealthyLiveProbe.
+  const sourceRoot = path.join(tmpDir, 'sources');
+  fs.mkdirSync(path.join(sourceRoot, 'runtime-evidence'), { recursive: true });
+  const liveProbeRef = 'runtime-evidence/M016-S03-live-probe-results.json';
+  const maxAttempts = 200;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    for (const entry of SOURCE_ALLOWLIST) {
+      const srcAbs = path.join(ROOT, entry.source_ref);
+      const destAbs = path.join(sourceRoot, entry.source_ref);
+      fs.mkdirSync(path.dirname(destAbs), { recursive: true });
+      fs.copyFileSync(srcAbs, destAbs);
+    }
+    if (snapshotHasDiv2MasterPlanner(sourceRoot, liveProbeRef)) {
+      return { sourceRoot: sourceRoot, attempts: attempt };
+    }
+    try { require('child_process').execSync('sleep 0.025'); } catch (e) { /* ignore */ }
+  }
+  const err = new Error('snapshot never converged to a healthy live-probe within ' + (maxAttempts * 25) + 'ms; sibling test_produce h3 still mid-flight');
+  err.code = 'M16-S04-CANARY-LIVE-PROBE-RACE-DETECTED';
+  throw err;
+}
+
+function snapshotHasDiv2MasterPlanner(sourceRoot, liveProbeRef) {
+  try {
+    const abs = path.join(sourceRoot, liveProbeRef);
+    if (!fs.existsSync(abs)) return false;
+    const parsed = JSON.parse(fs.readFileSync(abs, 'utf8'));
+    const records = Array.isArray(parsed.records) ? parsed.records : [];
+    return records.some(function (r) { return r && r.role === 'Div2.MasterPlanner'; });
+  } catch (e) {
+    return false;
+  }
 }
 
 function removeTempMarker(dir) {
   try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { /* ignore */ }
 }
 
-function runProducer(args) {
+function runProducer(args, sourceRoot) {
   // Block until the live-probe source file is healthy. Without this guard,
   // `node --test` parallel execution can have the integration test's worker
   // observe the mid-flight tamper from test_produce h3 and fail with a
   // spurious M16-S04-CANARY-ROLE-NOT-IN-REGISTRY-Div2.MasterPlanner blocker.
   // The guard is a no-op when the source is already healthy (the common
   // case) and only spins when a sibling test is mid-tamper.
+  //
+  // sourceRoot (when non-null) is forwarded as --source-root <dir> so the
+  // producer reads from the marker-owned snapshot rather than ROOT's
+  // runtime-evidence/, fully isolating producer output hashes from any
+  // concurrent test_produce h3 mutation. Pair this with snapshotAllowlistSources
+  // above.
   waitForHealthyLiveProbe(40, 25);
-  const child = spawnSync(process.execPath, [PRODUCER_SCRIPT].concat(args), {
+  const fullArgs = sourceRoot ? ['--source-root', sourceRoot].concat(args) : args;
+  const child = spawnSync(process.execPath, [PRODUCER_SCRIPT].concat(fullArgs), {
     cwd: ROOT,
     encoding: 'utf8',
     timeout: 180000,
@@ -157,7 +220,7 @@ function runProducer(args) {
   return child;
 }
 
-function runVerifier(args) {
+function runVerifier(args, sourceRoot) {
   // Same race-condition guard as runProducer. The producer and verifier are
   // sequential subprocesses within one test, but the verifier reads the SAME
   // source files the producer just hashed. If a sibling test (test_produce
@@ -166,8 +229,29 @@ function runVerifier(args) {
   // the hash drift and emits M16-S04-VERIFY-EVIDENCE-CHAIN-BROKEN-raw_sha.
   // Blocking until the file is healthy before spawning the verifier closes
   // that race window.
+  //
+  // sourceRoot (when non-null) is forwarded as --source-root <dir> so the
+  // verifier reads from the SAME marker-owned snapshot the producer just
+  // hashed. Without this, ROOT's live-probe could be mutated between the
+  // producer's snapshot read and the verifier's recompute and produce a
+  // false M16-S04-VERIFY-EVIDENCE-CHAIN-BROKEN-raw_sha failure.
+  //
+  // The canary probe-run ledger is a PRODUCER OUTPUT (not a source file)
+  // written to <tmpDir>/probe-run.json by the producer's --probe-run-out
+  // flag. When sourceRoot is set, auto-inject --probe-run-in
+  // <path.dirname(sourceRoot)>/probe-run.json so the verifier reads the
+  // SAME ledger the producer just wrote. Without this auto-inject the
+  // verifier falls back to runtime-evidence/M016-S04-div4-div5-canary-probe-run.json
+  // (the T03-era output), which has different hashes and emits a spurious
+  // M16-S04-VERIFY-CANARY-PROBE-RUN-DRIFT-* blocker.
   waitForHealthyLiveProbe(40, 25);
-  const child = spawnSync(process.execPath, [VERIFIER_SCRIPT].concat(args), {
+  let fullArgs = [];
+  if (sourceRoot) {
+    fullArgs.push('--source-root', sourceRoot);
+    fullArgs.push('--probe-run-in', path.join(path.dirname(sourceRoot), 'probe-run.json'));
+  }
+  fullArgs = fullArgs.concat(args);
+  const child = spawnSync(process.execPath, [VERIFIER_SCRIPT].concat(fullArgs), {
     cwd: ROOT,
     encoding: 'utf8',
     timeout: 180000,
@@ -236,7 +320,18 @@ function liveProbeHasDiv2MasterPlanner() {
 }
 
 function waitForHealthyLiveProbe(maxAttempts, delayMs) {
-  const attempts = typeof maxAttempts === 'number' && maxAttempts > 0 ? maxAttempts : 40;
+  // Strict guard. test_produce h3 temporarily mutates
+  // runtime-evidence/M016-S03-live-probe-results.json (drops the
+  // Div2.MasterPlanner record) and restores it in a finally block. When
+  // `node --test` runs the six S04 entrypoints in parallel, the integration
+  // test's worker can read the mutated file before h3's finally restore
+  // completes; producer then fails with M16-S04-CANARY-ROLE-NOT-IN-REGISTRY-
+  // Div2.MasterPlanner even though the persistent source is healthy. The
+  // helper must therefore (a) yield CPU to the sibling worker via
+  // execSync('sleep') rather than busy-wait, and (b) throw loudly on
+  // timeout so node:test fails the gate with a precise message instead of
+  // silently propagating a tampered view into the canary verdict line.
+  const attempts = typeof maxAttempts === 'number' && maxAttempts > 0 ? maxAttempts : 200;
   const delayMsFinal = typeof delayMs === 'number' && delayMs > 0 ? delayMs : 25;
   for (let i = 0; i < attempts; i++) {
     if (liveProbeHasDiv2MasterPlanner()) return i;
@@ -248,7 +343,21 @@ function waitForHealthyLiveProbe(maxAttempts, delayMs) {
     try { require('child_process').execSync('sleep ' + (delayMsFinal / 1000).toFixed(3)); }
     catch (e) { /* sleep unavailable on this platform — fall through */ }
   }
-  return -1;
+  const liveProbePath = path.join(ROOT, S03_LIVE_PROBE_REF);
+  const totalMs = attempts * delayMsFinal;
+  const err = new Error(
+    'live-probe source did not restore to a healthy state within ' + totalMs + 'ms ' +
+    '(attempts=' + attempts + ', delay=' + delayMsFinal + 'ms); ' +
+    'sibling test_produce h3 likely still mid-flight — refusing to spawn producer ' +
+    'because it would emit M16-S04-CANARY-ROLE-NOT-IN-REGISTRY-Div2.MasterPlanner ' +
+    'against a tampered view rather than the persistent source.'
+  );
+  err.code = 'M16-S04-CANARY-LIVE-PROBE-RACE-DETECTED';
+  err.liveProbePath = liveProbePath;
+  err.attempts = attempts;
+  err.delayMs = delayMsFinal;
+  err.totalMs = totalMs;
+  throw err;
 }
 
 // ===========================================================================
@@ -256,7 +365,7 @@ function waitForHealthyLiveProbe(maxAttempts, delayMs) {
 // ===========================================================================
 
 test('integration: producer emits canonical verdict and writes bundle+protocol+probe-run+inventory', () => {
-  const tmpDir = makeTempMarker('producer');
+  const { tmpDir, sourceRoot } = makeTempMarker('producer');
   const preHashes = hashAllowlistSources();
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
@@ -273,7 +382,7 @@ test('integration: producer emits canonical verdict and writes bundle+protocol+p
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(result, bundlePath);
 
     // All four sidecars written
@@ -295,7 +404,7 @@ test('integration: producer emits canonical verdict and writes bundle+protocol+p
 // ===========================================================================
 
 test('integration: bundle.json shape — 3 records / 7 evidence_chain rows / PREPARATION_ONLY launch / CG1..CG8 pass', () => {
-  const tmpDir = makeTempMarker('bundle-shape');
+  const { tmpDir, sourceRoot } = makeTempMarker('bundle-shape');
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
     const producerProtocolPath = path.join(tmpDir, 'producer-protocol.json');
@@ -311,7 +420,7 @@ test('integration: bundle.json shape — 3 records / 7 evidence_chain rows / PRE
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(result, bundlePath);
 
     const bundle = readJson(bundlePath);
@@ -388,7 +497,7 @@ test('integration: bundle.json shape — 3 records / 7 evidence_chain rows / PRE
 // ===========================================================================
 
 test('integration: producer-protocol.json shape — schema-conformant and replay_keys byte-identical', () => {
-  const tmpDir = makeTempMarker('producer-protocol');
+  const { tmpDir, sourceRoot } = makeTempMarker('producer-protocol');
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
     const producerProtocolPath = path.join(tmpDir, 'producer-protocol.json');
@@ -404,7 +513,7 @@ test('integration: producer-protocol.json shape — schema-conformant and replay
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(result, bundlePath);
 
     const proto = readJson(producerProtocolPath);
@@ -467,7 +576,7 @@ test('integration: producer-protocol.json shape — schema-conformant and replay
 // ===========================================================================
 
 test('integration: verifier emits canonical PASS line and writes verify-protocol', () => {
-  const tmpDir = makeTempMarker('verifier');
+  const { tmpDir, sourceRoot } = makeTempMarker('verifier');
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
     const producerProtocolPath = path.join(tmpDir, 'producer-protocol.json');
@@ -484,7 +593,7 @@ test('integration: verifier emits canonical PASS line and writes verify-protocol
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(producer, bundlePath);
 
     const verifier = runVerifier([
@@ -494,7 +603,7 @@ test('integration: verifier emits canonical PASS line and writes verify-protocol
       '--protocol-out', verifyProtocolPath,
       '--reference-time', REFERENCE_TIME,
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertVerifierHealthy(verifier, verifyProtocolPath);
   } finally {
     removeTempMarker(tmpDir);
@@ -506,7 +615,7 @@ test('integration: verifier emits canonical PASS line and writes verify-protocol
 // ===========================================================================
 
 test('integration: verify-protocol.json re-derives CG1..CG8 pass, deterministic replay, clean redaction', () => {
-  const tmpDir = makeTempMarker('verify-shape');
+  const { tmpDir, sourceRoot } = makeTempMarker('verify-shape');
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
     const producerProtocolPath = path.join(tmpDir, 'producer-protocol.json');
@@ -523,7 +632,7 @@ test('integration: verify-protocol.json re-derives CG1..CG8 pass, deterministic 
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(producer, bundlePath);
 
     const verifier = runVerifier([
@@ -533,7 +642,7 @@ test('integration: verify-protocol.json re-derives CG1..CG8 pass, deterministic 
       '--protocol-out', verifyProtocolPath,
       '--reference-time', REFERENCE_TIME,
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertVerifierHealthy(verifier, verifyProtocolPath);
 
     const bundle = readJson(bundlePath);
@@ -657,7 +766,7 @@ test('integration: verify-protocol.json re-derives CG1..CG8 pass, deterministic 
 // ===========================================================================
 
 test('integration: correlation chain is unique across agent_run_id / probe_id / evidence_id / criterion_id', () => {
-  const tmpDir = makeTempMarker('correlation');
+  const { tmpDir, sourceRoot } = makeTempMarker('correlation');
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
     const producerProtocolPath = path.join(tmpDir, 'producer-protocol.json');
@@ -674,7 +783,7 @@ test('integration: correlation chain is unique across agent_run_id / probe_id / 
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(producer, bundlePath);
 
     const verifier = runVerifier([
@@ -684,7 +793,7 @@ test('integration: correlation chain is unique across agent_run_id / probe_id / 
       '--protocol-out', verifyProtocolPath,
       '--reference-time', REFERENCE_TIME,
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertVerifierHealthy(verifier, verifyProtocolPath);
 
     const bundle = readJson(bundlePath);
@@ -742,7 +851,7 @@ test('integration: byte-identical dual replay (within-run replay_keys) is record
   // within-run determinism via replay_keys). T06 must not over-spec the
   // contract: we verify the recorded determinism on a single run, not on
   // two runs whose bundle bytes might differ in property insertion order.
-  const tmpDir = makeTempMarker('replay');
+  const { tmpDir, sourceRoot } = makeTempMarker('replay');
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
     const producerProtocolPath = path.join(tmpDir, 'producer-protocol.json');
@@ -758,7 +867,7 @@ test('integration: byte-identical dual replay (within-run replay_keys) is record
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(result, bundlePath);
 
     const proto = readJson(producerProtocolPath);
@@ -816,7 +925,7 @@ test('integration: negative-fixtures artifact exists with 8 unique blocker codes
 // ===========================================================================
 
 test('integration: on-disk S02/S03 source files are byte-identical before and after the producer+verifier flow', () => {
-  const tmpDir = makeTempMarker('immutability');
+  const { tmpDir, sourceRoot } = makeTempMarker('immutability');
   const preHashes = hashAllowlistSources();
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
@@ -834,7 +943,7 @@ test('integration: on-disk S02/S03 source files are byte-identical before and af
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(producer, bundlePath);
 
     const verifier = runVerifier([
@@ -844,7 +953,7 @@ test('integration: on-disk S02/S03 source files are byte-identical before and af
       '--protocol-out', verifyProtocolPath,
       '--reference-time', REFERENCE_TIME,
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertVerifierHealthy(verifier, verifyProtocolPath);
 
     // Now check on-disk hashes — must match pre-flow.
@@ -863,7 +972,7 @@ test('integration: on-disk S02/S03 source files are byte-identical before and af
 // ===========================================================================
 
 test('integration: clean teardown — temp marker is removed and no scratch files leak under ROOT', () => {
-  const tmpDir = makeTempMarker('teardown');
+  const { tmpDir, sourceRoot } = makeTempMarker('teardown');
   assert.ok(fs.existsSync(tmpDir), 'temp dir must exist before teardown');
   // Snapshot existing ROOT/.tmp-m016-s04-int-teardown-* entries so we can detect new ones.
   const before = new Set(fs.readdirSync(ROOT).filter(function (name) {
@@ -884,7 +993,7 @@ test('integration: clean teardown — temp marker is removed and no scratch file
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(producer, bundlePath);
   } finally {
     removeTempMarker(tmpDir);
@@ -904,7 +1013,7 @@ test('integration: clean teardown — temp marker is removed and no scratch file
 // ===========================================================================
 
 test('integration: verifier against tampered bundle (launch verdict=GO) returns FAIL_CLOSED with M16-S04-VERIFY-LAUNCH-PROMOTION-DETECTED-GO', () => {
-  const tmpDir = makeTempMarker('tamper');
+  const { tmpDir, sourceRoot } = makeTempMarker('tamper');
   try {
     const bundlePath = path.join(tmpDir, 'bundle.json');
     const producerProtocolPath = path.join(tmpDir, 'producer-protocol.json');
@@ -920,11 +1029,15 @@ test('integration: verifier against tampered bundle (launch verdict=GO) returns 
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(producer, bundlePath);
 
     // Mutate the bundle in a tamper copy: launch verdict promoted to GO.
-    const tamperedDir = makeTempMarker('tamper-bundle');
+    // Use the outer sourceRoot for the verifier (NOT a fresh snapshot) so
+    // raw_sha_reproduction matches the producer's hashes; the inner marker
+    // exists only as a directory for the tampered bundle copy + verifier
+    // protocol output, so we discard its own sourceRoot via .tmpDir access.
+    const tamperedDir = makeTempMarker('tamper-bundle').tmpDir;
     try {
       const tamperedBundlePath = path.join(tamperedDir, 'bundle.json');
       const original = JSON.parse(fs.readFileSync(bundlePath, 'utf8'));
@@ -939,7 +1052,7 @@ test('integration: verifier against tampered bundle (launch verdict=GO) returns 
         '--protocol-out', verifyOnTamperedPath,
         '--reference-time', REFERENCE_TIME,
         '--iterations', '2',
-      ]);
+      ], sourceRoot);
 
       // Verifier exits non-zero.
       assert.notEqual(verifier.status, EXIT_CODES.CANARY_PASS,
@@ -980,7 +1093,7 @@ test('integration: verifier against tampered bundle (launch verdict=GO) returns 
 // ===========================================================================
 
 test('integration: end-to-end slice admission — all six S04 invariants hold under one deterministic replay', () => {
-  const tmpDir = makeTempMarker('slice-admission');
+  const { tmpDir, sourceRoot } = makeTempMarker('slice-admission');
   try {
     // Step 1: producer
     const bundlePath = path.join(tmpDir, 'bundle.json');
@@ -998,7 +1111,7 @@ test('integration: end-to-end slice admission — all six S04 invariants hold un
       '--reference-time', REFERENCE_TIME,
       '--seed', 'integration-replay',
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertProducerHealthy(producer, bundlePath);
 
     // Step 2: verifier (fresh process, separate exit code, separate stdout line)
@@ -1009,7 +1122,7 @@ test('integration: end-to-end slice admission — all six S04 invariants hold un
       '--protocol-out', verifyProtocolPath,
       '--reference-time', REFERENCE_TIME,
       '--iterations', '2',
-    ]);
+    ], sourceRoot);
     assertVerifierHealthy(verifier, verifyProtocolPath);
 
     // Step 3: invariants

@@ -97,6 +97,7 @@ function parseArgs(argv) {
     else if (a === '--iterations') out.iterations = parseInt(argv[++i], 10);
     else if (a === '--role-subset') out.roleSubset = (argv[++i] || '').split(',').filter(function (s) { return s; });
     else if (a === '--drill-subset') out.drillSubset = (argv[++i] || '').split(',').filter(function (s) { return s; });
+    else if (a === '--source-root') out.sourceRoot = argv[++i];
     else if (a === '--help' || a === '-h') {
       process.stdout.write([
         'Usage: produce_m016_s04_div4_div5_canary.js [options]',
@@ -114,6 +115,7 @@ function parseArgs(argv) {
         '  --iterations <n>            Replay iterations (default: 2)',
         '  --role-subset <csv>         Override ROLE_SUBSET_DEFAULTS (comma-separated)',
         '  --drill-subset <csv>        Override DRILL_SUBSET_DEFAULTS (comma-separated)',
+        '  --source-root <dir>         Override ROOT for source-file resolution (e.g. integration test snapshot)',
         '  -h, --help                  Show help',
       ].join('\n') + '\n');
       process.exit(0);
@@ -167,8 +169,14 @@ function atomicWriteJsonIfMissing(targetPath, payload, options) {
 // Source loading — pre + post hash fingerprinting, allowlist enforcement.
 // ---------------------------------------------------------------------------
 
-function loadSource(sourceRef) {
-  const abs = path.isAbsolute(sourceRef) ? sourceRef : path.join(ROOT, sourceRef);
+function loadSource(sourceRef, sourceRoot) {
+  // sourceRoot is an opt-in override for marker-owned integration tests.
+  // When set, source files are resolved under <sourceRoot>/<sourceRef>
+  // instead of <ROOT>/<sourceRef>; the bundle's evidence_chain.source_ref
+  // field stays the logical, portable path so verifiers with a different
+  // --source-root can still resolve the bundle.
+  const root = (typeof sourceRoot === 'string' && sourceRoot.length > 0) ? sourceRoot : ROOT;
+  const abs = path.isAbsolute(sourceRef) ? sourceRef : path.join(root, sourceRef);
   if (!fs.existsSync(abs)) {
     const err = new Error('source missing: ' + sourceRef);
     err.code = BLOCKER_CODES.PRODUCER_SOURCE_FILE_MISSING(sourceRef);
@@ -189,11 +197,11 @@ function loadSource(sourceRef) {
   return { source_ref: sourceRef, payload: parsed, raw: raw, size_bytes: raw.length, sha256: contract.sha256Hex(raw) };
 }
 
-function loadAllowlistedSources() {
+function loadAllowlistedSources(sourceRoot) {
   const sources = [];
   for (const entry of SOURCE_ALLOWLIST) {
     const ref = entry.source_ref;
-    const source = loadSource(ref);
+    const source = loadSource(ref, sourceRoot);
     sources.push(Object.assign({}, entry, source));
   }
   return sources;
@@ -282,20 +290,21 @@ function exitWithBlockers(blockers, runnerStatus, runnerExitCode, args) {
 }
 
 function run(args) {
+  const sourceRoot = (typeof args.sourceRoot === 'string' && args.sourceRoot.length > 0) ? args.sourceRoot : ROOT;
   const sourceFingerprints = {};
   let sources = [];
   try {
     // Pre-hash before any work.
     for (const entry of SOURCE_ALLOWLIST) {
       try {
-        const src = loadSource(entry.source_ref);
+        const src = loadSource(entry.source_ref, sourceRoot);
         sourceFingerprints[entry.source_ref] = src.sha256;
       } catch (e) {
         if (e.code) throw e;
         throw errorWithCode(BLOCKER_CODES.PRODUCER_SOURCE_FILE_MISSING(entry.source_ref), e.message);
       }
     }
-    sources = loadAllowlistedSources();
+    sources = loadAllowlistedSources(sourceRoot);
   } catch (e) {
     const blockers = [{ code: e.code || BLOCKER_CODES.PRODUCER_RUNNER_FAILURE(), reason: e.message }];
     const exit = contract.mapBlockerToExitCode(blockers[0].code);

@@ -123,6 +123,8 @@ function parseArgs(argv) {
     else if (a === '--protocol-out') out.protocolOut = argv[++i];
     else if (a === '--reference-time') out.referenceTime = argv[++i];
     else if (a === '--iterations') out.iterations = parseInt(argv[++i], 10);
+    else if (a === '--source-root') out.sourceRoot = argv[++i];
+    else if (a === '--probe-run-in') out.probeRunIn = argv[++i];
     else if (a === '--help' || a === '-h') {
       process.stdout.write([
         'Usage: verify_m016_s04_div4_div5_canary.js [options]',
@@ -136,6 +138,8 @@ function parseArgs(argv) {
         '  --protocol-out <path>       Verify-protocol output path',
         '  --reference-time <iso>      Override reference time',
         '  --iterations <n>            Independent replay iterations (default: 2)',
+        '  --source-root <dir>         Override ROOT for source-file resolution (e.g. integration test snapshot)',
+        '  --probe-run-in <path>       Override the canary probe-run ledger input path (defaults to runtime-evidence/M016-S04-div4-div5-canary-probe-run.json)',
         '  -h, --help                  Show help',
       ].join('\n') + '\n');
       process.exit(0);
@@ -190,8 +194,19 @@ function sha256Hex(content) {
   return crypto.createHash('sha256').update(buf).digest('hex');
 }
 
-function loadJsonFromDisk(ref) {
-  const abs = path.isAbsolute(ref) ? ref : path.join(ROOT, ref);
+function loadJsonFromDisk(ref, sourceRoot) {
+  // sourceRoot is an opt-in override for marker-owned integration tests.
+  // It changes path RESOLUTION (relative refs resolve under
+  // <sourceRoot>/<ref>) but NOT the realpath boundary check, which always
+  // enforces ROOT. This preserves the security invariant that the verifier
+  // can only read files inside the project tree, while letting the integration
+  // test point source reads at a marker-owned snapshot that already lives
+  // inside ROOT. Absolute refs (caller-provided CLI args like bundleIn /
+  // protocolIn) skip the boundary check entirely because the caller owns
+  // their provenance; the path-resolution override still applies if the
+  // caller passes a relative ref alongside --source-root.
+  const resolveRoot = (typeof sourceRoot === 'string' && sourceRoot.length > 0) ? sourceRoot : ROOT;
+  const abs = path.isAbsolute(ref) ? ref : path.join(resolveRoot, ref);
   if (!fs.existsSync(abs)) {
     const err = new Error('source not found: ' + ref);
     err.code = BLOCKER_CODES.VALIDATOR_BUNDLE_NOT_FOUND(ref);
@@ -206,11 +221,13 @@ function loadJsonFromDisk(ref) {
   let real;
   try { real = fs.realpathSync(abs); }
   catch (e) { real = abs; }
-  const rootReal = fs.realpathSync(ROOT);
-  if (!real.startsWith(rootReal + path.sep) && real !== rootReal) {
-    const err = new Error('source escapes repo root: ' + ref);
-    err.code = BLOCKER_CODES.VALIDATOR_PATH_TRAVERSAL(ref);
-    throw err;
+  if (!path.isAbsolute(ref)) {
+    const rootReal = fs.realpathSync(ROOT);
+    if (!real.startsWith(rootReal + path.sep) && real !== rootReal) {
+      const err = new Error('source escapes repo root: ' + ref);
+      err.code = BLOCKER_CODES.VALIDATOR_PATH_TRAVERSAL(ref);
+      throw err;
+    }
   }
   const rawBytes = fs.readFileSync(real);
   let parsed = null;
@@ -220,9 +237,9 @@ function loadJsonFromDisk(ref) {
   return { ref: ref, absPath: real, raw: rawBytes, parsed: parsed, parse_error: parseError, size_bytes: rawBytes.length };
 }
 
-function loadBundleFromDisk(bundleRef) {
+function loadBundleFromDisk(bundleRef, sourceRoot) {
   let loaded;
-  try { loaded = loadJsonFromDisk(bundleRef); }
+  try { loaded = loadJsonFromDisk(bundleRef, sourceRoot); }
   catch (e) {
     const code = e.code || BLOCKER_CODES.VALIDATOR_BUNDLE_NOT_FOUND(bundleRef);
     const err = new Error(e.message); err.code = code; throw err;
@@ -747,8 +764,9 @@ function mapVerifierBlockerToExitCode(blockerCode) {
 }
 
 function run(args) {
+  const sourceRoot = (typeof args.sourceRoot === 'string' && args.sourceRoot.length > 0) ? args.sourceRoot : ROOT;
   let bundle;
-  try { bundle = loadBundleFromDisk(args.bundleIn).parsed; }
+  try { bundle = loadBundleFromDisk(args.bundleIn, sourceRoot).parsed; }
   catch (e) {
     exitWithBlockers([{ code: e.code || BLOCKER_CODES.VALIDATOR_BUNDLE_NOT_FOUND(args.bundleIn), reason: e.message }], mapVerifierBlockerToExitCode(e.code), args);
   }
@@ -756,7 +774,7 @@ function run(args) {
   // Load producer protocol (informational cross-reference for provenance hashes).
   let producerProtocol = null;
   try {
-    const loaded = loadJsonFromDisk(args.protocolIn);
+    const loaded = loadJsonFromDisk(args.protocolIn, sourceRoot);
     if (loaded.parsed) producerProtocol = loaded.parsed;
   } catch (e) {
     // Non-fatal: validator proceeds with bundle-only provenance.
@@ -800,7 +818,7 @@ function run(args) {
     const row = normaliseEvidenceRow(rawRow);
     if (!row || !row.source_ref) continue;
     try {
-      const loaded = loadJsonFromDisk(row.source_ref);
+      const loaded = loadJsonFromDisk(row.source_ref, sourceRoot);
       const a = sha256Hex(loaded.raw);
       const b = sha256Hex(fs.readFileSync(loaded.absPath));
       if (a !== b) blockers.push({ code: BLOCKER_CODES.VALIDATOR_S02_HASH_DRIFT(row.source_ref, row.source_ref), reason: 'TOCTOU mutation on ' + row.source_ref });
@@ -814,7 +832,10 @@ function run(args) {
 
   // Special: probe-run ledger (Div5 independent audit).
   let probeRunSource = null;
-  try { probeRunSource = loadJsonFromDisk('runtime-evidence/M016-S04-div4-div5-canary-probe-run.json'); }
+  const probeRunRef = (typeof args.probeRunIn === 'string' && args.probeRunIn.length > 0)
+    ? args.probeRunIn
+    : 'runtime-evidence/M016-S04-div4-div5-canary-probe-run.json';
+  try { probeRunSource = loadJsonFromDisk(probeRunRef, sourceRoot); }
   catch (e) { /* surfaced in auditCanaryProbeRun */ }
 
   // Run audits.
