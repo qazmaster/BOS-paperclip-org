@@ -6,7 +6,7 @@
   "milestone": "M016-txa3vu",
   "slice": "S07",
   "task": "T04",
-  "generated": "2026-07-21T23:20:20.000Z",
+  "generated": "2026-07-21T23:30:04.000Z",
   "reference_time": "2026-07-21T12:00:00.000Z",
   "verifier_line": "M16-S07-CLEANUP",
   "canonical_protocol": "PROTOCOL-M16-S07-REPLAY-CLEANUP-V1",
@@ -229,5 +229,5 @@
       "evidence_ref": "runtime-evidence/M016-S07-replay-cleanup-negative-fixtures.json"
     }
   ],
-  "byte_digest": "b6fd4ef291e4c30a1737cd173f74f93c62cbbd861707127de7c817e1110e0d76"
+  "byte_digest": "792b4c167d5fed5ba9568b203549935e57b772a8152ccdfaf58606fd98fcc1b6"
 }
