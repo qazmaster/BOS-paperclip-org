@@ -6,7 +6,7 @@
   "milestone": "M016-txa3vu",
   "slice": "S07",
   "task": "T01",
-  "generated": "2026-07-21T23:14:16.000Z",
+  "generated": "2026-07-21T23:20:20.000Z",
   "reference_time": "2026-07-21T12:00:00.000Z",
   "verifier_line": "M16-S07-CLEANUP",
   "canonical_protocol": "PROTOCOL-M16-S07-REPLAY-CLEANUP-V1",
@@ -125,5 +125,5 @@
     "redaction_bounds_loaded": true
   },
   "blockers": [],
-  "byte_digest": "334f137edbcd3040cd26d200a553dfc9f814015b4a05fb358b30643383ec1f6e"
+  "byte_digest": "ffa7a305d228f7a349eb21138291d0856ed7cfe43da98164d8070a6f8ac6bafa"
 }
