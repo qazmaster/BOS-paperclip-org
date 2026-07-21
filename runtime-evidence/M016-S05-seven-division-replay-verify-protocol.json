@@ -1,0 +1,35 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-verify-protocol.v1.json",
+  "schema_version": "v1",
+  "protocol_id": "m016-s05-seven-division-replay-verify-protocol-v1",
+  "protocol_kind": "seven-division-evidence-replay-verify-protocol",
+  "milestone": "M016-txa3vu",
+  "slice": "S05",
+  "task": "T03",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "line_class": "M16-S05-VERIFY",
+  "canonical_protocol": "PROTOCOL-M16-S05-VERIFY-V1",
+  "bundle_ref": "runtime-evidence/M016-S05-seven-division-replay-bundle.json",
+  "iterations": 3,
+  "replay_keys": {
+    "first_run_provenance_hash": "c849dc79fa75f4be415728efeaa5d4117410db99dd1acd6e6df1835dbf1d5fac",
+    "second_run_provenance_hash": "c849dc79fa75f4be415728efeaa5d4117410db99dd1acd6e6df1835dbf1d5fac",
+    "match": true,
+    "byte_identical": true,
+    "replay_key": "7a3a92b1d398565502cfc6129524a2b8ecbd3247c59b43e3f5b1d787eb4bf15d",
+    "verified_at": "2026-07-20T12:00:00.000Z"
+  },
+  "verifier_imports": [
+    "scripts/lib/m016-s05-seven-division-replay-data.js",
+    "scripts/lib/m016-s05-seven-division-replay-contract.js"
+  ],
+  "producer_cli_imported": false,
+  "network_calls": 0,
+  "mutation_count": 0,
+  "verdicts": {
+    "orchestration": "NOT_PROVEN",
+    "evidence": "PARTIAL",
+    "launch": "PREPARATION_ONLY"
+  },
+  "blockers": []
+}
