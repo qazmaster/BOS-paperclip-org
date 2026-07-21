@@ -10,10 +10,10 @@
   "rows": [
     {
       "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-      "raw_state": "not_proven",
-      "numeric_mapping": 0.5,
+      "raw_state": "pass",
+      "numeric_mapping": 1,
       "weight": 0.125,
-      "contribution": 0.0625,
+      "contribution": 0.125,
       "rationale": "every probe declares a role from the frozen registry, a bounded scope, an explicit limitations array and a bounded method from the GET-only allowlist",
       "source_refs": [
         "runtime-evidence/M016-S03-live-probe-results.json",
@@ -34,10 +34,10 @@
     },
     {
       "criterion_id": "HG3 RECOVERY_EVIDENCE",
-      "raw_state": "not_proven",
-      "numeric_mapping": 0.5,
+      "raw_state": "pass",
+      "numeric_mapping": 1,
       "weight": 0.125,
-      "contribution": 0.0625,
+      "contribution": 0.125,
       "rationale": "restore-drill and failure-drill produce objective hashes (recovery / cleanup) in owned scratch roots; output references runtime-evidence/M016-S03-scratch-drill-results.json",
       "source_refs": [
         "runtime-evidence/M016-S03-live-probe-results.json",
@@ -46,10 +46,10 @@
     },
     {
       "criterion_id": "HG4 FINANCIAL_PROTECTION",
-      "raw_state": "not_proven",
-      "numeric_mapping": 0.5,
+      "raw_state": "pass",
+      "numeric_mapping": 1,
       "weight": 0.125,
-      "contribution": 0.0625,
+      "contribution": 0.125,
       "rationale": "budget-stop drill exercises the off-by-one threshold in owned scratch state; cost_snapshot records observed usage from offline bundle reads",
       "source_refs": [
         "runtime-evidence/M016-S03-live-probe-results.json",
@@ -58,10 +58,10 @@
     },
     {
       "criterion_id": "HG5 SECURITY_POSTURE",
-      "raw_state": "not_proven",
-      "numeric_mapping": 0.5,
+      "raw_state": "pass",
+      "numeric_mapping": 1,
       "weight": 0.125,
-      "contribution": 0.0625,
+      "contribution": 0.125,
       "rationale": "hermes_environment + secret_posture probes confirm adapter config and redaction posture; limitations explicitly enumerate vendor and bearer leaks rejected",
       "source_refs": [
         "runtime-evidence/M016-S03-live-probe-results.json",
@@ -82,10 +82,10 @@
     },
     {
       "criterion_id": "HG7 READ_ONLY_BOUNDARY",
-      "raw_state": "not_proven",
-      "numeric_mapping": 0.5,
+      "raw_state": "pass",
+      "numeric_mapping": 1,
       "weight": 0.125,
-      "contribution": 0.0625,
+      "contribution": 0.125,
       "rationale": "paperclip_api_readonly probes keep every mutation_audit counter at zero and require isolation_invariant.read_only_boundary_pass=true",
       "source_refs": [
         "runtime-evidence/M016-S03-live-probe-results.json",
@@ -108,10 +108,10 @@
   "steps": [
     {
       "step": "step_orchestration",
-      "raw_state": "NOT_PROVEN",
-      "numeric_mapping": 0,
+      "raw_state": "PASS",
+      "numeric_mapping": 1,
       "weight": 0.34,
-      "contribution": 0,
+      "contribution": 0.34,
       "rationale": "division execution coverage",
       "source_refs": [
         "runtime-evidence/M016-S03-live-probe-results.json",
@@ -121,9 +121,9 @@
     {
       "step": "step_evidence",
       "raw_state": "PARTIAL",
-      "numeric_mapping": 0.5625,
+      "numeric_mapping": 0.875,
       "weight": 0.33,
-      "contribution": 0.185625,
+      "contribution": 0.28875,
       "rationale": "independent hard-gate evidence score",
       "source_refs": [
         "runtime-evidence/M016-S03-live-probe-results.json",
@@ -144,12 +144,12 @@
     }
   ],
   "weight_sum": 1,
-  "score": 0.350625,
+  "score": 0.79375,
   "verdicts": {
-    "orchestration": "NOT_PROVEN",
+    "orchestration": "PASS",
     "evidence": "PARTIAL",
     "launch": "PREPARATION_ONLY"
   },
-  "replay_key": "11dfeb0145d4bd8b1cc622f6d2d3f26264a77157fe7e66b04b18f45b64c42d78",
+  "replay_key": "b8bf95f4f59b487e87415cdb600e0fc07754f405dca9115fe4001e36da20d9d1",
   "blockers": []
 }

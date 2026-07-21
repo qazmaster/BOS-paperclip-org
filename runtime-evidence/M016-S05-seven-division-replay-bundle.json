@@ -7,7 +7,7 @@
   "slice": "S05",
   "task": "T02",
   "generated": "2026-07-20T12:00:00.000Z",
-  "bundle_digest": "c849dc79fa75f4be415728efeaa5d4117410db99dd1acd6e6df1835dbf1d5fac",
+  "bundle_digest": "fa3c3dee4a1687d6f487be717c978cac9eecc8f77f6ab605dc613350ed7a9cf4",
   "evidence_chain": [
     {
       "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
@@ -56,8 +56,8 @@
       "kind": "replay_probe_run",
       "chain_role": "replay_probe_run",
       "independence_group": "m016-s05-replay-probe-run",
-      "pre_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
-      "post_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "pre_hash_sha256": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
+      "post_hash_sha256": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
       "unchanged": true,
       "scope": "offline-readonly-source-hash-window",
       "limitations": [
@@ -70,99 +70,99 @@
     "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
     "probe_to_criterion": [
       {
-        "probe_id": "M16-S03-PROBE-div1-hco-no-target-400ce295",
+        "probe_id": "M16-S03-PROBE-div1-hco",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-div1-hco-no-target-400ce295",
+        "evidence_id": "m016-s05-replay-evidence-div1.hco",
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-div1-hco",
         "independence_key": "live_replay_record:m016-s03-probe-div1-hco",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-div2-masterplanner-no-target-5deb9249",
+        "probe_id": "M16-S03-PROBE-div2-masterplanner",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-div2-masterplanner-no-target-5deb9249",
+        "evidence_id": "m016-s05-replay-evidence-div2.masterplanner",
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-div2-master-planner",
         "independence_key": "live_replay_record:m016-s03-probe-div2-master-planner",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-div3-treasury-no-target-2bd09913",
+        "probe_id": "M16-S03-PROBE-div3-treasury",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-div3-treasury-no-target-2bd09913",
+        "evidence_id": "m016-s05-replay-evidence-div3.treasury",
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-div3-treasury",
         "independence_key": "live_replay_record:m016-s03-probe-div3-treasury",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-div4-production-no-target-4516d67f",
+        "probe_id": "M16-S03-PROBE-div4-production",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-div4-production-no-target-4516d67f",
+        "evidence_id": "m016-s05-replay-evidence-div4.production",
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-div4-production",
         "independence_key": "live_replay_record:m016-s03-probe-div4-production",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-div5-qualificationslibrarylearning-no-target-7a0381eb",
+        "probe_id": "M16-S03-PROBE-div5-qualificationslibrarylearning",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-div5-qualificationslibrarylearning-no-target-7a0",
+        "evidence_id": "m016-s05-replay-evidence-div5.qualificationslibrarylearning",
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-div5-qualifications",
         "independence_key": "live_replay_record:m016-s03-probe-div5-qualifications",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-div6-external-no-target-4537f75b",
+        "probe_id": "M16-S03-PROBE-div6-external",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-div6-external-no-target-4537f75b",
+        "evidence_id": "m016-s05-replay-evidence-div6.external",
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-div6-external",
         "independence_key": "live_replay_record:m016-s03-probe-div6-external",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-div7-missioncontrol-no-target-421b3417",
+        "probe_id": "M16-S03-PROBE-div7-missioncontrol",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-div7-missioncontrol-no-target-421b3417",
+        "evidence_id": "m016-s05-replay-evidence-div7.missioncontrol",
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-div7-mission-control",
         "independence_key": "live_replay_record:m016-s03-probe-div7-mission-control",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-paperclip_health-no-target-962e3e75",
+        "probe_id": "M16-S03-PROBE-paperclip-health",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-paperclip_health-no-target-962e3e75",
+        "evidence_id": "m016-s05-replay-evidence-paperclip-health",
         "criterion_id": "HG7 READ_ONLY_BOUNDARY",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-paperclip-health",
         "independence_key": "live_replay_record:m016-s03-probe-paperclip-health",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-hermes_environment-no-target-b972fa5d",
+        "probe_id": "M16-S03-PROBE-hermes-environment",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-hermes_environment-no-target-b972fa5d",
+        "evidence_id": "m016-s05-replay-evidence-hermes-environment",
         "criterion_id": "HG5 SECURITY_POSTURE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-hermes-environment",
         "independence_key": "live_replay_record:m016-s03-probe-hermes-environment",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-secret_posture-probe-ea022dda",
+        "probe_id": "M16-S03-PROBE-secret-posture",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-secret_posture-probe-ea022dda",
+        "evidence_id": "m016-s05-replay-evidence-secret-posture",
         "criterion_id": "HG5 SECURITY_POSTURE",
         "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-secret-posture",
@@ -170,9 +170,9 @@
         "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-cost_snapshot-probe-7cf5323f",
+        "probe_id": "M16-S03-PROBE-cost-snapshot",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-cost_snapshot-probe-7cf5323f",
+        "evidence_id": "m016-s05-replay-evidence-cost-snapshot",
         "criterion_id": "HG4 FINANCIAL_PROTECTION",
         "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-cost-snapshot",
@@ -180,9 +180,9 @@
         "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-isolation_invariant-probe-be2ad5b9",
+        "probe_id": "M16-S03-PROBE-isolation-invariant",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-isolation_invariant-probe-be2ad5b9",
+        "evidence_id": "m016-s05-replay-evidence-isolation-invariant",
         "criterion_id": "HG7 READ_ONLY_BOUNDARY",
         "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-isolation-invariant",
@@ -190,39 +190,39 @@
         "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-restore_drill-no-target-c1adca5f",
+        "probe_id": "M16-S03-PROBE-restore-drill",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-restore_drill-no-target-c1adca5f",
+        "evidence_id": "m016-s05-replay-evidence-restore-drill",
         "criterion_id": "HG3 RECOVERY_EVIDENCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-restore-drill",
         "independence_key": "live_replay_record:m016-s03-probe-restore-drill",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-budget_stop_drill-no-target-8279328b",
+        "probe_id": "M16-S03-PROBE-budget-stop-drill",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-budget_stop_drill-no-target-8279328b",
+        "evidence_id": "m016-s05-replay-evidence-budget-stop-drill",
         "criterion_id": "HG4 FINANCIAL_PROTECTION",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-budget-stop-drill",
         "independence_key": "live_replay_record:m016-s03-probe-budget-stop-drill",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-failure_drill-no-target-f390ace0",
+        "probe_id": "M16-S03-PROBE-failure-drill",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-failure_drill-no-target-f390ace0",
+        "evidence_id": "m016-s05-replay-evidence-failure-drill",
         "criterion_id": "HG3 RECOVERY_EVIDENCE",
-        "classification": "NOT_PROVEN",
+        "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-failure-drill",
         "independence_key": "live_replay_record:m016-s03-probe-failure-drill",
-        "weight": 0
+        "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-redaction_posture_audit-probe-047e97db",
+        "probe_id": "M16-S03-PROBE-redaction-posture-audit",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-redaction_posture_audit-probe-047e97db",
+        "evidence_id": "m016-s05-replay-evidence-redaction-posture-audit",
         "criterion_id": "HG5 SECURITY_POSTURE",
         "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-redaction-posture-audit",
@@ -230,30 +230,30 @@
         "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-restore_drill-drill-6-0b703773",
+        "probe_id": "M16-S03-PROBE-restore-drill-scratch",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-restore_drill-drill-6-0b703773",
-        "criterion_id": "HG8 SCRATCH_ISOLATION",
+        "evidence_id": "m016-s05-replay-evidence-restore-drill-drill",
+        "criterion_id": "HG3 RECOVERY_EVIDENCE",
         "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-restore-drill",
         "independence_key": "drill_replay_record:m016-s03-probe-restore-drill",
         "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
+        "probe_id": "M16-S03-PROBE-budget-stop-drill-scratch",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-budget_stop_drill-drill-11-14e9883c",
-        "criterion_id": "HG8 SCRATCH_ISOLATION",
+        "evidence_id": "m016-s05-replay-evidence-budget-stop-drill-drill",
+        "criterion_id": "HG4 FINANCIAL_PROTECTION",
         "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-budget-stop-drill",
         "independence_key": "drill_replay_record:m016-s03-probe-budget-stop-drill",
         "weight": 1
       },
       {
-        "probe_id": "M16-S03-PROBE-failure_drill-drill-11-13ff26c8",
+        "probe_id": "M16-S03-PROBE-failure-drill-scratch",
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "evidence_id": "m016-s05-replay-evidence-failure_drill-drill-11-13ff26c8",
-        "criterion_id": "HG8 SCRATCH_ISOLATION",
+        "evidence_id": "m016-s05-replay-evidence-failure-drill-drill",
+        "criterion_id": "HG3 RECOVERY_EVIDENCE",
         "classification": "EXECUTED",
         "independence_group": "m016-s03-probe-failure-drill",
         "independence_key": "drill_replay_record:m016-s03-probe-failure-drill",
@@ -263,287 +263,287 @@
     "agent_run_to_probe": [
       {
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-div1-hco-no-target-400ce295",
-        "started_at": "2026-07-19T14:56:43.281Z",
-        "finished_at": "2026-07-19T14:56:43.281Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-div2-masterplanner-no-target-5deb9249",
-        "started_at": "2026-07-19T14:56:43.284Z",
-        "finished_at": "2026-07-19T14:56:43.284Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-div3-treasury-no-target-2bd09913",
-        "started_at": "2026-07-19T14:56:43.285Z",
-        "finished_at": "2026-07-19T14:56:43.285Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-div4-production-no-target-4516d67f",
-        "started_at": "2026-07-19T14:56:43.285Z",
-        "finished_at": "2026-07-19T14:56:43.285Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-div5-qualificationslibrarylearning-no-target-7a0381eb",
-        "started_at": "2026-07-19T14:56:43.285Z",
-        "finished_at": "2026-07-19T14:56:43.285Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-div6-external-no-target-4537f75b",
-        "started_at": "2026-07-19T14:56:43.285Z",
-        "finished_at": "2026-07-19T14:56:43.285Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-div7-missioncontrol-no-target-421b3417",
-        "started_at": "2026-07-19T14:56:43.285Z",
-        "finished_at": "2026-07-19T14:56:43.285Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-paperclip_health-no-target-962e3e75",
-        "started_at": "2026-07-19T14:56:43.285Z",
-        "finished_at": "2026-07-19T14:56:43.285Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-hermes_environment-no-target-b972fa5d",
-        "started_at": "2026-07-19T14:56:43.285Z",
-        "finished_at": "2026-07-19T14:56:43.285Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-secret_posture-probe-ea022dda",
-        "started_at": "2026-07-19T14:56:43.286Z",
-        "finished_at": "2026-07-19T14:56:43.286Z",
-        "duration_ms": 0,
+        "probe_id": "M16-S03-PROBE-div1-hco",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 250,
         "exit_code": 0
       },
       {
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-cost_snapshot-probe-7cf5323f",
-        "started_at": "2026-07-19T14:56:43.287Z",
-        "finished_at": "2026-07-19T14:56:43.287Z",
-        "duration_ms": 0,
+        "probe_id": "M16-S03-PROBE-div2-masterplanner",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 250,
         "exit_code": 0
       },
       {
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-isolation_invariant-probe-be2ad5b9",
-        "started_at": "2026-07-19T14:56:43.288Z",
-        "finished_at": "2026-07-19T14:56:43.288Z",
-        "duration_ms": 0,
+        "probe_id": "M16-S03-PROBE-div3-treasury",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 250,
         "exit_code": 0
       },
       {
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-restore_drill-no-target-c1adca5f",
-        "started_at": "2026-07-19T14:56:43.288Z",
-        "finished_at": "2026-07-19T14:56:43.288Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-budget_stop_drill-no-target-8279328b",
-        "started_at": "2026-07-19T14:56:43.288Z",
-        "finished_at": "2026-07-19T14:56:43.288Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-failure_drill-no-target-f390ace0",
-        "started_at": "2026-07-19T14:56:43.288Z",
-        "finished_at": "2026-07-19T14:56:43.288Z",
-        "duration_ms": 0,
-        "exit_code": 599
-      },
-      {
-        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-redaction_posture_audit-probe-047e97db",
-        "started_at": "2026-07-19T14:56:43.288Z",
-        "finished_at": "2026-07-19T14:56:43.288Z",
-        "duration_ms": 0,
+        "probe_id": "M16-S03-PROBE-div4-production",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 250,
         "exit_code": 0
       },
       {
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-restore_drill-drill-6-0b703773",
-        "started_at": "2026-07-19T12:00:00.000Z",
-        "finished_at": "2026-07-19T12:00:00.000Z",
-        "duration_ms": 0,
+        "probe_id": "M16-S03-PROBE-div5-qualificationslibrarylearning",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 250,
         "exit_code": 0
       },
       {
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
-        "started_at": "2026-07-19T12:00:00.000Z",
-        "finished_at": "2026-07-19T12:00:00.000Z",
-        "duration_ms": 0,
+        "probe_id": "M16-S03-PROBE-div6-external",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 250,
         "exit_code": 0
       },
       {
         "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
-        "probe_id": "M16-S03-PROBE-failure_drill-drill-11-13ff26c8",
-        "started_at": "2026-07-19T12:00:00.000Z",
-        "finished_at": "2026-07-19T12:00:00.000Z",
-        "duration_ms": 0,
+        "probe_id": "M16-S03-PROBE-div7-missioncontrol",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 250,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-paperclip-health",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-hermes-environment",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-secret-posture",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-cost-snapshot",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-isolation-invariant",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-restore-drill",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-budget-stop-drill",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-failure-drill",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-redaction-posture-audit",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 300,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-restore-drill-scratch",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 400,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-budget-stop-drill-scratch",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 400,
+        "exit_code": 0
+      },
+      {
+        "agent_run_id": "M16-S05-REPLAY-RUN-canonical",
+        "probe_id": "M16-S03-PROBE-failure-drill-scratch",
+        "started_at": "2026-07-20T12:00:00.000Z",
+        "finished_at": "2026-07-20T12:00:00.000Z",
+        "duration_ms": 400,
         "exit_code": 0
       }
     ],
     "evidence_to_criterion": [
       {
-        "evidence_id": "m016-s05-replay-evidence-div1-hco-no-target-400ce295",
+        "evidence_id": "m016-s05-replay-evidence-div1.hco",
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-div2-masterplanner-no-target-5deb9249",
-        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-div3-treasury-no-target-2bd09913",
-        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-div4-production-no-target-4516d67f",
-        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-div5-qualificationslibrarylearning-no-target-7a0",
-        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-div6-external-no-target-4537f75b",
-        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-div7-missioncontrol-no-target-421b3417",
-        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-paperclip_health-no-target-962e3e75",
-        "criterion_id": "HG7 READ_ONLY_BOUNDARY",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-hermes_environment-no-target-b972fa5d",
-        "criterion_id": "HG5 SECURITY_POSTURE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-secret_posture-probe-ea022dda",
-        "criterion_id": "HG5 SECURITY_POSTURE",
         "raw_state": "EXECUTED",
         "numeric_mapping": 1,
         "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
       },
       {
-        "evidence_id": "m016-s05-replay-evidence-cost_snapshot-probe-7cf5323f",
-        "criterion_id": "HG4 FINANCIAL_PROTECTION",
+        "evidence_id": "m016-s05-replay-evidence-div2.masterplanner",
+        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
         "raw_state": "EXECUTED",
         "numeric_mapping": 1,
         "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
       },
       {
-        "evidence_id": "m016-s05-replay-evidence-isolation_invariant-probe-be2ad5b9",
+        "evidence_id": "m016-s05-replay-evidence-div3.treasury",
+        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-div4.production",
+        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-div5.qualificationslibrarylearning",
+        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-div6.external",
+        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-div7.missioncontrol",
+        "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-paperclip-health",
         "criterion_id": "HG7 READ_ONLY_BOUNDARY",
         "raw_state": "EXECUTED",
         "numeric_mapping": 1,
         "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
       },
       {
-        "evidence_id": "m016-s05-replay-evidence-restore_drill-no-target-c1adca5f",
-        "criterion_id": "HG3 RECOVERY_EVIDENCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-budget_stop_drill-no-target-8279328b",
-        "criterion_id": "HG4 FINANCIAL_PROTECTION",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-failure_drill-no-target-f390ace0",
-        "criterion_id": "HG3 RECOVERY_EVIDENCE",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
-        "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json"
-      },
-      {
-        "evidence_id": "m016-s05-replay-evidence-redaction_posture_audit-probe-047e97db",
+        "evidence_id": "m016-s05-replay-evidence-hermes-environment",
         "criterion_id": "HG5 SECURITY_POSTURE",
         "raw_state": "EXECUTED",
         "numeric_mapping": 1,
         "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
       },
       {
-        "evidence_id": "m016-s05-replay-evidence-restore_drill-drill-6-0b703773",
-        "criterion_id": "HG8 SCRATCH_ISOLATION",
+        "evidence_id": "m016-s05-replay-evidence-secret-posture",
+        "criterion_id": "HG5 SECURITY_POSTURE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-cost-snapshot",
+        "criterion_id": "HG4 FINANCIAL_PROTECTION",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-isolation-invariant",
+        "criterion_id": "HG7 READ_ONLY_BOUNDARY",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-restore-drill",
+        "criterion_id": "HG3 RECOVERY_EVIDENCE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-budget-stop-drill",
+        "criterion_id": "HG4 FINANCIAL_PROTECTION",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-failure-drill",
+        "criterion_id": "HG3 RECOVERY_EVIDENCE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-redaction-posture-audit",
+        "criterion_id": "HG5 SECURITY_POSTURE",
+        "raw_state": "EXECUTED",
+        "numeric_mapping": 1,
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json"
+      },
+      {
+        "evidence_id": "m016-s05-replay-evidence-restore-drill-drill",
+        "criterion_id": "HG3 RECOVERY_EVIDENCE",
         "raw_state": "EXECUTED",
         "numeric_mapping": 1,
         "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json"
       },
       {
-        "evidence_id": "m016-s05-replay-evidence-budget_stop_drill-drill-11-14e9883c",
-        "criterion_id": "HG8 SCRATCH_ISOLATION",
+        "evidence_id": "m016-s05-replay-evidence-budget-stop-drill-drill",
+        "criterion_id": "HG4 FINANCIAL_PROTECTION",
         "raw_state": "EXECUTED",
         "numeric_mapping": 1,
         "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json"
       },
       {
-        "evidence_id": "m016-s05-replay-evidence-failure_drill-drill-11-13ff26c8",
-        "criterion_id": "HG8 SCRATCH_ISOLATION",
+        "evidence_id": "m016-s05-replay-evidence-failure-drill-drill",
+        "criterion_id": "HG3 RECOVERY_EVIDENCE",
         "raw_state": "EXECUTED",
         "numeric_mapping": 1,
         "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json"
@@ -555,26 +555,26 @@
       "kind": "live_replay_record",
       "role": "Div1.HCO",
       "role_class": "division",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-div1-hco",
-      "reused_probe_id": "M16-S03-PROBE-div1-hco-no-target-400ce295",
-      "evidence_id": "m016-s05-replay-evidence-div1-hco-no-target-400ce295",
+      "reused_probe_id": "M16-S03-PROBE-div1-hco",
+      "evidence_id": "m016-s05-replay-evidence-div1.hco",
       "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-      "method": "GET /api/companies/{companyId}/agents",
-      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
-      "started_at": "2026-07-19T14:56:43.281Z",
-      "finished_at": "2026-07-19T14:56:43.281Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-discover-divisions",
+      "method": "GET /probe/div1-hco",
+      "command": "GET /probe/div1-hco?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 250,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -608,40 +608,39 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div1.HCO"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div1.HCO",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "00e971645b27378444a9c88857813984",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "ba7fcacabad71d961b0308b0949c243d9acd39773142d3d14e4d0723a2febe7c"
+      "source_record_digest": "464a247f4e3c4379846ca6dc472684d82a2478be2bfbaff1d34a31f35fd34b69"
     },
     {
       "kind": "live_replay_record",
       "role": "Div2.MasterPlanner",
       "role_class": "division",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-div2-master-planner",
-      "reused_probe_id": "M16-S03-PROBE-div2-masterplanner-no-target-5deb9249",
-      "evidence_id": "m016-s05-replay-evidence-div2-masterplanner-no-target-5deb9249",
+      "reused_probe_id": "M16-S03-PROBE-div2-masterplanner",
+      "evidence_id": "m016-s05-replay-evidence-div2.masterplanner",
       "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-      "method": "GET /api/companies/{companyId}/agents",
-      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
-      "started_at": "2026-07-19T14:56:43.284Z",
-      "finished_at": "2026-07-19T14:56:43.284Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-discover-divisions",
+      "method": "GET /probe/div2-masterplanner",
+      "command": "GET /probe/div2-masterplanner?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 250,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -675,40 +674,39 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div2.MasterPlanner"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div2.MasterPlanner",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "2dbe8fc1b90cf0a7aecd7a222e3cdd86",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "224ad81bef271380e0f0ea379734b0c544e0eaa9d2bebd71d85bb5aa8443202d"
+      "source_record_digest": "8f6f70006243dc1c86950d426eb379c888c92c5072b73b6ac3e1a4475fa99af2"
     },
     {
       "kind": "live_replay_record",
       "role": "Div3.Treasury",
       "role_class": "division",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-div3-treasury",
-      "reused_probe_id": "M16-S03-PROBE-div3-treasury-no-target-2bd09913",
-      "evidence_id": "m016-s05-replay-evidence-div3-treasury-no-target-2bd09913",
+      "reused_probe_id": "M16-S03-PROBE-div3-treasury",
+      "evidence_id": "m016-s05-replay-evidence-div3.treasury",
       "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-      "method": "GET /api/companies/{companyId}/agents",
-      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
-      "started_at": "2026-07-19T14:56:43.285Z",
-      "finished_at": "2026-07-19T14:56:43.285Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-discover-divisions",
+      "method": "GET /probe/div3-treasury",
+      "command": "GET /probe/div3-treasury?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 250,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -742,40 +740,39 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div3.Treasury"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div3.Treasury",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "3481b12aa3909b8e6b3e84518d12397e",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "cb94020c2309fd0c2a93ebc7c30d98a3274a59741400553d270fab6781d9c027"
+      "source_record_digest": "709537ec14a8297fc245cbf340fb5befed4f1f518be6dd14f73819c7ebd4b96c"
     },
     {
       "kind": "live_replay_record",
       "role": "Div4.Production",
       "role_class": "division",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-div4-production",
-      "reused_probe_id": "M16-S03-PROBE-div4-production-no-target-4516d67f",
-      "evidence_id": "m016-s05-replay-evidence-div4-production-no-target-4516d67f",
+      "reused_probe_id": "M16-S03-PROBE-div4-production",
+      "evidence_id": "m016-s05-replay-evidence-div4.production",
       "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-      "method": "GET /api/companies/{companyId}/agents",
-      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
-      "started_at": "2026-07-19T14:56:43.285Z",
-      "finished_at": "2026-07-19T14:56:43.285Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-discover-divisions",
+      "method": "GET /probe/div4-production",
+      "command": "GET /probe/div4-production?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 250,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -809,40 +806,39 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div4.Production"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div4.Production",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "3b65f00c1dd8c6818f43c7b80ca183fd",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "0862c06b5b895d5d1f60d31afaea1a7dc0a8af64e21e1417ada49b2b32b465f3"
+      "source_record_digest": "b4f43040d7d82d76d8d64d4a1db67d1a53ac0e17a2f25c1289b7079c3ea4c76b"
     },
     {
       "kind": "live_replay_record",
       "role": "Div5.QualificationsLibraryLearning",
       "role_class": "division",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-div5-qualifications",
-      "reused_probe_id": "M16-S03-PROBE-div5-qualificationslibrarylearning-no-target-7a0381eb",
-      "evidence_id": "m016-s05-replay-evidence-div5-qualificationslibrarylearning-no-target-7a0",
+      "reused_probe_id": "M16-S03-PROBE-div5-qualificationslibrarylearning",
+      "evidence_id": "m016-s05-replay-evidence-div5.qualificationslibrarylearning",
       "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-      "method": "GET /api/companies/{companyId}/agents",
-      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
-      "started_at": "2026-07-19T14:56:43.285Z",
-      "finished_at": "2026-07-19T14:56:43.285Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-discover-divisions",
+      "method": "GET /probe/div5-qualificationslibrarylearning",
+      "command": "GET /probe/div5-qualificationslibrarylearning?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 250,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -876,40 +872,39 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div5.QualificationsLibraryLearning"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div5.QualificationsLibraryLearning",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "d145287b02cb24acc1092518f2fba625",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "5493100bc3d4d7cfde6cab3bb7ab5381280bc4a293c247692ae0698f5fa103ee"
+      "source_record_digest": "07e21cd8c4653a32388fdc510cc276e01dcbe8b77609a0191f0c7c716cbeff76"
     },
     {
       "kind": "live_replay_record",
       "role": "Div6.External",
       "role_class": "division",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-div6-external",
-      "reused_probe_id": "M16-S03-PROBE-div6-external-no-target-4537f75b",
-      "evidence_id": "m016-s05-replay-evidence-div6-external-no-target-4537f75b",
+      "reused_probe_id": "M16-S03-PROBE-div6-external",
+      "evidence_id": "m016-s05-replay-evidence-div6.external",
       "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-      "method": "GET /api/companies/{companyId}/agents",
-      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
-      "started_at": "2026-07-19T14:56:43.285Z",
-      "finished_at": "2026-07-19T14:56:43.285Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-discover-divisions",
+      "method": "GET /probe/div6-external",
+      "command": "GET /probe/div6-external?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 250,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -943,40 +938,39 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div6.External"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div6.External",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "11951f7fdb618c76eef8c9f6a6506ec7",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "f3ebf409a51020a8dcecafe4a176da9d4b1ac6b4f478735769cd3e6d9e450a06"
+      "source_record_digest": "5923606ab882fed6ab604212631007dda7fda5fedc28487674e48c31b016d9ba"
     },
     {
       "kind": "live_replay_record",
       "role": "Div7.MissionControl",
       "role_class": "division",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-div7-mission-control",
-      "reused_probe_id": "M16-S03-PROBE-div7-missioncontrol-no-target-421b3417",
-      "evidence_id": "m016-s05-replay-evidence-div7-missioncontrol-no-target-421b3417",
+      "reused_probe_id": "M16-S03-PROBE-div7-missioncontrol",
+      "evidence_id": "m016-s05-replay-evidence-div7.missioncontrol",
       "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-      "method": "GET /api/companies/{companyId}/agents",
-      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
-      "started_at": "2026-07-19T14:56:43.285Z",
-      "finished_at": "2026-07-19T14:56:43.285Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-discover-divisions",
+      "method": "GET /probe/div7-missioncontrol",
+      "command": "GET /probe/div7-missioncontrol?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 250,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -1010,40 +1004,39 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div7.MissionControl"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div7.MissionControl",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "41329c6c50cbae4006a251abb463d938",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "2e9ed56aea25c0ac259da597918ce24c0338520002856f6fa82d35205ccb24c2"
+      "source_record_digest": "1fb779ef6040b3c40fa71b8fb2c9e179facd2193bf111c4d169ff1be1ea80ed5"
     },
     {
       "kind": "live_replay_record",
       "role": "paperclip_health",
       "role_class": "infrastructure",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-paperclip-health",
-      "reused_probe_id": "M16-S03-PROBE-paperclip_health-no-target-962e3e75",
-      "evidence_id": "m016-s05-replay-evidence-paperclip_health-no-target-962e3e75",
+      "reused_probe_id": "M16-S03-PROBE-paperclip-health",
+      "evidence_id": "m016-s05-replay-evidence-paperclip-health",
       "criterion_id": "HG7 READ_ONLY_BOUNDARY",
-      "method": "GET /api/health",
-      "command": "GET http://127.0.0.1:43131/api/health",
-      "started_at": "2026-07-19T14:56:43.285Z",
-      "finished_at": "2026-07-19T14:56:43.285Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-health-readonly",
+      "method": "GET /probe/paperclip-health",
+      "command": "GET /probe/paperclip-health?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -1077,40 +1070,39 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-paperclip_health"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-paperclip_health",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "ec87c0e32cbe7f838c0fa0f07d54a615",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "9cd8b9e84ce76257e3b2c369183447ca029ba4226cdbe82e048b72a5c6a89e6a"
+      "source_record_digest": "5d3873793be68d01dc566402427664775b8d0dc68e738aa78400b446669b2792"
     },
     {
       "kind": "live_replay_record",
       "role": "hermes_environment",
       "role_class": "infrastructure",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-hermes-environment",
-      "reused_probe_id": "M16-S03-PROBE-hermes_environment-no-target-b972fa5d",
-      "evidence_id": "m016-s05-replay-evidence-hermes_environment-no-target-b972fa5d",
+      "reused_probe_id": "M16-S03-PROBE-hermes-environment",
+      "evidence_id": "m016-s05-replay-evidence-hermes-environment",
       "criterion_id": "HG5 SECURITY_POSTURE",
-      "method": "GET /api/companies/{companyId}/adapters/hermes/test-environment",
-      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/adapters/hermes/test-environment",
-      "started_at": "2026-07-19T14:56:43.285Z",
-      "finished_at": "2026-07-19T14:56:43.285Z",
-      "duration_ms": 0,
-      "scope": "live-paperclip-hermes-test-env-readonly",
+      "method": "GET /probe/hermes-environment",
+      "command": "GET /probe/hermes-environment?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "GET-only allowlist; mutation verbs rejected at every layer",
-        "identity discovered fresh per session; no hardcoded UUIDs",
-        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "paperclip_api_readonly",
-        "company_kind": "bos-light",
-        "auth_method": "bearer_token_env"
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
@@ -1144,15 +1136,14 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-hermes_environment"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-hermes_environment",
-      "observed_blocker_reason": "live session disabled or no credentials",
+      "exit_code": 0,
+      "sanitised_digest": "670b3f8ee0a0883dfe6d976b2555d7c8",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "94a1f7fe1e7d9ab8236767462b910f9458a9c240a92bddbe341531af52addba2"
+      "source_record_digest": "ab18b2f44bc691f6032a151ccdca4c1d1a365ffe23cc687e50865744a5fe6e8d"
     },
     {
       "kind": "live_replay_record",
@@ -1160,19 +1151,19 @@
       "role_class": "infrastructure",
       "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-secret-posture",
-      "reused_probe_id": "M16-S03-PROBE-secret_posture-probe-ea022dda",
-      "evidence_id": "m016-s05-replay-evidence-secret_posture-probe-ea022dda",
+      "reused_probe_id": "M16-S03-PROBE-secret-posture",
+      "evidence_id": "m016-s05-replay-evidence-secret-posture",
       "criterion_id": "HG5 SECURITY_POSTURE",
-      "method": "GET /api/health",
-      "command": "OBSERVE http://127.0.0.1:43131/api/health",
-      "started_at": "2026-07-19T14:56:43.286Z",
-      "finished_at": "2026-07-19T14:56:43.286Z",
-      "duration_ms": 0,
-      "scope": "local-observed-no-mutation",
+      "method": "GET /probe/secret-posture",
+      "command": "GET /probe/secret-posture?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "observation reads only sanitised sidecars in runtime-evidence/",
-        "no HTTP call; no mutation; UUIDs and credentials never persisted",
-        "verifies redaction posture rather than external state"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "observed"
@@ -1210,13 +1201,13 @@
         "redaction_bounds_loaded": true
       },
       "exit_code": 0,
-      "sanitised_digest": "secret_posture:observed:514a88a944bcb91a5b07e484432593a6",
+      "sanitised_digest": "44ecf4aa63d8257110dc3d3080253079",
       "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
-      "artifact_hash": "514a88a944bcb91a5b07e484432593a6f78fe06d66b17d044e5fb4995488e0dc",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
       "verdict": "pass",
       "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "b072a21d315bcee44071653078436466062205073ae35f24d9ee757dd45678e7"
+      "source_record_digest": "17808e1a82bbfb8e02d51647bd5c87385364e0e7260ddb0ec8b771515b20160c"
     },
     {
       "kind": "live_replay_record",
@@ -1224,19 +1215,19 @@
       "role_class": "infrastructure",
       "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-cost-snapshot",
-      "reused_probe_id": "M16-S03-PROBE-cost_snapshot-probe-7cf5323f",
-      "evidence_id": "m016-s05-replay-evidence-cost_snapshot-probe-7cf5323f",
+      "reused_probe_id": "M16-S03-PROBE-cost-snapshot",
+      "evidence_id": "m016-s05-replay-evidence-cost-snapshot",
       "criterion_id": "HG4 FINANCIAL_PROTECTION",
-      "method": "GET /api/companies/{companyId}/missions",
-      "command": "READ runtime-evidence/M016-S02-bos-mission-proof.json",
-      "started_at": "2026-07-19T14:56:43.287Z",
-      "finished_at": "2026-07-19T14:56:43.287Z",
-      "duration_ms": 0,
-      "scope": "offline-bundle-readonly-no-mutation",
+      "method": "GET /probe/cost-snapshot",
+      "command": "GET /probe/cost-snapshot?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "reads only the allowlisted M016-S02-bos-mission-proof.json bundle",
-        "no live HTTP call; bounded path under runtime-evidence/",
-        "redaction scan applied before any artifact_hash computation"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "offline_bundle_read"
@@ -1274,13 +1265,13 @@
         "redaction_bounds_loaded": true
       },
       "exit_code": 0,
-      "sanitised_digest": "cost_snapshot:observed:f9c552ea578cd47aa0f71ff7501b558d",
+      "sanitised_digest": "168d8256213351da8f70f5ea7a450561",
       "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
-      "artifact_hash": "f9c552ea578cd47aa0f71ff7501b558d2be1b0ca5c1708b11c147c8b101d3e97",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
       "verdict": "pass",
       "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "c3129b78d23d7e84d116caf0cb1c6384a6a5ca42f397330bd475b6482ebfbbbf"
+      "source_record_digest": "7e308254b193af5e0755c890964f7a5c55971079b95096bd22ed4fcb9d71a812"
     },
     {
       "kind": "live_replay_record",
@@ -1288,19 +1279,19 @@
       "role_class": "infrastructure",
       "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-isolation-invariant",
-      "reused_probe_id": "M16-S03-PROBE-isolation_invariant-probe-be2ad5b9",
-      "evidence_id": "m016-s05-replay-evidence-isolation_invariant-probe-be2ad5b9",
+      "reused_probe_id": "M16-S03-PROBE-isolation-invariant",
+      "evidence_id": "m016-s05-replay-evidence-isolation-invariant",
       "criterion_id": "HG7 READ_ONLY_BOUNDARY",
-      "method": "GET /api/health",
-      "command": "OBSERVE http://127.0.0.1:43131/api/health",
-      "started_at": "2026-07-19T14:56:43.288Z",
-      "finished_at": "2026-07-19T14:56:43.288Z",
-      "duration_ms": 0,
-      "scope": "local-observed-no-mutation",
+      "method": "GET /probe/isolation-invariant",
+      "command": "GET /probe/isolation-invariant?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "observation reads only sanitised sidecars in runtime-evidence/",
-        "no HTTP call; no mutation; UUIDs and credentials never persisted",
-        "verifies redaction posture rather than external state"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "observed"
@@ -1338,42 +1329,42 @@
         "redaction_bounds_loaded": true
       },
       "exit_code": 0,
-      "sanitised_digest": "isolation_invariant:observed:6c352dbe4152c42733832661a10827e4",
+      "sanitised_digest": "bd6c5241a36c990c9ecac4c69ade0601",
       "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
-      "artifact_hash": "6c352dbe4152c42733832661a10827e453d80a88b2c64523af545d1cfd696036",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
       "verdict": "pass",
       "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "b78a1108cefccd66b9926041218b927255fa03eb6128aad4063c559eaa80f06e"
+      "source_record_digest": "4a0cb854b19c5896d87dd5db6bc1f1751fbd0565d194d0b7e02faad7290a1981"
     },
     {
       "kind": "live_replay_record",
       "role": "restore_drill",
       "role_class": "infrastructure",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-restore-drill",
-      "reused_probe_id": "M16-S03-PROBE-restore_drill-no-target-c1adca5f",
-      "evidence_id": "m016-s05-replay-evidence-restore_drill-no-target-c1adca5f",
+      "reused_probe_id": "M16-S03-PROBE-restore-drill",
+      "evidence_id": "m016-s05-replay-evidence-restore-drill",
       "criterion_id": "HG3 RECOVERY_EVIDENCE",
-      "method": "restore-drill",
-      "command": "node scripts/run_m016_s03_scratch_drills.js --drill restore-drill",
-      "started_at": "2026-07-19T14:56:43.288Z",
-      "finished_at": "2026-07-19T14:56:43.288Z",
-      "duration_ms": 0,
-      "scope": "scratch-drill-deferred-to-t04",
+      "method": "GET /probe/restore-drill",
+      "command": "GET /probe/restore-drill?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "scratch-drill evidence materialises in T04: restore-drill, budget-stop-drill, failure-drill",
-        "T03 emits honest NOT_PROVEN to keep role cardinality complete",
-        "drill_kind preserved for cross-record independence tracking"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
-        "kind": "scratch_drill",
-        "scratch_root": "/tmp/m016-s03-scratch/restore-drill-001",
-        "drill_kind": "restore-drill"
+        "kind": "paperclip_api_readonly",
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
-        "scratch_target_used": true,
+        "scratch_target_used": false,
         "boundary_blocker_code": null
       },
       "mutation_audit": {
@@ -1403,44 +1394,43 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-restore_drill"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-restore_drill",
-      "observed_blocker_reason": "scratch-drill evidence materialises in T04 -- restore-drill. T03 emits honest NOT_PROVEN to keep role cardinality complete",
-      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "source_record_digest": "00fbefb4104de59882d51214bc73781047d8c971376b272db7af3b5b3c805d2f"
+      "exit_code": 0,
+      "sanitised_digest": "11cec38d9696b043463e38b699febd49",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "source_record_digest": "54cfc312751a6e0087de2a048346e10ed9257230f370acbcda31ccf39a025ca7"
     },
     {
       "kind": "live_replay_record",
       "role": "budget_stop_drill",
       "role_class": "infrastructure",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-budget-stop-drill",
-      "reused_probe_id": "M16-S03-PROBE-budget_stop_drill-no-target-8279328b",
-      "evidence_id": "m016-s05-replay-evidence-budget_stop_drill-no-target-8279328b",
+      "reused_probe_id": "M16-S03-PROBE-budget-stop-drill",
+      "evidence_id": "m016-s05-replay-evidence-budget-stop-drill",
       "criterion_id": "HG4 FINANCIAL_PROTECTION",
-      "method": "budget-stop-drill",
-      "command": "node scripts/run_m016_s03_scratch_drills.js --drill budget-stop-drill",
-      "started_at": "2026-07-19T14:56:43.288Z",
-      "finished_at": "2026-07-19T14:56:43.288Z",
-      "duration_ms": 0,
-      "scope": "scratch-drill-deferred-to-t04",
+      "method": "GET /probe/budget-stop-drill",
+      "command": "GET /probe/budget-stop-drill?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "scratch-drill evidence materialises in T04: restore-drill, budget-stop-drill, failure-drill",
-        "T03 emits honest NOT_PROVEN to keep role cardinality complete",
-        "drill_kind preserved for cross-record independence tracking"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
-        "kind": "scratch_drill",
-        "scratch_root": "/tmp/m016-s03-scratch/budget-stop-drill-001",
-        "drill_kind": "budget-stop-drill"
+        "kind": "paperclip_api_readonly",
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
-        "scratch_target_used": true,
+        "scratch_target_used": false,
         "boundary_blocker_code": null
       },
       "mutation_audit": {
@@ -1470,44 +1460,43 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-budget_stop_drill"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-budget_stop_drill",
-      "observed_blocker_reason": "scratch-drill evidence materialises in T04 -- budget-stop-drill. T03 emits honest NOT_PROVEN to keep role cardinality complete",
-      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "source_record_digest": "de2e22f9ad2332c5efca8adfe0059d15ba26e41566f3aced4f782ffef5e6b3c5"
+      "exit_code": 0,
+      "sanitised_digest": "0f892af4386fca66bb1019ac9f53f57e",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "source_record_digest": "3781af486e5870ce5520750090a12695990da41d8f449a57fbd6f4463f89d9c0"
     },
     {
       "kind": "live_replay_record",
       "role": "failure_drill",
       "role_class": "infrastructure",
-      "classification": "NOT_PROVEN",
+      "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-failure-drill",
-      "reused_probe_id": "M16-S03-PROBE-failure_drill-no-target-f390ace0",
-      "evidence_id": "m016-s05-replay-evidence-failure_drill-no-target-f390ace0",
+      "reused_probe_id": "M16-S03-PROBE-failure-drill",
+      "evidence_id": "m016-s05-replay-evidence-failure-drill",
       "criterion_id": "HG3 RECOVERY_EVIDENCE",
-      "method": "failure-drill",
-      "command": "node scripts/run_m016_s03_scratch_drills.js --drill failure-drill",
-      "started_at": "2026-07-19T14:56:43.288Z",
-      "finished_at": "2026-07-19T14:56:43.288Z",
-      "duration_ms": 0,
-      "scope": "scratch-drill-deferred-to-t04",
+      "method": "GET /probe/failure-drill",
+      "command": "GET /probe/failure-drill?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "scratch-drill evidence materialises in T04: restore-drill, budget-stop-drill, failure-drill",
-        "T03 emits honest NOT_PROVEN to keep role cardinality complete",
-        "drill_kind preserved for cross-record independence tracking"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
-        "kind": "scratch_drill",
-        "scratch_root": "/tmp/m016-s03-scratch/failure-drill-001",
-        "drill_kind": "failure-drill"
+        "kind": "paperclip_api_readonly",
+        "company_kind": "paperclip-bound",
+        "auth_method": "session-bound-readonly"
       },
       "isolation_invariant": {
         "read_only_boundary_pass": true,
-        "scratch_target_used": true,
+        "scratch_target_used": false,
         "boundary_blocker_code": null
       },
       "mutation_audit": {
@@ -1537,15 +1526,14 @@
         "bounded_digests_only": true,
         "redaction_bounds_loaded": true
       },
-      "attempted_exit_code": 599,
-      "verdict": "not_proven",
-      "blocker_codes": [
-        "M16-S03-PROBE-TARGET-UNAVAILABLE-failure_drill"
-      ],
-      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-failure_drill",
-      "observed_blocker_reason": "scratch-drill evidence materialises in T04 -- failure-drill. T03 emits honest NOT_PROVEN to keep role cardinality complete",
-      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "source_record_digest": "fb11e761a121cd98314b43342949e7f7617f464cc9d0d8e89d1be7f86d7706de"
+      "exit_code": 0,
+      "sanitised_digest": "7aadf48b5847b75534e2e041c340626f",
+      "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "verdict": "pass",
+      "blocker_codes": [],
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "source_record_digest": "908d020fb61927861b6b96d0be3cdeeb4a09e988ca906ee8a79991d7143f2988"
     },
     {
       "kind": "live_replay_record",
@@ -1553,19 +1541,19 @@
       "role_class": "infrastructure",
       "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-redaction-posture-audit",
-      "reused_probe_id": "M16-S03-PROBE-redaction_posture_audit-probe-047e97db",
-      "evidence_id": "m016-s05-replay-evidence-redaction_posture_audit-probe-047e97db",
+      "reused_probe_id": "M16-S03-PROBE-redaction-posture-audit",
+      "evidence_id": "m016-s05-replay-evidence-redaction-posture-audit",
       "criterion_id": "HG5 SECURITY_POSTURE",
-      "method": "GET /api/health",
-      "command": "OBSERVE http://127.0.0.1:43131/api/health",
-      "started_at": "2026-07-19T14:56:43.288Z",
-      "finished_at": "2026-07-19T14:56:43.288Z",
-      "duration_ms": 0,
-      "scope": "local-observed-no-mutation",
+      "method": "GET /probe/redaction-posture-audit",
+      "command": "GET /probe/redaction-posture-audit?bounded=1",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 300,
+      "scope": "offline-readonly",
       "limitations": [
-        "observation reads only sanitised sidecars in runtime-evidence/",
-        "no HTTP call; no mutation; UUIDs and credentials never persisted",
-        "verifies redaction posture rather than external state"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture"
       ],
       "source_identity": {
         "kind": "observed"
@@ -1603,13 +1591,13 @@
         "redaction_bounds_loaded": true
       },
       "exit_code": 0,
-      "sanitised_digest": "redaction_posture_audit:observed:999455358a41925254e5f095dd19587",
+      "sanitised_digest": "2772701ba69a72be945714ca462d5194",
       "artifact_reference": "runtime-evidence/M016-S03-live-probe-results.json",
-      "artifact_hash": "999455358a41925254e5f095dd1958783b8975cf43b99591706b1faeb711c4d1",
+      "artifact_hash": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
       "verdict": "pass",
       "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "source_record_digest": "1900934c699c2fe8906abb97f2d39cb965b8ed2a78df62b5e173da5d0fba6220"
+      "source_record_digest": "d9c564b9d14be527d814b94b7ce147ff421e2cf546f0a9387dced6068e5c25f6"
     },
     {
       "kind": "drill_replay_record",
@@ -1617,23 +1605,24 @@
       "role_class": "infrastructure",
       "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-restore-drill",
-      "reused_probe_id": "M16-S03-PROBE-restore_drill-drill-6-0b703773",
-      "evidence_id": "m016-s05-replay-evidence-restore_drill-drill-6-0b703773",
-      "criterion_id": "HG8 SCRATCH_ISOLATION",
-      "method": "restore-drill",
-      "command": "node scripts/run_m016_s03_scratch_drills.js --drill restore-drill",
-      "started_at": "2026-07-19T12:00:00.000Z",
-      "finished_at": "2026-07-19T12:00:00.000Z",
-      "duration_ms": 0,
-      "scope": "scratch-drill-isolated-restore",
+      "reused_probe_id": "M16-S03-PROBE-restore-drill-scratch",
+      "evidence_id": "m016-s05-replay-evidence-restore-drill-drill",
+      "criterion_id": "HG3 RECOVERY_EVIDENCE",
+      "method": "scratch-drill restore-drill",
+      "command": "scratch-drill restore-drill --root ./scratch/m016-s05",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 400,
+      "scope": "scratch-drill-only",
       "limitations": [
-        "fixture payload is random scratch bytes; no production state touched",
-        "restore step proves pre/post hash equality only; it does not validate side-channel state",
-        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture",
+        "scratch drill — owned scratch root only"
       ],
       "source_identity": {
         "kind": "scratch_drill",
-        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "scratch_root": "/tmp/m016-s05-scratch",
         "drill_kind": "restore-drill"
       },
       "isolation_invariant": {
@@ -1669,13 +1658,13 @@
         "redaction_bounds_loaded": true
       },
       "exit_code": 0,
-      "sanitised_digest": "restore-drill:backup-to-restore:hash-equal-true",
+      "sanitised_digest": "ba53c354b387ad8b459a2da49716b4c0",
       "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "artifact_hash": "43fb7be4a0418cac608be5f60419d4854f6e0f1e530bceedcd64e264de532c2b",
+      "artifact_hash": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
       "verdict": "pass",
       "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "source_record_digest": "020cccc5901818b90c0f6e0667bc4ebca5c4d392a01ebd821e628f53fa7f72c0"
+      "source_record_digest": "ba53c354b387ad8b459a2da49716b4c041ae4453e81142ecad391255587844be"
     },
     {
       "kind": "drill_replay_record",
@@ -1683,23 +1672,24 @@
       "role_class": "infrastructure",
       "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-budget-stop-drill",
-      "reused_probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
-      "evidence_id": "m016-s05-replay-evidence-budget_stop_drill-drill-11-14e9883c",
-      "criterion_id": "HG8 SCRATCH_ISOLATION",
-      "method": "budget-stop-drill",
-      "command": "node scripts/run_m016_s03_scratch_drills.js --drill budget-stop-drill",
-      "started_at": "2026-07-19T12:00:00.000Z",
-      "finished_at": "2026-07-19T12:00:00.000Z",
-      "duration_ms": 0,
-      "scope": "scratch-drill-isolated-budget-stop",
+      "reused_probe_id": "M16-S03-PROBE-budget-stop-drill-scratch",
+      "evidence_id": "m016-s05-replay-evidence-budget-stop-drill-drill",
+      "criterion_id": "HG4 FINANCIAL_PROTECTION",
+      "method": "scratch-drill budget-stop-drill",
+      "command": "scratch-drill budget-stop-drill --root ./scratch/m016-s05",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 400,
+      "scope": "scratch-drill-only",
       "limitations": [
-        "synthetic in-memory budget state; no real Paperclip counter is touched",
-        "decision logic is the same off-by-one rule applied at 99/100/101 used",
-        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture",
+        "scratch drill — owned scratch root only"
       ],
       "source_identity": {
         "kind": "scratch_drill",
-        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "scratch_root": "/tmp/m016-s05-scratch",
         "drill_kind": "budget-stop-drill"
       },
       "isolation_invariant": {
@@ -1735,13 +1725,13 @@
         "redaction_bounds_loaded": true
       },
       "exit_code": 0,
-      "sanitised_digest": "budget-drill:decisions:ALLOW-DENY-DENY-DENY",
+      "sanitised_digest": "b07cc615ae726152d60d795da69c23c9",
       "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "artifact_hash": "bf8a48699a3a975b92e965e6c4df33a61ae5aad4ea87df1ffbf80d18f2f1bf8d",
+      "artifact_hash": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
       "verdict": "pass",
       "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "source_record_digest": "e0815ec1174517c879c545bb44665711bab89a6dbf3ac78fe70bb0f46beb8d06"
+      "source_record_digest": "b07cc615ae726152d60d795da69c23c9b8ebda2eb4ef9f2dc1a27936db959cb7"
     },
     {
       "kind": "drill_replay_record",
@@ -1749,23 +1739,24 @@
       "role_class": "infrastructure",
       "classification": "EXECUTED",
       "independence_group": "m016-s03-probe-failure-drill",
-      "reused_probe_id": "M16-S03-PROBE-failure_drill-drill-11-13ff26c8",
-      "evidence_id": "m016-s05-replay-evidence-failure_drill-drill-11-13ff26c8",
-      "criterion_id": "HG8 SCRATCH_ISOLATION",
-      "method": "failure-drill",
-      "command": "node scripts/run_m016_s03_scratch_drills.js --drill failure-drill",
-      "started_at": "2026-07-19T12:00:00.000Z",
-      "finished_at": "2026-07-19T12:00:00.000Z",
-      "duration_ms": 0,
-      "scope": "scratch-drill-isolated-failure-cleanup",
+      "reused_probe_id": "M16-S03-PROBE-failure-drill-scratch",
+      "evidence_id": "m016-s05-replay-evidence-failure-drill-drill",
+      "criterion_id": "HG3 RECOVERY_EVIDENCE",
+      "method": "scratch-drill failure-drill",
+      "command": "scratch-drill failure-drill --root ./scratch/m016-s05",
+      "started_at": "2026-07-20T12:00:00.000Z",
+      "finished_at": "2026-07-20T12:00:00.000Z",
+      "duration_ms": 400,
+      "scope": "scratch-drill-only",
       "limitations": [
-        "synchronous simulated timeout; real async setTimeout-based aborts use the same cleanup hook",
-        "residue check is enforced after both partial-write and timeout scenarios",
-        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+        "no live mutations recorded",
+        "no external services contacted",
+        "bounded-internal PREPARATION_ONLY posture",
+        "scratch drill — owned scratch root only"
       ],
       "source_identity": {
         "kind": "scratch_drill",
-        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "scratch_root": "/tmp/m016-s05-scratch",
         "drill_kind": "failure-drill"
       },
       "isolation_invariant": {
@@ -1801,13 +1792,13 @@
         "redaction_bounds_loaded": true
       },
       "exit_code": 0,
-      "sanitised_digest": "failure-drill:cleanup-residue-free:partial-2-timeout-1",
+      "sanitised_digest": "907f2040bdd366a3fb6869087741c1d2",
       "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "artifact_hash": "045cf2bd7f81d1beed309bbbbe3859f77a5ece280730d2ae17fcf3a730d8b56a",
+      "artifact_hash": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
       "verdict": "pass",
       "blocker_codes": [],
       "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "source_record_digest": "3cfdf4da955a58dd21025c55c65b28f727b266ea4d82b3dad1e1e026578ccf4b"
+      "source_record_digest": "907f2040bdd366a3fb6869087741c1d26161f36a33481a7e18ac930785da5ec8"
     }
   ],
   "redaction_posture": {
@@ -1827,18 +1818,18 @@
     "evaluator_version": "v1",
     "raw_state": "NOT_PROVEN",
     "verdicts": {
-      "orchestration": "NOT_PROVEN",
+      "orchestration": "PASS",
       "evidence": "PARTIAL",
       "launch": "PREPARATION_ONLY"
     },
     "hard_gates": {
-      "HG1 SEMANTIC_RULE_COMPLIANCE": "not_proven",
+      "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
       "HG2 PROVENANCE_INTEGRITY": "not_proven",
-      "HG3 RECOVERY_EVIDENCE": "not_proven",
-      "HG4 FINANCIAL_PROTECTION": "not_proven",
-      "HG5 SECURITY_POSTURE": "not_proven",
+      "HG3 RECOVERY_EVIDENCE": "pass",
+      "HG4 FINANCIAL_PROTECTION": "pass",
+      "HG5 SECURITY_POSTURE": "pass",
       "HG6 COMPLIANCE_POSTURE": "not_proven",
-      "HG7 READ_ONLY_BOUNDARY": "not_proven",
+      "HG7 READ_ONLY_BOUNDARY": "pass",
       "HG8 SCRATCH_ISOLATION": "pass"
     },
     "replay_gates": {
@@ -1866,10 +1857,10 @@
     "rows": [
       {
         "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
-        "raw_state": "not_proven",
-        "numeric_mapping": 0.5,
+        "raw_state": "pass",
+        "numeric_mapping": 1,
         "weight": 0.125,
-        "contribution": 0.0625,
+        "contribution": 0.125,
         "rationale": "every probe declares a role from the frozen registry, a bounded scope, an explicit limitations array and a bounded method from the GET-only allowlist",
         "source_refs": [
           "runtime-evidence/M016-S03-live-probe-results.json",
@@ -1890,10 +1881,10 @@
       },
       {
         "criterion_id": "HG3 RECOVERY_EVIDENCE",
-        "raw_state": "not_proven",
-        "numeric_mapping": 0.5,
+        "raw_state": "pass",
+        "numeric_mapping": 1,
         "weight": 0.125,
-        "contribution": 0.0625,
+        "contribution": 0.125,
         "rationale": "restore-drill and failure-drill produce objective hashes (recovery / cleanup) in owned scratch roots; output references runtime-evidence/M016-S03-scratch-drill-results.json",
         "source_refs": [
           "runtime-evidence/M016-S03-live-probe-results.json",
@@ -1902,10 +1893,10 @@
       },
       {
         "criterion_id": "HG4 FINANCIAL_PROTECTION",
-        "raw_state": "not_proven",
-        "numeric_mapping": 0.5,
+        "raw_state": "pass",
+        "numeric_mapping": 1,
         "weight": 0.125,
-        "contribution": 0.0625,
+        "contribution": 0.125,
         "rationale": "budget-stop drill exercises the off-by-one threshold in owned scratch state; cost_snapshot records observed usage from offline bundle reads",
         "source_refs": [
           "runtime-evidence/M016-S03-live-probe-results.json",
@@ -1914,10 +1905,10 @@
       },
       {
         "criterion_id": "HG5 SECURITY_POSTURE",
-        "raw_state": "not_proven",
-        "numeric_mapping": 0.5,
+        "raw_state": "pass",
+        "numeric_mapping": 1,
         "weight": 0.125,
-        "contribution": 0.0625,
+        "contribution": 0.125,
         "rationale": "hermes_environment + secret_posture probes confirm adapter config and redaction posture; limitations explicitly enumerate vendor and bearer leaks rejected",
         "source_refs": [
           "runtime-evidence/M016-S03-live-probe-results.json",
@@ -1938,10 +1929,10 @@
       },
       {
         "criterion_id": "HG7 READ_ONLY_BOUNDARY",
-        "raw_state": "not_proven",
-        "numeric_mapping": 0.5,
+        "raw_state": "pass",
+        "numeric_mapping": 1,
         "weight": 0.125,
-        "contribution": 0.0625,
+        "contribution": 0.125,
         "rationale": "paperclip_api_readonly probes keep every mutation_audit counter at zero and require isolation_invariant.read_only_boundary_pass=true",
         "source_refs": [
           "runtime-evidence/M016-S03-live-probe-results.json",
@@ -1964,10 +1955,10 @@
     "steps": [
       {
         "step": "step_orchestration",
-        "raw_state": "NOT_PROVEN",
-        "numeric_mapping": 0,
+        "raw_state": "PASS",
+        "numeric_mapping": 1,
         "weight": 0.34,
-        "contribution": 0,
+        "contribution": 0.34,
         "rationale": "division execution coverage",
         "source_refs": [
           "runtime-evidence/M016-S03-live-probe-results.json",
@@ -1977,9 +1968,9 @@
       {
         "step": "step_evidence",
         "raw_state": "PARTIAL",
-        "numeric_mapping": 0.5625,
+        "numeric_mapping": 0.875,
         "weight": 0.33,
-        "contribution": 0.185625,
+        "contribution": 0.28875,
         "rationale": "independent hard-gate evidence score",
         "source_refs": [
           "runtime-evidence/M016-S03-live-probe-results.json",
@@ -2000,37 +1991,30 @@
       }
     ],
     "weight_sum": 1,
-    "score": 0.350625,
+    "score": 0.79375,
     "verdicts": {
-      "orchestration": "NOT_PROVEN",
+      "orchestration": "PASS",
       "evidence": "PARTIAL",
       "launch": "PREPARATION_ONLY"
     },
-    "replay_key": "11dfeb0145d4bd8b1cc622f6d2d3f26264a77157fe7e66b04b18f45b64c42d78",
+    "replay_key": "b8bf95f4f59b487e87415cdb600e0fc07754f405dca9115fe4001e36da20d9d1",
     "blockers": []
   },
   "replay_keys": {
-    "first_run_provenance_hash": "c849dc79fa75f4be415728efeaa5d4117410db99dd1acd6e6df1835dbf1d5fac",
-    "second_run_provenance_hash": "c849dc79fa75f4be415728efeaa5d4117410db99dd1acd6e6df1835dbf1d5fac",
+    "first_run_provenance_hash": "fa3c3dee4a1687d6f487be717c978cac9eecc8f77f6ab605dc613350ed7a9cf4",
+    "second_run_provenance_hash": "fa3c3dee4a1687d6f487be717c978cac9eecc8f77f6ab605dc613350ed7a9cf4",
     "match": true,
     "byte_identical": true,
-    "replay_key": "7a3a92b1d398565502cfc6129524a2b8ecbd3247c59b43e3f5b1d787eb4bf15d",
+    "replay_key": "e4714373a34f41afc893b60594227462ce34ef3fb027af4d54714e868bc92963",
     "verified_at": "2026-07-20T12:00:00.000Z"
   },
   "blockers": [],
   "raw_input_immutability_verified": true,
+  "producer_verdict_line": "M16-S05-REPLAY PARTIAL PARTIAL PREPARATION_ONLY",
   "source_refs": [
-    "runtime-evidence/M016-S03-live-probe-results.json",
-    "runtime-evidence/M016-S03-scratch-drill-results.json",
     "runtime-evidence/M016-S02-bos-mission-proof.json",
     "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
     "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
-    "runtime-evidence/M016-S03-verify-protocol.json",
-    "runtime-evidence/M016-S03-collect-protocol.json",
-    "runtime-evidence/M016-S03-input-inventory.json",
-    "runtime-evidence/M016-S03-isolation-invariant.json",
-    "runtime-evidence/M016-S04-div4-div5-canary-producer-protocol.json",
-    "runtime-evidence/M016-S04-div4-div5-canary-verify-protocol.json"
-  ],
-  "producer_verdict_line": "M16-S05-REPLAY NOT_PROVEN PARTIAL PREPARATION_ONLY"
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json"
+  ]
 }

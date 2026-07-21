@@ -9,6 +9,7 @@
     {
       "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
       "kind": "s02_baseline",
+      "required": true,
       "pre_hash_sha256": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
       "post_hash_sha256": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
       "unchanged": true,
@@ -17,6 +18,7 @@
     {
       "source_ref": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
       "kind": "s03_pack",
+      "required": true,
       "pre_hash_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
       "post_hash_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
       "unchanged": true,
@@ -25,85 +27,23 @@
     {
       "source_ref": "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
       "kind": "s04_canary_bundle",
+      "required": true,
       "pre_hash_sha256": "3f0dd1b187ccb66f80b6e1332809686bbcc3f73a7eb9d3a13274faf30ab883cd",
       "post_hash_sha256": "3f0dd1b187ccb66f80b6e1332809686bbcc3f73a7eb9d3a13274faf30ab883cd",
       "unchanged": true,
       "scope": "offline-readonly"
     },
     {
-      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
-      "kind": "live_probe_results",
-      "pre_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
-      "post_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
-      "unchanged": true,
-      "scope": "offline-readonly"
-    },
-    {
-      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
-      "kind": "scratch_drill_results",
-      "pre_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
-      "post_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
-      "unchanged": true,
-      "scope": "offline-readonly"
-    },
-    {
-      "source_ref": "runtime-evidence/M016-S03-verify-protocol.json",
-      "kind": "s03_verify_protocol",
-      "pre_hash_sha256": "f026abf61260753f32735bfc6e84740f2675f4469b4f13429c8a19f1fd93e2ed",
-      "post_hash_sha256": "f026abf61260753f32735bfc6e84740f2675f4469b4f13429c8a19f1fd93e2ed",
-      "unchanged": true,
-      "scope": "offline-readonly"
-    },
-    {
-      "source_ref": "runtime-evidence/M016-S03-collect-protocol.json",
-      "kind": "s03_collect_protocol",
-      "pre_hash_sha256": "cf8dd9ac7d5d4ff44ae673c26798fee76cf3c2deee03c772a932cac0943fe94c",
-      "post_hash_sha256": "cf8dd9ac7d5d4ff44ae673c26798fee76cf3c2deee03c772a932cac0943fe94c",
-      "unchanged": true,
-      "scope": "offline-readonly"
-    },
-    {
-      "source_ref": "runtime-evidence/M016-S03-input-inventory.json",
-      "kind": "s03_input_inventory",
-      "pre_hash_sha256": "31d5d75974e33d27a1df53768b3916f409b3b03a21c9c96a2f1a8afcfa29bb31",
-      "post_hash_sha256": "31d5d75974e33d27a1df53768b3916f409b3b03a21c9c96a2f1a8afcfa29bb31",
-      "unchanged": true,
-      "scope": "offline-readonly"
-    },
-    {
-      "source_ref": "runtime-evidence/M016-S03-isolation-invariant.json",
-      "kind": "s03_isolation_invariant",
-      "pre_hash_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
-      "post_hash_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
-      "unchanged": true,
-      "scope": "offline-readonly"
-    },
-    {
-      "source_ref": "runtime-evidence/M016-S04-div4-div5-canary-producer-protocol.json",
-      "kind": "s04_canary_producer_protocol",
-      "pre_hash_sha256": "12dae6fba3962465d296123dce8e5baf3377a926f4a1b2251aa2db54a3046d54",
-      "post_hash_sha256": "12dae6fba3962465d296123dce8e5baf3377a926f4a1b2251aa2db54a3046d54",
-      "unchanged": true,
-      "scope": "offline-readonly"
-    },
-    {
-      "source_ref": "runtime-evidence/M016-S04-div4-div5-canary-verify-protocol.json",
-      "kind": "s04_canary_verify_protocol",
-      "pre_hash_sha256": "48d8a53c7769cfdc31d32fa50f51c93d6165fcd50a541ad2c1faaed40f421094",
-      "post_hash_sha256": "48d8a53c7769cfdc31d32fa50f51c93d6165fcd50a541ad2c1faaed40f421094",
-      "unchanged": true,
-      "scope": "offline-readonly"
-    },
-    {
       "source_ref": "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
       "kind": "replay_probe_run",
-      "pre_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
-      "post_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "required": true,
+      "pre_hash_sha256": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
+      "post_hash_sha256": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
       "unchanged": true,
       "scope": "offline-readonly"
     }
   ],
-  "source_count": 12,
+  "source_count": 4,
   "raw_bodies_persisted": false,
   "blockers": []
 }
