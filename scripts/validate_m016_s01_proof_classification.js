@@ -106,7 +106,35 @@ function resolveSafePath(p, baseDir) {
 
 function isWithinRoot(resolvedPath) {
   const rootResolved = path.resolve(ROOT);
-  const rel = path.relative(rootResolved, resolvedPath);
+  // Realpath containment — lexical containment alone accepts a symlink
+  // that points outside repo root. We resolve symlinks on both ends.
+  // When resolvedPath does not exist yet (output-dir created later via
+  // mkdirSync) we fall back to resolving the parent directory and checking
+  // the lexical containment of the trailing segment against that real parent.
+  let realResolved;
+  try {
+    realResolved = fs.realpathSync(resolvedPath);
+  } catch (e) {
+    if (e && e.code === 'ENOENT') {
+      const parent = path.dirname(resolvedPath);
+      let realParent;
+      try { realParent = fs.realpathSync(parent); }
+      catch (_) { return false; }
+      const relParent = path.relative(realParent, resolvedPath);
+      if (relParent.startsWith('..') || path.isAbsolute(relParent)) return false;
+      try {
+        const realRoot = fs.realpathSync(rootResolved);
+        const relRoot = path.relative(realRoot, realParent);
+        if (relRoot.startsWith('..') || path.isAbsolute(relRoot)) return false;
+        return true;
+      } catch (_) { return false; }
+    }
+    return false;
+  }
+  let realRoot;
+  try { realRoot = fs.realpathSync(rootResolved); }
+  catch (_) { return false; }
+  const rel = path.relative(realRoot, realResolved);
   return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel));
 }
 
@@ -124,13 +152,26 @@ function sha256Hex(input) {
 
 function deriveClaimsFromM015Evidence(m015) {
   if (!m015 || typeof m015 !== 'object') throw new Error('m015 evidence is not an object');
-  const root = m015.mission_entities && m015.mission_entities.root;
-  if (!root || typeof root.completed_at !== 'string') throw new Error('m015 evidence missing mission_entities.root.completed_at');
-  const goal = m015.mission_entities && m015.mission_entities.goal;
-  if (!goal || typeof goal.created_at !== 'string') throw new Error('m015 evidence missing mission_entities.goal.created_at');
 
-  const startedAt = goal.created_at;
-  const endedAt = root.completed_at;
+  // Resolve startedAt / endedAt from any of the documented M015 shapes:
+  //   (a) legacy: m015.mission_entities.{goal.created_at, root.completed_at}
+  //   (b) top-level: m015.generated (current M015 evidence shape)
+  // Either pair must be present. If both shapes are present we prefer the
+  // legacy mission_entities pair so deterministic tests stay byte-identical.
+  let startedAt = null;
+  let endedAt = null;
+  const legacy = m015.mission_entities;
+  if (legacy && typeof legacy === 'object') {
+    if (legacy.goal && typeof legacy.goal.created_at === 'string') startedAt = legacy.goal.created_at;
+    if (legacy.root && typeof legacy.root.completed_at === 'string') endedAt = legacy.root.completed_at;
+  }
+  if ((!startedAt || !endedAt) && typeof m015.generated === 'string') {
+    if (!startedAt) startedAt = m015.generated;
+    if (!endedAt) endedAt = m015.generated;
+  }
+  if (!startedAt || !endedAt) {
+    throw new Error('m015 evidence missing required timestamps (mission_entities.{goal.created_at,root.completed_at} or top-level generated)');
+  }
 
   const sourcePath = 'runtime-evidence/M015-native-seven-division-mission-20260717.json';
 
@@ -274,8 +315,29 @@ function compareToFixture(actual, expected) {
 function writeJsonAtomic(filePath, payload) {
   assertWriteSafe(payload);
   const tmp = `${filePath}.tmp-${RUN_ID}`;
-  fs.writeFileSync(tmp, JSON.stringify(payload, null, 2) + '\n');
-  fs.renameSync(tmp, filePath);
+  // Atomic write with cleanup: on rename failure the tmp must NOT remain
+  // on disk. Cleanup failure itself is recorded so the outer catch can
+  // distinguish residue drift from a clean write error.
+  let tmpWritten = false;
+  try {
+    fs.writeFileSync(tmp, JSON.stringify(payload, null, 2) + '\n');
+    tmpWritten = true;
+    fs.renameSync(tmp, filePath);
+    tmpWritten = false; // rename consumed tmp
+  } catch (err) {
+    if (tmpWritten) {
+      try {
+        fs.unlinkSync(tmp);
+        tmpWritten = false;
+      } catch (cleanupErr) {
+        // Cleanup itself failed — mark the leftover with a sibling marker
+        // and rethrow the ORIGINAL error so the outer catch emits a bounded
+        // exit code. The post-run absence check will surface any residue.
+        try { fs.writeFileSync(`${tmp}.cleanup-failed`, `atomic-temp cleanup failed: ${String(cleanupErr && cleanupErr.message || cleanupErr)}`); } catch (_) { /* best effort */ }
+      }
+    }
+    throw err;
+  }
 }
 
 function emitError(prefix, message) {
@@ -304,6 +366,34 @@ function main() {
 
   if (!isWithinRoot(outputDirResolved)) {
     emitError('path-error', `output-dir ${outputDirResolved} is outside repo root ${ROOT}`);
+    process.exit(EXIT_CODES.CLASSIFICATION_REJECTED_MALFORMED);
+  }
+
+  // Pre-run residue refusal: refuse to clobber pre-existing scratch files
+  // inside the output-dir. Marker ownership — S01 CLI owns output-dir only
+  // when it contains no `.tmp-m016-*` residue from prior runs.
+  try {
+    const dirEntries = fs.readdirSync(outputDirResolved);
+    const preExistingTmp = dirEntries.filter((n) => n.startsWith('.tmp-m016-'));
+    if (preExistingTmp.length > 0) {
+      emitError('residue-pre-run', `output-dir contains ${preExistingTmp.length} pre-existing scratch file(s): ${preExistingTmp.slice(0, 5).join(', ')}`);
+      process.exit(EXIT_CODES.CLASSIFICATION_REJECTED_MALFORMED);
+    }
+  } catch (e) {
+    if (!e || e.code !== 'ENOENT') {
+      emitError('path-error', `output-dir read failed: ${e.message}`);
+      process.exit(EXIT_CODES.CLASSIFICATION_REJECTED_MALFORMED);
+    }
+    // ENOENT is fine — mkdirSync(recursive) below will create the dir.
+  }
+
+  // S07 scratch root refusal: refuse to start if the S07 verifier left a
+  // scratch root behind. The S01 lifecycle and S07 verifier share
+  // runtime-evidence/ but never its `.m016-s07-replay-scratch/` zone.
+  const s07ScratchRel = '.m016-s07-replay-scratch';
+  const s07ScratchAbs = path.join(ROOT, 'runtime-evidence', s07ScratchRel);
+  if (fs.existsSync(s07ScratchAbs)) {
+    emitError('scratch-root-present', `S07 scratch root still present at runtime-evidence/${s07ScratchRel}; remove before re-running S01 CLI`);
     process.exit(EXIT_CODES.CLASSIFICATION_REJECTED_MALFORMED);
   }
 
@@ -405,6 +495,20 @@ function main() {
     }
   } catch (e) {
     emitError('write-error', e.message);
+    process.exit(EXIT_CODES.CLASSIFICATION_RUNNER_FAILURE);
+  }
+
+  // Post-run absence: confirm no atomic temp files leaked into output-dir.
+  // Cleanup failure is fail-closed (RESIDUE_DRIFT) — never silent.
+  try {
+    const afterEntries = fs.readdirSync(outputDirResolved);
+    const leftoverTmp = afterEntries.filter((n) => n.startsWith('.tmp-') && n.includes(RUN_ID));
+    if (leftoverTmp.length > 0) {
+      emitError('residue-post-run', `output-dir contains ${leftoverTmp.length} atomic temp residue file(s) after writes: ${leftoverTmp.slice(0, 5).join(', ')}`);
+      process.exit(EXIT_CODES.CLASSIFICATION_RUNNER_FAILURE);
+    }
+  } catch (e) {
+    emitError('residue-post-run', `output-dir post-write read failed: ${e.message}`);
     process.exit(EXIT_CODES.CLASSIFICATION_RUNNER_FAILURE);
   }
 

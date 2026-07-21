@@ -708,3 +708,178 @@ test('CLI integration: malformed JSON in regression fixture → exit 1 (load-err
   assert.equal(result.status, data.EXIT_CODES.CLASSIFICATION_REJECTED_MALFORMED);
   assert.match(result.stderr, /load-error/);
 });
+
+test('CLI integration: bad regression fixture → exit 6 (REGRESSION_MISMATCH)', (t) => {
+  const tmpDir = makeTempDir();
+  t.after(() => rmrf(tmpDir));
+  // Inline-built negative fixture (isolated from any canonical artifact).
+  const tampered = path.join(tmpDir, 'tampered-fixture.json');
+  fs.writeFileSync(tampered, JSON.stringify({
+    expected_runner_status: 'FAIL',
+    expected_runner_exit_code: 2,
+    expected_gates: {
+      HG1_SEMANTIC_RULE_COMPLIANCE: 'pass',
+      HG2_PROVENANCE_INTEGRITY: 'pass',
+      HG3_INDEPENDENCE_GROUP_ISOLATION: 'pass',
+      HG4_ARTIFACT_BINDING: 'pass',
+      HG5_WORKSHEET_INTEGRITY: 'pass',
+      HG6_VERDICT_DERIVATION_BOUNDED: 'pass',
+    },
+    expected_verdicts: { orchestration: 'NOT_PROVEN', evidence: 'PARTIAL', launch: 'PREPARATION_ONLY' },
+    expected_classification_count: 9,
+  }));
+
+  const result = runCli([
+    '--input', REAL_INPUT,
+    '--expected', tampered,
+    '--output-dir', tmpDir,
+    '--schema', SCHEMA_PATH,
+    '--force',
+  ]);
+  assert.equal(result.status, data.EXIT_CODES.CLASSIFICATION_REGRESSION_MISMATCH);
+  assert.match(result.stderr, /regression-mismatch/);
+  assert.match(result.stderr, /runner_status/);
+});
+
+test('CLI integration: bad m015 evidence (missing root.completed_at) → exit 1 (derive-error)', (t) => {
+  const tmpDir = makeTempDir();
+  t.after(() => rmrf(tmpDir));
+  // Inline-built negative fixture: mission_entities.goal only — root.completed_at
+  // missing — so deriveClaimsFromM015Evidence refuses.
+  const badInput = path.join(tmpDir, 'bad-m015.json');
+  fs.writeFileSync(badInput, JSON.stringify({
+    milestone: 'M015',
+    mission_key: 'BAD',
+    mission_entities: { goal: { id: 'x', created_at: '2026-01-01T00:00:00Z' } },
+  }));
+
+  const result = runCli([
+    '--input', badInput,
+    '--expected', REAL_FIXTURE,
+    '--output-dir', tmpDir,
+    '--schema', SCHEMA_PATH,
+    '--force',
+  ]);
+  assert.equal(result.status, data.EXIT_CODES.CLASSIFICATION_REJECTED_MALFORMED);
+  assert.match(result.stderr, /derive-error/);
+  assert.match(result.stderr, /required timestamps/);
+});
+
+// ---------------------------------------------------------------------------
+// Tests — T02 S07 hardening additions
+// ---------------------------------------------------------------------------
+
+test('deriveClaimsFromM015Evidence: accepts top-level generated when mission_entities is missing (fallback chain)', () => {
+  // New M015 evidence shape — no mission_entities block, uses top-level generated.
+  const m015 = {
+    milestone: 'M015',
+    generated: '2026-07-17T12:00:00.000Z',
+    verdict: { native_paperclip_mission: 'PASS' },
+  };
+  const claims = cli.deriveClaimsFromM015Evidence(m015);
+  assert.equal(claims.length, 9);
+  for (const claim of claims) {
+    assert.equal(claim.executed_provenance.started_at, '2026-07-17T12:00:00.000Z');
+    assert.equal(claim.executed_provenance.ended_at, '2026-07-17T12:00:00.000Z');
+    assert.equal(claim.worksheet.completed_at, '2026-07-17T12:00:00.000Z');
+  }
+});
+
+test('deriveClaimsFromM015Evidence: legacy mission_entities shape is preferred when both are present', () => {
+  const m015 = {
+    generated: '2026-07-17T99:99:99.000Z', // bogus top-level value
+    mission_entities: {
+      goal: { id: 'g', created_at: '2026-07-17T12:00:00Z' },
+      root: { id: 'r', completed_at: '2026-07-17T13:00:00Z' },
+    },
+  };
+  const claims = cli.deriveClaimsFromM015Evidence(m015);
+  assert.equal(claims.length, 9);
+  // Legacy mission_entities.* must win over top-level generated
+  assert.equal(claims[0].executed_provenance.started_at, '2026-07-17T12:00:00Z');
+  assert.equal(claims[0].executed_provenance.ended_at, '2026-07-17T13:00:00Z');
+});
+
+test('deriveClaimsFromM015Evidence: throws when neither legacy nor top-level timestamps are present', () => {
+  const m015 = { milestone: 'M015', verdict: {} };
+  assert.throws(() => cli.deriveClaimsFromM015Evidence(m015), /required timestamps/);
+});
+
+test('isWithinRoot: realpath containment rejects symlink escape to outside-root', (t) => {
+  // Create a symlink inside repo root that points outside. Lexical
+  // containment would pass this; realpath containment must reject it.
+  const tmpDir = makeTempDir();
+  t.after(() => rmrf(tmpDir));
+  const symlinkPath = path.join(tmpDir, 'escape-link');
+  try {
+    fs.symlinkSync('/tmp', symlinkPath, 'dir');
+  } catch {
+    // symlinks may not be supported on this filesystem; skip silently.
+    return;
+  }
+  assert.equal(cli.isWithinRoot(symlinkPath), false,
+    'symlink to /tmp must NOT be treated as inside-root');
+});
+
+test('CLI integration: pre-run residue refusal — .tmp-m016-* in output-dir → exit 1 (residue-pre-run)', (t) => {
+  const tmpDir = makeTempDir();
+  t.after(() => rmrf(tmpDir));
+  const outDir = path.join(tmpDir, 'out');
+  fs.mkdirSync(outDir, { recursive: true });
+  // Plant pre-existing scratch residue inside output-dir.
+  fs.writeFileSync(path.join(outDir, '.tmp-m016-pre-existing.json'), '{"residue":true}');
+
+  const result = runCli([
+    '--input', REAL_INPUT,
+    '--expected', REAL_FIXTURE,
+    '--output-dir', outDir,
+    '--schema', SCHEMA_PATH,
+    '--force',
+  ]);
+  assert.equal(result.status, data.EXIT_CODES.CLASSIFICATION_REJECTED_MALFORMED);
+  assert.match(result.stderr, /residue-pre-run/);
+  // The pre-existing residue must still be on disk (CLI refused without touching it).
+  assert.equal(fs.existsSync(path.join(outDir, '.tmp-m016-pre-existing.json')), true);
+  // No canonical output should have been written.
+  assert.equal(fs.existsSync(path.join(outDir, cli.PROTOCOL_FILENAME)), false);
+});
+
+test('CLI integration: S07 scratch root present → exit 1 (scratch-root-present)', (t) => {
+  const tmpDir = makeTempDir();
+  t.after(() => rmrf(tmpDir));
+  const scratchRoot = path.join(RUNTIME_EVIDENCE, '.m016-s07-replay-scratch');
+  fs.mkdirSync(scratchRoot, { recursive: true });
+  try {
+    const result = runCli([
+      '--input', REAL_INPUT,
+      '--expected', REAL_FIXTURE,
+      '--output-dir', tmpDir,
+      '--schema', SCHEMA_PATH,
+      '--force',
+    ]);
+    assert.equal(result.status, data.EXIT_CODES.CLASSIFICATION_REJECTED_MALFORMED);
+    assert.match(result.stderr, /scratch-root-present/);
+  } finally {
+    rmrf(scratchRoot);
+  }
+});
+
+test('CLI integration: post-run absence — no atomic temp residue after successful run', (t) => {
+  const tmpDir = makeTempDir();
+  t.after(() => rmrf(tmpDir));
+  const outDir = path.join(tmpDir, 'out');
+  fs.mkdirSync(outDir, { recursive: true });
+
+  const result = runCli([
+    '--input', REAL_INPUT,
+    '--expected', REAL_FIXTURE,
+    '--output-dir', outDir,
+    '--schema', SCHEMA_PATH,
+    '--force',
+  ]);
+  assert.equal(result.status, 0);
+  // After a clean successful run, no `.tmp-*` files must remain in outDir.
+  const entries = fs.readdirSync(outDir);
+  const leftoverTmp = entries.filter((n) => n.startsWith('.tmp-'));
+  assert.deepEqual(leftoverTmp, [], `expected no .tmp-* residue after success; got: ${leftoverTmp.join(', ')}`);
+});
