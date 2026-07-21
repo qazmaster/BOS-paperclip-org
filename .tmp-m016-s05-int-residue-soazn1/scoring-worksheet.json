@@ -1,0 +1,155 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-scoring-worksheet.v1.json",
+  "schema_version": "v1",
+  "worksheet_id": "m016-s05-seven-division-replay-scoring-worksheet-v1",
+  "worksheet_kind": "seven-division-evidence-replay-scoring-worksheet",
+  "milestone": "M016-txa3vu",
+  "slice": "S05",
+  "task": "T01",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "rows": [
+    {
+      "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
+      "raw_state": "not_proven",
+      "numeric_mapping": 0.5,
+      "weight": 0.125,
+      "contribution": 0.0625,
+      "rationale": "every probe declares a role from the frozen registry, a bounded scope, an explicit limitations array and a bounded method from the GET-only allowlist",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "criterion_id": "HG2 PROVENANCE_INTEGRITY",
+      "raw_state": "not_proven",
+      "numeric_mapping": 0.5,
+      "weight": 0.125,
+      "contribution": 0.0625,
+      "rationale": "every EXECUTED record carries exit_code, sanitised_digest, artifact_reference and artifact_hash; NOT_PROVEN records carry attempted_exit_code, observed_blocker_code and observed_blocker_reason",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "criterion_id": "HG3 RECOVERY_EVIDENCE",
+      "raw_state": "not_proven",
+      "numeric_mapping": 0.5,
+      "weight": 0.125,
+      "contribution": 0.0625,
+      "rationale": "restore-drill and failure-drill produce objective hashes (recovery / cleanup) in owned scratch roots; output references runtime-evidence/M016-S03-scratch-drill-results.json",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "criterion_id": "HG4 FINANCIAL_PROTECTION",
+      "raw_state": "not_proven",
+      "numeric_mapping": 0.5,
+      "weight": 0.125,
+      "contribution": 0.0625,
+      "rationale": "budget-stop drill exercises the off-by-one threshold in owned scratch state; cost_snapshot records observed usage from offline bundle reads",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "criterion_id": "HG5 SECURITY_POSTURE",
+      "raw_state": "not_proven",
+      "numeric_mapping": 0.5,
+      "weight": 0.125,
+      "contribution": 0.0625,
+      "rationale": "hermes_environment + secret_posture probes confirm adapter config and redaction posture; limitations explicitly enumerate vendor and bearer leaks rejected",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "criterion_id": "HG6 COMPLIANCE_POSTURE",
+      "raw_state": "not_proven",
+      "numeric_mapping": 0.5,
+      "weight": 0.125,
+      "contribution": 0.0625,
+      "rationale": "no PII, no public endpoints, no external messaging in any probe result or limiter string; compliance is preserved by observing redaction-flag invariants",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "criterion_id": "HG7 READ_ONLY_BOUNDARY",
+      "raw_state": "not_proven",
+      "numeric_mapping": 0.5,
+      "weight": 0.125,
+      "contribution": 0.0625,
+      "rationale": "paperclip_api_readonly probes keep every mutation_audit counter at zero and require isolation_invariant.read_only_boundary_pass=true",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "criterion_id": "HG8 SCRATCH_ISOLATION",
+      "raw_state": "pass",
+      "numeric_mapping": 1,
+      "weight": 0.125,
+      "contribution": 0.125,
+      "rationale": "scratch-drill probes run inside /tmp, /private/tmp or /var/folders scratch roots, declare drill_kind explicitly, and require isolation_invariant.scratch_target_used=true and read_only_boundary_pass=true",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step": "step_orchestration",
+      "raw_state": "NOT_PROVEN",
+      "numeric_mapping": 0,
+      "weight": 0.34,
+      "contribution": 0,
+      "rationale": "division execution coverage",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "step": "step_evidence",
+      "raw_state": "PARTIAL",
+      "numeric_mapping": 0.5625,
+      "weight": 0.33,
+      "contribution": 0.185625,
+      "rationale": "independent hard-gate evidence score",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    },
+    {
+      "step": "step_launch",
+      "raw_state": "PREPARATION_ONLY",
+      "numeric_mapping": 0.5,
+      "weight": 0.33,
+      "contribution": 0.165,
+      "rationale": "bounded launch verdict",
+      "source_refs": [
+        "runtime-evidence/M016-S03-live-probe-results.json",
+        "runtime-evidence/M016-S03-scratch-drill-results.json"
+      ]
+    }
+  ],
+  "weight_sum": 1,
+  "score": 0.350625,
+  "verdicts": {
+    "orchestration": "NOT_PROVEN",
+    "evidence": "PARTIAL",
+    "launch": "PREPARATION_ONLY"
+  },
+  "replay_key": "11dfeb0145d4bd8b1cc622f6d2d3f26264a77157fe7e66b04b18f45b64c42d78",
+  "blockers": []
+}

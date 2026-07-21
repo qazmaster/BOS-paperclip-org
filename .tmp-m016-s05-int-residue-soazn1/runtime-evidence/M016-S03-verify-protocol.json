@@ -1,0 +1,440 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json",
+  "schema_version": "v1",
+  "pack_id": "m016-s03-safe-operational-evidence-pack-v1",
+  "pack_kind": "safe-operational-evidence-pack",
+  "milestone": "M016-txa3vu",
+  "slice": "S03",
+  "task": "T06",
+  "generated_at": "2026-07-19T20:49:58.419Z",
+  "replay_iterations": 2,
+  "line_class": "M16-S03-VERIFY",
+  "canonical_protocol": "PROTOCOL-M16-S03-VERIFY-V1",
+  "pack_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+  "pack_path": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+  "protocol_path": "runtime-evidence/M016-S03-verify-protocol.json",
+  "schema_path": "schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json",
+  "runner_status": "PASS",
+  "runner_exit_code": 0,
+  "gate_ids": [
+    "HG1 SEMANTIC_RULE_COMPLIANCE",
+    "HG2 PROVENANCE_INTEGRITY",
+    "HG3 RECOVERY_EVIDENCE",
+    "HG4 FINANCIAL_PROTECTION",
+    "HG5 SECURITY_POSTURE",
+    "HG6 COMPLIANCE_POSTURE",
+    "HG7 READ_ONLY_BOUNDARY",
+    "HG8 SCRATCH_ISOLATION"
+  ],
+  "gate_labels": {
+    "HG1 SEMANTIC_RULE_COMPLIANCE": "HG1 SEMANTIC_RULE_COMPLIANCE: pack schema_id/version, role_matrix, drill_matrix, and records semantic replay all pass",
+    "HG2 PROVENANCE_INTEGRITY": "HG2 PROVENANCE_INTEGRITY: every pack.sources entry has matching pre/post SHA-256 on disk and pack.s02_baseline pre/post canonical hash matches the on-disk S02 canonical hash",
+    "HG3 RECOVERY_EVIDENCE": "HG3 RECOVERY_EVIDENCE: drill_matrix reports all 3 drills EXECUTED with isolation_violation=false and residue_detected=false",
+    "HG4 FINANCIAL_PROTECTION": "HG4 FINANCIAL_PROTECTION: budget_stop_drill present in role_matrix with EXECUTED classification and recorded counters",
+    "HG5 SECURITY_POSTURE": "HG5 SECURITY_POSTURE: redaction_posture flags all false and no leak markers detected in pack",
+    "HG6 COMPLIANCE_POSTURE": "HG6 COMPLIANCE_POSTURE: embedded_classification.verdicts.launch stays frozen at PREPARATION_ONLY and raw_state_worksheet.step_launch.observed_status=fail_closed",
+    "HG7 READ_ONLY_BOUNDARY": "HG7 READ_ONLY_BOUNDARY: every record carries zero mutation_audit counters and live probes use GET-only methods",
+    "HG8 SCRATCH_ISOLATION": "HG8 SCRATCH_ISOLATION: scratch drill records have scratch_target_used=true and isolation_violation=false, no residue"
+  },
+  "gates": {
+    "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
+    "HG2 PROVENANCE_INTEGRITY": "pass",
+    "HG3 RECOVERY_EVIDENCE": "pass",
+    "HG4 FINANCIAL_PROTECTION": "pass",
+    "HG5 SECURITY_POSTURE": "pass",
+    "HG6 COMPLIANCE_POSTURE": "pass",
+    "HG7 READ_ONLY_BOUNDARY": "pass",
+    "HG8 SCRATCH_ISOLATION": "pass"
+  },
+  "hard_gates": {
+    "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
+    "HG2 PROVENANCE_INTEGRITY": "pass",
+    "HG3 RECOVERY_EVIDENCE": "pass",
+    "HG4 FINANCIAL_PROTECTION": "pass",
+    "HG5 SECURITY_POSTURE": "pass",
+    "HG6 COMPLIANCE_POSTURE": "pass",
+    "HG7 READ_ONLY_BOUNDARY": "pass",
+    "HG8 SCRATCH_ISOLATION": "pass"
+  },
+  "derived_gates": {
+    "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
+    "HG2 PROVENANCE_INTEGRITY": "pass",
+    "HG3 RECOVERY_EVIDENCE": "pass",
+    "HG4 FINANCIAL_PROTECTION": "pass",
+    "HG5 SECURITY_POSTURE": "pass",
+    "HG6 COMPLIANCE_POSTURE": "pass",
+    "HG7 READ_ONLY_BOUNDARY": "pass",
+    "HG8 SCRATCH_ISOLATION": "pass"
+  },
+  "classification_drift": [],
+  "records_semantic_replay": {
+    "row_count": 19,
+    "executed_count": 7,
+    "not_proven_count": 12,
+    "fail_closed_count": 0,
+    "rows": [
+      {
+        "role": "Div1.HCO",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "Div2.MasterPlanner",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "Div3.Treasury",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "Div4.Production",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "Div5.QualificationsLibraryLearning",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "Div6.External",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "Div7.MissionControl",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "budget_stop_drill",
+        "classification": "EXECUTED",
+        "verdict": "pass",
+        "replay_ok": true,
+        "replay_verdict": "pass",
+        "replay_reason": "probe passed all gates"
+      },
+      {
+        "role": "budget_stop_drill",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "cost_snapshot",
+        "classification": "EXECUTED",
+        "verdict": "pass",
+        "replay_ok": true,
+        "replay_verdict": "pass",
+        "replay_reason": "probe passed all gates"
+      },
+      {
+        "role": "failure_drill",
+        "classification": "EXECUTED",
+        "verdict": "pass",
+        "replay_ok": true,
+        "replay_verdict": "pass",
+        "replay_reason": "probe passed all gates"
+      },
+      {
+        "role": "failure_drill",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "hermes_environment",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "isolation_invariant",
+        "classification": "EXECUTED",
+        "verdict": "pass",
+        "replay_ok": true,
+        "replay_verdict": "pass",
+        "replay_reason": "probe passed all gates"
+      },
+      {
+        "role": "paperclip_health",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "redaction_posture_audit",
+        "classification": "EXECUTED",
+        "verdict": "pass",
+        "replay_ok": true,
+        "replay_verdict": "pass",
+        "replay_reason": "probe passed all gates"
+      },
+      {
+        "role": "restore_drill",
+        "classification": "EXECUTED",
+        "verdict": "pass",
+        "replay_ok": true,
+        "replay_verdict": "pass",
+        "replay_reason": "probe passed all gates"
+      },
+      {
+        "role": "restore_drill",
+        "classification": "NOT_PROVEN",
+        "verdict": "not_proven",
+        "replay_ok": false,
+        "replay_verdict": "not_proven",
+        "replay_reason": "not_proven"
+      },
+      {
+        "role": "secret_posture",
+        "classification": "EXECUTED",
+        "verdict": "pass",
+        "replay_ok": true,
+        "replay_verdict": "pass",
+        "replay_reason": "probe passed all gates"
+      }
+    ]
+  },
+  "independent_replay": {
+    "iterations": 2,
+    "deterministic": true,
+    "first_mismatched_run": null,
+    "mismatch_field": null,
+    "runs": [
+      {
+        "iteration": 0,
+        "runner_status": "PASS",
+        "runner_exit_code": 0,
+        "verdict": "pass",
+        "blockers_count": 0,
+        "gates": {
+          "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
+          "HG2 PROVENANCE_INTEGRITY": "pass",
+          "HG3 RECOVERY_EVIDENCE": "pass",
+          "HG4 FINANCIAL_PROTECTION": "pass",
+          "HG5 SECURITY_POSTURE": "pass",
+          "HG6 COMPLIANCE_POSTURE": "pass",
+          "HG7 READ_ONLY_BOUNDARY": "pass",
+          "HG8 SCRATCH_ISOLATION": "pass"
+        }
+      },
+      {
+        "iteration": 1,
+        "runner_status": "PASS",
+        "runner_exit_code": 0,
+        "verdict": "pass",
+        "blockers_count": 0,
+        "gates": {
+          "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
+          "HG2 PROVENANCE_INTEGRITY": "pass",
+          "HG3 RECOVERY_EVIDENCE": "pass",
+          "HG4 FINANCIAL_PROTECTION": "pass",
+          "HG5 SECURITY_POSTURE": "pass",
+          "HG6 COMPLIANCE_POSTURE": "pass",
+          "HG7 READ_ONLY_BOUNDARY": "pass",
+          "HG8 SCRATCH_ISOLATION": "pass"
+        }
+      }
+    ]
+  },
+  "raw_sha_reproduction": {
+    "all_match": true,
+    "match_count": 5,
+    "total_count": 5,
+    "sources": [
+      {
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+        "kind": "live_probe_results",
+        "independence_group": "m016-s03-probe-live",
+        "claimed_pre_hash_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+        "claimed_post_hash_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+        "actual_raw_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-live-probe-results.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+        "kind": "scratch_drill_results",
+        "independence_group": "m016-s03-probe-drill",
+        "claimed_pre_hash_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+        "claimed_post_hash_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+        "actual_raw_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-scratch-drill-results.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-isolation-invariant.json",
+        "kind": "isolation_invariant",
+        "independence_group": "m016-s03-probe-drill-isolation",
+        "claimed_pre_hash_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
+        "claimed_post_hash_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
+        "actual_raw_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-isolation-invariant.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-live-probe-protocol.json",
+        "kind": "live_probe_protocol",
+        "independence_group": "m016-s03-probe-live-protocol",
+        "claimed_pre_hash_sha256": "86d3e44775b70edfcaf8eb68ec160c58fd62fc2cd7f32119c3213a5d986ea990",
+        "claimed_post_hash_sha256": "86d3e44775b70edfcaf8eb68ec160c58fd62fc2cd7f32119c3213a5d986ea990",
+        "actual_raw_sha256": "86d3e44775b70edfcaf8eb68ec160c58fd62fc2cd7f32119c3213a5d986ea990",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-live-probe-protocol.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-scratch-drill-protocol.json",
+        "kind": "scratch_drill_protocol",
+        "independence_group": "m016-s03-probe-drill-protocol",
+        "claimed_pre_hash_sha256": "d3e9c8df410bebba199bc56fe34a9e63ba37547e7e465b0fbdcd2cec05d9d6b1",
+        "claimed_post_hash_sha256": "d3e9c8df410bebba199bc56fe34a9e63ba37547e7e465b0fbdcd2cec05d9d6b1",
+        "actual_raw_sha256": "d3e9c8df410bebba199bc56fe34a9e63ba37547e7e465b0fbdcd2cec05d9d6b1",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-scratch-drill-protocol.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      }
+    ]
+  },
+  "s02_baseline_reproduction": {
+    "match": true,
+    "pre_match": true,
+    "post_match": true,
+    "pre_post_equal": true,
+    "unchanged_flag": true,
+    "raw_pre_post_match": true,
+    "computed_canonical_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
+    "claimed_pre_canonical_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
+    "claimed_post_canonical_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
+    "raw_sha_first_read": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+    "raw_sha_second_read": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+    "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S02-bos-mission-proof.json",
+    "pre_window_sha": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+    "post_window_sha": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+    "raw_window_unchanged": true
+  },
+  "allowlist_drift": {
+    "not_in_allowlist": [],
+    "missing_from_bundle": [],
+    "drift_count": 0
+  },
+  "role_matrix_audit": {
+    "issue_count": 0,
+    "issues": []
+  },
+  "drill_matrix_audit": {
+    "issue_count": 0,
+    "issues": []
+  },
+  "launch_posture_audit": {
+    "frozen": true,
+    "issue_count": 0,
+    "issues": []
+  },
+  "replay_key_audit": {
+    "intact": true,
+    "issue_count": 0,
+    "issues": []
+  },
+  "redaction_audit": {
+    "clean": true,
+    "hit_count": 0,
+    "hits": []
+  },
+  "pack_digest_match": {
+    "claimed_pack_digest": "ce5312d28b79d903490791f20f918773faa0c5d911d84f38e26115aa5bf794a5",
+    "claimed_only": true
+  },
+  "raw_input_immutability_verified": true,
+  "redaction_posture": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false,
+    "raw_reasoning": false,
+    "raw_body": false,
+    "raw_result_json_result": false,
+    "vendor_reuse_strings": false,
+    "bounded_digests_only": true,
+    "redaction_bounds_loaded": true
+  },
+  "embedded_classification_verdicts": {
+    "orchestration": "PASS",
+    "evidence": "PASS",
+    "launch": "PREPARATION_ONLY"
+  },
+  "replay_keys_match": true,
+  "blockers": [],
+  "blocker_codes": [],
+  "verdict_line": "M16-S03-VERIFY verdict=PASS exit=0 block_count=0 blocker_first=null gates=HG1 SEMANTIC_RULE_COMPLIANCE=pass,HG2 PROVENANCE_INTEGRITY=pass,HG3 RECOVERY_EVIDENCE=pass,HG4 FINANCIAL_PROTECTION=pass,HG5 SECURITY_POSTURE=pass,HG6 COMPLIANCE_POSTURE=pass,HG7 READ_ONLY_BOUNDARY=pass,HG8 SCRATCH_ISOLATION=pass replay_match=true records_match=true provenance_match=true raw_sha_match_count=5/5 s02_baseline_match=true classification_match=true redaction_clean=true launch_frozen=true allowlist_drift=0 role_issues=0 drill_issues=0 iterations=2 pack_sha256=e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+  "options": {
+    "force": true,
+    "iterations": 2,
+    "reference_time": "2026-07-19T20:49:58.419Z"
+  },
+  "paths": {
+    "pack": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+    "verification": "runtime-evidence/M016-S03-verify-protocol.json",
+    "schema": "schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json"
+  }
+}
