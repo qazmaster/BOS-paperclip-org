@@ -1,0 +1,51 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-admission.v1.json",
+  "schema_version": "v1",
+  "admission_id": "m016-s05-seven-division-replay-admission-v1",
+  "admission_kind": "seven-division-evidence-replay-admission",
+  "milestone": "M016-txa3vu",
+  "slice": "S05",
+  "task": "T01",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "operator_gate": {
+    "token": "--confirm-operator-gate",
+    "confirmed": true,
+    "confirmed_at": "2026-07-20T12:00:00.000Z"
+  },
+  "source_refs": [
+    "runtime-evidence/M016-S02-bos-mission-proof.json",
+    "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+    "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json"
+  ],
+  "sanitised": true,
+  "raw_bodies_persisted": false,
+  "blockers": [],
+  "producer_line": "M16-S05-REPLAY",
+  "source_hashes": [
+    {
+      "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
+      "pre_hash_sha256": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+      "post_hash_sha256": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+      "unchanged": true
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+      "pre_hash_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+      "post_hash_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+      "unchanged": true
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
+      "pre_hash_sha256": "3f0dd1b187ccb66f80b6e1332809686bbcc3f73a7eb9d3a13274faf30ab883cd",
+      "post_hash_sha256": "3f0dd1b187ccb66f80b6e1332809686bbcc3f73a7eb9d3a13274faf30ab883cd",
+      "unchanged": true
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
+      "pre_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "post_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "unchanged": true
+    }
+  ]
+}

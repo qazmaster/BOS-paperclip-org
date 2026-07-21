@@ -6,7 +6,7 @@
   "milestone": "M016-txa3vu",
   "slice": "S04",
   "task": "T05",
-  "generated": "2026-07-20T19:29:26.853Z",
+  "generated": "2026-07-20T12:00:00.000Z",
   "line_class": "M16-S04-CANARY",
   "canonical_protocol": "PROTOCOL-M16-S04-CANARY-V1",
   "baseline_bundle": "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",

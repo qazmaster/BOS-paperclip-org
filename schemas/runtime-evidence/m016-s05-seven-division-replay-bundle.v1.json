@@ -1,0 +1,183 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-bundle.v1.json",
+  "title": "M016 S05 Seven Division Evidence Replay Bundle v1",
+  "description": "Strict sanitised offline replay bundle. Exactly 16 role matrix records and 3 isolated drill records are carried forward without classification changes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "bundle_id", "bundle_kind", "milestone", "slice", "task", "generated", "bundle_digest", "evidence_chain", "correlation_contract", "records", "redaction_posture", "embedded_classification", "scoring_worksheet", "replay_keys", "blockers", "raw_input_immutability_verified", "producer_verdict_line"],
+  "properties": {
+    "schema_id": {"const": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-bundle.v1.json"},
+    "schema_version": {"const": "v1"},
+    "bundle_id": {"const": "m016-s05-seven-division-replay-bundle-v1"},
+    "bundle_kind": {"const": "seven-division-evidence-replay-bundle"},
+    "milestone": {"const": "M016-txa3vu"},
+    "slice": {"const": "S05"},
+    "task": {"const": "T02"},
+    "generated": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "bundle_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "evidence_chain": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/definitions/evidenceChainRow"}},
+    "correlation_contract": {"$ref": "#/definitions/correlationContract"},
+    "records": {"type": "array", "minItems": 19, "maxItems": 19, "items": {"$ref": "#/definitions/replayRecord"}},
+    "redaction_posture": {"$ref": "#/definitions/redactionPosture"},
+    "embedded_classification": {"$ref": "#/definitions/classification"},
+    "scoring_worksheet": {"$ref": "#/definitions/worksheet"},
+    "replay_keys": {"$ref": "#/definitions/replayKeys"},
+    "blockers": {"type": "array", "maxItems": 0},
+    "raw_input_immutability_verified": {"const": true},
+    "producer_verdict_line": {"type": "string", "pattern": "^M16-S05-REPLAY [A-Z_]+ [A-Z_]+ [A-Z_]+$"},
+    "source_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^runtime-evidence/M016-S[0-9]{2}-[A-Za-z0-9._/-]+\\.json$"}}
+  },
+  "definitions": {
+    "timestamp": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "replayRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "role", "role_class", "classification", "independence_group", "reused_probe_id", "evidence_id", "criterion_id", "method", "started_at", "finished_at", "duration_ms", "scope", "limitations", "source_identity", "isolation_invariant", "mutation_audit", "redaction", "verdict", "blocker_codes", "source_ref", "source_record_digest"],
+      "properties": {
+        "kind": {"enum": ["live_replay_record", "drill_replay_record"]},
+        "role": {"type": "string", "pattern": "^(Div[1-7]\\.(HCO|MasterPlanner|Treasury|Production|QualificationsLibraryLearning|External|MissionControl)|paperclip_health|hermes_environment|secret_posture|cost_snapshot|isolation_invariant|restore_drill|budget_stop_drill|failure_drill|redaction_posture_audit)$"},
+        "role_class": {"enum": ["division", "infrastructure"]},
+        "classification": {"enum": ["EXECUTED", "NOT_PROVEN"]},
+        "independence_group": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,63}$"},
+        "reused_probe_id": {"type": "string", "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"},
+        "evidence_id": {"type": "string", "pattern": "^m016-s05-replay-evidence-[a-z][a-z0-9._-]{2,63}$"},
+        "criterion_id": {"type": "string", "pattern": "^HG[1-8] (SEMANTIC_RULE_COMPLIANCE|PROVENANCE_INTEGRITY|RECOVERY_EVIDENCE|FINANCIAL_PROTECTION|SECURITY_POSTURE|COMPLIANCE_POSTURE|READ_ONLY_BOUNDARY|SCRATCH_ISOLATION)$"},
+        "method": {"type": "string", "minLength": 1, "maxLength": 256, "pattern": "^(?!.*\\b(?:POST|PUT|PATCH|DELETE|CONNECT|TRACE)\\b).+$"},
+        "command": {"type": "string", "maxLength": 512, "pattern": "^(?!.*\\b(?:POST|PUT|PATCH|DELETE|CONNECT|TRACE)\\b).+$"},
+        "started_at": {"$ref": "#/definitions/timestamp"},
+        "finished_at": {"$ref": "#/definitions/timestamp"},
+        "duration_ms": {"type": "integer", "minimum": 0, "maximum": 600000},
+        "scope": {"type": "string", "minLength": 1, "maxLength": 256},
+        "limitations": {"type": "array", "minItems": 1, "maxItems": 16, "items": {"type": "string", "maxLength": 512}},
+        "source_identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": {"enum": ["paperclip_api_readonly", "scratch_drill", "offline_bundle_read", "observed"]},
+            "company_kind": {"type": "string", "maxLength": 64},
+            "auth_method": {"type": "string", "maxLength": 64},
+            "scratch_root": {"type": "string", "pattern": "^/(?:tmp|private/tmp|var/folders)/[A-Za-z0-9._/-]+$"},
+            "drill_kind": {"enum": ["restore-drill", "budget-stop-drill", "failure-drill"]}
+          }
+        },
+        "isolation_invariant": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["read_only_boundary_pass", "scratch_target_used", "boundary_blocker_code"],
+          "properties": {
+            "read_only_boundary_pass": {"type": "boolean"},
+            "scratch_target_used": {"type": "boolean"},
+            "boundary_blocker_code": {"type": ["string", "null"], "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"}
+          }
+        },
+        "mutation_audit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["issues_created", "issues_business_updated", "documents_created", "documents_business_updated", "projects_created", "projects_business_updated", "goals_created", "goals_business_updated", "plugins_created", "plugins_updated", "agents_created", "agents_operational_updated", "business_mutations_recorded"],
+          "properties": {
+            "issues_created": {"const": 0}, "issues_business_updated": {"const": 0}, "documents_created": {"const": 0}, "documents_business_updated": {"const": 0}, "projects_created": {"const": 0}, "projects_business_updated": {"const": 0}, "goals_created": {"const": 0}, "goals_business_updated": {"const": 0}, "plugins_created": {"const": 0}, "plugins_updated": {"const": 0}, "agents_created": {"const": 0}, "agents_operational_updated": {"const": 0}, "business_mutations_recorded": {"const": 0}
+          }
+        },
+        "redaction": {"$ref": "#/definitions/redactionPosture"},
+        "exit_code": {"const": 0},
+        "attempted_exit_code": {"type": "integer", "minimum": 1, "maximum": 599},
+        "sanitised_digest": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9._:-]+$"},
+        "artifact_reference": {"type": "string", "pattern": "^runtime-evidence/M016-S03-[A-Za-z0-9._/-]+\\.json$"},
+        "artifact_hash": {"$ref": "#/definitions/digest"},
+        "verdict": {"enum": ["pass", "not_proven", "fail_closed"]},
+        "blocker_codes": {"type": "array", "maxItems": 16, "items": {"type": "string", "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"}},
+        "observed_blocker_code": {"type": "string", "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"},
+        "observed_blocker_reason": {"type": "string", "maxLength": 512},
+        "source_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S0[234]-[A-Za-z0-9._/-]+\\.json$"},
+        "source_record_digest": {"$ref": "#/definitions/digest"}
+      },
+      "allOf": [
+        {"if": {"properties": {"kind": {"const": "drill_replay_record"}}}, "then": {"properties": {"source_identity": {"properties": {"kind": {"const": "scratch_drill"}}, "required": ["kind"]}, "isolation_invariant": {"properties": {"scratch_target_used": {"const": true}}, "required": ["scratch_target_used"]}}}},
+        {"if": {"properties": {"classification": {"const": "EXECUTED"}}}, "then": {"required": ["exit_code", "sanitised_digest", "artifact_reference", "artifact_hash"]}},
+        {"if": {"properties": {"classification": {"const": "NOT_PROVEN"}}}, "then": {"required": ["attempted_exit_code", "observed_blocker_code", "observed_blocker_reason"]}}
+      ]
+    },
+    "redactionPosture": {
+      "type": "object", "additionalProperties": false,
+      "required": ["full_ids", "credentials", "xiaomi_endpoint_reuse", "synthetic_bos", "raw_reasoning", "raw_body", "raw_result_json_result", "vendor_reuse_strings", "bounded_digests_only", "redaction_bounds_loaded"],
+      "properties": {"full_ids": {"const": false}, "credentials": {"const": false}, "xiaomi_endpoint_reuse": {"const": false}, "synthetic_bos": {"const": false}, "raw_reasoning": {"const": false}, "raw_body": {"const": false}, "raw_result_json_result": {"const": false}, "vendor_reuse_strings": {"const": false}, "bounded_digests_only": {"const": true}, "redaction_bounds_loaded": {"const": true}}
+    },
+    "evidenceChainRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_ref", "kind", "chain_role", "independence_group", "pre_hash_sha256", "post_hash_sha256", "unchanged", "scope", "limitations"],
+      "properties": {
+        "source_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S0[2345]-[A-Za-z0-9._/-]+\\.json$"},
+        "kind": {"enum": ["s02_baseline", "s03_pack", "s04_canary_bundle", "replay_probe_run"]},
+        "chain_role": {"enum": ["s02_baseline", "s03_pack", "s04_canary_bundle", "replay_probe_run"]},
+        "independence_group": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,63}$"},
+        "pre_hash_sha256": {"$ref": "#/definitions/digest"},
+        "post_hash_sha256": {"$ref": "#/definitions/digest"},
+        "unchanged": {"type": "boolean"},
+        "scope": {"type": "string", "maxLength": 256},
+        "limitations": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"type": "string", "maxLength": 512}}
+      }
+    },
+    "correlationContract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["agent_run_id", "probe_to_criterion", "agent_run_to_probe", "evidence_to_criterion"],
+      "properties": {
+        "agent_run_id": {"type": "string", "pattern": "^M16-S05-REPLAY-RUN-[A-Za-z0-9._-]+$"},
+        "probe_to_criterion": {"type": "array", "minItems": 19, "maxItems": 19, "items": {"$ref": "#/definitions/probeRow"}},
+        "agent_run_to_probe": {"type": "array", "minItems": 19, "maxItems": 19, "items": {"$ref": "#/definitions/agentRow"}},
+        "evidence_to_criterion": {"type": "array", "minItems": 19, "maxItems": 19, "items": {"$ref": "#/definitions/evidenceRow"}}
+      }
+    },
+    "probeRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["probe_id", "agent_run_id", "evidence_id", "criterion_id", "classification", "independence_group", "independence_key", "weight"],
+      "properties": {
+        "probe_id": {"type": "string", "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"}, "agent_run_id": {"type": "string", "pattern": "^M16-S05-REPLAY-RUN-[A-Za-z0-9._-]+$"}, "evidence_id": {"type": "string", "pattern": "^m016-s05-replay-evidence-[a-z][a-z0-9._-]{2,63}$"}, "criterion_id": {"type": "string", "pattern": "^HG[1-8] .+$"}, "classification": {"enum": ["EXECUTED", "NOT_PROVEN"]}, "independence_group": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,63}$"}, "independence_key": {"type": "string", "pattern": "^(live_replay_record|drill_replay_record):[a-z][a-z0-9._-]{2,63}$"}, "weight": {"enum": [0, 1]}
+      }
+    },
+    "agentRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["agent_run_id", "probe_id", "started_at", "finished_at", "duration_ms", "exit_code"],
+      "properties": {"agent_run_id": {"type": "string", "pattern": "^M16-S05-REPLAY-RUN-[A-Za-z0-9._-]+$"}, "probe_id": {"type": "string", "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"}, "started_at": {"$ref": "#/definitions/timestamp"}, "finished_at": {"$ref": "#/definitions/timestamp"}, "duration_ms": {"type": "integer", "minimum": 0, "maximum": 600000}, "exit_code": {"type": "integer", "minimum": 0, "maximum": 599}}
+    },
+    "evidenceRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_id", "criterion_id", "raw_state", "numeric_mapping", "source_ref"],
+      "properties": {"evidence_id": {"type": "string", "pattern": "^m016-s05-replay-evidence-[a-z][a-z0-9._-]{2,63}$"}, "criterion_id": {"type": "string", "pattern": "^HG[1-8] .+$"}, "raw_state": {"enum": ["EXECUTED", "NOT_PROVEN"]}, "numeric_mapping": {"enum": [0, 1]}, "source_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S0[234]-[A-Za-z0-9._/-]+\\.json$"}}
+    },
+    "classification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evaluator", "evaluator_version", "raw_state", "verdicts", "hard_gates", "replay_gates", "bounded_internal_constraints"],
+      "properties": {
+        "evaluator": {"const": "S05-seven-division-replay-contract"}, "evaluator_version": {"const": "v1"}, "raw_state": {"enum": ["EXECUTED", "NOT_PROVEN", "FAIL_CLOSED"]},
+        "verdicts": {"type": "object", "additionalProperties": false, "required": ["orchestration", "evidence", "launch"], "properties": {"orchestration": {"enum": ["PASS", "PARTIAL", "NOT_PROVEN"]}, "evidence": {"enum": ["PASS", "PARTIAL", "NOT_PROVEN"]}, "launch": {"enum": ["GO_BOUNDED_INTERNAL", "PREPARATION_ONLY", "NO_GO"]}}},
+        "hard_gates": {"type": "object", "additionalProperties": false, "minProperties": 8, "maxProperties": 8, "patternProperties": {"^HG[1-8] .+$": {"enum": ["pass", "not_proven", "fail_closed"]}}},
+        "replay_gates": {"type": "object", "additionalProperties": false, "minProperties": 4, "maxProperties": 4, "patternProperties": {"^SG[1-4] .+$": {"enum": ["pass", "not_proven", "fail_closed"]}}},
+        "bounded_internal_constraints": {"type": "object", "additionalProperties": false, "required": ["offline_only", "read_only", "no_network_mutation", "no_forbidden_verdict_promotion"], "properties": {"offline_only": {"const": true}, "read_only": {"const": true}, "no_network_mutation": {"const": true}, "no_forbidden_verdict_promotion": {"const": true}}}
+      }
+    },
+    "worksheet": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_id", "schema_version", "worksheet_id", "worksheet_kind", "milestone", "slice", "task", "generated", "rows", "steps", "weight_sum", "score", "verdicts", "replay_key", "blockers"],
+      "properties": {
+        "schema_id": {"const": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-scoring-worksheet.v1.json"}, "schema_version": {"const": "v1"}, "worksheet_id": {"const": "m016-s05-seven-division-replay-scoring-worksheet-v1"}, "worksheet_kind": {"const": "seven-division-evidence-replay-scoring-worksheet"}, "milestone": {"const": "M016-txa3vu"}, "slice": {"const": "S05"}, "task": {"const": "T01"}, "generated": {"$ref": "#/definitions/timestamp"}, "rows": {"type": "array", "minItems": 8, "maxItems": 8, "items": {"$ref": "#/definitions/worksheetRow"}}, "steps": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/definitions/worksheetStep"}}, "weight_sum": {"type": "number", "const": 1}, "score": {"type": "number", "minimum": 0, "maximum": 1}, "verdicts": {"$ref": "#/definitions/classification/properties/verdicts"}, "replay_key": {"$ref": "#/definitions/digest"}, "blockers": {"type": "array", "maxItems": 0}
+      }
+    },
+    "worksheetRow": {
+      "type": "object", "additionalProperties": false, "required": ["criterion_id", "raw_state", "numeric_mapping", "weight", "contribution", "rationale", "source_refs"],
+      "properties": {"criterion_id": {"pattern": "^HG[1-8] .+$"}, "raw_state": {"enum": ["pass", "not_proven", "fail_closed"]}, "numeric_mapping": {"type": "number", "minimum": 0, "maximum": 1}, "weight": {"type": "number", "minimum": 0, "maximum": 1}, "contribution": {"type": "number", "minimum": 0, "maximum": 1}, "rationale": {"type": "string", "minLength": 1, "maxLength": 1024}, "source_refs": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "pattern": "^runtime-evidence/M016-S0[2345]-[A-Za-z0-9._/-]+\\.json$"}}
+      }
+    },
+    "worksheetStep": {
+      "type": "object", "additionalProperties": false, "required": ["step", "raw_state", "numeric_mapping", "weight", "contribution", "rationale", "source_refs"],
+      "properties": {"step": {"enum": ["step_orchestration", "step_evidence", "step_launch"]}, "raw_state": {"enum": ["PASS", "PARTIAL", "NOT_PROVEN", "GO_BOUNDED_INTERNAL", "PREPARATION_ONLY", "NO_GO"]}, "numeric_mapping": {"type": "number", "minimum": 0, "maximum": 1}, "weight": {"type": "number", "minimum": 0, "maximum": 1}, "contribution": {"type": "number", "minimum": 0, "maximum": 1}, "rationale": {"type": "string", "minLength": 1, "maxLength": 256}, "source_refs": {"type": "array", "minItems": 1, "maxItems": 16, "items": {"type": "string", "pattern": "^runtime-evidence/M016-S0[2345]-[A-Za-z0-9._/-]+\\.json$"}}
+      }
+    },
+    "replayKeys": {
+      "type": "object", "additionalProperties": false, "required": ["first_run_provenance_hash", "second_run_provenance_hash", "match", "byte_identical", "replay_key", "verified_at"],
+      "properties": {"first_run_provenance_hash": {"$ref": "#/definitions/digest"}, "second_run_provenance_hash": {"$ref": "#/definitions/digest"}, "match": {"const": true}, "byte_identical": {"const": true}, "replay_key": {"$ref": "#/definitions/digest"}, "verified_at": {"$ref": "#/definitions/timestamp"}}
+    }
+  }
+}

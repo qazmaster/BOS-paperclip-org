@@ -232,7 +232,7 @@ const FIXTURES = Object.freeze([
 // ---------------------------------------------------------------------------
 
 function _buildArtifact() {
-  const generated = new Date().toISOString();
+  const generated = data.DEFAULTS.reference_time;
   const fixtures = FIXTURES.map(function (f) {
     return {
       fixture_id: f.id,
