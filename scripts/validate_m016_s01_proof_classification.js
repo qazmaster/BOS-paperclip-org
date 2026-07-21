@@ -109,19 +109,34 @@ function isWithinRoot(resolvedPath) {
   // Realpath containment — lexical containment alone accepts a symlink
   // that points outside repo root. We resolve symlinks on both ends.
   // When resolvedPath does not exist yet (output-dir created later via
-  // mkdirSync) we fall back to resolving the parent directory and checking
-  // the lexical containment of the trailing segment against that real parent.
+  // mkdirSync) we walk up the parent chain until we find an existing
+  // ancestor and check containment from that ancestor. This lets the
+  // S07 verifier pass --output-dir under a freshly-created scratch
+  // root whose intermediate parents do not exist yet.
   let realResolved;
   try {
     realResolved = fs.realpathSync(resolvedPath);
   } catch (e) {
     if (e && e.code === 'ENOENT') {
-      const parent = path.dirname(resolvedPath);
-      let realParent;
-      try { realParent = fs.realpathSync(parent); }
-      catch (_) { return false; }
-      const relParent = path.relative(realParent, resolvedPath);
-      if (relParent.startsWith('..') || path.isAbsolute(relParent)) return false;
+      // Walk up the parent chain collecting tail segments until we find
+      // an existing ancestor or hit the filesystem root.
+      let cursor = resolvedPath;
+      const tail = [];
+      let realParent = null;
+      while (true) {
+        const parent = path.dirname(cursor);
+        if (parent === cursor) return false; // reached root with no existing ancestor
+        try {
+          realParent = fs.realpathSync(parent);
+          break;
+        } catch (e2) {
+          if (!e2 || e2.code !== 'ENOENT') return false;
+          tail.unshift(path.basename(cursor));
+          cursor = parent;
+        }
+      }
+      // All tail segments must be free of `..` traversal.
+      for (const seg of tail) if (seg === '..') return false;
       try {
         const realRoot = fs.realpathSync(rootResolved);
         const relRoot = path.relative(realRoot, realParent);

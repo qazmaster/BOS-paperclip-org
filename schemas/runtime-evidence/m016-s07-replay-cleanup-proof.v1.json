@@ -1,0 +1,489 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s07-replay-cleanup-proof.v1.json",
+  "title": "M016 S07 Replay Cleanup Proof v1",
+  "description": "Canonical sanitised proof sidecar produced by scripts/verify_m016_s07_replay_cleanup_proof.js (S07/T03 verifier) for the policy-compliant replay cleanup proof slice. The schema covers two proof kinds — `replay-cleanup-proof` (canonical deterministic cleanup sidecar) and `replay-cleanup-negative-fixtures` (negative test catalog) — sharing the same root and frozen enums. The proof sidecar records the S01 schema/fixture/canonical artifacts + M015 source SHA-256 inventory, the marker-owned repo-local scratch root, the ordered cleanup trace, pre/post-run absence assertions, atomic-temporary cleanup verification, sidecar/output overwrite refusal, the exactly-one subprocess replay invocation count, the frozen verdict triple (orchestration=PASS, evidence=PARTIAL, launch=PREPARATION_ONLY), the canonical machine-scannable `M016_S07_REPLAY_CLEANUP=PASS|FAIL` verdict line, and the bounded exit code. The negative-fixtures sidecar enumerates tamper fixtures and the expected blocker code / verdict / exit code mapping. raw_bodies_persisted MUST be false; the redaction_posture leak-class flags MUST all be false; the verdict triple MUST stay fail-closed (orchestration=PASS, evidence=PARTIAL, launch=PREPARATION_ONLY) — any drift is structurally rejected.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "proof_id",
+    "proof_kind",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "reference_time",
+    "verifier_line",
+    "canonical_protocol",
+    "canonical_verdict_line",
+    "canonical_verdict_line_status",
+    "bounded_exit_code",
+    "inputs",
+    "source_hashes",
+    "limits",
+    "raw_bodies_persisted",
+    "redaction_posture",
+    "blockers",
+    "byte_digest"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "https://gsd.local/schemas/runtime-evidence/m016-s07-replay-cleanup-proof.v1.json"
+    },
+    "schema_version": {"const": "v1"},
+    "proof_id": {
+      "type": "string",
+      "pattern": "^m016-s07-(replay-cleanup-proof|replay-cleanup-negative-fixtures)-v1$"
+    },
+    "proof_kind": {
+      "enum": ["replay-cleanup-proof", "replay-cleanup-negative-fixtures"]
+    },
+    "milestone": {"const": "M016-txa3vu"},
+    "slice": {"const": "S07"},
+    "task": {
+      "type": "string",
+      "pattern": "^T[0-9]{2}$"
+    },
+    "generated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"
+    },
+    "reference_time": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"
+    },
+    "verifier_line": {"const": "M16-S07-CLEANUP"},
+    "canonical_protocol": {"const": "PROTOCOL-M16-S07-REPLAY-CLEANUP-V1"},
+    "canonical_verdict_line": {
+      "const": "M016_S07_REPLAY_CLEANUP=PASS|FAIL"
+    },
+    "canonical_verdict_line_status": {
+      "enum": ["PASS", "FAIL"]
+    },
+    "bounded_exit_code": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 7
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "s01_schema",
+        "s01_fixture",
+        "s01_protocol",
+        "s01_validation",
+        "s01_verification",
+        "m015_baseline",
+        "s01_classifier_cli"
+      ],
+      "properties": {
+        "s01_schema": {
+          "type": "string",
+          "pattern": "^schemas/runtime-evidence/m016-s01-[A-Za-z0-9._/-]+\\.json$"
+        },
+        "s01_fixture": {
+          "type": "string",
+          "pattern": "^runtime-evidence/M016-S01-[A-Za-z0-9._/-]+\\.json$"
+        },
+        "s01_protocol": {
+          "type": "string",
+          "pattern": "^runtime-evidence/M016-S01-[A-Za-z0-9._/-]+\\.json$"
+        },
+        "s01_validation": {
+          "type": "string",
+          "pattern": "^runtime-evidence/M016-S01-[A-Za-z0-9._/-]+\\.json$"
+        },
+        "s01_verification": {
+          "type": "string",
+          "pattern": "^runtime-evidence/M016-S01-[A-Za-z0-9._/-]+\\.json$"
+        },
+        "m015_baseline": {
+          "type": "string",
+          "pattern": "^runtime-evidence/M015-[A-Za-z0-9._/-]+\\.json$"
+        },
+        "s01_classifier_cli": {
+          "type": "string",
+          "pattern": "^scripts/[A-Za-z0-9._/-]+\\.js$"
+        }
+      }
+    },
+    "source_hashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(schemas/runtime-evidence/m016-s01-[A-Za-z0-9._/-]+\\.json|runtime-evidence/M016-S01-[A-Za-z0-9._/-]+\\.json|runtime-evidence/M015-[A-Za-z0-9._/-]+\\.json)$": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_cleanup_trace_rows",
+        "max_blocker_codes",
+        "max_blocker_reason_chars",
+        "max_replay_subprocess_invocations",
+        "max_source_refs",
+        "max_reproducibility_runs"
+      ],
+      "properties": {
+        "max_cleanup_trace_rows": {"const": 16},
+        "max_blocker_codes": {"const": 96},
+        "max_blocker_reason_chars": {"const": 512},
+        "max_replay_subprocess_invocations": {"const": 1},
+        "max_source_refs": {"const": 8},
+        "max_reproducibility_runs": {"const": 4}
+      }
+    },
+    "raw_bodies_persisted": {"const": false},
+    "redaction_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_ids",
+        "credentials",
+        "xiaomi_endpoint_reuse",
+        "synthetic_bos",
+        "raw_reasoning",
+        "raw_body",
+        "raw_result_json_result",
+        "vendor_reuse_strings",
+        "bounded_digests_only",
+        "redaction_bounds_loaded"
+      ],
+      "properties": {
+        "full_ids": {"const": false},
+        "credentials": {"const": false},
+        "xiaomi_endpoint_reuse": {"const": false},
+        "synthetic_bos": {"const": false},
+        "raw_reasoning": {"const": false},
+        "raw_body": {"const": false},
+        "raw_result_json_result": {"const": false},
+        "vendor_reuse_strings": {"const": false},
+        "bounded_digests_only": {"const": true},
+        "redaction_bounds_loaded": {"const": true}
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 96,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "reason"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^M16-S07-CLEANUP-[A-Za-z0-9._-]+$"
+          },
+          "reason": {"type": "string", "minLength": 1, "maxLength": 512}
+        }
+      }
+    },
+    "byte_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "cleanup_marker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relpath", "contents", "sha256"],
+      "properties": {
+        "relpath": {"type": "string", "pattern": "^[A-Za-z0-9._/-]+$"},
+        "contents": {"const": "M16-S07-CLEANUP-MARKER"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "scratch_root_relpath": {
+      "type": "string",
+      "pattern": "^runtime-evidence/[A-Za-z0-9._/-]+$"
+    },
+    "replay_subprocess_invocations": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1
+    },
+    "cleanup_trace": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["phase", "action", "target_relpath", "outcome"],
+        "properties": {
+          "phase": {"enum": ["pre_run", "replay", "post_run"]},
+          "action": {
+            "enum": [
+              "created",
+              "removed",
+              "refused",
+              "atomic_rename_failed",
+              "post_run_absent",
+              "overwrite_refused",
+              "marker_validated",
+              "marker_forged",
+              "marker_missing",
+              "subprocess_invoked"
+            ]
+          },
+          "target_relpath": {
+            "type": "string",
+            "pattern": "^(runtime-evidence|scripts|schemas)(/[A-Za-z0-9._/-]+)?$"
+          },
+          "outcome": {"enum": ["success", "refused", "failed"]},
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "pre_run_absence_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relpath", "present_before", "present_after"],
+      "properties": {
+        "relpath": {"type": "string", "pattern": "^runtime-evidence/[A-Za-z0-9._/-]+$"},
+        "present_before": {"type": "boolean"},
+        "present_after": {"type": "boolean"}
+      }
+    },
+    "post_run_absence_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relpath", "present_before", "present_after"],
+      "properties": {
+        "relpath": {"type": "string", "pattern": "^runtime-evidence/[A-Za-z0-9._/-]+$"},
+        "present_before": {"type": "boolean"},
+        "present_after": {"type": "boolean"}
+      }
+    },
+    "atomic_temp_cleanup_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relpath", "removed"],
+      "properties": {
+        "relpath": {"type": "string", "pattern": "^runtime-evidence/[A-Za-z0-9._/-]+\\.tmp-[A-Za-z0-9._-]+$"},
+        "removed": {"type": "boolean"}
+      }
+    },
+    "canonical_sidecar_overwrite_refusal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempted", "refused"],
+      "properties": {
+        "attempted": {"type": "boolean"},
+        "refused": {"type": "boolean"}
+      }
+    },
+    "canonical_output_overwrite_refusal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempted", "refused"],
+      "properties": {
+        "attempted": {"type": "boolean"},
+        "refused": {"type": "boolean"}
+      }
+    },
+    "verdict_triple": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orchestration", "evidence", "launch"],
+      "properties": {
+        "orchestration": {"const": "PASS"},
+        "evidence": {"const": "PARTIAL"},
+        "launch": {"const": "PREPARATION_ONLY"}
+      }
+    },
+    "semantic_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "reproducibility_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fixture_id",
+          "threat_class",
+          "tamper_path",
+          "mutator_kind",
+          "baseline_value",
+          "tampered_value",
+          "expected_blocker_code",
+          "expected_verdict",
+          "expected_exit_code",
+          "rationale",
+          "evidence_ref"
+        ],
+        "properties": {
+          "fixture_id": {"type": "string", "pattern": "^S07-NF-[0-9]{2}$"},
+          "threat_class": {
+            "enum": [
+              "traversal",
+              "symlink_escape",
+              "marker_forgery",
+              "marker_missing",
+              "source_hash_drift",
+              "pre_existing_residue",
+              "cleanup_refusal",
+              "atomic_rename_failure",
+              "overwrite_attempt",
+              "redaction_leak",
+              "subprocess_overflow",
+              "verdict_triple_drift"
+            ]
+          },
+          "tamper_path": {"type": "string", "minLength": 1, "maxLength": 256},
+          "mutator_kind": {
+            "enum": [
+              "string_replace",
+              "hash_drift",
+              "boolean_flip",
+              "path_traversal",
+              "symlink_swap",
+              "missing_file",
+              "forged_marker",
+              "rename_failure",
+              "extra_subprocess",
+              "verdict_promotion"
+            ]
+          },
+          "baseline_value": {"type": "string", "minLength": 1, "maxLength": 512},
+          "tampered_value": {"type": "string", "minLength": 1, "maxLength": 512},
+          "expected_blocker_code": {
+            "type": "string",
+            "pattern": "^M16-S07-CLEANUP-[A-Za-z0-9._-]+$"
+          },
+          "expected_verdict": {"enum": ["PASS", "FAIL"]},
+          "expected_exit_code": {"type": "integer", "minimum": 1, "maximum": 7},
+          "rationale": {"type": "string", "minLength": 1, "maxLength": 512},
+          "evidence_ref": {
+            "type": "string",
+            "pattern": "^runtime-evidence/M016-S07-replay-cleanup-negative-fixtures\\.json$"
+          }
+        }
+      }
+    },
+    "fixture_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 32
+    },
+    "unique_blocker_codes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 96
+    },
+    "coverage_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "traversal",
+        "symlink_escape",
+        "marker_forgery",
+        "marker_missing",
+        "source_hash_drift",
+        "pre_existing_residue",
+        "cleanup_refusal",
+        "atomic_rename_failure",
+        "overwrite_attempt",
+        "redaction_leak",
+        "subprocess_overflow",
+        "verdict_triple_drift"
+      ],
+      "properties": {
+        "traversal": {"type": "integer", "minimum": 0, "maximum": 16},
+        "symlink_escape": {"type": "integer", "minimum": 0, "maximum": 16},
+        "marker_forgery": {"type": "integer", "minimum": 0, "maximum": 16},
+        "marker_missing": {"type": "integer", "minimum": 0, "maximum": 16},
+        "source_hash_drift": {"type": "integer", "minimum": 0, "maximum": 16},
+        "pre_existing_residue": {"type": "integer", "minimum": 0, "maximum": 16},
+        "cleanup_refusal": {"type": "integer", "minimum": 0, "maximum": 16},
+        "atomic_rename_failure": {"type": "integer", "minimum": 0, "maximum": 16},
+        "overwrite_attempt": {"type": "integer", "minimum": 0, "maximum": 16},
+        "redaction_leak": {"type": "integer", "minimum": 0, "maximum": 16},
+        "subprocess_overflow": {"type": "integer", "minimum": 0, "maximum": 16},
+        "verdict_triple_drift": {"type": "integer", "minimum": 0, "maximum": 16}
+      }
+    },
+    "runner_command": {
+      "type": "string",
+      "pattern": "^node(?:[ \\t]+--\\w+)*[ \\t]+scripts/test_m016_s07_replay_cleanup_(artifacts|tamper)\\.js$"
+    },
+    "evaluation_command": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "schema_path": {
+      "type": "string",
+      "pattern": "^schemas/runtime-evidence/m016-s07-[A-Za-z0-9._/-]+\\.json$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "proof_kind": {"const": "replay-cleanup-proof"}
+        },
+        "required": ["proof_kind"]
+      },
+      "then": {
+        "required": [
+          "cleanup_marker",
+          "scratch_root_relpath",
+          "replay_subprocess_invocations",
+          "cleanup_trace",
+          "pre_run_absence_check",
+          "post_run_absence_check",
+          "atomic_temp_cleanup_check",
+          "canonical_sidecar_overwrite_refusal",
+          "canonical_output_overwrite_refusal",
+          "verdict_triple",
+          "semantic_digest",
+          "reproducibility_count"
+        ],
+        "properties": {
+          "replay_subprocess_invocations": {"const": 1},
+          "canonical_verdict_line_status": {"const": "PASS"},
+          "bounded_exit_code": {"const": 0}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "proof_kind": {"const": "replay-cleanup-negative-fixtures"}
+        },
+        "required": ["proof_kind"]
+      },
+      "then": {
+        "required": [
+          "fixture_count",
+          "unique_blocker_codes",
+          "coverage_summary",
+          "runner_command",
+          "evaluation_command",
+          "schema_path"
+        ],
+        "properties": {
+          "bounded_exit_code": {"const": 0},
+          "canonical_verdict_line_status": {"const": "PASS"}
+        }
+      }
+    }
+  ]
+}
