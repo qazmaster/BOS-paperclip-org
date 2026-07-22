@@ -284,6 +284,13 @@ const BLOCKER_CODES = Object.freeze({
   PRODUCER_CLOSURE_KIND_MISMATCH: (kind) => 'M16-S08-NATIVE-CLOSURE-KIND-MISMATCH-' + _safeSuffix(kind),
   PRODUCER_RUNNER_FAILURE: () => 'M16-S08-NATIVE-RUNNER-FAILURE',
 
+  // Coordinator-level gate raised when an explicit CLI output path
+  // does not match the canonical runtime-evidence/M016-S08-native-…json
+  // pattern. Custom locations would silently break the verify-protocol
+  // schema's *-ref field regexes, so the coordinator rejects them
+  // BEFORE spawning any child subprocess.
+  COORDINATOR_EXPLICIT_PATH_NON_CANONICAL: (kind) => 'M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-' + _safeSuffix(kind),
+
   // --- validator (M16-S08-VERIFY) blockers ---
   VALIDATOR_ADMISSION_NOT_FOUND: () => 'M16-S08-VERIFY-ADMISSION-NOT-FOUND',
   VALIDATOR_CANDIDATE_NOT_FOUND: () => 'M16-S08-VERIFY-CANDIDATE-NOT-FOUND',
@@ -809,6 +816,46 @@ function getFixtureEntry(fixtureId) {
 }
 
 // ---------------------------------------------------------------------------
+// 15b. CANONICAL_OUTPUT_PATH_PATTERNS — frozen regex set that maps each
+//      sidecar kind to its canonical runtime-evidence/M016-S08-native-…json
+//      pattern. The coordinator uses this to REJECT explicit CLI output
+//      paths that diverge from the canonical namespace BEFORE any child
+//      subprocess is spawned. Custom locations would silently break the
+//      verify-protocol schema's *_ref field regexes (which are anchored
+//      on those exact patterns), so we fail closed rather than emit a
+//      sidecar whose protocol ref cannot be schema-validated.
+// ---------------------------------------------------------------------------
+
+const CANONICAL_OUTPUT_PATH_KINDS = Object.freeze([
+  'admission',
+  'candidate',
+  'closure',
+  'scope_decision',
+  'negative_fixtures',
+  'verify_protocol',
+]);
+
+const CANONICAL_OUTPUT_PATH_PATTERNS = Object.freeze({
+  admission: /^runtime-evidence\/M016-S08-native-seven-agent-admission\.json$/,
+  candidate: /^runtime-evidence\/M016-S08-native-seven-agent-candidate\.json$/,
+  closure: /^runtime-evidence\/M016-S08-native-seven-agent-closure\.json$/,
+  scope_decision: /^runtime-evidence\/M016-S08-native-seven-agent-scope-decision\.json$/,
+  negative_fixtures: /^runtime-evidence\/M016-S08-native-seven-agent-negative-fixtures\.json$/,
+  verify_protocol: /^runtime-evidence\/M016-S08-native-seven-agent-verify-protocol\.json$/,
+});
+
+function isCanonicalOutputPathKind(value) {
+  return typeof value === 'string' && CANONICAL_OUTPUT_PATH_KINDS.indexOf(value) >= 0;
+}
+
+function isCanonicalOutputPath(value, kind) {
+  if (!isCanonicalOutputPathKind(kind)) return false;
+  const re = CANONICAL_OUTPUT_PATH_PATTERNS[kind];
+  if (!re) return false;
+  return typeof value === 'string' && re.test(value);
+}
+
+// ---------------------------------------------------------------------------
 // 16. IDENTIFIER PATTERNS
 // ---------------------------------------------------------------------------
 
@@ -1076,6 +1123,12 @@ module.exports = {
   NEGATIVE_FIXTURE_TAXONOMY_BY_ID,
   isKnownFixtureId,
   getFixtureEntry,
+
+  // 15b. CANONICAL_OUTPUT_PATH_PATTERNS — schema-safety gate
+  CANONICAL_OUTPUT_PATH_KINDS,
+  CANONICAL_OUTPUT_PATH_PATTERNS,
+  isCanonicalOutputPathKind,
+  isCanonicalOutputPath,
 
   // 16. IDENTIFIER PATTERNS
   IDENTIFIER_PATTERNS,

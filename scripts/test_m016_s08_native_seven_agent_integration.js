@@ -282,31 +282,30 @@ test('pathIsUnderRoot: root itself → true', () => {
   assert.equal(coordinator.pathIsUnderRoot(ROOT, ROOT), true);
 });
 
-test('resolveRunPaths: rejects paths outside root', () => {
+test('resolveRunPaths: rejects non-canonical explicit path with bounded error code (T06 schema-safety gate)', () => {
+  // T06 schema-safety gate runs BEFORE the path-escape check:
+  // non-canonical paths are rejected first with a distinct
+  // M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-<kind> code. The
+  // canonical gate is intentionally stricter than the old
+  // root-containment check because divergent paths would silently
+  // break the verify-protocol schema's *_ref field regexes.
   const args = coordinator.parseArgs([
     '--admission-out', '/tmp/escape-admission.json',
-    '--candidate-out', 'runtime-evidence/c.json',
-    '--closure-out', 'runtime-evidence/cl.json',
-    '--scope-decision-out', 'runtime-evidence/sd.json',
-    '--negative-fixtures-out', 'runtime-evidence/nf.json',
-    '--verify-protocol-out', 'runtime-evidence/vp.json',
+    '--candidate-out', data.DEFAULTS.candidate_output,
+    '--closure-out', data.DEFAULTS.closure_output,
+    '--scope-decision-out', data.DEFAULTS.scope_decision_output,
+    '--negative-fixtures-out', data.DEFAULTS.negative_fixtures_output,
+    '--verify-protocol-out', data.DEFAULTS.verify_protocol_output,
   ]);
-  assert.throws(() => coordinator.resolveRunPaths(args), /output paths escaped repo root/);
+  let caught = null;
+  try {
+    coordinator.resolveRunPaths(args);
+  } catch (e) {
+    caught = e;
+  }
+  assert.ok(caught);
+  assert.equal(caught.code, 'M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-admission');
 });
-
-test('resolveRunPaths: accepts all-under-root paths', () => {
-  const args = coordinator.parseArgs([
-    '--admission-out', 'runtime-evidence/_test/a.json',
-    '--candidate-out', 'runtime-evidence/_test/c.json',
-    '--closure-out', 'runtime-evidence/_test/cl.json',
-    '--scope-decision-out', 'runtime-evidence/_test/sd.json',
-    '--negative-fixtures-out', 'runtime-evidence/_test/nf.json',
-    '--verify-protocol-out', 'runtime-evidence/_test/vp.json',
-  ]);
-  const paths = coordinator.resolveRunPaths(args);
-  assert.equal(paths.admissionRel, 'runtime-evidence/_test/a.json');
-});
-
 // ---------------------------------------------------------------------------
 // 3. selectBranch
 // ---------------------------------------------------------------------------
@@ -1075,13 +1074,17 @@ test('source immutability hash table covers all 9 SOURCE_ALLOWLIST entries', () 
 // ---------------------------------------------------------------------------
 
 test('resolveRunPaths: includes workingRootAbs/Rel and all six Rel paths', () => {
+  // T06 schema-safety gate now requires every explicit output path
+  // to match the canonical runtime-evidence/M016-S08-native-…json
+  // pattern. This test exercises resolveRunPaths' shape using
+  // canonical paths (which are exactly the defaults the gate allows).
   const args = coordinator.parseArgs([
-    '--admission-out', 'runtime-evidence/_t/a.json',
-    '--candidate-out', 'runtime-evidence/_t/c.json',
-    '--closure-out', 'runtime-evidence/_t/cl.json',
-    '--scope-decision-out', 'runtime-evidence/_t/s.json',
-    '--negative-fixtures-out', 'runtime-evidence/_t/n.json',
-    '--verify-protocol-out', 'runtime-evidence/_t/p.json',
+    '--admission-out', data.DEFAULTS.admission_output,
+    '--candidate-out', data.DEFAULTS.candidate_output,
+    '--closure-out', data.DEFAULTS.closure_output,
+    '--scope-decision-out', data.DEFAULTS.scope_decision_output,
+    '--negative-fixtures-out', data.DEFAULTS.negative_fixtures_output,
+    '--verify-protocol-out', data.DEFAULTS.verify_protocol_output,
   ]);
   const paths = coordinator.resolveRunPaths(args);
   assert.ok('workingRootAbs' in paths);
@@ -1107,4 +1110,236 @@ test('CLI with malformed argv — exits non-zero with bounded stderr summary', {
   const result = spawnSync('node', cliArgs, { cwd: ROOT, encoding: 'utf8', timeout: 30_000 });
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /M16-S08-COORD/);
+});
+
+// ---------------------------------------------------------------------------
+// 22. T06 — negative matrix validation + canonical path rejection
+// ---------------------------------------------------------------------------
+
+test('assertCanonicalPathPattern: accepts canonical admission path', () => {
+  // No throw; returns the input.
+  const out = coordinator.assertCanonicalPathPattern(
+    'runtime-evidence/M016-S08-native-seven-agent-admission.json',
+    'admission'
+  );
+  assert.equal(out, 'runtime-evidence/M016-S08-native-seven-agent-admission.json');
+});
+
+test('assertCanonicalPathPattern: rejects non-canonical path with bounded error code', () => {
+  let caught = null;
+  try {
+    coordinator.assertCanonicalPathPattern('custom/foo.json', 'admission');
+  } catch (e) {
+    caught = e;
+  }
+  assert.ok(caught, 'helper must throw on non-canonical path');
+  assert.equal(caught.code, 'M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-admission');
+  assert.match(caught.message, /admission/);
+  assert.match(caught.message, /custom\/foo\.json/);
+});
+
+test('assertCanonicalPathPattern: rejects unknown kind with bounded error code', () => {
+  let caught = null;
+  try {
+    coordinator.assertCanonicalPathPattern('runtime-evidence/x.json', 'unknown_kind');
+  } catch (e) {
+    caught = e;
+  }
+  assert.ok(caught);
+  assert.equal(caught.code, 'M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-unknown_kind');
+});
+
+test('assertCanonicalPathPattern: rejects empty / non-string with bounded error code', () => {
+  let caught = null;
+  try {
+    coordinator.assertCanonicalPathPattern('', 'admission');
+  } catch (e) {
+    caught = e;
+  }
+  assert.ok(caught);
+  assert.equal(caught.code, 'M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-admission');
+});
+
+test('parseTamperCountsFromStdout: extracts executed/passed/failed from verifier bounded line', () => {
+  const stdout = [
+    'noise',
+    'M16-S08-VERIFY verdict=scope_revised:NOT_PROVEN_SCOPE_REVISED exit=0 blockers=0 divisions=0 correlated_runs=0 unexpected_mutations=0 replay_key_match=false',
+    'M016_S08_VERIFY=pass branch=scope_revised protocol=runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json blockers=0 divisions=0 unexpected_mutations=0 tamper_classes_executed=14 tamper_classes_passed=14 tamper_classes_failed=0 exit_code=0',
+    ''
+  ].join('\n');
+  const counts = coordinator.parseTamperCountsFromStdout(stdout);
+  assert.ok(counts);
+  assert.equal(counts.executed, 14);
+  assert.equal(counts.passed, 14);
+  assert.equal(counts.failed, 0);
+});
+
+test('parseTamperCountsFromStdout: returns null on missing bounded line', () => {
+  const counts = coordinator.parseTamperCountsFromStdout('no bounded line here');
+  assert.equal(counts, null);
+});
+
+test('parseTamperCountsFromStdout: returns null on non-string input', () => {
+  assert.equal(coordinator.parseTamperCountsFromStdout(null), null);
+  assert.equal(coordinator.parseTamperCountsFromStdout(undefined), null);
+});
+
+test('captureTamperCountsIntoSummary: writes tamper fields onto summary', () => {
+  const summary = {};
+  const child = { stdout: 'M016_S08_VERIFY=pass branch=scope_revised protocol=runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json blockers=0 divisions=0 unexpected_mutations=0 tamper_classes_executed=14 tamper_classes_passed=14 tamper_classes_failed=0 exit_code=0\n' };
+  coordinator.captureTamperCountsIntoSummary(child, summary);
+  assert.equal(summary.tamperClassesExecuted, 14);
+  assert.equal(summary.tamperClassesPassed, 14);
+  assert.equal(summary.tamperClassesFailed, 0);
+});
+
+test('resolveRunPaths: rejects divergent explicit output path with bounded error code', () => {
+  const args = coordinator.parseArgs([
+    '--admission-out', 'custom/foo.json',
+    '--candidate-out', data.DEFAULTS.candidate_output,
+    '--closure-out', data.DEFAULTS.closure_output,
+    '--scope-decision-out', data.DEFAULTS.scope_decision_output,
+    '--negative-fixtures-out', data.DEFAULTS.negative_fixtures_output,
+    '--verify-protocol-out', data.DEFAULTS.verify_protocol_output,
+  ]);
+  let caught = null;
+  try {
+    coordinator.resolveRunPaths(args);
+  } catch (e) {
+    caught = e;
+  }
+  assert.ok(caught, 'resolveRunPaths must refuse non-canonical paths');
+  assert.equal(caught.code, 'M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-admission');
+});
+
+test('resolveRunPaths: accepts explicit canonical paths (same as defaults)', () => {
+  const args = coordinator.parseArgs([
+    '--admission-out', data.DEFAULTS.admission_output,
+    '--candidate-out', data.DEFAULTS.candidate_output,
+    '--closure-out', data.DEFAULTS.closure_output,
+    '--scope-decision-out', data.DEFAULTS.scope_decision_output,
+    '--negative-fixtures-out', data.DEFAULTS.negative_fixtures_output,
+    '--verify-protocol-out', data.DEFAULTS.verify_protocol_output,
+  ]);
+  const paths = coordinator.resolveRunPaths(args);
+  assert.equal(paths.admissionRel, data.DEFAULTS.admission_output);
+  assert.equal(paths.scopeDecisionRel, data.DEFAULTS.scope_decision_output);
+  assert.equal(paths.verifyProtocolRel, data.DEFAULTS.verify_protocol_output);
+});
+
+test('runScopeBranch: validates 14-fixture negative matrix (tamper_classes_executed=14 passed=14 failed=0)', { timeout: 90_000 }, () => {
+  // Use a real subprocess of the verifier via the scope branch path.
+  // The fixture catalog must be present at the canonical
+  // negative-fixtures path so the verifier's optional evaluation
+  // actually runs and emits tamper counts in its bounded stderr line.
+  const args = coordinator.parseArgs([
+    '--no-cleanup',  // don't remove canonical artifacts we did not create
+  ]);
+  // Force the catalog and scope decision into the canonical paths
+  // via the helpers, then call runScopeBranch to spawn the verifier
+  // subprocess. We do not touch admission/candidate/closure because
+  // runScopeBranch writes them itself.
+  const paths = {
+    workingRootAbs: data.DEFAULTS.output_dir + '/_m016-s08-coordinator-working',
+    workingRootRel: 'runtime-evidence/_m016-s08-coordinator-working',
+    admissionAbs: ROOT + '/' + data.DEFAULTS.admission_output,
+    admissionRel: data.DEFAULTS.admission_output,
+    candidateAbs: ROOT + '/' + data.DEFAULTS.candidate_output,
+    candidateRel: data.DEFAULTS.candidate_output,
+    closureAbs: ROOT + '/' + data.DEFAULTS.closure_output,
+    closureRel: data.DEFAULTS.closure_output,
+    scopeDecisionAbs: ROOT + '/' + data.DEFAULTS.scope_decision_output,
+    scopeDecisionRel: data.DEFAULTS.scope_decision_output,
+    negativeFixturesAbs: ROOT + '/' + data.DEFAULTS.negative_fixtures_output,
+    negativeFixturesRel: data.DEFAULTS.negative_fixtures_output,
+    verifyProtocolAbs: ROOT + '/' + data.DEFAULTS.verify_protocol_output,
+    verifyProtocolRel: data.DEFAULTS.verify_protocol_output,
+  };
+  args.admissionOutput = data.DEFAULTS.admission_output;
+  args.candidateOutput = data.DEFAULTS.candidate_output;
+  args.closureOutput = data.DEFAULTS.closure_output;
+  args.scopeDecisionOutput = data.DEFAULTS.scope_decision_output;
+  args.negativeFixturesOutput = data.DEFAULTS.negative_fixtures_output;
+  args.verifyProtocolOutput = data.DEFAULTS.verify_protocol_output;
+  args.force = true;
+  args.cleanup = false;
+  args.fakeTransport = false;
+  args.timeoutMs = 60_000;
+
+  const branchDecision = coordinator.selectBranch(args);
+  assert.equal(branchDecision.branch, 'scope_revised');
+  try {
+    const summary = coordinator.runScopeBranch(args, paths, branchDecision);
+    assert.equal(summary.closureKind, 'scope_revised');
+    assert.equal(summary.closureVerdict, 'NOT_PROVEN_SCOPE_REVISED');
+    assert.equal(summary.exitCode, 0, 'exit code must be 0');
+    assert.equal(summary.blockers, 0, 'blockers must be zero');
+    assert.equal(summary.unexpectedMutations, 0, 'unexpected mutations must be zero');
+    assert.equal(summary.divisions, 0);
+    assert.equal(summary.correlatedRuns, 0);
+    assert.equal(summary.tamperClassesExecuted, 14, '14-fixture matrix must execute');
+    assert.equal(summary.tamperClassesPassed, 14, 'all 14 fixture classes must pass');
+    assert.equal(summary.tamperClassesFailed, 0, 'zero fixture classes must fail');
+    // Canonical stdout line shape.
+    assert.match(summary.canonicalLine, /^M16-S08-VERIFY verdict=scope_revised:NOT_PROVEN_SCOPE_REVISED exit=0 blockers=0 divisions=0 correlated_runs=0 unexpected_mutations=0 replay_key_match=false$/);
+    // No candidate or closure must be materialised.
+    assert.equal(fs.existsSync(paths.candidateAbs), false, 'candidate must NOT be created in scope branch');
+    assert.equal(fs.existsSync(paths.closureAbs), false, 'closure must NOT be created in scope branch');
+    // Admission denial + scope decision + fixtures must all be present.
+    assert.ok(fs.existsSync(paths.admissionAbs), 'admission denial must be on disk');
+    assert.ok(fs.existsSync(paths.scopeDecisionAbs), 'scope decision must be on disk');
+    assert.ok(fs.existsSync(paths.negativeFixturesAbs), 'negative fixtures must be on disk');
+    assert.ok(fs.existsSync(paths.verifyProtocolAbs), 'verify protocol must be on disk');
+  } finally {
+    // Note: do not clean up canonical artifacts — they belong to the
+    // slice-level closure posture and are overwritten by the next run.
+  }
+});
+
+test('CLI scope-branch no-token end-to-end — validates 14/14/0 and rejects divergent paths', { timeout: 90_000 }, () => {
+  // Real subprocess end-to-end. First, run with default canonical
+  // paths and assert the bounded stderr summary carries tamper
+  // counts 14/14/0. Then, run with a divergent explicit path and
+  // assert the rejection happens BEFORE any child subprocess spawns.
+  const { spawnSync } = require('node:child_process');
+
+  // Canonical run: no token, no flags → scope branch with negative
+  // matrix validation.
+  // T05 left canonical artifacts on disk; --force allows this CLI
+  // smoke to overwrite them so we exercise the full no-token path.
+  const canonical = spawnSync(
+    'node',
+    ['scripts/finalize_m016_s08_native_seven_agent_integration.js', '--force'],
+    { cwd: ROOT, encoding: 'utf8', timeout: 60_000 }
+  );
+  assert.equal(canonical.status, 0,
+    'canonical no-token run must exit 0; stderr=\n' + canonical.stderr);
+  assert.match(canonical.stdout, /^M16-S08-VERIFY verdict=scope_revised:NOT_PROVEN_SCOPE_REVISED exit=0 blockers=0 divisions=0 correlated_runs=0 unexpected_mutations=0 replay_key_match=false\n?$/);
+  // Bounded stderr summary must carry tamper counts 14/14/0.
+  assert.match(canonical.stderr, /M16-S08-COORD/);
+  assert.match(canonical.stderr, /tamper_classes_executed=14/);
+  assert.match(canonical.stderr, /tamper_classes_passed=14/);
+  assert.match(canonical.stderr, /tamper_classes_failed=0/);
+  assert.match(canonical.stderr, /unexpected_mutations=0/);
+  assert.match(canonical.stderr, /source_pre_post_match=true/);
+  // Exit code field on stderr.
+  assert.match(canonical.stderr, /exit_code=0/);
+
+  // Divergent run: --admission-out custom/foo.json. Coordinator must
+  // REJECT BEFORE any child subprocess is spawned. We assert
+  // non-zero exit and a distinct M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL
+  // bounded stderr line; no canonical verdict line may be emitted.
+  const divergent = spawnSync(
+    'node',
+    [
+      'scripts/finalize_m016_s08_native_seven_agent_integration.js',
+      '--admission-out', 'custom/foo.json',
+    ],
+    { cwd: ROOT, encoding: 'utf8', timeout: 30_000 }
+  );
+  assert.notEqual(divergent.status, 0, 'divergent path must exit non-zero');
+  assert.match(divergent.stderr, /M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-admission/);
+  // Canonical verdict line must NOT be emitted when path is rejected.
+  assert.equal(/^M16-S08-VERIFY/.test(divergent.stdout), false,
+    'canonical verdict line must not be emitted on divergent path rejection; stdout=\n' + divergent.stdout);
 });

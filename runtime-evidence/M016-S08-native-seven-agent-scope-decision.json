@@ -6,7 +6,7 @@
   "milestone": "M016-txa3vu",
   "slice": "S08",
   "task": "T01",
-  "generated": "2026-07-22T00:00:00.000Z",
+  "generated": "2026-07-20T12:00:00.000Z",
   "closure_kind": "scope_revised",
   "closure_verdict": "NOT_PROVEN_SCOPE_REVISED",
   "boundary": "PREPARATION_ONLY",
@@ -21,7 +21,7 @@
     "primary_reason": "bounded native replay unavailable — operator gate token absent; no producer invocation attempted; no candidate/run materialised",
     "observed_prerequisite_state": "preflight unavailable — no operator confirmation",
     "secondary_blocker_codes": [],
-    "denial_observed_at": "2026-07-22T00:00:00.000Z"
+    "denial_observed_at": "2026-07-20T12:00:00.000Z"
   },
   "admission_denial_ref": "runtime-evidence/M016-S08-native-seven-agent-admission.json",
   "mutating_harness_invoked": false,

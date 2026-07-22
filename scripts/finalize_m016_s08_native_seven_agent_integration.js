@@ -182,12 +182,17 @@ function parseArgs(argv) {
     workingRoot: path.join(ROOT, data.DEFAULTS.output_dir, '_m016-s08-coordinator-working'),
     referenceTime: data.DEFAULTS.reference_time,
     seed: 'canonical',
-    admissionOutput: ADMISSION_OUTPUT,
-    candidateOutput: CANDIDATE_OUTPUT,
-    closureOutput: CLOSURE_OUTPUT,
-    scopeDecisionOutput: SCOPE_DECISION_OUTPUT,
-    negativeFixturesOutput: NEGATIVE_FIXTURES_OUTPUT,
-    verifyProtocolOutput: VERIFY_PROTOCOL_OUTPUT,
+    // T06 schema-safety gate: defaults MUST be the canonical relative
+    // patterns so assertCanonicalPathPattern (which is applied to the
+    // raw CLI value, before path.resolve/join) accepts them. Absolute
+    // defaults would silently fail the gate and break the no-token
+    // CLI smoke that exercises the canonical posture.
+    admissionOutput: data.DEFAULTS.admission_output,
+    candidateOutput: data.DEFAULTS.candidate_output,
+    closureOutput: data.DEFAULTS.closure_output,
+    scopeDecisionOutput: data.DEFAULTS.scope_decision_output,
+    negativeFixturesOutput: data.DEFAULTS.negative_fixtures_output,
+    verifyProtocolOutput: data.DEFAULTS.verify_protocol_output,
     timeoutMs: 60_000,
     force: false,
     cleanup: true,
@@ -483,12 +488,21 @@ function spawnProducer(args, branchDecision, paths) {
 }
 
 function spawnVerifierForScope(args, paths) {
+  // The scope branch MUST validate the canonical 14-fixture negative
+  // matrix, NOT suppress it. T06 lifts the suppression that previously
+  // skipped `evaluateNegativeFixtures` here, so the scope posture now
+  // produces tamper_classes_executed=14, tamper_classes_passed=14,
+  // tamper_classes_failed=0 in both the canonical stdout line and the
+  // bounded stderr summary line. The verifier refuses to publish the
+  // protocol sidecar when any fixture class fails, so the explicit
+  // fixture validation here is the gate that prevents a scope posture
+  // from being silently recorded as PROVEN without the negative
+  // matrix being actually executed.
   const verifierArgv = [
     VERIFIER_CLI,
     '--scope-decision-path', paths.scopeDecisionRel,
     '--negative-fixtures-path', paths.negativeFixturesRel,
     '--protocol-out', paths.verifyProtocolRel,
-    '--no-publish-negative-fixtures',
   ];
   if (args.force) verifierArgv.push('--force');
   return spawnSync('node', verifierArgv, {
@@ -723,6 +737,9 @@ function emitCanonicalVerdictLine(args, summary) {
 }
 
 function emitBoundedStderr(args, summary, branch) {
+  const tamperExecuted = typeof summary.tamperClassesExecuted === 'number' ? summary.tamperClassesExecuted : 0;
+  const tamperPassed = typeof summary.tamperClassesPassed === 'number' ? summary.tamperClassesPassed : 0;
+  const tamperFailed = typeof summary.tamperClassesFailed === 'number' ? summary.tamperClassesFailed : 0;
   const line = COORDINATOR_LINE_CLASS + ' '
     + 'branch=' + branch
     + ' closure=' + (summary.closureKind || 'unknown')
@@ -731,6 +748,9 @@ function emitBoundedStderr(args, summary, branch) {
     + ' unexpected_mutations=' + summary.unexpectedMutations
     + ' divisions=' + summary.divisions
     + ' replay_key_match=' + (summary.replayKeyMatch ? 'true' : 'false')
+    + ' tamper_classes_executed=' + tamperExecuted
+    + ' tamper_classes_passed=' + tamperPassed
+    + ' tamper_classes_failed=' + tamperFailed
     + ' canonical_line=' + JSON.stringify(summary.canonicalLine)
     + ' exit_code=' + summary.exitCode;
   process.stderr.write(line + '\n');
@@ -782,7 +802,13 @@ function runScopeBranch(args, paths, branchDecision) {
   summary.scopeDecisionCreated = true;
 
   // 3. Spawn verifier (scope branch — only --scope-decision-path).
+  // The verifier validates the canonical 14-fixture negative matrix
+  // and emits tamper_classes_executed/passed/failed counts in its
+  // bounded stderr summary. Capture them so the coordinator's own
+  // bounded stderr line mirrors the verdict and the protocol sidecar
+  // records the matrix outcome.
   const child = spawnVerifierForScope(args, paths);
+  captureTamperCountsIntoSummary(child, summary);
   if (child.error) {
     summary.exitCode = data.EXIT_CODES.RUNNER_FAILURE;
     summary.blockers = 1;
@@ -878,6 +904,7 @@ function runLiveBranch(args, paths, branchDecision) {
 
   // 4. Spawn verifier (live branch).
   const verifierChild = spawnVerifierForLive(args, paths);
+  captureTamperCountsIntoSummary(verifierChild, summary);
   if (verifierChild.error) {
     summary.demotedToScope = true;
     summary.demotionReason = 'verifier-spawn-failed: ' + verifierChild.error.message;
@@ -950,6 +977,7 @@ function demoteFromProducerFailure(args, paths, summary, producerExit, producerC
   summary.closureVerdict = data.CLOSURE_VERDICT_VALUES.NOT_PROVEN_SCOPE_REVISED;
   // Now spawn scope verifier to publish verify protocol sidecar.
   const verifierChild = spawnVerifierForScope(args, paths);
+  captureTamperCountsIntoSummary(verifierChild, summary);
   if (verifierChild.error) {
     summary.exitCode = data.EXIT_CODES.RUNNER_FAILURE;
     summary.blockers = 1;
@@ -1011,6 +1039,7 @@ function demoteToScope(args, paths, summary, kind, blockerCodes) {
 
   // Spawn scope verifier.
   const verifierChild = spawnVerifierForScope(args, paths);
+  captureTamperCountsIntoSummary(verifierChild, summary);
   if (verifierChild.error) {
     summary.exitCode = data.EXIT_CODES.RUNNER_FAILURE;
     summary.blockers = 1;
@@ -1053,7 +1082,79 @@ function buildCanonicalLineFromSummary(summary, args) {
 // against the runtime-evidence allowlist (refuse traversal/symlink escape).
 // ---------------------------------------------------------------------------
 
+function assertCanonicalPathPattern(relPath, kind) {
+  // T06 schema-safety gate. Every explicit CLI output path MUST match
+  // its canonical runtime-evidence/M016-S08-native-…json pattern; custom
+  // locations would silently break the verify-protocol schema's *_ref
+  // field regexes (which are anchored on those exact patterns), so we
+  // reject BEFORE spawning any child subprocess with the distinct
+  // M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-<kind> bounded error.
+  // The error.code is a stable machine-readable blocker; the error
+  // message names the canonical regex and the offending value so
+  // operators can correct the CLI invocation.
+  if (typeof relPath !== 'string' || relPath.length === 0) {
+    const err = new Error('explicit output path for ' + kind + ' must be a non-empty string');
+    err.code = data.BLOCKER_CODES.COORDINATOR_EXPLICIT_PATH_NON_CANONICAL(kind);
+    throw err;
+  }
+  if (!data.isCanonicalOutputPathKind(kind)) {
+    const err = new Error('unknown explicit output path kind: ' + kind);
+    err.code = data.BLOCKER_CODES.COORDINATOR_EXPLICIT_PATH_NON_CANONICAL(kind);
+    throw err;
+  }
+  if (!data.isCanonicalOutputPath(relPath, kind)) {
+    const err = new Error(
+      'explicit output path for ' + kind + ' must match canonical pattern '
+      + data.CANONICAL_OUTPUT_PATH_PATTERNS[kind].source
+      + ' (got: ' + relPath + ')'
+    );
+    err.code = data.BLOCKER_CODES.COORDINATOR_EXPLICIT_PATH_NON_CANONICAL(kind);
+    throw err;
+  }
+  return relPath;
+}
+
+// Verifier bounded stderr summary line carries the canonical
+// tamper-classes-executed/passed/failed counts. Capture them so the
+// coordinator's stderr summary can mirror the verifier's verdict.
+const VERIFIER_BOUNDS_LINE_PATTERN = /^M016_S08_VERIFY=(?<verdict>pass|fail)\s+branch=(?<branch>\S+)\s+protocol=\S+\s+blockers=\d+\s+divisions=\d+\s+unexpected_mutations=\d+\s+tamper_classes_executed=(?<executed>\d+)\s+tamper_classes_passed=(?<passed>\d+)\s+tamper_classes_failed=(?<failed>\d+)\s+exit_code=\d+/m;
+
+function parseTamperCountsFromStdout(stdout) {
+  if (typeof stdout !== 'string') return null;
+  const m = VERIFIER_BOUNDS_LINE_PATTERN.exec(stdout);
+  if (!m) return null;
+  return {
+    executed: Number(m.groups.executed),
+    passed: Number(m.groups.passed),
+    failed: Number(m.groups.failed),
+  };
+}
+
+function captureTamperCountsIntoSummary(child, summary) {
+  const counts = parseTamperCountsFromStdout(child && child.stdout);
+  if (!counts) return;
+  summary.tamperClassesExecuted = counts.executed;
+  summary.tamperClassesPassed = counts.passed;
+  summary.tamperClassesFailed = counts.failed;
+}
+
 function resolveRunPaths(args) {
+  // T06 schema-safety gate: every explicit output path MUST match
+  // its canonical runtime-evidence/M016-S08-native-…json pattern.
+  // Custom locations would silently break the verify-protocol
+  // schema's *_ref field regexes (which are anchored on those exact
+  // patterns), so we reject BEFORE any child subprocess is spawned
+  // with the distinct M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-<kind>
+  // bounded error. Defaults are exactly the canonical patterns, so
+  // default-arg invocations and explicit-canonical invocations both
+  // pass this gate; only divergent paths fail.
+  assertCanonicalPathPattern(args.admissionOutput, 'admission');
+  assertCanonicalPathPattern(args.candidateOutput, 'candidate');
+  assertCanonicalPathPattern(args.closureOutput, 'closure');
+  assertCanonicalPathPattern(args.scopeDecisionOutput, 'scope_decision');
+  assertCanonicalPathPattern(args.negativeFixturesOutput, 'negative_fixtures');
+  assertCanonicalPathPattern(args.verifyProtocolOutput, 'verify_protocol');
+
   const admissionAbs = resolveAbsolute(args.admissionOutput);
   const candidateAbs = resolveAbsolute(args.candidateOutput);
   const closureAbs = resolveAbsolute(args.closureOutput);
@@ -1105,7 +1206,25 @@ async function main(argv) {
     return;
   }
 
-  const paths = resolveRunPaths(args);
+  // T06 schema-safety gate: reject divergent explicit output paths
+  // BEFORE any child subprocess is spawned. The helper raises with a
+  // stable M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL-<kind> code so
+  // we can emit a distinct bounded stderr line and exit
+  // REJECTED_MALFORMED without invoking producer or verifier. This
+  // is the documented rejection path — custom paths cannot be
+  // supported safely because the verify-protocol schema's *_ref
+  // regexes are anchored on the canonical patterns.
+  let paths;
+  try {
+    paths = resolveRunPaths(args);
+  } catch (e) {
+    if (e && e.code && /^M16-S08-NATIVE-EXPLICIT-PATH-NON-CANONICAL/.test(String(e.code))) {
+      process.stderr.write(COORDINATOR_LINE_CLASS + ' ' + e.code + ': ' + e.message + '\n');
+      process.exit(data.EXIT_CODES.REJECTED_MALFORMED);
+      return;
+    }
+    throw e;
+  }
   ensureWorkingRoot(paths.workingRootAbs);
 
   const preHashes = collectPreHashes();
@@ -1196,6 +1315,10 @@ module.exports = {
   demoteFromProducerFailure,
   resolveRunPaths,
   buildCanonicalLineFromSummary,
+  assertCanonicalPathPattern,
+  parseTamperCountsFromStdout,
+  captureTamperCountsIntoSummary,
+  VERIFIER_BOUNDS_LINE_PATTERN,
   main,
   printHelp: function printHelp() { process.stdout.write(USAGE + '\n'); },
   ROOT,

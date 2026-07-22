@@ -6,13 +6,13 @@
   "milestone": "M016-txa3vu",
   "slice": "S08",
   "task": "T01",
-  "generated": "2026-07-22T00:00:00.000Z",
+  "generated": "2026-07-20T12:00:00.000Z",
   "operator_gate": {
     "token": "--confirm-native-seven-agent-replay",
     "confirmed": false,
     "confirmed_at": null,
     "source": "history",
-    "replay_key": "679389e12ab2a08fa4e92a4b807a75ebe410cb10f9b70e400e204b381dfe4a11"
+    "replay_key": "6e74da3950bc3a030361c68ab558a77a617addb6b6e1d5a49d416ba6580c4a3b"
   },
   "bos_identity_probe": {
     "required_company_paths": [
@@ -26,7 +26,7 @@
     ],
     "stale_marker_detected": false,
     "fresh_readonly_probe": false,
-    "probe_digest_sha256": "9657afcd36ee9a3a1625f206ba823f154ef94b90f523a3c60ccb250f222c5731",
+    "probe_digest_sha256": "a692929f113477d31ece463b677b9e5bdc1b117dac957afdb642bc7e3c5df45e",
     "expected_agent_count": 7,
     "observed_agent_count": 0,
     "agent_role_paths": [
@@ -55,7 +55,7 @@
     "recovery_keys": [
       "m016-s08-native-recovery-canonical"
     ],
-    "replay_key_sha256": "7ca9466291f3828037b0a51324bad9f73851336b06e905369b5c7f9dc1f690de"
+    "replay_key_sha256": "bfcdadf44b09e6d07a9176ccda12904d9ed47cc40e08d2e02f44ec42763ca445"
   },
   "mutation_plan": {
     "expected_root_mutation_count": 1,
@@ -75,7 +75,7 @@
   "network_allowlist": [
     "localhost"
   ],
-  "deadline": "2026-07-22T00:10:00.000Z",
+  "deadline": "2026-07-20T12:10:00.000Z",
   "expected_single_root_mutation": true,
   "sanitised": true,
   "raw_bodies_persisted": false,
