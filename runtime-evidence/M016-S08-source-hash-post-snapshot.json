@@ -1,0 +1,11 @@
+{
+  "produced_at": "2026-07-22T18:38:19.932Z",
+  "summary": {
+    "drift_count": 0,
+    "total_sources": 9,
+    "missing_post": [
+      "runtime-evidence/M015-S04-native-mission-contract.json"
+    ],
+    "drift": []
+  }
+}

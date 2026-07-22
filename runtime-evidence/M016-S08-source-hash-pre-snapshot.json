@@ -1,0 +1,40 @@
+{
+  "produced_at": "2026-07-22T18:37:46.195Z",
+  "snapshot": {
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json": {
+      "sha256": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
+      "bytes": 2804
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-admission.json": {
+      "sha256": "e07185e98b660c0c03093b8dfa64a0f06f8e2f4b7e20722551346f4103adfb34",
+      "bytes": 2143
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json": {
+      "sha256": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
+      "bytes": 577
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json": {
+      "sha256": "0ad23a9d60f9fdbf2b781a825d92dbab331ef8eef07f624b9e0576f965322554",
+      "bytes": 1344
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-bundle.json": {
+      "sha256": "a5767044baeeb879c37bd64fb38b8c5be7949b7fea7a8e0c828d3783088fdaa2",
+      "bytes": 77704
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-producer-protocol.json": {
+      "sha256": "1582092e5fbe8647d16839251242a50916a0c18ae2e3f09111bd845507484b49",
+      "bytes": 1482
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-negative-fixtures.json": {
+      "sha256": "1e8710ef8c76a708aeaf75f372773f5f248026b1cae65101b87b0b7e941d37eb",
+      "bytes": 20699
+    },
+    "runtime-evidence/M016-S04-div4-div5-canary-bundle.json": {
+      "sha256": "3f0dd1b187ccb66f80b6e1332809686bbcc3f73a7eb9d3a13274faf30ab883cd",
+      "bytes": 16426
+    }
+  },
+  "missing": [
+    "runtime-evidence/M015-S04-native-mission-contract.json"
+  ]
+}
