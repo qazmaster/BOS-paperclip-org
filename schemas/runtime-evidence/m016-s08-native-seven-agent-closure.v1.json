@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-closure.v1.json",
+  "title": "M016 S08 Native Seven Agent Closure v1",
+  "description": "Discriminated closure union. Exactly two acceptable closure shapes: closure_kind='live' + closure_verdict='PROVEN_BOUNDED_NATIVE' (with full fresh seven-of-seven graph and zero unexpected mutations), or closure_kind='scope_revised' + closure_verdict='NOT_PROVEN_SCOPE_REVISED' with boundary='PREPARATION_ONLY' (no live claim). Any other verdict or kind combination is forbidden.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "closure_id",
+    "closure_kind",
+    "closure_verdict",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "admission_ref",
+    "verifier_agreement",
+    "verifier_line",
+    "verifier_exit_code",
+    "verifier_blocker_codes",
+    "divisions_count",
+    "correlated_runs",
+    "unexpected_mutations",
+    "replay_key_match",
+    "replay_keys",
+    "source_refs",
+    "sanitised",
+    "raw_bodies_persisted",
+    "blockers",
+    "boundary",
+    "atomic_write"
+  ],
+  "properties": {
+    "schema_id": {"const": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-closure.v1.json"},
+    "schema_version": {"const": "v1"},
+    "closure_id": {"type": "string", "pattern": "^(m016-s08-native-seven-agent-closure-v1|m016-s08-native-seven-agent-closure-v1-[a-z0-9._-]{1,32})$"},
+    "milestone": {"const": "M016-txa3vu"},
+    "slice": {"const": "S08"},
+    "task": {"const": "T05"},
+    "generated": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "admission_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-(admission|scope-decision)\\.json$"},
+    "candidate_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-candidate\\.json$"},
+
+    "closure_kind": {"enum": ["live", "scope_revised"]},
+    "closure_verdict": {"enum": ["PROVEN_BOUNDED_NATIVE", "NOT_PROVEN_SCOPE_REVISED"]},
+
+    "boundary": {"const": "PREPARATION_ONLY"},
+
+    "verifier_agreement": {"type": "boolean"},
+    "verifier_line": {"type": "string", "pattern": "^M16-S08-VERIFY verdict=(live:PROVEN_BOUNDED_NATIVE|scope_revised:NOT_PROVEN_SCOPE_REVISED) exit=[0-9] blockers=[0-9]+ divisions=[0-9]+ correlated_runs=[0-9]+ unexpected_mutations=[0-9]+ replay_key_match=(true|false)$"},
+    "verifier_exit_code": {"type": "integer", "minimum": 0, "maximum": 9},
+    "verifier_blocker_codes": {
+      "type": "array",
+      "maxItems": 96,
+      "items": {"type": "string", "pattern": "^M16-S08-VERIFY-[A-Za-z0-9._-]+$"}
+    },
+
+    "divisions_count": {"type": "integer", "minimum": 0, "maximum": 7},
+    "correlated_runs": {"type": "integer", "minimum": 0, "maximum": 7},
+    "unexpected_mutations": {"type": "integer", "minimum": 0, "maximum": 64},
+    "replay_key_match": {"type": "boolean"},
+
+    "replay_keys": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["first_run_provenance_hash", "second_run_provenance_hash", "match", "byte_identical", "replay_key", "verified_at"],
+      "properties": {
+        "first_run_provenance_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "second_run_provenance_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "match": {"type": "boolean"},
+        "byte_identical": {"type": "boolean"},
+        "replay_key": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "verified_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"}
+      }
+    },
+
+    "source_refs": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^runtime-evidence/M0(?:15|16)-(S0[0-9]|native)-[A-Za-z0-9._/-]+\\.json$"}
+    },
+
+    "sanitised": {"const": true},
+    "raw_bodies_persisted": {"const": false},
+
+    "blockers": {
+      "type": "array",
+      "maxItems": 0,
+      "items": {"type": "object"}
+    },
+
+    "atomic_write": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "verified"],
+      "properties": {
+        "strategy": {"const": "rename_temp_into_place"},
+        "verified": {"const": true},
+        "temp_relpath": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-(closure|scope-decision)\\.json\\.tmp-[a-z0-9._-]{1,32}$"},
+        "final_relpath": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-(closure|scope-decision)\\.json$"}
+      }
+    },
+
+    "verifier_protocol_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-verify-protocol\\.json$"},
+    "negative_fixtures_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-negative-fixtures\\.json$"}
+  },
+  "allOf": [
+    {
+      "description": "Discriminated coherence: PROVEN_BOUNDED_NATIVE only with live kind and full graph; NOT_PROVEN_SCOPE_REVISED only with scope_revised kind.",
+      "if": {
+        "properties": {"closure_kind": {"const": "live"}},
+        "required": ["closure_kind"]
+      },
+      "then": {
+        "properties": {
+          "closure_verdict": {"const": "PROVEN_BOUNDED_NATIVE"},
+          "divisions_count": {"const": 7},
+          "correlated_runs": {"const": 7},
+          "unexpected_mutations": {"const": 0},
+          "verifier_agreement": {"const": true},
+          "replay_key_match": {"const": true},
+          "verifier_blocker_codes": {"maxItems": 0},
+          "candidate_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-candidate\\.json$"}
+        },
+        "required": ["candidate_ref"]
+      }
+    },
+    {
+      "if": {
+        "properties": {"closure_kind": {"const": "scope_revised"}},
+        "required": ["closure_kind"]
+      },
+      "then": {
+        "properties": {
+          "closure_verdict": {"const": "NOT_PROVEN_SCOPE_REVISED"},
+          "verifier_blocker_codes": {"minItems": 1}
+        }
+      }
+    }
+  ]
+}

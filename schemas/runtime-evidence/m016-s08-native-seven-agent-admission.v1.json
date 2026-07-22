@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-admission.v1.json",
+  "title": "M016 S08 Native Seven Agent Admission v1",
+  "description": "Operator-gated sanitised admission for a bounded native seven-agent Paperclip replay. The producer MAY receive the exact operator_gate_token only from the current invocation argv; env/comment/history are forbidden sources.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "admission_id",
+    "admission_kind",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "operator_gate",
+    "bos_identity_probe",
+    "source_refs",
+    "source_hashes",
+    "mission_keys",
+    "mutation_plan",
+    "network_allowlist",
+    "deadline",
+    "expected_single_root_mutation",
+    "sanitised",
+    "raw_bodies_persisted",
+    "blockers",
+    "producer_line"
+  ],
+  "properties": {
+    "schema_id": {"const": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-admission.v1.json"},
+    "schema_version": {"const": "v1"},
+    "admission_id": {"type": "string", "pattern": "^(m016-s08-native-seven-agent-admission-v1|m016-s08-native-seven-agent-admission-v1-[a-z0-9._-]{1,32})$"},
+    "admission_kind": {"const": "native-seven-agent-integration-admission"},
+    "milestone": {"const": "M016-txa3vu"},
+    "slice": {"const": "S08"},
+    "task": {"const": "T01"},
+    "generated": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "operator_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["token", "confirmed", "confirmed_at", "source"],
+      "properties": {
+        "token": {"const": "--confirm-native-seven-agent-replay"},
+        "confirmed": {"type": "boolean"},
+        "confirmed_at": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+        "source": {"enum": ["cli_argv", "env", "comment", "history"]},
+        "replay_key": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "bos_identity_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_company_paths", "forbidden_company_paths", "observed_company_paths", "stale_marker_detected", "fresh_readonly_probe", "expected_agent_count", "observed_agent_count"],
+      "properties": {
+        "required_company_paths": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+        "forbidden_company_paths": {"type": "array", "minItems": 0, "maxItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+        "observed_company_paths": {"type": "array", "minItems": 0, "maxItems": 8, "items": {"type": "string"}, "uniqueItems": true},
+        "stale_marker_detected": {"type": "boolean"},
+        "fresh_readonly_probe": {"type": "boolean"},
+        "probe_digest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "expected_agent_count": {"const": 7},
+        "observed_agent_count": {"type": "integer", "minimum": 0, "maximum": 32},
+        "agent_role_paths": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^(Div[1-7]\\.[A-Za-z]+|/BOS/agents/[A-Za-z0-9._-]{2,63})$"}
+        }
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^runtime-evidence/M0(?:15|16)-(S0[0-9]|native)-[A-Za-z0-9._/-]+\\.json$"}
+    },
+    "source_hashes": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_ref", "kind", "chain_role", "pre_hash_sha256", "post_hash_sha256", "unchanged"],
+        "properties": {
+          "source_ref": {"type": "string", "pattern": "^runtime-evidence/M0(?:15|16)-(S0[0-9]|native)-[A-Za-z0-9._/-]+\\.json$"},
+          "kind": {"type": "string", "minLength": 2, "maxLength": 64},
+          "chain_role": {"type": "string", "minLength": 2, "maxLength": 64},
+          "pre_hash_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "post_hash_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "unchanged": {"type": "boolean"}
+        }
+      }
+    },
+    "mission_keys": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mission_id", "idempotency_keys", "recovery_keys", "replay_key_sha256"],
+      "properties": {
+        "mission_id": {"type": "string", "pattern": "^m016-s08-native-mission-[a-z0-9._-]{2,63}$"},
+        "idempotency_keys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9._:-]{4,128}$"},
+          "uniqueItems": true
+        },
+        "recovery_keys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9._:-]{4,128}$"},
+          "uniqueItems": true
+        },
+        "replay_key_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "mutation_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_root_mutation_count", "expected_mutation_kind", "expected_mutation_subject", "forbidden_mutation_kinds"],
+      "properties": {
+        "expected_root_mutation_count": {"const": 1},
+        "expected_mutation_kind": {"const": "bounded_root_intake"},
+        "expected_mutation_subject": {"const": "paperclip_native_root_artifact"},
+        "forbidden_mutation_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 2, "maxLength": 64},
+          "uniqueItems": true
+        }
+      }
+    },
+    "network_allowlist": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {"type": "string", "pattern": "^(localhost|127\\.0\\.0\\.1|::1|https://[A-Za-z0-9._-]+)$"},
+      "uniqueItems": true
+    },
+    "deadline": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "expected_single_root_mutation": {"const": true},
+    "sanitised": {"const": true},
+    "raw_bodies_persisted": {"const": false},
+    "blockers": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "reason"],
+        "properties": {
+          "code": {"type": "string", "pattern": "^M16-S08-NATIVE-[A-Za-z0-9._-]+$"},
+          "reason": {"type": "string", "minLength": 1, "maxLength": 512}
+        }
+      }
+    },
+    "producer_line": {"const": "M16-S08-NATIVE"},
+    "denial_diagnostic_only": {"type": "boolean"}
+  }
+}
