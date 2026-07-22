@@ -1,0 +1,230 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-negative-fixtures.v1.json",
+  "schema_version": "v1",
+  "negative_fixtures_id": "m016-s08-native-seven-agent-negative-fixtures-v1",
+  "negative_fixtures_kind": "native-seven-agent-integration-negative-fixtures",
+  "milestone": "M016-txa3vu",
+  "slice": "S08",
+  "task": "T01",
+  "generated": "2026-07-22T18:38:33.000Z",
+  "fixtures": [
+    {
+      "fixture_id": "M16-S08-NATIVE-MISSING-CONFIRMATION-FIXTURE",
+      "label": "Missing operator confirmation (no --confirm-native-seven-agent-replay)",
+      "category": "admission",
+      "primary_blocker_code": "M16-S08-NATIVE-OPERATOR-GATE-DENIED",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "52268eeb4ce2b7e01746e8a86b70b3f4bb473bbe5a1c27d923fd5d82e7be02ff",
+      "expected_exit_code": 1,
+      "shape_summary": {
+        "tamper_field": "Missing operator confirmation (no --confirm-native-seven-agent-replay)",
+        "tamper_kind": "missing"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-STALE-IDENTITY-MARKER-FIXTURE",
+      "label": "Stale /BOSA identity marker present (forbidden stale UUID)",
+      "category": "identity",
+      "primary_blocker_code": "M16-S08-NATIVE-BOSA-STALE-MARKER-PRESENT",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "89d561ff002198ecc23b176e993d2ace6828140abe06618c2c501bc5cada46a9",
+      "expected_exit_code": 4,
+      "shape_summary": {
+        "tamper_field": "Stale /BOSA identity marker present (forbidden stale UUID)",
+        "tamper_kind": "wrong_value"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-WRONG-RUN-OWNER-FIXTURE",
+      "label": "Mission / idempotency / recovery key owner does not match admission",
+      "category": "correlation",
+      "primary_blocker_code": "M16-S08-NATIVE-WRONG-RUN-OWNER-mission_id",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "04dada8367c27701ffa4bf66eed33ce164e4aad768100818ab3c75bd3793fc87",
+      "expected_exit_code": 5,
+      "shape_summary": {
+        "tamper_field": "Mission / idempotency / recovery key owner does not match admission",
+        "tamper_kind": "mismatch"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-DUPLICATE-DIVISION-FIXTURE",
+      "label": "Two agent_runs target the same DivN role (duplicate division)",
+      "category": "graph",
+      "primary_blocker_code": "M16-S08-NATIVE-DIVISION-DUPLICATE-Div3",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "66384b09c0e09fd42043a5d2b279d7b6d0eea92159264f7e993fa6e6e8c0207e",
+      "expected_exit_code": 2,
+      "shape_summary": {
+        "tamper_field": "Two agent_runs target the same DivN role (duplicate division)",
+        "tamper_kind": "duplicate",
+        "tamper_target_division": "Div3"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-MISSING-READBACK-FIXTURE",
+      "label": "No agent_run for one of Div1..Div7 (missing readback)",
+      "category": "graph",
+      "primary_blocker_code": "M16-S08-NATIVE-READBACK-MISSING-Div5",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "6608294da782013bab4c716c526de1e90a226a3c0026583472abe75b8123d928",
+      "expected_exit_code": 2,
+      "shape_summary": {
+        "tamper_field": "No agent_run for one of Div1..Div7 (missing readback)",
+        "tamper_kind": "duplicate",
+        "tamper_target_division": "Div5"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-NON-TERMINAL-READBACK-FIXTURE",
+      "label": "Agent_run status not in {SUCCEEDED,FAILED,ABANDONED}",
+      "category": "terminality",
+      "primary_blocker_code": "M16-S08-NATIVE-NON-TERMINAL-READBACK-Div4",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "e6087381c96a7dc96eeb631e8a0d06487a71c278c249d9d2f6ef48688adcad75",
+      "expected_exit_code": 2,
+      "shape_summary": {
+        "tamper_field": "Agent_run status not in {SUCCEEDED,FAILED,ABANDONED}",
+        "tamper_kind": "non_terminal",
+        "tamper_target_division": "Div4"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-SOURCE-DRIFT-FIXTURE",
+      "label": "Allowlisted M015/S05 source pre_hash_sha256 != post_hash_sha256",
+      "category": "provenance",
+      "primary_blocker_code": "M16-S08-NATIVE-SOURCE-HASH-DRIFT-m015_native_mission_contract",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "62b459ed39e0d84f3a053507ccbb5e15ceb2bbbbaa81daffc4f630a881371754",
+      "expected_exit_code": 5,
+      "shape_summary": {
+        "tamper_field": "Allowlisted M015/S05 source pre_hash_sha256 != post_hash_sha256",
+        "tamper_kind": "drift",
+        "tamper_target_chain_role": "m015_native_mission_contract"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-UNEXPECTED-MUTATION-FIXTURE",
+      "label": "unexpected_mutation_count > 0 (extra or forbidden mutation)",
+      "category": "mutation",
+      "primary_blocker_code": "M16-S08-NATIVE-MUTATION-UNEXPECTED-PRESENT-rollback",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "29adceabb631e6049658979f2ddd50d2f75fe6851b89ea44c2c70328b14171ca",
+      "expected_exit_code": 7,
+      "shape_summary": {
+        "tamper_field": "unexpected_mutation_count > 0 (extra or forbidden mutation)",
+        "tamper_kind": "forbidden_field"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-TIMEOUT-FIXTURE",
+      "label": "Root intake or readback exceeded bounded polling budget",
+      "category": "timing",
+      "primary_blocker_code": "M16-S08-NATIVE-TIMEOUT-readback",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "b059d4c6cb4f31e2110ef1c461a63ed1cfe79fd1a314257adb00c466a8487824",
+      "expected_exit_code": 2,
+      "shape_summary": {
+        "tamper_field": "Root intake or readback exceeded bounded polling budget",
+        "tamper_kind": "timeout"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-RAW-BODY-FIXTURE",
+      "label": "Candidate payload leaks raw_body or raw_result_json_result",
+      "category": "redaction",
+      "primary_blocker_code": "M16-S08-NATIVE-REDACTION-LEAK-raw_body",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "b55f147e29d55c8b179366d16c55584acd6e9004935dfa658e70d9f19deb63ea",
+      "expected_exit_code": 6,
+      "shape_summary": {
+        "tamper_field": "Candidate payload leaks raw_body or raw_result_json_result",
+        "tamper_kind": "raw_payload"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-RAW-TOKEN-FIXTURE",
+      "label": "Candidate payload leaks raw admission token or operator_token value",
+      "category": "redaction",
+      "primary_blocker_code": "M16-S08-NATIVE-REDACTION-LEAK-raw_token",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "09d4fd68d93f1e46bf6a2f0975d32b93a5b3a1ea084d35ed19cf6c297077a496",
+      "expected_exit_code": 6,
+      "shape_summary": {
+        "tamper_field": "Candidate payload leaks raw admission token or operator_token value",
+        "tamper_kind": "raw_payload"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-SYNTHETIC-BOS-FIXTURE",
+      "label": "Candidate payload contains result_json.bos (synthetic BOS claim)",
+      "category": "redaction",
+      "primary_blocker_code": "M16-S08-NATIVE-SYNTHETIC-BOS-DETECTED",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "cb6649fd56fd2637c544aa064778d56bf390491a74b17c92f48d2baca28fa293",
+      "expected_exit_code": 6,
+      "shape_summary": {
+        "tamper_field": "Candidate payload contains result_json.bos (synthetic BOS claim)",
+        "tamper_kind": "raw_payload"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-BRANCH-MISMATCH-FIXTURE",
+      "label": "Closure carries closure_kind=live but candidate data is scope_revised",
+      "category": "closure",
+      "primary_blocker_code": "M16-S08-NATIVE-CLOSURE-KIND-MISMATCH-live",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "bd28a433b7837d9b0bf414f2b85da46a933689d8b6dae0fd8e99bae6ef029b16",
+      "expected_exit_code": 3,
+      "shape_summary": {
+        "tamper_field": "Closure carries closure_kind=live but candidate data is scope_revised",
+        "tamper_kind": "mismatch"
+      }
+    },
+    {
+      "fixture_id": "M16-S08-NATIVE-REPLAY-KEY-MISMATCH-FIXTURE",
+      "label": "first_run_provenance_hash != second_run_provenance_hash on replay",
+      "category": "replay",
+      "primary_blocker_code": "M16-S08-NATIVE-REPLAY-KEY-MISMATCH",
+      "closure_kind_target": "scope_revised",
+      "shape_digest_sha256": "22e1e4b1489fb198122f62b933af3f80b67f8e5800c6d4a535e9e49afc142f47",
+      "expected_exit_code": 5,
+      "shape_summary": {
+        "tamper_field": "first_run_provenance_hash != second_run_provenance_hash on replay",
+        "tamper_kind": "drift"
+      }
+    }
+  ],
+  "fixture_count": 14,
+  "categories": [
+    "admission",
+    "identity",
+    "correlation",
+    "graph",
+    "terminality",
+    "provenance",
+    "mutation",
+    "timing",
+    "redaction",
+    "closure",
+    "replay"
+  ],
+  "all_blockers_unique": true,
+  "sanitised": true,
+  "raw_bodies_persisted": false,
+  "blockers": [],
+  "producer_line": "M16-S08-NATIVE",
+  "atomic_write": {
+    "strategy": "rename_temp_into_place",
+    "verified": true,
+    "temp_relpath": "runtime-evidence/M016-S08-native-seven-agent-negative-fixtures.json.tmp-canonical",
+    "final_relpath": "runtime-evidence/M016-S08-native-seven-agent-negative-fixtures.json"
+  },
+  "source_refs": [
+    "runtime-evidence/M015-S04-native-mission-contract.json",
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+    "runtime-evidence/M016-S05-seven-division-replay-admission.json",
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
+    "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json"
+  ]
+}
