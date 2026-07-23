@@ -712,7 +712,7 @@ test('y1: builder module source does not import a verifier file', () => {
 // ---------------------------------------------------------------------------
 // (z) Real-project build emits the documented CLI signature
 // ---------------------------------------------------------------------------
-test('z1: real-project build (against actual runtime-evidence/) emits a builder CLI line with the documented fields', () => {
+test('z1: real-project build (against actual runtime-evidence/, T05-restored S08 closure on disk) emits a builder CLI line with the documented fields', () => {
   const outDir = makeRootedTmp('real');
   const tmpOut = path.join(outDir, 'review.md');
   try {
@@ -729,11 +729,14 @@ test('z1: real-project build (against actual runtime-evidence/) emits a builder 
     // Output path is reported relative to ROOT, so it always starts with `.gsd/`.
     assert.match(cliLine, /output_path=\.gsd\//);
     assert.match(cliLine, /output_sha256=[a-f0-9]{64}/);
-    // Real project: S08 closure is missing on disk, so build is fail-closed
-    assert.equal(res.status, 2);
-    assert.match(cliLine, /verdict=FAIL_CLOSED/);
-    assert.match(cliLine, /exit=2/);
-    assert.match(cliLine, /block_count=[1-9][0-9]*/);
+    // Real project (post-T05): S08 closure source has been restored under
+    // runtime-evidence/M016-S08-native-seven-agent-closure.json, so all 11
+    // allowlisted sources are present, the contract evaluates cleanly, and
+    // the builder exits 0 with verdict=PREPARATION_ONLY.
+    assert.equal(res.status, 0, 'builder must exit 0 when all 11 allowlisted sources are readable; got status=' + res.status + ' stderr=' + (res.stderr || '').slice(0, 240));
+    assert.match(cliLine, /verdict=PREPARATION_ONLY/);
+    assert.match(cliLine, /exit=0/);
+    assert.match(cliLine, /block_count=0/);
   } finally { cleanupRoot(outDir); }
 });
 

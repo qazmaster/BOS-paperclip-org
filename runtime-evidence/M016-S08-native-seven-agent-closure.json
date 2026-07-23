@@ -1,0 +1,134 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-closure.v1.json",
+  "schema_version": "v1",
+  "closure_id": "m016-s08-native-seven-agent-closure-v1",
+  "closure_kind": "native-seven-agent-integration-closure",
+  "milestone": "M016-txa3vu",
+  "slice": "S08",
+  "task": "T05",
+  "generated": "2026-07-23T12:00:00.000Z",
+  "closure_verdict": "NOT_PROVEN_SCOPE_REVISED",
+  "boundary": "PREPARATION_ONLY",
+  "stage_b_recommendation": "adapter-native proof integration, deferred-unvalidated",
+  "scope_decision_ref": "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json",
+  "admission_ref": "runtime-evidence/M016-S08-native-seven-agent-admission.json",
+  "verify_protocol_ref": "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json",
+  "negative_fixtures_ref": "runtime-evidence/M016-S08-native-seven-agent-negative-fixtures.json",
+  "scope_decision_summary": {
+    "primary_blocker_code": "M16-S08-NATIVE-OPERATOR-GATE-DENIED",
+    "primary_reason": "bounded native replay unavailable — operator gate token absent; no producer invocation attempted; no candidate/run materialised",
+    "observed_prerequisite_state": "preflight unavailable — no operator confirmation",
+    "secondary_blocker_codes": [],
+    "denial_observed_at": "2026-07-20T12:00:00.000Z"
+  },
+  "stage_b_evidence_state": "deferred-unvalidated",
+  "bos_grade_contract_proof_state": "NOT_PROVEN_MISSING_RESULT_JSON_BOS",
+  "mutating_harness_invoked": false,
+  "candidate_created": false,
+  "agent_runs_materialised": 0,
+  "division_count": 0,
+  "correlated_runs": 0,
+  "unexpected_mutations": 0,
+  "replay_key_match": false,
+  "operator_gate": {
+    "token": "--confirm-native-seven-agent-replay",
+    "confirmed": false,
+    "confirmed_at": null,
+    "source": "history",
+    "replay_key": "6e74da3950bc3a030361c68ab558a77a617addb6b6e1d5a49d416ba6580c4a3b"
+  },
+  "bos_identity_probe": {
+    "required_company_paths": [
+      "/BOS"
+    ],
+    "forbidden_company_paths": [
+      "/BOSA"
+    ],
+    "observed_company_paths": [
+      "/BOS"
+    ],
+    "stale_marker_detected": false,
+    "fresh_readonly_probe": false,
+    "probe_digest_sha256": "a692929f113477d31ece463b677b9e5bdc1b117dac957afdb642bc7e3c5df45e",
+    "expected_agent_count": 7,
+    "observed_agent_count": 0,
+    "agent_role_paths": [
+      "Div1.HCO",
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External",
+      "Div7.MissionControl"
+    ]
+  },
+  "mission_keys": {
+    "mission_id": "m016-s08-native-mission-canonical",
+    "idempotency_keys": [
+      "m016-s08-native-idempotency-canonical"
+    ],
+    "recovery_keys": [
+      "m016-s08-native-recovery-canonical"
+    ],
+    "replay_key_sha256": "bfcdadf44b09e6d07a9176ccda12904d9ed47cc40e08d2e02f44ec42763ca445"
+  },
+  "mutation_plan": {
+    "expected_root_mutation_count": 1,
+    "expected_mutation_kind": "bounded_root_intake",
+    "expected_mutation_subject": "paperclip_native_root_artifact",
+    "forbidden_mutation_kinds": [
+      "rollback",
+      "delete",
+      "update_existing",
+      "mass_intake",
+      "plugin_state_change",
+      "approval_state_change",
+      "external_send",
+      "result_json_bos_injection"
+    ]
+  },
+  "network_allowlist": [
+    "localhost"
+  ],
+  "deadline": "2026-07-20T12:10:00.000Z",
+  "expected_single_root_mutation": true,
+  "indemnity_groups": [
+    "scope_revised",
+    "admission",
+    "identity",
+    "verify_protocol",
+    "negative_fixtures",
+    "stage_b",
+    "replay",
+    "mutation",
+    "provenance",
+    "redaction"
+  ],
+  "source_refs": [
+    "runtime-evidence/M015-S04-native-mission-contract.json",
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+    "runtime-evidence/M016-S05-seven-division-replay-admission.json",
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
+    "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json",
+    "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json",
+    "runtime-evidence/M016-S08-native-seven-agent-admission.json",
+    "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json",
+    "runtime-evidence/M016-S08-native-seven-agent-negative-fixtures.json"
+  ],
+  "sanitised": true,
+  "raw_bodies_persisted": false,
+  "blockers": [
+    {
+      "code": "M16-S08-NATIVE-OPERATOR-GATE-DENIED",
+      "reason": "bounded native replay unavailable — operator gate token absent; no producer invocation attempted; no candidate/run materialised"
+    }
+  ],
+  "producer_line": "M16-S08-NATIVE",
+  "denial_diagnostic_only": true,
+  "atomic_write": {
+    "strategy": "rename_temp_into_place",
+    "verified": true,
+    "temp_relpath": "runtime-evidence/M016-S08-native-seven-agent-closure.json.tmp-m016-s09-t05",
+    "final_relpath": "runtime-evidence/M016-S08-native-seven-agent-closure.json"
+  }
+}
