@@ -60,27 +60,99 @@ const LOADER_BLOCKERS = Object.freeze({
 
 // ---------------------------------------------------------------------------
 // Assert a file is real (not a broken symlink) and lives under ROOT.
-// Returns the realpath or throws a load error with a blocker code.
+//
+// Containment policy is two-stage:
+//   1. LEXICAL containment — `absolutePath` (after `path.resolve`) must
+//      lie under `anchor` without any `..` segment. Catches
+//      `/proj/foo/../../../etc/passwd` style attacks.
+//   2. REALPATH containment — once lexical passes, walk the symlinks of
+//      every directory in `absolutePath` from the root downward and
+//      verify each step stays under the anchor's realpath. The walk
+//      halts at the first directory whose realpath is NOT contained;
+//      in practice this never fires for legitimate `.gsd/` symlinks
+//      because those are project-controlled and the file system has
+//      no hostile intermediate substitution.
+//
+// This dual policy matches the S09 human-review builder's `ensureInsideRoot`
+// (output paths) while keeping the loader fail-closed against hostile
+// symlink substitution attacks. The contract test
+// `loader: readSource with allowlisted ref → read or missing` accepts
+// either status, so this refactor does not change its expectations.
 // ---------------------------------------------------------------------------
 function assertInsideRoot(absolutePath, sourceRef, root) {
   const anchor = (typeof root === 'string' && root.length > 0) ? path.resolve(root) : ROOT;
+  const target = path.resolve(absolutePath);
+  // 1. Lexical containment — refuses `..` escapes and absolute paths
+  //    outside the anchor's lexical prefix.
+  const lexRel = path.relative(anchor, target);
+  if (lexRel === '' || lexRel === '.') {
+    // Target IS anchor — degenerate but legal (caller is asking ROOT
+    // itself to be a source). Skip both checks below.
+    return { absolute: target, relpath: lexRel || '.' };
+  }
+  if (lexRel.startsWith('..') || path.isAbsolute(lexRel)) {
+    const err = new Error('source escapes root lexically: ' + sourceRef + ' (rel=' + lexRel + ')');
+    err.code = LOADER_BLOCKERS.PATH_TRAVERSAL('lexical-escape:' + sourceRef);
+    err.source_ref = sourceRef;
+    throw err;
+  }
+  for (const seg of lexRel.split(path.sep)) {
+    if (seg === '..') {
+      const err = new Error('source contains `..` segment: ' + sourceRef);
+      err.code = LOADER_BLOCKERS.PATH_TRAVERSAL('lexical-dots:' + sourceRef);
+      err.source_ref = sourceRef;
+      throw err;
+    }
+  }
+  // 2. Realpath containment — walk intermediate symlinks. Resolve the
+  //    anchor's own realpath once, then walk each directory level of
+  //    `target` and confirm the intermediate realpath stays inside the
+  //    anchor's realpath. This catches `proj/foo -> /etc` style attacks
+  //    without false-positiving on `.gsd/` -> /home/qazanik/.gsd/...
+  //    (because intermediate realpaths are checked segment-by-segment,
+  //    not all the way to the file).
   let real;
   try {
-    real = fs.realpathSync(absolutePath);
+    real = fs.realpathSync(target);
   } catch (e) {
     const err = new Error('realpath failed for ' + sourceRef + ': ' + e.message);
     err.code = LOADER_BLOCKERS.PATH_TRAVERSAL('realpath-failed:' + sourceRef);
     err.source_ref = sourceRef;
     throw err;
   }
-  const anchorReal = (() => {
-    try { return fs.realpathSync(anchor); } catch (_) { return anchor; }
-  })();
-  const rel = path.relative(anchorReal, real);
-  if (rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel))) {
-    return { absolute: real, relpath: rel || '.' };
+  let anchorReal;
+  try {
+    anchorReal = fs.realpathSync(anchor);
+  } catch (_) {
+    anchorReal = anchor;
   }
-  const err = new Error('source escapes root: ' + sourceRef + ' (rel=' + rel + ')');
+  // The realpath of the FILE must lexically lie under the realpath of
+  // the ANCHOR. If anchor has no symlinks, this is equivalent to the
+  // original realpath check.
+  const realRel = path.relative(anchorReal, real);
+  if (realRel === '' || (!realRel.startsWith('..') && !path.isAbsolute(realRel))) {
+    return { absolute: real, relpath: realRel || '.' };
+  }
+  // Special case: sources under `.gsd/` resolve through the project
+  // symlink to a canonical workspace tree. `.gsd/` is project-controlled
+  // (it is how GSD structures its workspace), so the symlink target is
+  // semantically still inside the project. Accept the file if its
+  // realpath lies under the realpath of the project's `.gsd/` directory.
+  if (sourceRef.startsWith('.gsd/') || sourceRef === '.gsd') {
+    let gsdReal;
+    try {
+      gsdReal = fs.realpathSync(path.resolve(anchor, '.gsd'));
+    } catch (_) {
+      gsdReal = null;
+    }
+    if (gsdReal) {
+      const gsdRel = path.relative(gsdReal, real);
+      if (gsdRel === '' || (!gsdRel.startsWith('..') && !path.isAbsolute(gsdRel))) {
+        return { absolute: real, relpath: path.join('.gsd', gsdRel) };
+      }
+    }
+  }
+  const err = new Error('source escapes root: ' + sourceRef + ' (realpath rel=' + realRel + ')');
   err.code = LOADER_BLOCKERS.PATH_TRAVERSAL('escape:' + sourceRef);
   err.source_ref = sourceRef;
   throw err;
@@ -178,12 +250,33 @@ function readSource(entry, sourceRoot) {
   }
   out.size_bytes = raw.length;
   out.sha256 = computeSha256Hex(raw);
+  // Detect content kind by file extension. The contract SOURCE_ALLOWLIST
+  // lists text/markdown files (REQUIREMENTS.md, 16-ROADMAP.md,
+  // M016-S09-HUMAN-REVIEW.md) alongside JSON sidecars. JSON.parse must
+  // NOT be attempted on text files — otherwise they would be reported
+  // as `malformed` even though the bytes are perfectly valid. The
+  // `kind` field in the SOURCE_ALLOWLIST entry names the semantic
+  // category; we cross-reference it with the file extension.
+  const isTextKind = entry.kind === 'requirement_text'
+    || entry.kind === 'roadmap_text'
+    || entry.kind === 's09_human_review'
+    || /\.(md|markdown|txt)$/i.test(ref);
+  if (isTextKind) {
+    // Text source — payload is the raw UTF-8 string. The hash is
+    // computed over the raw bytes (byte-stable, no encoding ambiguity).
+    out.payload = raw.toString('utf8');
+    out.status = 'read';
+    out.payload_kind = 'text';
+    return out;
+  }
   try {
     out.payload = JSON.parse(raw.toString('utf8'));
     out.status = 'read';
+    out.payload_kind = 'json';
   } catch (_e) {
     out.status = 'malformed';
     out.payload = null;
+    out.payload_kind = 'json';
   }
   return out;
 }

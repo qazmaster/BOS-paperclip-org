@@ -1,0 +1,435 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s10-seven-division-acceptance-contract.v1.json",
+  "schema_version": "v1",
+  "schema_namespace": "m016-s10-seven-division-acceptance-contract-v1",
+  "acceptance_contract_id": "m016-s10-seven-division-acceptance-contract-v1",
+  "acceptance_contract_kind": "seven-division-acceptance-contract",
+  "acceptance_contract_digest": "a0ad4d83cf639b56821fd1752c13a00b90c9f80e80af24d7e3ed9dc5fb694961",
+  "milestone": "M016-txa3vu",
+  "slice": "S10",
+  "task": "T02",
+  "builder_line_class": "M16-S10-BUILD",
+  "canonical_protocol": "PROTOCOL-M16-S10-SEVEN-DIVISION-ACCEPTANCE-BUILD-V1",
+  "generated": "2026-07-23T12:00:00.000Z",
+  "reference_time": "2026-07-23T12:00:00.000Z",
+  "output_path": "runtime-evidence/M016-S10-seven-division-acceptance-contract.json",
+  "section_count": 6,
+  "section_ids": [
+    "r041_acceptance",
+    "milestone_criterion",
+    "s05_canonical_verdicts",
+    "s08_scope_decision",
+    "not_proven_preservation",
+    "canonical_acceptance_outcome"
+  ],
+  "source_count": 15,
+  "source_refs": [
+    ".gsd/REQUIREMENTS.md",
+    ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md",
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+    "runtime-evidence/M016-S05-seven-division-replay-bundle.json",
+    "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json",
+    "runtime-evidence/M016-S05-seven-division-replay-producer-protocol.json",
+    "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json",
+    "runtime-evidence/M016-S05-seven-division-replay-admission.json",
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
+    "runtime-evidence/M016-S06-proof-reconciliation.json",
+    "runtime-evidence/M016-S06-capability-reconciliation.json",
+    "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json",
+    "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json",
+    "runtime-evidence/M016-S08-native-seven-agent-closure.json",
+    "runtime-evidence/M016-S09-HUMAN-REVIEW.md"
+  ],
+  "source_hashes": {
+    ".gsd/REQUIREMENTS.md": "e230d361882298bb62c0f875e308d8aa09e288858863d8f277ae8b1b61668d41",
+    ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md": "0bdd250f118203453e1b72cd17c4d70c6f156344240aa5698eba306d13da90e2",
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
+    "runtime-evidence/M016-S05-seven-division-replay-bundle.json": "a5767044baeeb879c37bd64fb38b8c5be7949b7fea7a8e0c828d3783088fdaa2",
+    "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json": "b7f1c8584bc8243c693fde4d8e8b75992fb578c5fac8cd8d6c3659d6a4c0b1a0",
+    "runtime-evidence/M016-S05-seven-division-replay-producer-protocol.json": "1582092e5fbe8647d16839251242a50916a0c18ae2e3f09111bd845507484b49",
+    "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json": "0ad23a9d60f9fdbf2b781a825d92dbab331ef8eef07f624b9e0576f965322554",
+    "runtime-evidence/M016-S05-seven-division-replay-admission.json": "e07185e98b660c0c03093b8dfa64a0f06f8e2f4b7e20722551346f4103adfb34",
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
+    "runtime-evidence/M016-S06-proof-reconciliation.json": "4b533351f39f15d882829c0f8b9d15700d694f7a4dd48ebc680a2fb2781b82dd",
+    "runtime-evidence/M016-S06-capability-reconciliation.json": "afb4417183914e746513b85594f6741bed38d4262c6bc0268c0fb24e0c133f47",
+    "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json": "fbd44cffa4a853646f03189180590bd15684df47b7572b6279e484f698461429",
+    "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json": "06a4368c544b30387b2471799dccb4496cbc603a9c94e1717536466ba0b7d935",
+    "runtime-evidence/M016-S08-native-seven-agent-closure.json": "279c246d8456fea2dcda5349184fbef1395fbb3564be0a740d55cb3dbd288a62",
+    "runtime-evidence/M016-S09-HUMAN-REVIEW.md": "fde33d4a2f153bc8759fd690a9d7ce0e9fa75ca6bc9f9fb9380d50d1950596df"
+  },
+  "source_snapshots": {
+    ".gsd/REQUIREMENTS.md": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 47367,
+      "sha256": "e230d361882298bb62c0f875e308d8aa09e288858863d8f277ae8b1b61668d41",
+      "chain_role": "r041_text",
+      "review_section": "r041_acceptance",
+      "required": true,
+      "status": "read"
+    },
+    ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 6525,
+      "sha256": "0bdd250f118203453e1b72cd17c4d70c6f156344240aa5698eba306d13da90e2",
+      "chain_role": "milestone_criterion_text",
+      "review_section": "milestone_criterion",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 2804,
+      "sha256": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
+      "chain_role": "m015_baseline",
+      "review_section": "s05_canonical_verdicts",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-bundle.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 77704,
+      "sha256": "a5767044baeeb879c37bd64fb38b8c5be7949b7fea7a8e0c828d3783088fdaa2",
+      "chain_role": "s05_replay_bundle",
+      "review_section": "s05_canonical_verdicts",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 5862,
+      "sha256": "b7f1c8584bc8243c693fde4d8e8b75992fb578c5fac8cd8d6c3659d6a4c0b1a0",
+      "chain_role": "s05_replay_worksheet",
+      "review_section": "s05_canonical_verdicts",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-producer-protocol.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 1482,
+      "sha256": "1582092e5fbe8647d16839251242a50916a0c18ae2e3f09111bd845507484b49",
+      "chain_role": "s05_replay_producer_protocol",
+      "review_section": "s05_canonical_verdicts",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 1344,
+      "sha256": "0ad23a9d60f9fdbf2b781a825d92dbab331ef8eef07f624b9e0576f965322554",
+      "chain_role": "s05_replay_verify_protocol",
+      "review_section": "s05_canonical_verdicts",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-admission.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 2143,
+      "sha256": "e07185e98b660c0c03093b8dfa64a0f06f8e2f4b7e20722551346f4103adfb34",
+      "chain_role": "s05_replay_admission",
+      "review_section": "s05_canonical_verdicts",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 577,
+      "sha256": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
+      "chain_role": "s05_replay_probe_run",
+      "review_section": "s05_canonical_verdicts",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S06-proof-reconciliation.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 20959,
+      "sha256": "4b533351f39f15d882829c0f8b9d15700d694f7a4dd48ebc680a2fb2781b82dd",
+      "chain_role": "s06_reconciliation",
+      "review_section": "s05_canonical_verdicts",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S06-capability-reconciliation.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 18916,
+      "sha256": "afb4417183914e746513b85594f6741bed38d4262c6bc0268c0fb24e0c133f47",
+      "chain_role": "s06_capability_reconciliation",
+      "review_section": "not_proven_preservation",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 2464,
+      "sha256": "fbd44cffa4a853646f03189180590bd15684df47b7572b6279e484f698461429",
+      "chain_role": "s08_scope_decision",
+      "review_section": "s08_scope_decision",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 3013,
+      "sha256": "06a4368c544b30387b2471799dccb4496cbc603a9c94e1717536466ba0b7d935",
+      "chain_role": "s08_verify_protocol",
+      "review_section": "s08_scope_decision",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S08-native-seven-agent-closure.json": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 4908,
+      "sha256": "279c246d8456fea2dcda5349184fbef1395fbb3564be0a740d55cb3dbd288a62",
+      "chain_role": "s08_closure",
+      "review_section": "s08_scope_decision",
+      "required": true,
+      "status": "read"
+    },
+    "runtime-evidence/M016-S09-HUMAN-REVIEW.md": {
+      "snapshot_kind": "read",
+      "captured_at": "2026-07-23T12:00:00.000Z",
+      "size_bytes": 46471,
+      "sha256": "fde33d4a2f153bc8759fd690a9d7ce0e9fa75ca6bc9f9fb9380d50d1950596df",
+      "chain_role": "s09_human_review",
+      "review_section": "not_proven_preservation",
+      "required": true,
+      "status": "read"
+    }
+  },
+  "provenance_appendix": {
+    "source_count": 15,
+    "read_count": 15,
+    "missing_count": 0,
+    "malformed_count": 0,
+    "byte_total": 242539,
+    "source_refs": [
+      ".gsd/REQUIREMENTS.md",
+      ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md",
+      "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "runtime-evidence/M016-S05-seven-division-replay-bundle.json",
+      "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json",
+      "runtime-evidence/M016-S05-seven-division-replay-producer-protocol.json",
+      "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json",
+      "runtime-evidence/M016-S05-seven-division-replay-admission.json",
+      "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
+      "runtime-evidence/M016-S06-proof-reconciliation.json",
+      "runtime-evidence/M016-S06-capability-reconciliation.json",
+      "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json",
+      "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json",
+      "runtime-evidence/M016-S08-native-seven-agent-closure.json",
+      "runtime-evidence/M016-S09-HUMAN-REVIEW.md"
+    ]
+  },
+  "launch_posture": {
+    "orchestration": "PARTIAL",
+    "evidence": "PARTIAL",
+    "launch": "PREPARATION_ONLY",
+    "bounded_internal": true
+  },
+  "sections": [
+    {
+      "section_id": "r041_acceptance",
+      "section_label": "R041 acceptance (failure-visibility structural satisfaction, не verdict-value overclaim)",
+      "requirement_id": "R041",
+      "requirement_class": "failure-visibility",
+      "criterion_kind": "structural",
+      "structural_components": [
+        "separate_verdicts",
+        "hard_gates",
+        "reproducible_worksheet"
+      ],
+      "observed_structural_components": [
+        "separate_verdicts",
+        "hard_gates",
+        "reproducible_worksheet"
+      ],
+      "satisfied": true,
+      "satisfaction": "STRUCTURAL_ONLY",
+      "evidence_ref": ".gsd/REQUIREMENTS.md",
+      "text_snapshot_sha256": "e230d361882298bb62c0f875e308d8aa09e288858863d8f277ae8b1b61668d41",
+      "text_snapshot_required": true,
+      "forbidden_satisfaction_rejected": {
+        "ACCEPTED": "verdict overclaim — fails closed",
+        "LAUNCH_READY": "launch readiness claim without bounded_internal gate",
+        "VERIFIED_LIVE": "live runtime claim not allowed at this acceptance tier",
+        "PROVEN_BOUNDED_NATIVE": "S08 promotion forbidden — only scope_revised survives",
+        "GO_BOUNDED_INTERNAL": "must remain PREPARATION_ONLY until launch posture expands"
+      },
+      "rationale": "R041 accepts structural satisfaction only — verdict overclaim (ACCEPTED / LAUNCH_READY / PROVEN_BOUNDED_NATIVE) is forbidden.",
+      "blockers": []
+    },
+    {
+      "section_id": "milestone_criterion",
+      "section_label": "Milestone success criterion (6 verbatim bullets из 16-ROADMAP.md)",
+      "bullet_count": 6,
+      "satisfied_count": 6,
+      "bullets": [
+        {
+          "bullet_id": "MC1",
+          "label": "Historical M015 evidence is deterministically classified as orchestration PASS, evidence PARTIAL, and launch PREPARATION_ONLY rather than an unauditable conditional score.",
+          "strict_value": "orchestration=PASS & evidence=PARTIAL & launch=PREPARATION_ONLY",
+          "evidence_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+          "satisfied": true
+        },
+        {
+          "bullet_id": "MC2",
+          "label": "A canonical sanitised bos-mission-proof.json can be regenerated and validated offline without modifying Paperclip core, plugin state, or raw result_json.result.",
+          "strict_value": "offline-regeneration = successful & mutation_count = 0",
+          "evidence_ref": "runtime-evidence/M016-S05-seven-division-replay-bundle.json",
+          "satisfied": true
+        },
+        {
+          "bullet_id": "MC3",
+          "label": "Safe probes produce objective executed evidence from read-only live checks and isolated scratch drills; unavailable checks are explicit NOT_PROVEN.",
+          "strict_value": "unavailable_checks explicit NOT_PROVEN",
+          "evidence_ref": "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
+          "satisfied": true
+        },
+        {
+          "bullet_id": "MC4",
+          "label": "A Div4 to Div5 canary proves the producer, collector, independent validation, verdict, and fail-closed paths end to end.",
+          "strict_value": "canary_e2e = proven",
+          "evidence_ref": "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json",
+          "satisfied": true
+        },
+        {
+          "bullet_id": "MC5",
+          "label": "A confirmed seven division replay produces a full hard-gate and weighted worksheet with separate reproducible orchestration, evidence, and GO_BOUNDED_INTERNAL or PREPARATION_ONLY launch verdicts.",
+          "strict_value": "replay_verdicts separate + reproducible",
+          "evidence_ref": "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json",
+          "satisfied": true
+        },
+        {
+          "bullet_id": "MC6",
+          "label": "No secret, credential, raw reasoning, sensitive body, public exposure, external message, live rollback, or unapproved live mutation enters evidence or execution.",
+          "strict_value": "redaction_posture = clean",
+          "evidence_ref": "runtime-evidence/M016-S09-HUMAN-REVIEW.md",
+          "satisfied": true
+        }
+      ],
+      "roadmap_text_ref": ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md",
+      "roadmap_text_sha256": "0bdd250f118203453e1b72cd17c4d70c6f156344240aa5698eba306d13da90e2",
+      "blockers": []
+    },
+    {
+      "section_id": "s05_canonical_verdicts",
+      "section_label": "S05 canonical verdicts (producer PASS + verifier NOT_PROVEN + S06 PARTIAL + S09 PARTIAL, divergence acknowledged)",
+      "producer_verdict": "PASS",
+      "verifier_protocol_verdict": "NOT_PROVEN",
+      "s06_reconciled_verdict": "PARTIAL",
+      "s09_frozen_verdict": "PARTIAL",
+      "frozen_reconciliation_verdict": "PARTIAL",
+      "divergence_acknowledged": true,
+      "producer_provenance_preserved": true,
+      "verifier_provenance_preserved": true,
+      "frozen_reconciliation_equals_s09": true,
+      "source_refs": {
+        "bundle": "runtime-evidence/M016-S05-seven-division-replay-bundle.json",
+        "worksheet": "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json",
+        "producer_protocol": "runtime-evidence/M016-S05-seven-division-replay-producer-protocol.json",
+        "verify_protocol": "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json",
+        "admission": "runtime-evidence/M016-S05-seven-division-replay-admission.json",
+        "probe_run": "runtime-evidence/M016-S05-seven-division-replay-probe-run.json"
+      },
+      "rationale": "Producer PASS and verifier NOT_PROVEN are recorded as provenance; frozen_reconciliation=PARTIAL (=S06/S09 alignment) is the canonical S10 value.",
+      "blockers": []
+    },
+    {
+      "section_id": "s08_scope_decision",
+      "section_label": "S08 scope decision (scope_revised + NOT_PROVEN_SCOPE_REVISED + PREPARATION_ONLY boundary preservation)",
+      "closure_kind": "scope_revised",
+      "closure_verdict": "NOT_PROVEN_SCOPE_REVISED",
+      "boundary": "PREPARATION_ONLY",
+      "primary_blocker_code": "M16-S08-NATIVE-OPERATOR-GATE-DENIED",
+      "denial_summary_required": true,
+      "mutated_state_preserved": true,
+      "scope_decision_ref": "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json",
+      "verify_protocol_ref": "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json",
+      "closure_ref": "runtime-evidence/M016-S08-native-seven-agent-closure.json",
+      "rationale": "S08 scope_revised branch is preserved verbatim; PROVEN_BOUNDED_NATIVE promotion is forbidden.",
+      "blockers": []
+    },
+    {
+      "section_id": "not_proven_preservation",
+      "section_label": "NOT_PROVEN preservation (preserved_ids list без capability promotion)",
+      "preserved_ids": [
+        "COMPLIANCE_POSTURE_NOT_PROVEN",
+        "HG2_PROVENANCE_INTEGRITY_NOT_PROVEN",
+        "HG6_COMPLIANCE_POSTURE_NOT_PROVEN",
+        "NOT_PROVEN_MISSING_RESULT_JSON_BOS",
+        "NOT_PROVEN_SCOPE_REVISED",
+        "PROVENANCE_NOT_PROVEN",
+        "S05_VERIFIER_NOT_PROVEN_DIVERGENCE_ACKNOWLEDGED",
+        "S08_OPERATOR_GATE_DENIED",
+        "STAGE_B_ADAPTER_NATIVE_DEFERRED_UNVALIDATED"
+      ],
+      "preserved_count": 9,
+      "frozen_minimal_count": 9,
+      "missing_frozen_ids": [],
+      "forbidden_extra_ids": [],
+      "capability_promotion_blocked": true,
+      "capability_audit_ref": "runtime-evidence/M016-S06-capability-reconciliation.json",
+      "s09_review_ref": "runtime-evidence/M016-S09-HUMAN-REVIEW.md",
+      "rationale": "NOT_PROVEN preservation: preserved_ids must be a SUPERSET of the frozen minimal set; capability promotion is forbidden.",
+      "blockers": []
+    },
+    {
+      "section_id": "canonical_acceptance_outcome",
+      "section_label": "Canonical acceptance outcome (единый derived acceptance outcome без promotion)",
+      "orchestration": "PARTIAL",
+      "evidence": "PARTIAL",
+      "launch": "PREPARATION_ONLY",
+      "bounded_internal": true,
+      "reconciliation_status": "RESOLVED_PREPARATION_ONLY",
+      "acceptance_verdict": "ACCEPTANCE_RESOLVED",
+      "launch_posture_frozen": true,
+      "launch_posture_matches_s09": true,
+      "capability_promotion_blocked": true,
+      "rationale": "Single derived acceptance outcome — orchestration/evidence/launch frozen = PARTIAL/PARTIAL/PREPARATION_ONLY; bounded_internal=true; no capability promotion; no launch expansion.",
+      "blockers": []
+    }
+  ],
+  "not_proven_preserved_count": 9,
+  "blocked_count": 0,
+  "blockers": [],
+  "redaction_hits": [],
+  "redaction_posture": {
+    "bounded_digests_only": true,
+    "synthetic_bos_detected": false,
+    "redaction_bounds_loaded": true,
+    "raw_bodies_persisted": false
+  },
+  "evaluation": {
+    "ok": true,
+    "verdict": "ACCEPTANCE_BUILT",
+    "exit_code": 0,
+    "block_count": 0
+  },
+  "counters": {
+    "network_calls": 0,
+    "subprocess_calls": 0,
+    "env_reads": 0,
+    "mutation_count": 0,
+    "temp_file_writes": 1
+  },
+  "sanitised": true,
+  "raw_bodies_persisted": false,
+  "producer_cli_invoked": false,
+  "network_calls": 0,
+  "subprocess_calls": 0,
+  "env_reads": 0,
+  "mutation_count": 0
+}
