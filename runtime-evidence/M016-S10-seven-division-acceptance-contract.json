@@ -4,7 +4,7 @@
   "schema_namespace": "m016-s10-seven-division-acceptance-contract-v1",
   "acceptance_contract_id": "m016-s10-seven-division-acceptance-contract-v1",
   "acceptance_contract_kind": "seven-division-acceptance-contract",
-  "acceptance_contract_digest": "a0ad4d83cf639b56821fd1752c13a00b90c9f80e80af24d7e3ed9dc5fb694961",
+  "acceptance_contract_digest": "11153a65f69f219c6dcb03dfec9c10705b535e3c4419234c38b1f756244bc362",
   "milestone": "M016-txa3vu",
   "slice": "S10",
   "task": "T02",
@@ -42,7 +42,7 @@
   ],
   "source_hashes": {
     ".gsd/REQUIREMENTS.md": "e230d361882298bb62c0f875e308d8aa09e288858863d8f277ae8b1b61668d41",
-    ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md": "0bdd250f118203453e1b72cd17c4d70c6f156344240aa5698eba306d13da90e2",
+    ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md": "9658571911cb48c71eedb4542c092e333841797f6a1297a887138ea8aaf09256",
     "runtime-evidence/M015-native-seven-division-mission-20260717.json": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
     "runtime-evidence/M016-S05-seven-division-replay-bundle.json": "a5767044baeeb879c37bd64fb38b8c5be7949b7fea7a8e0c828d3783088fdaa2",
     "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json": "b7f1c8584bc8243c693fde4d8e8b75992fb578c5fac8cd8d6c3659d6a4c0b1a0",
@@ -72,7 +72,7 @@
       "snapshot_kind": "read",
       "captured_at": "2026-07-23T12:00:00.000Z",
       "size_bytes": 6525,
-      "sha256": "0bdd250f118203453e1b72cd17c4d70c6f156344240aa5698eba306d13da90e2",
+      "sha256": "9658571911cb48c71eedb4542c092e333841797f6a1297a887138ea8aaf09256",
       "chain_role": "milestone_criterion_text",
       "review_section": "milestone_criterion",
       "required": true,
@@ -321,7 +321,7 @@
         }
       ],
       "roadmap_text_ref": ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md",
-      "roadmap_text_sha256": "0bdd250f118203453e1b72cd17c4d70c6f156344240aa5698eba306d13da90e2",
+      "roadmap_text_sha256": "9658571911cb48c71eedb4542c092e333841797f6a1297a887138ea8aaf09256",
       "blockers": []
     },
     {
