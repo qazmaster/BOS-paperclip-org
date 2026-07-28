@@ -193,9 +193,12 @@ test('sanitiseMissionEvidence: strips UUIDs from mission_entities + paperclip co
   // No UUIDs anywhere in the projection
   const hits = contract.checkRedactionSafety(proj);
   assert.equal(hits.length, 0, 'expected no redaction hits in sanitised M015 projection: ' + JSON.stringify(hits));
-  // mission_topology has only counts (no ids)
-  assert.equal(proj.mission_topology.distinct_agents_executed, 7);
-  assert.equal(proj.mission_topology.successful_runs, 8);
+  // The canonical v1 fixture is already sanitised and carries bounded
+  // provenance metadata rather than the retired live-capture counters.
+  assert.equal(proj.schema_version, 'v1');
+  assert.equal(proj.mission_id, 'm015-native-seven-division-mission-20260717');
+  assert.equal(proj.source_count, 6);
+  assert.deepEqual(proj.verdict_basis, payload.verdict_basis);
   // verdict preserved as string values
   assert.equal(proj.verdict.native_paperclip_mission, 'PASS');
 });
@@ -236,7 +239,9 @@ test('sanitisers: refuse to silently accept a payload that contains a UUID leak'
   // Craft a payload where execution.distinct_agents_executed (the source the
   // sanitiser reads from) leaks a UUID into the projection.
   const payload = JSON.parse(fs.readFileSync(path.join(ROOT, collector.ALLOWLIST[0].source_ref), 'utf8'));
-  payload.execution.distinct_agents_executed = 'leak-45cb883f-32b5-40cd-bf8d-94c40419a1d1-marker';
+  payload.execution = {
+    distinct_agents_executed: 'leak-45cb883f-32b5-40cd-bf8d-94c40419a1d1-marker',
+  };
   const proj = collector.sanitiseMissionEvidence(payload);
   const hits = contract.checkRedactionSafety(proj);
   assert.ok(hits.some((h) => h.kind === 'uuid'),

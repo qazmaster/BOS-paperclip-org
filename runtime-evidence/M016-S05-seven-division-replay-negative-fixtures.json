@@ -10,7 +10,7 @@
   "line_class": "M16-S05-VERIFY",
   "canonical_protocol": "PROTOCOL-M16-S05-VERIFY-V1",
   "baseline_bundle": "runtime-evidence/M016-S05-seven-division-replay-bundle.json",
-  "baseline_bundle_sha256": "fa3c3dee4a1687d6f487be717c978cac9eecc8f77f6ab605dc613350ed7a9cf4",
+  "baseline_bundle_sha256": "491cf9ec6400cfd81396fe4992a8815b72085ab32227c50ea396537a56c3a221",
   "runner_command": "node --test scripts/test_m016_s05_seven_division_replay_tamper.js",
   "evaluation_command": "node scripts/verify_m016_s05_seven_division_replay.js --source-root <marker> --protocol-out <marker>/runtime-evidence/M016-S05-seven-division-replay-verify-protocol-tamper.json",
   "fixture_count": 24,

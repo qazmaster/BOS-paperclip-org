@@ -16,15 +16,15 @@
   "worksheet_ref": "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json",
   "records_count": 19,
   "replay_keys": {
-    "first_run_provenance_hash": "fa3c3dee4a1687d6f487be717c978cac9eecc8f77f6ab605dc613350ed7a9cf4",
-    "second_run_provenance_hash": "fa3c3dee4a1687d6f487be717c978cac9eecc8f77f6ab605dc613350ed7a9cf4",
+    "first_run_provenance_hash": "491cf9ec6400cfd81396fe4992a8815b72085ab32227c50ea396537a56c3a221",
+    "second_run_provenance_hash": "491cf9ec6400cfd81396fe4992a8815b72085ab32227c50ea396537a56c3a221",
     "match": true,
     "byte_identical": true,
-    "replay_key": "e4714373a34f41afc893b60594227462ce34ef3fb027af4d54714e868bc92963",
+    "replay_key": "8083b52126ee297cd575d72cd393f57b880384ac678aa6324f35d49d8694b04d",
     "verified_at": "2026-07-20T12:00:00.000Z"
   },
   "verdicts": {
-    "orchestration": "PASS",
+    "orchestration": "NOT_PROVEN",
     "evidence": "PARTIAL",
     "launch": "PREPARATION_ONLY"
   },

@@ -6,11 +6,11 @@
   "milestone": "M016-txa3vu",
   "slice": "S03",
   "task": "T06",
-  "generated_at": "2026-07-19T20:49:58.419Z",
-  "replay_iterations": 2,
+  "generated_at": "2026-07-28T03:54:41.524Z",
+  "replay_iterations": 1,
   "line_class": "M16-S03-VERIFY",
   "canonical_protocol": "PROTOCOL-M16-S03-VERIFY-V1",
-  "pack_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+  "pack_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
   "pack_path": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
   "protocol_path": "runtime-evidence/M016-S03-verify-protocol.json",
   "schema_path": "schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json",
@@ -228,30 +228,13 @@
     ]
   },
   "independent_replay": {
-    "iterations": 2,
+    "iterations": 1,
     "deterministic": true,
     "first_mismatched_run": null,
     "mismatch_field": null,
     "runs": [
       {
         "iteration": 0,
-        "runner_status": "PASS",
-        "runner_exit_code": 0,
-        "verdict": "pass",
-        "blockers_count": 0,
-        "gates": {
-          "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
-          "HG2 PROVENANCE_INTEGRITY": "pass",
-          "HG3 RECOVERY_EVIDENCE": "pass",
-          "HG4 FINANCIAL_PROTECTION": "pass",
-          "HG5 SECURITY_POSTURE": "pass",
-          "HG6 COMPLIANCE_POSTURE": "pass",
-          "HG7 READ_ONLY_BOUNDARY": "pass",
-          "HG8 SCRATCH_ISOLATION": "pass"
-        }
-      },
-      {
-        "iteration": 1,
         "runner_status": "PASS",
         "runner_exit_code": 0,
         "verdict": "pass",
@@ -363,14 +346,14 @@
     "pre_post_equal": true,
     "unchanged_flag": true,
     "raw_pre_post_match": true,
-    "computed_canonical_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
-    "claimed_pre_canonical_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
-    "claimed_post_canonical_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
-    "raw_sha_first_read": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
-    "raw_sha_second_read": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+    "computed_canonical_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
+    "claimed_pre_canonical_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
+    "claimed_post_canonical_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
+    "raw_sha_first_read": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+    "raw_sha_second_read": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
     "path": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S02-bos-mission-proof.json",
-    "pre_window_sha": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
-    "post_window_sha": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+    "pre_window_sha": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+    "post_window_sha": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
     "raw_window_unchanged": true
   },
   "allowlist_drift": {
@@ -402,7 +385,7 @@
     "hits": []
   },
   "pack_digest_match": {
-    "claimed_pack_digest": "ce5312d28b79d903490791f20f918773faa0c5d911d84f38e26115aa5bf794a5",
+    "claimed_pack_digest": "37c95cfe45fce98c9668f23cfa8574546fc0dfc2263da6f8750a458e133ffcf6",
     "claimed_only": true
   },
   "raw_input_immutability_verified": true,
@@ -426,11 +409,11 @@
   "replay_keys_match": true,
   "blockers": [],
   "blocker_codes": [],
-  "verdict_line": "M16-S03-VERIFY verdict=PASS exit=0 block_count=0 blocker_first=null gates=HG1 SEMANTIC_RULE_COMPLIANCE=pass,HG2 PROVENANCE_INTEGRITY=pass,HG3 RECOVERY_EVIDENCE=pass,HG4 FINANCIAL_PROTECTION=pass,HG5 SECURITY_POSTURE=pass,HG6 COMPLIANCE_POSTURE=pass,HG7 READ_ONLY_BOUNDARY=pass,HG8 SCRATCH_ISOLATION=pass replay_match=true records_match=true provenance_match=true raw_sha_match_count=5/5 s02_baseline_match=true classification_match=true redaction_clean=true launch_frozen=true allowlist_drift=0 role_issues=0 drill_issues=0 iterations=2 pack_sha256=e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+  "verdict_line": "M16-S03-VERIFY verdict=PASS exit=0 block_count=0 blocker_first=null gates=HG1 SEMANTIC_RULE_COMPLIANCE=pass,HG2 PROVENANCE_INTEGRITY=pass,HG3 RECOVERY_EVIDENCE=pass,HG4 FINANCIAL_PROTECTION=pass,HG5 SECURITY_POSTURE=pass,HG6 COMPLIANCE_POSTURE=pass,HG7 READ_ONLY_BOUNDARY=pass,HG8 SCRATCH_ISOLATION=pass replay_match=true records_match=true provenance_match=true raw_sha_match_count=5/5 s02_baseline_match=true classification_match=true redaction_clean=true launch_frozen=true allowlist_drift=0 role_issues=0 drill_issues=0 iterations=1 pack_sha256=77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
   "options": {
     "force": true,
-    "iterations": 2,
-    "reference_time": "2026-07-19T20:49:58.419Z"
+    "iterations": 1,
+    "reference_time": "2026-07-28T03:54:41.524Z"
   },
   "paths": {
     "pack": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",

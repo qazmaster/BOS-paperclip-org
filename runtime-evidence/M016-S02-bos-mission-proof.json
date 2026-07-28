@@ -6,15 +6,15 @@
   "milestone": "M016-txa3vu",
   "slice": "S02",
   "task": "T02",
-  "generated": "2026-07-28T00:00:00Z",
-  "sidecar_id": "5c472a2957de44f9002832e5f987f3725436d98d0e187eb8c5642ecf9d2eadbd",
-  "provenance_hash": "19fa18c784756e91a3bfcbd98c4561ae391be2c14da7a6dce49baafa568bdc41",
+  "generated": "2026-07-28T03:50:31.713Z",
+  "sidecar_id": "4df2c6a6f331170580b6638211f4f0c6d04aaebe63b8074bfcc9158abcd1a72c",
+  "provenance_hash": "20f1fb3ea6024dd35cb8eca566d0fdccb3b0c9439ef78e3ca1e7a32fcc376eba",
   "sources": [
     {
       "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
       "kind": "mission_evidence",
       "raw_sha256": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
-      "sanitised_sha256": "1a884caee50ae20d8f34e379bc73deda92143e10650d6f450a2d364eeb536275",
+      "sanitised_sha256": "1b7581bab4486930976cc50fac42a7d192a251463fd189c1fffaef9947bda518",
       "independence_group": "mission-topology",
       "size_bytes": 2804,
       "claim_ids": [
@@ -163,10 +163,10 @@
           "observed_evidence": "BG5 classification_frozen PASS BG6 launch_not_promoted PASS"
         }
       ],
-      "completed_at": "2026-07-28T00:00:00Z",
+      "completed_at": "2026-07-28T03:50:31.713Z",
       "completed_by": "classifier"
     },
-    "completed_at": "2026-07-28T00:00:00Z",
+    "completed_at": "2026-07-28T03:50:31.713Z",
     "completed_by": "classifier"
   },
   "sanitised_artifacts": [
@@ -226,11 +226,11 @@
     }
   ],
   "replay_keys": {
-    "first_run_provenance_hash": "19fa18c784756e91a3bfcbd98c4561ae391be2c14da7a6dce49baafa568bdc41",
-    "second_run_provenance_hash": "19fa18c784756e91a3bfcbd98c4561ae391be2c14da7a6dce49baafa568bdc41",
+    "first_run_provenance_hash": "20f1fb3ea6024dd35cb8eca566d0fdccb3b0c9439ef78e3ca1e7a32fcc376eba",
+    "second_run_provenance_hash": "20f1fb3ea6024dd35cb8eca566d0fdccb3b0c9439ef78e3ca1e7a32fcc376eba",
     "match": true,
     "byte_identical": true,
-    "verified_at": "2026-07-28T00:00:00Z"
+    "verified_at": "2026-07-28T03:50:31.713Z"
   },
   "blockers": []
 }

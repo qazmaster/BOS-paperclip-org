@@ -130,8 +130,10 @@ const SEED = 'canonical';  // MUST equal the canonical default ('canonical') so 
 // Canonical values pinned by T02 + T03 summaries: replay_key +
 // bundle_digest must equal these exactly under the canonical
 // reference_time + seed (byte-stability regression guard).
-const CANONICAL_REPLAY_KEY = '7a3a92b1d398565502cfc6129524a2b8ecbd3247c59b43e3f5b1d787eb4bf15d';
-const CANONICAL_BUNDLE_DIGEST = 'c849dc79fa75f4be415728efeaa5d4117410db99dd1acd6e6df1835dbf1d5fac';
+// Updated after the S02 v1 fixture/sanitiser synchronization. These values
+// pin the deterministic replay of the current canonical upstream chain.
+const CANONICAL_REPLAY_KEY = '8083b52126ee297cd575d72cd393f57b880384ac678aa6324f35d49d8694b04d';
+const CANONICAL_BUNDLE_DIGEST = '491cf9ec6400cfd81396fe4992a8815b72085ab32227c50ea396537a56c3a221';
 
 // The 7 canonical S05 sidecars that the producer and verifier write.
 // Their on-disk paths are schema-constrained via the producer-protocol

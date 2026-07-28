@@ -225,9 +225,30 @@ function safeStr(v, max) {
 }
 
 function sanitiseMissionEvidence(payload) {
+  // M015 is accepted in both the original live-capture shape and the later
+  // repository-contained v1 sanitised shape. Project only bounded metadata;
+  // never copy arbitrary source fields into the sidecar.
+  const canonicalV1 = typeof payload.schema_id === 'string';
+  const boundedBasis = canonicalV1 && payload.verdict_basis && typeof payload.verdict_basis === 'object'
+    ? Object.fromEntries(Object.entries(payload.verdict_basis).map(([key, value]) => [key, safeStr(value, 240)]))
+    : undefined;
   return {
-    $schema: payload.$schema,
+    $schema: payload.$schema || payload.schema_id,
+    schema_id: canonicalV1 ? payload.schema_id : undefined,
+    schema_version: canonicalV1 ? payload.schema_version : undefined,
     milestone: payload.milestone,
+    mission_id: canonicalV1 ? safeStr(payload.mission_id, 120) : undefined,
+    mission_kind: canonicalV1 ? safeStr(payload.mission_kind, 120) : undefined,
+    milestone_target: canonicalV1 ? safeStr(payload.milestone_target, 80) : undefined,
+    generated: canonicalV1 ? payload.generated : undefined,
+    bounded_internal: canonicalV1 ? payload.bounded_internal : undefined,
+    scope: canonicalV1 ? safeStr(payload.scope, 200) : undefined,
+    sanitised: canonicalV1 ? payload.sanitised : undefined,
+    raw_bodies_persisted: canonicalV1 ? payload.raw_bodies_persisted : undefined,
+    raw_result_json_persisted: canonicalV1 ? payload.raw_result_json_persisted : undefined,
+    verdict_basis: boundedBasis,
+    source_count: canonicalV1 && Array.isArray(payload.sources) ? payload.sources.length : undefined,
+    blocker_count: canonicalV1 && Array.isArray(payload.blockers) ? payload.blockers.length : undefined,
     mission_key: payload.mission_key,
     purpose_class: safeStr(payload.purpose, 200),
     captured_at: payload.captured_at,

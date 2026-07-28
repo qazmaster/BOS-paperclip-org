@@ -6,8 +6,8 @@
   "milestone": "M016-txa3vu",
   "slice": "S03",
   "task": "T05",
-  "generated": "2026-07-19T20:24:01.780Z",
-  "pack_digest": "ce5312d28b79d903490791f20f918773faa0c5d911d84f38e26115aa5bf794a5",
+  "generated": "2026-07-28T03:52:00.463Z",
+  "pack_digest": "37c95cfe45fce98c9668f23cfa8574546fc0dfc2263da6f8750a458e133ffcf6",
   "sources": [
     {
       "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
@@ -191,8 +191,8 @@
   ],
   "s02_baseline": {
     "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
-    "pre_canonical_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
-    "post_canonical_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
+    "pre_canonical_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
+    "post_canonical_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
     "unchanged": true
   },
   "role_matrix": [
@@ -1747,10 +1747,10 @@
           "observed_evidence": "BG6 launch_not_promoted PASS"
         }
       ],
-      "completed_at": "2026-07-19T20:24:01.780Z",
+      "completed_at": "2026-07-28T03:52:00.463Z",
       "completed_by": "collector"
     },
-    "completed_at": "2026-07-19T20:24:01.780Z",
+    "completed_at": "2026-07-28T03:52:00.463Z",
     "completed_by": "collector"
   },
   "replay_keys": {
@@ -1758,7 +1758,7 @@
     "second_run_provenance_hash": "2f4b0c7dd9c666c91ec7edf1a85fdda4b81d1e5b9c582ec8de62ed5a33dfa030",
     "match": true,
     "byte_identical": true,
-    "verified_at": "2026-07-19T20:24:01.780Z"
+    "verified_at": "2026-07-28T03:52:00.463Z"
   },
   "blockers": [],
   "raw_input_immutability_verified": true

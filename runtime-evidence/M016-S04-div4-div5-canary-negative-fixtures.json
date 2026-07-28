@@ -10,7 +10,7 @@
   "line_class": "M16-S04-CANARY",
   "canonical_protocol": "PROTOCOL-M16-S04-CANARY-V1",
   "baseline_bundle": "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
-  "baseline_bundle_sha256": "93dbf9e4eed3a282ea070a1ebd74d4e58cc2c26b4cd359ea7fd834c3201b3099",
+  "baseline_bundle_sha256": "3e865edeb49a82f9ac65e921fc3d518a9677daddf2abfbcdb59e83195e6f97d1",
   "runner_command": "node --test scripts/test_m016_s04_div4_div5_canary_tamper.js",
   "evaluation_command": "node -e \"require('./scripts/lib/m016-s04-div4-div5-canary-contract').evaluateCanaryContract({ bundle: tamperedBundle, options: { runSchema: false } })\"",
   "fixture_count": 8,

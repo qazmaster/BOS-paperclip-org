@@ -6,7 +6,7 @@
   "milestone": "M016-txa3vu",
   "slice": "S03",
   "task": "T05",
-  "generated": "2026-07-19T20:24:01.780Z",
+  "generated": "2026-07-28T03:52:00.463Z",
   "line_class": "M16-S03-COLLECT",
   "canonical_protocol": "PROTOCOL-M16-S03-COLLECT-V1",
   "sources_loaded": [
@@ -17,7 +17,7 @@
     "runtime-evidence/M016-S03-scratch-drill-protocol.json"
   ],
   "s02_baseline_unchanged": true,
-  "s02_baseline_hash": "435037155fdf6e3c5394e55e972ae75fa03d45731bd349af0050ab8ea0b5c537",
+  "s02_baseline_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
   "role_matrix_size": 16,
   "drill_matrix_size": 3,
   "record_count": 19,

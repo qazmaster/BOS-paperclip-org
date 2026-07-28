@@ -9,41 +9,101 @@
     {
       "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
       "kind": "s02_baseline",
-      "required": true,
-      "pre_hash_sha256": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
-      "post_hash_sha256": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+      "pre_hash_sha256": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+      "post_hash_sha256": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
       "unchanged": true,
       "scope": "offline-readonly"
     },
     {
       "source_ref": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
       "kind": "s03_pack",
-      "required": true,
-      "pre_hash_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
-      "post_hash_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+      "pre_hash_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
+      "post_hash_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
       "unchanged": true,
       "scope": "offline-readonly"
     },
     {
       "source_ref": "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
       "kind": "s04_canary_bundle",
-      "required": true,
-      "pre_hash_sha256": "3f0dd1b187ccb66f80b6e1332809686bbcc3f73a7eb9d3a13274faf30ab883cd",
-      "post_hash_sha256": "3f0dd1b187ccb66f80b6e1332809686bbcc3f73a7eb9d3a13274faf30ab883cd",
+      "pre_hash_sha256": "faa42d8372b509cbeb3fbb511d17662b5ecb72627a99cb46a373d635e3da28c9",
+      "post_hash_sha256": "faa42d8372b509cbeb3fbb511d17662b5ecb72627a99cb46a373d635e3da28c9",
+      "unchanged": true,
+      "scope": "offline-readonly"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "kind": "live_probe_results",
+      "pre_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "post_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "unchanged": true,
+      "scope": "offline-readonly"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "kind": "scratch_drill_results",
+      "pre_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "post_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "unchanged": true,
+      "scope": "offline-readonly"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-verify-protocol.json",
+      "kind": "s03_verify_protocol",
+      "pre_hash_sha256": "d203991618c28d5436d2ec024a9bb8462d4562b81a16ce1cf9f7855b9e7cc6cf",
+      "post_hash_sha256": "d203991618c28d5436d2ec024a9bb8462d4562b81a16ce1cf9f7855b9e7cc6cf",
+      "unchanged": true,
+      "scope": "offline-readonly"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-collect-protocol.json",
+      "kind": "s03_collect_protocol",
+      "pre_hash_sha256": "441dfa507b9e63f1d33640102a180055e6f273f6472dfe9c48dd89231e0c2f41",
+      "post_hash_sha256": "441dfa507b9e63f1d33640102a180055e6f273f6472dfe9c48dd89231e0c2f41",
+      "unchanged": true,
+      "scope": "offline-readonly"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-input-inventory.json",
+      "kind": "s03_input_inventory",
+      "pre_hash_sha256": "3d762ca71dcf903cf72e4b2f09cb6f5619360f726f751989d5ca8ae452a35d98",
+      "post_hash_sha256": "3d762ca71dcf903cf72e4b2f09cb6f5619360f726f751989d5ca8ae452a35d98",
+      "unchanged": true,
+      "scope": "offline-readonly"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-isolation-invariant.json",
+      "kind": "s03_isolation_invariant",
+      "pre_hash_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
+      "post_hash_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
+      "unchanged": true,
+      "scope": "offline-readonly"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S04-div4-div5-canary-producer-protocol.json",
+      "kind": "s04_canary_producer_protocol",
+      "pre_hash_sha256": "9d2d32511e88aebdbc56b51caa19dd2c107fbbe829fbddd77ea0c3ef4a887240",
+      "post_hash_sha256": "9d2d32511e88aebdbc56b51caa19dd2c107fbbe829fbddd77ea0c3ef4a887240",
+      "unchanged": true,
+      "scope": "offline-readonly"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S04-div4-div5-canary-verify-protocol.json",
+      "kind": "s04_canary_verify_protocol",
+      "pre_hash_sha256": "70f736c74c328a6b3762d4e40552fb5ac041bd592a68394457b6d0563b964b9b",
+      "post_hash_sha256": "70f736c74c328a6b3762d4e40552fb5ac041bd592a68394457b6d0563b964b9b",
       "unchanged": true,
       "scope": "offline-readonly"
     },
     {
       "source_ref": "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
       "kind": "replay_probe_run",
-      "required": true,
-      "pre_hash_sha256": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
-      "post_hash_sha256": "34af561525fa2a0356230608e301b5121fc875bfe0602c7c0c74f75021253f98",
+      "pre_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
+      "post_hash_sha256": "8626f1829e6b676be9ef47afa79e0c8c4955b8b4b77d0542e57e51f2a8907c44",
       "unchanged": true,
       "scope": "offline-readonly"
     }
   ],
-  "source_count": 4,
+  "source_count": 12,
   "raw_bodies_persisted": false,
   "blockers": []
 }
