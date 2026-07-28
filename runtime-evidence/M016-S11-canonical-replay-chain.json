@@ -4,7 +4,7 @@
   "schema_namespace": "m016-s11-canonical-replay-chain-v1",
   "chain_id": "m016-s11-canonical-replay-chain-v1",
   "chain_kind": "canonical-replay-chain-reverification",
-  "chain_digest": "15bddb153ee80b8596a00da3b3507b46516a84e6e4697e4f3e05c16d0af54853",
+  "chain_digest": "800d0fda8936db0485c3f25c2fd5bc149152518a8eef147d7d8f3d9dac74dfc1",
   "milestone": "M016-txa3vu",
   "slice": "S11",
   "task": "T02",
@@ -18,8 +18,8 @@
   "builder_line_class": "M16-S11-BUILD",
   "verifier_line_class": "M16-S11-CHAIN",
   "canonical_protocol": "PROTOCOL-M16-S11-CANONICAL-REPLAY-CHAIN-BUILD-V1",
-  "generated": "2026-07-25T00:00:00.000Z",
-  "reference_time": "2026-07-25T00:00:00.000Z",
+  "generated": "2026-07-28T00:00:00Z",
+  "reference_time": "2026-07-28T00:00:00Z",
   "output_path": "runtime-evidence/M016-S11-canonical-replay-chain.json",
   "section_count": 8,
   "expected_section_count": 8,
@@ -321,8 +321,8 @@
     "runtime-evidence/M016-S10-seven-division-acceptance-contract.json"
   ],
   "source_hashes": {
-    ".gsd/REQUIREMENTS.md": "e230d361882298bb62c0f875e308d8aa09e288858863d8f277ae8b1b61668d41",
-    ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md": "9658571911cb48c71eedb4542c092e333841797f6a1297a887138ea8aaf09256",
+    ".gsd/REQUIREMENTS.md": "e0fbde51f7f7d65f54032aa26b18eeff57a312e5ce5f324b73a457860b51c5a1",
+    ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md": "e66b801dc539cdee70b060b38890a2ca4badaa19b54f274f204f920c50b73361",
     "runtime-evidence/M015-native-seven-division-mission-20260717.json": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
     "runtime-evidence/M016-S02-bos-mission-proof.json": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
     "runtime-evidence/M016-S05-seven-division-replay-bundle.json": "a5767044baeeb879c37bd64fb38b8c5be7949b7fea7a8e0c828d3783088fdaa2",
@@ -334,7 +334,7 @@
     "runtime-evidence/M016-S06-proof-reconciliation.json": "4b533351f39f15d882829c0f8b9d15700d694f7a4dd48ebc680a2fb2781b82dd",
     "runtime-evidence/M016-S06-capability-reconciliation.json": "afb4417183914e746513b85594f6741bed38d4262c6bc0268c0fb24e0c133f47",
     "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json": "fbd44cffa4a853646f03189180590bd15684df47b7572b6279e484f698461429",
-    "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json": "06a4368c544b30387b2471799dccb4496cbc603a9c94e1717536466ba0b7d935",
+    "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json": "3adc16a25561567566caf8eb919609e1306c6eb85c0f6a637febb8d56e62e936",
     "runtime-evidence/M016-S08-native-seven-agent-closure.json": "279c246d8456fea2dcda5349184fbef1395fbb3564be0a740d55cb3dbd288a62",
     "runtime-evidence/M016-S09-HUMAN-REVIEW.md": "fde33d4a2f153bc8759fd690a9d7ce0e9fa75ca6bc9f9fb9380d50d1950596df",
     "runtime-evidence/M016-S10-seven-division-acceptance-contract.json": "c81605911eb93452def4acff6e6c9ef68187076e20b8bedf74fb8d1bbd5ef1e5"
@@ -343,24 +343,24 @@
     ".gsd/REQUIREMENTS.md": {
       "source_ref": ".gsd/REQUIREMENTS.md",
       "status": "read",
-      "sha256": "e230d361882298bb62c0f875e308d8aa09e288858863d8f277ae8b1b61668d41",
-      "size_bytes": 47367,
+      "sha256": "e0fbde51f7f7d65f54032aa26b18eeff57a312e5ce5f324b73a457860b51c5a1",
+      "size_bytes": 48086,
       "verification_class": "Contract",
       "chain_role": "r041_text",
       "chain_section": "r041_canonical",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md": {
       "source_ref": ".gsd/phases/16-txa3vu-evidence-bearing-bounded-mission-proof/16-ROADMAP.md",
       "status": "read",
-      "sha256": "9658571911cb48c71eedb4542c092e333841797f6a1297a887138ea8aaf09256",
+      "sha256": "e66b801dc539cdee70b060b38890a2ca4badaa19b54f274f204f920c50b73361",
       "size_bytes": 6525,
       "verification_class": "Contract",
       "chain_role": "milestone_criterion_text",
       "chain_section": "milestone_criterion",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M015-native-seven-division-mission-20260717.json": {
       "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
@@ -371,7 +371,7 @@
       "chain_role": "m015_baseline",
       "chain_section": "s05_canonical_verdicts",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S02-bos-mission-proof.json": {
       "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
@@ -382,7 +382,7 @@
       "chain_role": "s02_proof",
       "chain_section": "s05_canonical_verdicts",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S05-seven-division-replay-bundle.json": {
       "source_ref": "runtime-evidence/M016-S05-seven-division-replay-bundle.json",
@@ -393,7 +393,7 @@
       "chain_role": "s05_replay_bundle",
       "chain_section": "s05_canonical_verdicts",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json": {
       "source_ref": "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json",
@@ -404,7 +404,7 @@
       "chain_role": "s05_replay_worksheet",
       "chain_section": "s05_canonical_verdicts",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S05-seven-division-replay-producer-protocol.json": {
       "source_ref": "runtime-evidence/M016-S05-seven-division-replay-producer-protocol.json",
@@ -415,7 +415,7 @@
       "chain_role": "s05_replay_producer_protocol",
       "chain_section": "s05_canonical_verdicts",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json": {
       "source_ref": "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json",
@@ -426,7 +426,7 @@
       "chain_role": "s05_replay_verify_protocol",
       "chain_section": "s05_canonical_verdicts",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S05-seven-division-replay-admission.json": {
       "source_ref": "runtime-evidence/M016-S05-seven-division-replay-admission.json",
@@ -437,7 +437,7 @@
       "chain_role": "s05_replay_admission",
       "chain_section": "s05_canonical_verdicts",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S05-seven-division-replay-probe-run.json": {
       "source_ref": "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
@@ -448,7 +448,7 @@
       "chain_role": "s05_replay_probe_run",
       "chain_section": "s05_canonical_verdicts",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S06-proof-reconciliation.json": {
       "source_ref": "runtime-evidence/M016-S06-proof-reconciliation.json",
@@ -459,7 +459,7 @@
       "chain_role": "s06_proof_reconciliation",
       "chain_section": "s06_reconciliation",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S06-capability-reconciliation.json": {
       "source_ref": "runtime-evidence/M016-S06-capability-reconciliation.json",
@@ -470,7 +470,7 @@
       "chain_role": "s06_capability_reconciliation",
       "chain_section": "s06_reconciliation",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json": {
       "source_ref": "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json",
@@ -481,18 +481,18 @@
       "chain_role": "s08_scope_decision",
       "chain_section": "s08_scope_decision",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json": {
       "source_ref": "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json",
       "status": "read",
-      "sha256": "06a4368c544b30387b2471799dccb4496cbc603a9c94e1717536466ba0b7d935",
+      "sha256": "3adc16a25561567566caf8eb919609e1306c6eb85c0f6a637febb8d56e62e936",
       "size_bytes": 3013,
       "verification_class": "Operational",
       "chain_role": "s08_verify_protocol",
       "chain_section": "s08_scope_decision",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S08-native-seven-agent-closure.json": {
       "source_ref": "runtime-evidence/M016-S08-native-seven-agent-closure.json",
@@ -503,7 +503,7 @@
       "chain_role": "s08_closure",
       "chain_section": "s08_scope_decision",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S09-HUMAN-REVIEW.md": {
       "source_ref": "runtime-evidence/M016-S09-HUMAN-REVIEW.md",
@@ -514,7 +514,7 @@
       "chain_role": "s09_human_review",
       "chain_section": "s09_human_review",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     },
     "runtime-evidence/M016-S10-seven-division-acceptance-contract.json": {
       "source_ref": "runtime-evidence/M016-S10-seven-division-acceptance-contract.json",
@@ -525,7 +525,7 @@
       "chain_role": "s10_acceptance_contract",
       "chain_section": "s10_acceptance_contract",
       "required": true,
-      "captured_at": "2026-07-25T00:00:00.000Z"
+      "captured_at": "2026-07-28T00:00:00Z"
     }
   },
   "hard_gate_ids": [
@@ -582,7 +582,7 @@
     "missing_count": 0,
     "malformed_count": 0,
     "not_allowlisted_count": 0,
-    "byte_total": 273506,
+    "byte_total": 274225,
     "expected_source_count": 17
   },
   "builder_counters": {

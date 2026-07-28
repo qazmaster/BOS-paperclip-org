@@ -3,18 +3,18 @@
   "milestone": "M016-txa3vu",
   "slice": "S02",
   "task": "T02",
-  "generated": "2026-07-19T13:00:00Z",
+  "generated": "2026-07-28T00:00:00Z",
   "source_count": 5,
   "sources": [
     {
       "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
       "kind": "mission_evidence",
-      "raw_sha256": "84e5c950fd1db3b5a82c078b75f28925a4f6a052d4744bf403f2aef2b2e787a4",
-      "sanitised_sha256": "4abb102760bf8a4f3a5accf1654e76ae46ee4dba2967048733788039df2c908c",
+      "raw_sha256": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
+      "sanitised_sha256": "1a884caee50ae20d8f34e379bc73deda92143e10650d6f450a2d364eeb536275",
       "independence_group": "mission-topology",
-      "size_bytes": 6767,
+      "size_bytes": 2804,
       "claim_ids_count": 9,
-      "captured_at": "2026-07-17T12:57:48Z",
+      "captured_at": "2026-07-17T12:00:00.000Z",
       "raw_input_immutable": true,
       "sanitised_projection_keys": [
         "$schema",
@@ -65,12 +65,12 @@
     {
       "source_ref": "runtime-evidence/M016-S01-classification-protocol.json",
       "kind": "classification_protocol",
-      "raw_sha256": "df7d819d2ddfe71809c78355838d195b8e602f9ef8bbbb2fa8cc1e933def065d",
-      "sanitised_sha256": "991a2e3769c60976e5d9bdb1b245483578377909361d79fde86cdaf2a1450df5",
+      "raw_sha256": "77b75fe2451234f17f0dfbd1cbc4d45788a6cbc5cfd188c126f25ca84e466139",
+      "sanitised_sha256": "296fb746c95ca5c1d0b93ebcaf99f580d106a7fb525614e3508d9ab6868a64df",
       "independence_group": "classification-protocol",
       "size_bytes": 3024,
       "claim_ids_count": 9,
-      "captured_at": "2026-07-19T05:53:18.099Z",
+      "captured_at": "2026-07-27T19:07:51.254Z",
       "raw_input_immutable": true,
       "sanitised_projection_keys": [
         "$schema",
@@ -92,12 +92,12 @@
     {
       "source_ref": "runtime-evidence/M016-S01-classification-verification.json",
       "kind": "classification_verification",
-      "raw_sha256": "456e71cdad2b302ccd84835fb5c6b986de81d5e57180931e08e34351392b009d",
-      "sanitised_sha256": "3946cd935ac16f7ce8413a5317ce353447621c44f84a0cb6d1c98a3be009ef11",
+      "raw_sha256": "656e3aab945583ab8ebf96c1ebc641aebd916d46e5fc673326067924cb03ea92",
+      "sanitised_sha256": "576b375aec8aa040dca741f464b1835f3a4d5d89dc3914eea02f4cf3929cfe0a",
       "independence_group": "classification-verification",
       "size_bytes": 8000,
       "claim_ids_count": 9,
-      "captured_at": "2026-07-19T05:53:18.099Z",
+      "captured_at": "2026-07-27T19:07:51.255Z",
       "raw_input_immutable": true,
       "sanitised_projection_keys": [
         "$schema",
@@ -117,12 +117,12 @@
     {
       "source_ref": "runtime-evidence/M016-S01-classification-validation.json",
       "kind": "classification_verification",
-      "raw_sha256": "c6388696c89a83e11a59fcf94c1b233acb616196c6ab1b10435378a75a96f5a2",
-      "sanitised_sha256": "a86abd29d78412f6938c75439b1ef5a358c68c74a9a3ec5954ceb444babc4fea",
+      "raw_sha256": "08b1fda4856a92d0ee9f36f1d3f90387270911f1c2b3207ea3f80a6e507ea7ff",
+      "sanitised_sha256": "0bb26e3b05fb4781c5889099de49b1033fc765681e00dea057b0157bd63f8f8c",
       "independence_group": "classification-validation",
       "size_bytes": 8615,
       "claim_ids_count": 9,
-      "captured_at": "2026-07-19T05:53:18.099Z",
+      "captured_at": "2026-07-27T19:07:51.255Z",
       "raw_input_immutable": true,
       "sanitised_projection_keys": [
         "$schema",
@@ -148,11 +148,11 @@
     "regression-fixture"
   ],
   "raw_input_hashes": {
-    "runtime-evidence/M015-native-seven-division-mission-20260717.json": "84e5c950fd1db3b5a82c078b75f28925a4f6a052d4744bf403f2aef2b2e787a4",
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
     "runtime-evidence/M016-S01-m015-regression-fixture.json": "6d8b550e76c0cb5556175927ac341fa5d3387c71f2ff5a9c10348c595625dcf1",
-    "runtime-evidence/M016-S01-classification-protocol.json": "df7d819d2ddfe71809c78355838d195b8e602f9ef8bbbb2fa8cc1e933def065d",
-    "runtime-evidence/M016-S01-classification-verification.json": "456e71cdad2b302ccd84835fb5c6b986de81d5e57180931e08e34351392b009d",
-    "runtime-evidence/M016-S01-classification-validation.json": "c6388696c89a83e11a59fcf94c1b233acb616196c6ab1b10435378a75a96f5a2"
+    "runtime-evidence/M016-S01-classification-protocol.json": "77b75fe2451234f17f0dfbd1cbc4d45788a6cbc5cfd188c126f25ca84e466139",
+    "runtime-evidence/M016-S01-classification-verification.json": "656e3aab945583ab8ebf96c1ebc641aebd916d46e5fc673326067924cb03ea92",
+    "runtime-evidence/M016-S01-classification-validation.json": "08b1fda4856a92d0ee9f36f1d3f90387270911f1c2b3207ea3f80a6e507ea7ff"
   },
   "raw_input_immutability_verified": true
 }
