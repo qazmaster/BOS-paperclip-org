@@ -1,0 +1,257 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+  "schema_version": "v1",
+  "milestone": "M016-txa3vu",
+  "slice": "S03",
+  "task": "T04",
+  "generated": "2026-07-19T12:00:00.000Z",
+  "line_class": "M16-S03-DRILL",
+  "canonical_protocol": "PROTOCOL-M16-S03-PROBE-V1",
+  "protocol_digest": "d10607a4704bc134b95a46291fed32e64b567d543c32a78f2bfe545410937720",
+  "record_count": 3,
+  "executed_count": 3,
+  "not_proven_count": 0,
+  "fail_closed_count": 0,
+  "isolation_violation": false,
+  "residue_detected": false,
+  "stop_reason": null,
+  "session": {
+    "scratch_root": "/tmp/m016-s03-canonical",
+    "bounded_drill_count": 3,
+    "isolation_violation": false,
+    "residue_detected": false,
+    "stop_reason": null,
+    "drill_started_at": "2026-07-19T12:00:00.000Z",
+    "drills": [
+      {
+        "drill_kind": "restore-drill",
+        "ledger_entries": 6
+      },
+      {
+        "drill_kind": "budget-stop-drill",
+        "ledger_entries": 11
+      },
+      {
+        "drill_kind": "failure-drill",
+        "ledger_entries": 11
+      }
+    ]
+  },
+  "drill_ledger_summary": [
+    {
+      "drill_kind": "restore-drill",
+      "ledger_entries": 6
+    },
+    {
+      "drill_kind": "budget-stop-drill",
+      "ledger_entries": 11
+    },
+    {
+      "drill_kind": "failure-drill",
+      "ledger_entries": 11
+    }
+  ],
+  "records": [
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T04",
+      "generated": "2026-07-19T12:00:00.000Z",
+      "probe_id": "M16-S03-PROBE-restore_drill-drill-6-0b703773",
+      "role_class": "infrastructure",
+      "role": "restore_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-restore-drill",
+      "method": "restore-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill restore-drill",
+      "started_at": "2026-07-19T12:00:00.000Z",
+      "finished_at": "2026-07-19T12:00:00.000Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-isolated-restore",
+      "limitations": [
+        "fixture payload is random scratch bytes; no production state touched",
+        "restore step proves pre/post hash equality only; it does not validate side-channel state",
+        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "drill_kind": "restore-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "restore-drill:backup-to-restore:hash-equal-true",
+      "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "artifact_hash": "43fb7be4a0418cac608be5f60419d4854f6e0f1e530bceedcd64e264de532c2b",
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T04",
+      "generated": "2026-07-19T12:00:00.000Z",
+      "probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
+      "role_class": "infrastructure",
+      "role": "budget_stop_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-budget-stop-drill",
+      "method": "budget-stop-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill budget-stop-drill",
+      "started_at": "2026-07-19T12:00:00.000Z",
+      "finished_at": "2026-07-19T12:00:00.000Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-isolated-budget-stop",
+      "limitations": [
+        "synthetic in-memory budget state; no real Paperclip counter is touched",
+        "decision logic is the same off-by-one rule applied at 99/100/101 used",
+        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "drill_kind": "budget-stop-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "budget-drill:decisions:ALLOW-DENY-DENY-DENY",
+      "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "artifact_hash": "bf8a48699a3a975b92e965e6c4df33a61ae5aad4ea87df1ffbf80d18f2f1bf8d",
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T04",
+      "generated": "2026-07-19T12:00:00.000Z",
+      "probe_id": "M16-S03-PROBE-failure_drill-drill-11-13ff26c8",
+      "role_class": "infrastructure",
+      "role": "failure_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-failure-drill",
+      "method": "failure-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill failure-drill",
+      "started_at": "2026-07-19T12:00:00.000Z",
+      "finished_at": "2026-07-19T12:00:00.000Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-isolated-failure-cleanup",
+      "limitations": [
+        "synchronous simulated timeout; real async setTimeout-based aborts use the same cleanup hook",
+        "residue check is enforced after both partial-write and timeout scenarios",
+        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "drill_kind": "failure-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "failure-drill:cleanup-residue-free:partial-2-timeout-1",
+      "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "artifact_hash": "045cf2bd7f81d1beed309bbbbe3859f77a5ece280730d2ae17fcf3a730d8b56a",
+      "verdict": "pass",
+      "blocker_codes": []
+    }
+  ]
+}

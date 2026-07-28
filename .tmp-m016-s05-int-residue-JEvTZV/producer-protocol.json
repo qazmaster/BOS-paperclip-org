@@ -1,0 +1,32 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-producer-protocol.v1.json",
+  "schema_version": "v1",
+  "protocol_id": "m016-s05-seven-division-replay-producer-protocol-v1",
+  "protocol_kind": "seven-division-evidence-replay-producer-protocol",
+  "milestone": "M016-txa3vu",
+  "slice": "S05",
+  "task": "T02",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "line_class": "M16-S05-REPLAY",
+  "canonical_protocol": "PROTOCOL-M16-S05-REPLAY-V1",
+  "admission_ref": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/.tmp-m016-s05-int-residue-JEvTZV/admission.json",
+  "input_inventory_ref": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/.tmp-m016-s05-int-residue-JEvTZV/input-inventory.json",
+  "probe_run_ref": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/.tmp-m016-s05-int-residue-JEvTZV/probe-run.json",
+  "bundle_ref": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/.tmp-m016-s05-int-residue-JEvTZV/bundle.json",
+  "worksheet_ref": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/.tmp-m016-s05-int-residue-JEvTZV/scoring-worksheet.json",
+  "records_count": 19,
+  "replay_keys": {
+    "first_run_provenance_hash": "ceb03b5f5115e8586cac685b4e5ed089caf5cb099558ffa33182dc499c2dcd36",
+    "second_run_provenance_hash": "ceb03b5f5115e8586cac685b4e5ed089caf5cb099558ffa33182dc499c2dcd36",
+    "match": true,
+    "byte_identical": true,
+    "replay_key": "185439e136c86e299bbe653a79b84cf62c42f03d242634c3eb0dce2c5157a835",
+    "verified_at": "2026-07-20T12:00:00.000Z"
+  },
+  "verdicts": {
+    "orchestration": "NOT_PROVEN",
+    "evidence": "PARTIAL",
+    "launch": "PREPARATION_ONLY"
+  },
+  "blockers": []
+}

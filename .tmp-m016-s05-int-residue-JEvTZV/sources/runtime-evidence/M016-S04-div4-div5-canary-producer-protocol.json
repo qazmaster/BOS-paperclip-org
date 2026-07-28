@@ -1,0 +1,140 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s04-div4-div5-canary-producer-protocol.v1.json",
+  "schema_version": "v1",
+  "protocol_id": "m016-s04-div4-div5-canary-producer-protocol-v1",
+  "protocol_kind": "div4-to-div5-canary-producer-protocol",
+  "milestone": "M016-txa3vu",
+  "slice": "S04",
+  "task": "T03",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "line_class": "M16-S04-CANARY",
+  "canonical_protocol": "PROTOCOL-M16-S04-CANARY-V1",
+  "bundle_id": "m016-s04-div4-div5-canary-bundle-v1",
+  "bundle_sha256": "93dbf9e4eed3a282ea070a1ebd74d4e58cc2c26b4cd359ea7fd834c3201b3099",
+  "bundle_path": "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
+  "protocol_path": "runtime-evidence/M016-S04-div4-div5-canary-producer-protocol.json",
+  "schema_path": "schemas/runtime-evidence/m016-s04-div4-div5-canary-bundle.v1.json",
+  "producer_command": "node scripts/produce_m016_s04_div4_div5_canary.js --force",
+  "role_subset": [
+    "Div2.MasterPlanner",
+    "secret_posture"
+  ],
+  "drill_subset": [
+    "budget-stop-drill"
+  ],
+  "reference_time": "2026-07-20T12:00:00.000Z",
+  "options": {
+    "force": true,
+    "iterations": 2,
+    "reference_time": "2026-07-20T12:00:00.000Z"
+  },
+  "sources_loaded": [
+    "runtime-evidence/M016-S02-bos-mission-proof.json",
+    "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+    "runtime-evidence/M016-S03-live-probe-results.json",
+    "runtime-evidence/M016-S03-scratch-drill-results.json",
+    "runtime-evidence/M016-S03-verify-protocol.json",
+    "runtime-evidence/M016-S03-collect-protocol.json",
+    "runtime-evidence/M016-S03-input-inventory.json"
+  ],
+  "evidence_chain": [
+    {
+      "chain_role": "s02_baseline",
+      "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
+      "pre_hash_sha256": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+      "post_hash_sha256": "373d54e024ee847dc0388a4e2acfbdba536d1eef8392bd89ce929a618050e329",
+      "unchanged": true,
+      "size_bytes": 10148,
+      "independence_group": "m016-s02-bos-mission-proof",
+      "runner_status": "PASS"
+    },
+    {
+      "chain_role": "s03_pack",
+      "source_ref": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+      "pre_hash_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+      "post_hash_sha256": "e8550b4c3dd015085de375278bb637f8cc3aff492bd8841265103551672bac14",
+      "unchanged": true,
+      "size_bytes": 66178,
+      "independence_group": "m016-s03-pack",
+      "runner_status": "PASS"
+    },
+    {
+      "chain_role": "canary_probe_run",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "pre_hash_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "post_hash_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "unchanged": true,
+      "size_bytes": 42267,
+      "independence_group": "m016-s03-probe-live",
+      "runner_status": "PASS"
+    },
+    {
+      "chain_role": "canary_probe_run",
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "pre_hash_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+      "post_hash_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+      "unchanged": true,
+      "size_bytes": 9159,
+      "independence_group": "m016-s03-probe-drill",
+      "runner_status": "PASS"
+    },
+    {
+      "chain_role": "s03_verify_protocol",
+      "source_ref": "runtime-evidence/M016-S03-verify-protocol.json",
+      "pre_hash_sha256": "f026abf61260753f32735bfc6e84740f2675f4469b4f13429c8a19f1fd93e2ed",
+      "post_hash_sha256": "f026abf61260753f32735bfc6e84740f2675f4469b4f13429c8a19f1fd93e2ed",
+      "unchanged": true,
+      "size_bytes": 17015,
+      "independence_group": "m016-s03-verify-protocol",
+      "runner_status": "PASS"
+    },
+    {
+      "chain_role": "s03_collect_protocol",
+      "source_ref": "runtime-evidence/M016-S03-collect-protocol.json",
+      "pre_hash_sha256": "cf8dd9ac7d5d4ff44ae673c26798fee76cf3c2deee03c772a932cac0943fe94c",
+      "post_hash_sha256": "cf8dd9ac7d5d4ff44ae673c26798fee76cf3c2deee03c772a932cac0943fe94c",
+      "unchanged": true,
+      "size_bytes": 1668,
+      "independence_group": "m016-s03-collect-protocol",
+      "runner_status": "PASS"
+    },
+    {
+      "chain_role": "s03_input_inventory",
+      "source_ref": "runtime-evidence/M016-S03-input-inventory.json",
+      "pre_hash_sha256": "31d5d75974e33d27a1df53768b3916f409b3b03a21c9c96a2f1a8afcfa29bb31",
+      "post_hash_sha256": "31d5d75974e33d27a1df53768b3916f409b3b03a21c9c96a2f1a8afcfa29bb31",
+      "unchanged": true,
+      "size_bytes": 6300,
+      "independence_group": "m016-s03-input-inventory",
+      "runner_status": "PASS"
+    }
+  ],
+  "replay": {
+    "iterations": 2,
+    "first_run_provenance_hash": "93dbf9e4eed3a282ea070a1ebd74d4e58cc2c26b4cd359ea7fd834c3201b3099",
+    "second_run_provenance_hash": "93dbf9e4eed3a282ea070a1ebd74d4e58cc2c26b4cd359ea7fd834c3201b3099",
+    "match": true,
+    "byte_identical": true
+  },
+  "gates": {
+    "CG1 CANARY_PRODUCER_VALID": "pass",
+    "CG2 CANARY_VALIDATOR_INDEPENDENT": "pass",
+    "CG3 EVIDENCE_CHAIN_INTACT": "pass",
+    "CG4 CORRELATION_CONTRACT_VALID": "pass",
+    "CG5 REDACTION_SAFE": "pass",
+    "CG6 S02_BASELINE_IMMUTABLE": "pass",
+    "CG7 S03_PACK_IMMUTABLE": "pass",
+    "CG8 DETERMINISTIC_REPLAY": "pass"
+  },
+  "canary_subset_size": {
+    "live_records": 2,
+    "drill_records": 1,
+    "correlation_rows": 3,
+    "agent_run_to_probe_rows": 3
+  },
+  "verdict": "PRODUCED",
+  "blockers": [],
+  "runner_status": 0,
+  "runner_exit_code": 0,
+  "verdict_line": "M16-S04-CANARY verdict=PRODUCED exit=0 block_count=0 gate_count=8"
+}

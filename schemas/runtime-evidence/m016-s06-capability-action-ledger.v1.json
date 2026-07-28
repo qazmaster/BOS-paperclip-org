@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s06-capability-action-ledger.v1.json",
+  "title": "M016 S06 Capability Action Ledger v1",
+  "description": "Narrow audit sidecar produced by the S06 verifier: each existing capability row from plugin-bos-light/capabilities.paperclip-runtime.json is reproduced with pre_status, post_status, action (keep | update_fallback | update_blocker | drop), confidence, justification, and the bounded source_ref that anchors the row. No row may reach `confirmed` in M016/S06 unless the upstream ledger already had `confirmed` AND the row is NOT in the FORBIDDEN_PROMOTION_SURFACES set; otherwise the ledger sidecar is fail-closed refused. Promotion_blocked MUST remain true on the canonical output. Raw bodies, secret tokens, full UUIDs, and Paperclip base URLs MUST NEVER appear.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "ledger_id",
+    "ledger_kind",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "reference_time",
+    "verifier_line",
+    "canonical_protocol",
+    "ledger_source_ref",
+    "ledger_source_sha256",
+    "capability_rows",
+    "aggregate_action_counts",
+    "promotion_blocked",
+    "pre_status_promoted_to_confirmed_count",
+    "total_rows",
+    "limits",
+    "blockers",
+    "byte_digest"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "https://gsd.local/schemas/runtime-evidence/m016-s06-capability-action-ledger.v1.json"
+    },
+    "schema_version": {"const": "v1"},
+    "ledger_id": {"const": "m016-s06-capability-action-ledger-v1"},
+    "ledger_kind": {"const": "capability-action-ledger"},
+    "milestone": {"const": "M016-txa3vu"},
+    "slice": {"const": "S06"},
+    "task": {"const": "T01"},
+    "generated": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "reference_time": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "verifier_line": {"const": "M16-S06-RECONCILE"},
+    "canonical_protocol": {"const": "PROTOCOL-M16-S06-RECONCILE-V1"},
+    "ledger_source_ref": {"const": "plugin-bos-light/capabilities.paperclip-runtime.json"},
+    "ledger_source_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "capability_rows": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 64,
+      "items": {"$ref": "#/definitions/capability_row"}
+    },
+    "aggregate_action_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keep", "update_fallback", "update_blocker", "drop"],
+      "properties": {
+        "keep": {"type": "integer", "minimum": 0, "maximum": 64},
+        "update_fallback": {"type": "integer", "minimum": 0, "maximum": 64},
+        "update_blocker": {"type": "integer", "minimum": 0, "maximum": 64},
+        "drop": {"type": "integer", "minimum": 0, "maximum": 64}
+      }
+    },
+    "promotion_blocked": {"const": true},
+    "pre_status_promoted_to_confirmed_count": {"type": "integer", "minimum": 0, "maximum": 0},
+    "total_rows": {"type": "integer", "minimum": 0, "maximum": 64},
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_capability_rows", "max_blocker_codes", "max_blocker_reason_chars"],
+      "properties": {
+        "max_capability_rows": {"const": 64},
+        "max_blocker_codes": {"const": 96},
+        "max_blocker_reason_chars": {"const": 512}
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 96,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "reason"],
+        "properties": {
+          "code": {"type": "string", "pattern": "^M16-S06-RECONCILE-[A-Za-z0-9._-]+$"},
+          "reason": {"type": "string", "minLength": 1, "maxLength": 512}
+        }
+      }
+    },
+    "byte_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "definitions": {
+    "capability_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability_key",
+        "paperclip_surface_name",
+        "pre_status",
+        "post_status",
+        "action",
+        "confidence",
+        "justification",
+        "source_ref",
+        "source_sha256",
+        "observed_in_m015_or_m016",
+        "supported_by_criterion_ids"
+      ],
+      "properties": {
+        "capability_key": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,63}$"},
+        "paperclip_surface_name": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "pre_status": {"enum": ["confirmed", "unvalidated", "fallback-only", "unsupported"]},
+        "post_status": {"enum": ["confirmed", "unvalidated", "fallback-only", "unsupported"]},
+        "action": {"enum": ["keep", "update_fallback", "update_blocker", "drop"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "justification": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "source_ref": {"const": "plugin-bos-light/capabilities.paperclip-runtime.json"},
+        "source_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "observed_in_m015_or_m016": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "oneOf": [
+              {"type": "string", "pattern": "^runtime-evidence/M015-[A-Za-z0-9._/-]+\\.json$"},
+              {"type": "string", "pattern": "^runtime-evidence/M016-S[0-9]{2}-[A-Za-z0-9._/-]+\\.json$"}
+            ]
+          }
+        },
+        "supported_by_criterion_ids": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^M16-S06-CRITERION-[A-Za-z0-9_-]+$"}
+        },
+        "blocked_reason": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "minLength": 1, "maxLength": 512}
+          ]
+        }
+      }
+    }
+  }
+}

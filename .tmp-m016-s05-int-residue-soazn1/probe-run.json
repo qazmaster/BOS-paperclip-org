@@ -1,0 +1,33 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-producer-protocol.v1.json",
+  "schema_version": "v1",
+  "run_id": "M16-S05-REPLAY-RUN-integration-replay",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "iterations": 2,
+  "record_count": 19,
+  "exit_codes": [
+    599,
+    599,
+    599,
+    599,
+    599,
+    599,
+    599,
+    599,
+    599,
+    0,
+    0,
+    0,
+    599,
+    599,
+    599,
+    0,
+    0,
+    0,
+    0
+  ],
+  "network_calls": 0,
+  "mutation_count": 0,
+  "replay_key": "b4ad907a9799e38c698891c21b8e465c65d0d37fb08e3d1a6bc3f9a3ee56c298",
+  "blockers": []
+}

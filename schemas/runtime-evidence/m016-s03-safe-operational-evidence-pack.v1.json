@@ -1,0 +1,527 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json",
+  "title": "M016-S03 Safe Operational Evidence Pack v1",
+  "description": "Canonical replayable S03 evidence pack aggregating bounded live-probe and scratch-drill evidence with explicit NOT_PROVEN materialisation for missing roles. Embeds frozen S02-baseline immutability check, role/drill matrices, raw-state worksheet projection, and PREPARATION_ONLY launch verdict so the sidecar structurally cannot be promoted into a launch proof. Every source carries pre/post SHA-256 and a sanitised SHA-256; replay keys prove byte-identical offline dual-run determinism. No full UUIDs, no credentials, no Xiaomi/MiMo vendor-reuse strings, no raw reasoning, no raw body, no result_json.result, no agent vendor markers.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "pack_id",
+    "pack_kind",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "pack_digest",
+    "sources",
+    "s02_baseline",
+    "role_matrix",
+    "drill_matrix",
+    "records",
+    "raw_state_worksheet",
+    "redaction_posture",
+    "embedded_classification",
+    "replay_keys",
+    "blockers",
+    "raw_input_immutability_verified"
+  ],
+  "properties": {
+    "schema_id": {
+      "type": "string",
+      "const": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "pack_id": {
+      "type": "string",
+      "description": "Stable kebab-case identifier of this pack.",
+      "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "pack_kind": {
+      "type": "string",
+      "description": "Frozen pack discriminator.",
+      "const": "safe-operational-evidence-pack"
+    },
+    "milestone": {
+      "type": "string",
+      "const": "M016-txa3vu"
+    },
+    "slice": {
+      "type": "string",
+      "const": "S03"
+    },
+    "task": {
+      "type": "string",
+      "enum": ["T05", "t05"]
+    },
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of pack generation."
+    },
+    "pack_digest": {
+      "type": "string",
+      "description": "Deterministic sha256 of the canonical pack body (excluding pack_digest itself).",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_ref",
+          "kind",
+          "pre_hash_sha256",
+          "post_hash_sha256",
+          "sanitised_sha256",
+          "independence_group",
+          "size_bytes",
+          "claim_ids",
+          "projection_keys",
+          "captured_at"
+        ],
+        "properties": {
+          "source_ref": {
+            "type": "string",
+            "pattern": "^runtime-evidence/M016-S03-[a-z0-9._-]+\\.json$",
+            "maxLength": 256
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "live_probe_results",
+              "scratch_drill_results",
+              "isolation_invariant",
+              "live_probe_protocol",
+              "scratch_drill_protocol"
+            ]
+          },
+          "pre_hash_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "post_hash_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "sanitised_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4194304
+          },
+          "independence_group": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]{2,63}$"
+          },
+          "claim_ids": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 64,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9._-]{2,63}$"
+            }
+          },
+          "projection_keys": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 256,
+            "items": { "type": "string", "maxLength": 256 }
+          },
+          "captured_at": { "type": ["string", "null"] },
+          "record_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1024
+          },
+          "executed_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1024
+          },
+          "not_proven_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1024
+          }
+        }
+      }
+    },
+    "s02_baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_ref",
+        "pre_canonical_hash",
+        "post_canonical_hash",
+        "unchanged"
+      ],
+      "properties": {
+        "source_ref": {
+          "type": "string",
+          "const": "runtime-evidence/M016-S02-bos-mission-proof.json"
+        },
+        "pre_canonical_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "post_canonical_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "unchanged": { "type": "boolean", "const": true }
+      }
+    },
+    "role_matrix": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "role_class",
+          "classification",
+          "independence_group",
+          "source_ref",
+          "probe_id"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "Div1.HCO",
+              "Div2.MasterPlanner",
+              "Div3.Treasury",
+              "Div4.Production",
+              "Div5.QualificationsLibraryLearning",
+              "Div6.External",
+              "Div7.MissionControl",
+              "paperclip_health",
+              "hermes_environment",
+              "secret_posture",
+              "cost_snapshot",
+              "isolation_invariant",
+              "restore_drill",
+              "budget_stop_drill",
+              "failure_drill",
+              "redaction_posture_audit"
+            ]
+          },
+          "role_class": {
+            "type": "string",
+            "enum": ["division", "infrastructure"]
+          },
+          "classification": {
+            "type": "string",
+            "enum": ["EXECUTED", "NOT_PROVEN"]
+          },
+          "independence_group": {
+            "type": "string",
+            "pattern": "^m016-s03-probe-[a-z0-9._-]+$"
+          },
+          "source_ref": {
+            "type": "string",
+            "pattern": "^runtime-evidence/M016-S03-(live-probe-results|scratch-drill-results)\\.json$"
+          },
+          "probe_id": {
+            "type": "string",
+            "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"
+          },
+          "methodology": {
+            "type": "string",
+            "enum": ["live-readonly", "scratch-drill", "observed"]
+          }
+        }
+      }
+    },
+    "drill_matrix": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "drill_kind",
+          "role",
+          "classification",
+          "independence_group",
+          "source_ref",
+          "probe_id"
+        ],
+        "properties": {
+          "drill_kind": {
+            "type": "string",
+            "enum": ["restore-drill", "budget-stop-drill", "failure-drill"]
+          },
+          "role": {
+            "type": "string",
+            "enum": ["restore_drill", "budget_stop_drill", "failure_drill"]
+          },
+          "classification": { "type": "string", "const": "EXECUTED" },
+          "independence_group": {
+            "type": "string",
+            "pattern": "^m016-s03-probe-[a-z0-9._-]+$"
+          },
+          "source_ref": {
+            "type": "string",
+            "const": "runtime-evidence/M016-S03-scratch-drill-results.json"
+          },
+          "probe_id": {
+            "type": "string",
+            "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"
+          },
+          "isolation_violation": { "type": "boolean" },
+          "residue_detected": { "type": "boolean" }
+        }
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 32,
+      "description": "Concatenation of live-probe records (16) and scratch-drill records (3). Each record conforms to the safe-probe schema with mutually-exclusive EXECUTED/NOT_PROVEN branches."
+    },
+    "raw_state_worksheet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_orchestration", "step_evidence", "step_launch"],
+      "properties": {
+        "step_orchestration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["weight", "numeric_mapping", "observed_status"],
+          "properties": {
+            "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+            "numeric_mapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["live_signed", "division_agents_mapped"],
+              "properties": {
+                "live_signed": { "type": "number", "minimum": 0, "maximum": 1 },
+                "division_agents_mapped": { "type": "integer", "minimum": 0, "maximum": 7 }
+              }
+            },
+            "observed_status": {
+              "type": "string",
+              "enum": ["pass", "not_proven", "fail_closed"]
+            }
+          }
+        },
+        "step_evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["weight", "numeric_mapping", "observed_status"],
+          "properties": {
+            "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+            "numeric_mapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sources_sanitised", "s02_unchanged"],
+              "properties": {
+                "sources_sanitised": { "type": "integer", "minimum": 0, "maximum": 16 },
+                "s02_unchanged": { "type": "integer", "enum": [0, 1] }
+              }
+            },
+            "observed_status": {
+              "type": "string",
+              "enum": ["pass", "not_proven", "fail_closed"]
+            }
+          }
+        },
+        "step_launch": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["weight", "numeric_mapping", "observed_status"],
+          "properties": {
+            "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+            "numeric_mapping": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["executed_count", "verdict_frozen"],
+              "properties": {
+                "executed_count": { "type": "integer", "minimum": 0, "maximum": 32 },
+                "verdict_frozen": { "type": "string", "const": "PREPARATION_ONLY" }
+              }
+            },
+            "observed_status": {
+              "type": "string",
+              "enum": ["fail_closed"]
+            }
+          }
+        }
+      }
+    },
+    "redaction_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_ids",
+        "credentials",
+        "xiaomi_endpoint_reuse",
+        "synthetic_bos",
+        "raw_reasoning",
+        "raw_body",
+        "raw_result_json_result",
+        "vendor_reuse_strings",
+        "bounded_digests_only",
+        "redaction_bounds_loaded"
+      ],
+      "properties": {
+        "full_ids": { "type": "boolean" },
+        "credentials": { "type": "boolean" },
+        "xiaomi_endpoint_reuse": { "type": "boolean" },
+        "synthetic_bos": { "type": "boolean" },
+        "raw_reasoning": { "type": "boolean" },
+        "raw_body": { "type": "boolean" },
+        "raw_result_json_result": { "type": "boolean" },
+        "vendor_reuse_strings": { "type": "boolean" },
+        "bounded_digests_only": { "type": "boolean" },
+        "redaction_bounds_loaded": { "type": "boolean" }
+      }
+    },
+    "embedded_classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluator",
+        "evaluator_version",
+        "raw_state",
+        "numeric_mapping",
+        "weight",
+        "verdicts",
+        "hard_gates",
+        "worksheet"
+      ],
+      "properties": {
+        "evaluator": {
+          "type": "string",
+          "const": "S03-safe-operational-evidence-pack-contract"
+        },
+        "evaluator_version": { "type": "string", "const": "v1" },
+        "raw_state": {
+          "type": "string",
+          "enum": ["PARTIAL", "EXECUTED", "NOT_PROVEN"]
+        },
+        "numeric_mapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["orchestration", "evidence", "launch"],
+          "properties": {
+            "orchestration": { "type": "number", "minimum": 0, "maximum": 1 },
+            "evidence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "launch": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "verdicts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["orchestration", "evidence", "launch"],
+          "properties": {
+            "orchestration": { "type": "string", "enum": ["PASS", "PARTIAL", "NOT_PROVEN"] },
+            "evidence": { "type": "string", "enum": ["PASS", "PARTIAL", "NOT_PROVEN"] },
+            "launch": { "type": "string", "const": "PREPARATION_ONLY" }
+          }
+        },
+        "hard_gates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "HG1 SEMANTIC_RULE_COMPLIANCE",
+            "HG2 PROVENANCE_INTEGRITY",
+            "HG3 RECOVERY_EVIDENCE",
+            "HG4 FINANCIAL_PROTECTION",
+            "HG5 SECURITY_POSTURE",
+            "HG6 COMPLIANCE_POSTURE",
+            "HG7 READ_ONLY_BOUNDARY",
+            "HG8 SCRATCH_ISOLATION"
+          ],
+          "properties": {
+            "HG1 SEMANTIC_RULE_COMPLIANCE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG2 PROVENANCE_INTEGRITY": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG3 RECOVERY_EVIDENCE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG4 FINANCIAL_PROTECTION": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG5 SECURITY_POSTURE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG6 COMPLIANCE_POSTURE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG7 READ_ONLY_BOUNDARY": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG8 SCRATCH_ISOLATION": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] }
+          }
+        },
+        "worksheet": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["steps", "completed_at", "completed_by"],
+          "properties": {
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["step_id", "description", "verify_cmd", "observed_status", "observed_evidence"],
+                "properties": {
+                  "step_id": { "type": "string", "pattern": "^[a-z][a-z0-9._-]{2,63}$" },
+                  "description": { "type": "string", "maxLength": 400 },
+                  "verify_cmd": { "type": "string", "pattern": "^node scripts/test_[a-z0-9._-]+\\.js$" },
+                  "observed_status": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+                  "observed_evidence": { "type": "string", "maxLength": 400 }
+                }
+              }
+            },
+            "completed_at": { "type": "string", "format": "date-time" },
+            "completed_by": { "type": "string", "const": "collector" }
+          }
+        },
+        "completed_at": { "type": "string", "format": "date-time" },
+        "completed_by": { "type": "string", "const": "collector" }
+      }
+    },
+    "replay_keys": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "first_run_provenance_hash",
+        "second_run_provenance_hash",
+        "match",
+        "byte_identical",
+        "verified_at"
+      ],
+      "properties": {
+        "first_run_provenance_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "second_run_provenance_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "match": { "type": "boolean", "const": true },
+        "byte_identical": { "type": "boolean", "const": true },
+        "verified_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "reason"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^M16-S03-(COLLECT|PACK)-[A-Za-z0-9._-]+$"
+          },
+          "reason": { "type": "string", "minLength": 1, "maxLength": 400 },
+          "source_ref": { "type": "string", "maxLength": 256 }
+        }
+      }
+    },
+    "raw_input_immutability_verified": { "type": "boolean", "const": true }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json",
+  "schema_version": "v1",
+  "pack_id": "m016-s03-safe-operational-evidence-pack-v1",
+  "pack_kind": "safe-operational-evidence-pack",
+  "milestone": "M016-txa3vu",
+  "slice": "S03",
+  "task": "T05",
+  "generated": "2026-07-28T03:52:00.463Z",
+  "line_class": "M16-S03-COLLECT",
+  "canonical_protocol": "PROTOCOL-M16-S03-COLLECT-V1",
+  "sources_loaded": [
+    "runtime-evidence/M016-S03-live-probe-results.json",
+    "runtime-evidence/M016-S03-scratch-drill-results.json",
+    "runtime-evidence/M016-S03-isolation-invariant.json",
+    "runtime-evidence/M016-S03-live-probe-protocol.json",
+    "runtime-evidence/M016-S03-scratch-drill-protocol.json"
+  ],
+  "s02_baseline_unchanged": true,
+  "s02_baseline_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
+  "role_matrix_size": 16,
+  "drill_matrix_size": 3,
+  "record_count": 19,
+  "gates": {
+    "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
+    "HG2 PROVENANCE_INTEGRITY": "pass",
+    "HG3 RECOVERY_EVIDENCE": "pass",
+    "HG4 FINANCIAL_PROTECTION": "pass",
+    "HG5 SECURITY_POSTURE": "pass",
+    "HG6 COMPLIANCE_POSTURE": "pass",
+    "HG7 READ_ONLY_BOUNDARY": "pass",
+    "HG8 SCRATCH_ISOLATION": "pass"
+  },
+  "verdict": "pass",
+  "blockers": [],
+  "paths": {
+    "pack": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+    "inventory": "runtime-evidence/M016-S03-input-inventory.json",
+    "protocol": "runtime-evidence/M016-S03-collect-protocol.json",
+    "schema": "schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json"
+  },
+  "runner_status": 0
+}

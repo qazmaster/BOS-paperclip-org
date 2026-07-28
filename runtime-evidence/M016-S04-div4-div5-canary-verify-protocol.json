@@ -1,0 +1,347 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s04-div4-div5-canary-verify-protocol.v1.json",
+  "schema_version": "v1",
+  "protocol_id": "m016-s04-div4-div5-canary-verify-protocol-v1",
+  "protocol_kind": "div4-to-div5-canary-verify-protocol",
+  "milestone": "M016-txa3vu",
+  "slice": "S04",
+  "task": "T04",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "line_class": "M16-S04-VERIFY",
+  "canonical_protocol": "PROTOCOL-M16-S04-VERIFY-V1",
+  "bundle_id": "m016-s04-div4-div5-canary-bundle-v1",
+  "bundle_sha256": "3f69467ce18f94fa7c8f171697ecd0168a497705a517f61d3a82d505f1028c80",
+  "bundle_path": "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
+  "protocol_path": "runtime-evidence/M016-S04-div4-div5-canary-verify-protocol.json",
+  "schema_path": "schemas/runtime-evidence/m016-s04-div4-div5-canary-bundle.v1.json",
+  "validator_command": "node scripts/verify_m016_s04_div4_div5_canary.js --force",
+  "replay_iterations": 2,
+  "reference_time": "2026-07-20T12:00:00.000Z",
+  "options": {
+    "force": true,
+    "iterations": 2,
+    "reference_time": "2026-07-20T12:00:00.000Z"
+  },
+  "gate_ids": [
+    "CG1 CANARY_PRODUCER_VALID",
+    "CG2 CANARY_VALIDATOR_INDEPENDENT",
+    "CG3 EVIDENCE_CHAIN_INTACT",
+    "CG4 CORRELATION_CONTRACT_VALID",
+    "CG5 REDACTION_SAFE",
+    "CG6 S02_BASELINE_IMMUTABLE",
+    "CG7 S03_PACK_IMMUTABLE",
+    "CG8 DETERMINISTIC_REPLAY"
+  ],
+  "gate_labels": {
+    "CG1 CANARY_PRODUCER_VALID": "Div4 producer CLI exit=0, bundle schema passes, byte-identical inline dual-run replay produces two equal provenance hashes",
+    "CG2 CANARY_VALIDATOR_INDEPENDENT": "Div5 verifier imports only contract/data modules, never the producer CLI; N-iteration replay produces equal verifier verdict lines",
+    "CG3 EVIDENCE_CHAIN_INTACT": "s02_baseline pre_canonical_hash == post_canonical_hash, s03_pack pre_sha256 == post_sha256, canary_probe_run pre_sha256 == post_sha256",
+    "CG4 CORRELATION_CONTRACT_VALID": "agent_run_id, probe_id, evidence_id, criterion_id are all unique within the bundle; criterion_id is a member of HARD_GATE_IDS or CANARY_GATE_IDS; independence_group is a member of INDEPENDENCE_GROUPS_SET",
+    "CG5 REDACTION_SAFE": "all 10 REDACTION_FLAG_VALUES flags are false; bounded_digests_only=true; redaction_bounds_loaded=true; no leak regex hit on any sanitised field",
+    "CG6 S02_BASELINE_IMMUTABLE": "s02 baseline canonical_hash and raw_sha256 are equal on the producer pre and post windows; unchanged flag is true",
+    "CG7 S03_PACK_IMMUTABLE": "s03_safe_operational_evidence_pack sha256 and pack_digest are equal on the producer pre and post windows; unchanged flag is true",
+    "CG8 DETERMINISTIC_REPLAY": "two sequential producer runs produce byte-identical bundle bytes under the same reference_time; replay_keys.match=true and byte_identical=true"
+  },
+  "gates": {
+    "CG1 CANARY_PRODUCER_VALID": "pass",
+    "CG2 CANARY_VALIDATOR_INDEPENDENT": "pass",
+    "CG3 EVIDENCE_CHAIN_INTACT": "pass",
+    "CG4 CORRELATION_CONTRACT_VALID": "pass",
+    "CG5 REDACTION_SAFE": "pass",
+    "CG6 S02_BASELINE_IMMUTABLE": "pass",
+    "CG7 S03_PACK_IMMUTABLE": "pass",
+    "CG8 DETERMINISTIC_REPLAY": "pass"
+  },
+  "hard_gates": {
+    "HG1 SEMANTIC_RULE_COMPLIANCE": "not_proven",
+    "HG2 PROVENANCE_INTEGRITY": "pass",
+    "HG3 RECOVERY_EVIDENCE": "pass",
+    "HG4 FINANCIAL_PROTECTION": "pass",
+    "HG5 SECURITY_POSTURE": "pass",
+    "HG6 COMPLIANCE_POSTURE": "pass",
+    "HG7 READ_ONLY_BOUNDARY": "pass",
+    "HG8 SCRATCH_ISOLATION": "pass"
+  },
+  "canary_gates": {
+    "CG1 CANARY_PRODUCER_VALID": "pass",
+    "CG2 CANARY_VALIDATOR_INDEPENDENT": "pass",
+    "CG3 EVIDENCE_CHAIN_INTACT": "pass",
+    "CG4 CORRELATION_CONTRACT_VALID": "pass",
+    "CG5 REDACTION_SAFE": "pass",
+    "CG6 S02_BASELINE_IMMUTABLE": "pass",
+    "CG7 S03_PACK_IMMUTABLE": "pass",
+    "CG8 DETERMINISTIC_REPLAY": "pass"
+  },
+  "derived_gates": {
+    "CG1 CANARY_PRODUCER_VALID": "pass",
+    "CG2 CANARY_VALIDATOR_INDEPENDENT": "pass",
+    "CG3 EVIDENCE_CHAIN_INTACT": "pass",
+    "CG4 CORRELATION_CONTRACT_VALID": "pass",
+    "CG5 REDACTION_SAFE": "pass",
+    "CG6 S02_BASELINE_IMMUTABLE": "pass",
+    "CG7 S03_PACK_IMMUTABLE": "pass",
+    "CG8 DETERMINISTIC_REPLAY": "pass"
+  },
+  "independent_replay": {
+    "iterations": 2,
+    "deterministic": true,
+    "first_mismatched_run": null,
+    "mismatch_field": null,
+    "runs": [
+      {
+        "iteration": 0,
+        "runner_status": "PASS",
+        "runner_exit_code": 0,
+        "verdict": "PASS",
+        "blockers_count": 0,
+        "gates": {
+          "CG1 CANARY_PRODUCER_VALID": "pass",
+          "CG2 CANARY_VALIDATOR_INDEPENDENT": "pass",
+          "CG3 EVIDENCE_CHAIN_INTACT": "pass",
+          "CG4 CORRELATION_CONTRACT_VALID": "pass",
+          "CG5 REDACTION_SAFE": "pass",
+          "CG6 S02_BASELINE_IMMUTABLE": "pass",
+          "CG7 S03_PACK_IMMUTABLE": "pass",
+          "CG8 DETERMINISTIC_REPLAY": "pass"
+        }
+      },
+      {
+        "iteration": 1,
+        "runner_status": "PASS",
+        "runner_exit_code": 0,
+        "verdict": "PASS",
+        "blockers_count": 0,
+        "gates": {
+          "CG1 CANARY_PRODUCER_VALID": "pass",
+          "CG2 CANARY_VALIDATOR_INDEPENDENT": "pass",
+          "CG3 EVIDENCE_CHAIN_INTACT": "pass",
+          "CG4 CORRELATION_CONTRACT_VALID": "pass",
+          "CG5 REDACTION_SAFE": "pass",
+          "CG6 S02_BASELINE_IMMUTABLE": "pass",
+          "CG7 S03_PACK_IMMUTABLE": "pass",
+          "CG8 DETERMINISTIC_REPLAY": "pass"
+        }
+      }
+    ]
+  },
+  "raw_sha_reproduction": {
+    "all_match": true,
+    "match_count": 7,
+    "total_count": 7,
+    "sources": [
+      {
+        "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
+        "kind": "s02_baseline",
+        "independence_group": "m016-s02-bos-mission-proof",
+        "claimed_pre_hash_sha256": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+        "claimed_post_hash_sha256": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+        "actual_raw_sha256": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S02-bos-mission-proof.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+        "kind": "s03_pack",
+        "independence_group": "m016-s03-pack",
+        "claimed_pre_hash_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
+        "claimed_post_hash_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
+        "actual_raw_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-safe-operational-evidence-pack.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+        "kind": "canary_probe_run",
+        "independence_group": "m016-s03-probe-live",
+        "claimed_pre_hash_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+        "claimed_post_hash_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+        "actual_raw_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-live-probe-results.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+        "kind": "canary_probe_run",
+        "independence_group": "m016-s03-probe-drill",
+        "claimed_pre_hash_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+        "claimed_post_hash_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+        "actual_raw_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-scratch-drill-results.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-verify-protocol.json",
+        "kind": "s03_verify_protocol",
+        "independence_group": "m016-s03-verify-protocol",
+        "claimed_pre_hash_sha256": "d203991618c28d5436d2ec024a9bb8462d4562b81a16ce1cf9f7855b9e7cc6cf",
+        "claimed_post_hash_sha256": "d203991618c28d5436d2ec024a9bb8462d4562b81a16ce1cf9f7855b9e7cc6cf",
+        "actual_raw_sha256": "d203991618c28d5436d2ec024a9bb8462d4562b81a16ce1cf9f7855b9e7cc6cf",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-verify-protocol.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-collect-protocol.json",
+        "kind": "s03_collect_protocol",
+        "independence_group": "m016-s03-collect-protocol",
+        "claimed_pre_hash_sha256": "441dfa507b9e63f1d33640102a180055e6f273f6472dfe9c48dd89231e0c2f41",
+        "claimed_post_hash_sha256": "441dfa507b9e63f1d33640102a180055e6f273f6472dfe9c48dd89231e0c2f41",
+        "actual_raw_sha256": "441dfa507b9e63f1d33640102a180055e6f273f6472dfe9c48dd89231e0c2f41",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-collect-protocol.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      },
+      {
+        "source_ref": "runtime-evidence/M016-S03-input-inventory.json",
+        "kind": "s03_input_inventory",
+        "independence_group": "m016-s03-input-inventory",
+        "claimed_pre_hash_sha256": "3d762ca71dcf903cf72e4b2f09cb6f5619360f726f751989d5ca8ae452a35d98",
+        "claimed_post_hash_sha256": "3d762ca71dcf903cf72e4b2f09cb6f5619360f726f751989d5ca8ae452a35d98",
+        "actual_raw_sha256": "3d762ca71dcf903cf72e4b2f09cb6f5619360f726f751989d5ca8ae452a35d98",
+        "exists_on_disk": true,
+        "is_symlink": false,
+        "realpath": "/home/qazanik/Documents/BOS_Chimera_Paperclip_Handoff/BOS_Chimera_Paperclip_Handoff/runtime-evidence/M016-S03-input-inventory.json",
+        "raw_read_error": null,
+        "pre_hash_match": true,
+        "post_hash_match": true,
+        "pre_post_equal": true,
+        "raw_match": true
+      }
+    ]
+  },
+  "s02_baseline_reproduction": {
+    "match": true,
+    "pre_match": true,
+    "post_match": true,
+    "pre_post_equal": true,
+    "unchanged_flag": true,
+    "raw_pre_post_match": true,
+    "raw_sha_first_read": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+    "raw_sha_second_read": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+    "computed_canonical_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
+    "claimed_pre_canonical_hash": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+    "claimed_post_canonical_hash": "3acef41b4a209d7136350faba80ec3d6c46cdfd58151e74390e1939d11cb75c2",
+    "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json"
+  },
+  "s03_pack_reproduction": {
+    "match": true,
+    "pre_match": true,
+    "post_match": true,
+    "pre_post_equal": true,
+    "unchanged_flag": true,
+    "computed_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
+    "claimed_pre_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
+    "claimed_post_sha256": "77a88c5771ed50e60b6e06770d155ee9a7dbe6de8a7b2a8bd460cf37bcdcee53",
+    "source_ref": "runtime-evidence/M016-S03-safe-operational-evidence-pack.json"
+  },
+  "canary_probe_run_reproduction": {
+    "match": true,
+    "pre_match": true,
+    "post_match": true,
+    "pre_post_equal": true,
+    "computed_sha256": "1eccb4352b94ab760b32e045d1fb6bd46f312bddee97166c1fd2ac9362d01187",
+    "claimed_pre_sha256": "1eccb4352b94ab760b32e045d1fb6bd46f312bddee97166c1fd2ac9362d01187",
+    "claimed_post_sha256": "1eccb4352b94ab760b32e045d1fb6bd46f312bddee97166c1fd2ac9362d01187",
+    "source_ref": "runtime-evidence/M016-S04-div4-div5-canary-probe-run.json"
+  },
+  "allowlist_drift": {
+    "not_in_allowlist": [],
+    "missing_from_bundle": [],
+    "drift_count": 0
+  },
+  "role_matrix_audit": {
+    "issue_count": 0,
+    "issues": []
+  },
+  "drill_matrix_audit": {
+    "issue_count": 0,
+    "issues": []
+  },
+  "correlation_audit": {
+    "issue_count": 0,
+    "agent_run_unique": false,
+    "probe_unique": true,
+    "evidence_unique": true,
+    "criterion_unique": true,
+    "criteria_in_vocabulary": true,
+    "independence_group_in_registry": true,
+    "issues": []
+  },
+  "launch_posture_audit": {
+    "frozen": true,
+    "issue_count": 0,
+    "issues": []
+  },
+  "redaction_audit": {
+    "clean": true,
+    "hit_count": 0,
+    "hits": []
+  },
+  "tamper_detection": {
+    "issue_count": 0,
+    "issues": []
+  },
+  "classification_drift": [],
+  "redaction_posture": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false,
+    "raw_reasoning": false,
+    "raw_body": false,
+    "raw_result_json_result": false,
+    "vendor_reuse_strings": false,
+    "bounded_digests_only": true,
+    "redaction_bounds_loaded": true
+  },
+  "embedded_classification_verdicts": {
+    "orchestration": "PASS",
+    "evidence": "PASS",
+    "launch": "PREPARATION_ONLY"
+  },
+  "replay_keys_match": true,
+  "blockers": [],
+  "blocker_codes": [],
+  "runner_status": "PASS",
+  "runner_exit_code": 0,
+  "verdict_line": "M16-S04-VERIFY verdict=PASS exit=0 block_count=0",
+  "paths": {
+    "bundle": "runtime-evidence/M016-S04-div4-div5-canary-bundle.json",
+    "verify": "runtime-evidence/M016-S04-div4-div5-canary-verify-protocol.json",
+    "schema": "schemas/runtime-evidence/m016-s04-div4-div5-canary-bundle.v1.json"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+  "schema_version": "v1",
+  "milestone": "M016-txa3vu",
+  "slice": "S03",
+  "task": "T03",
+  "generated": "2026-07-19T12:00:00.000Z",
+  "line_class": "M16-S03-LIVE",
+  "canonical_protocol": "PROTOCOL-M16-S03-PROBE-V1",
+  "record_count": 16,
+  "executed_count": 4,
+  "not_proven_count": 12,
+  "fail_closed_count": 0,
+  "gates": {
+    "HG1 SEMANTIC_RULE_COMPLIANCE": "not_proven",
+    "HG2 PROVENANCE_INTEGRITY": "not_proven",
+    "HG3 RECOVERY_EVIDENCE": "not_proven",
+    "HG4 FINANCIAL_PROTECTION": "not_proven",
+    "HG5 SECURITY_POSTURE": "not_proven",
+    "HG6 COMPLIANCE_POSTURE": "not_proven",
+    "HG7 READ_ONLY_BOUNDARY": "not_proven",
+    "HG8 SCRATCH_ISOLATION": "not_proven"
+  },
+  "verdict": "not_proven",
+  "replays_deterministic": true,
+  "protocol_digest": "e554f5a481421060663f74a2d7d870c387394d1975dc918c3581ec94028e82e2",
+  "session": {
+    "base_url": "http://127.0.0.1:43131",
+    "origin": "http://127.0.0.1:43131",
+    "allow_live": false,
+    "signed_in": false,
+    "sign_in_error": null,
+    "company_id": null,
+    "division_agents_mapped": 0,
+    "bounded_calls": 0,
+    "max_body_bytes": 1048576,
+    "timeout_ms": 15000,
+    "mutation_stopped": false,
+    "stop_reason": null,
+    "sidecar_immutability": {
+      "ok": true,
+      "drift": []
+    },
+    "role_count": 16,
+    "executed_count": 4,
+    "not_proven_count": 12,
+    "fail_closed_count": 0,
+    "immutable_sidecars": [
+      "runtime-evidence/M016-S02-bos-mission-proof.json",
+      "runtime-evidence/M016-S02-collect-protocol.json",
+      "runtime-evidence/M016-S02-input-inventory.json",
+      "runtime-evidence/M016-S02-redaction-contract.json",
+      "runtime-evidence/M016-S02-verify-protocol.json"
+    ]
+  }
+}

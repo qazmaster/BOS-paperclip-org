@@ -1,0 +1,54 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-scope-decision.v1.json",
+  "schema_version": "v1",
+  "scope_decision_id": "m016-s08-native-seven-agent-scope-decision-v1",
+  "scope_decision_kind": "native-seven-agent-integration-scope-decision",
+  "milestone": "M016-txa3vu",
+  "slice": "S08",
+  "task": "T01",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "closure_kind": "scope_revised",
+  "closure_verdict": "NOT_PROVEN_SCOPE_REVISED",
+  "boundary": "PREPARATION_ONLY",
+  "unavailable_prerequisites": [
+    "operator_gate_token",
+    "paperclip_runtime_health",
+    "seven_agent_identities"
+  ],
+  "revised_boundary": "PREPARATION_ONLY",
+  "denial_summary": {
+    "primary_blocker_code": "M16-S08-NATIVE-OPERATOR-GATE-DENIED",
+    "primary_reason": "bounded native replay unavailable — operator gate token absent; no producer invocation attempted; no candidate/run materialised",
+    "observed_prerequisite_state": "preflight unavailable — no operator confirmation",
+    "secondary_blocker_codes": [],
+    "denial_observed_at": "2026-07-20T12:00:00.000Z"
+  },
+  "admission_denial_ref": "runtime-evidence/M016-S08-native-seven-agent-admission.json",
+  "mutating_harness_invoked": false,
+  "candidate_created": false,
+  "agent_runs_materialised": 0,
+  "source_refs": [
+    "runtime-evidence/M015-S04-native-mission-contract.json",
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+    "runtime-evidence/M016-S05-seven-division-replay-admission.json",
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
+    "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json"
+  ],
+  "sanitised": true,
+  "raw_bodies_persisted": false,
+  "blockers": [
+    {
+      "code": "M16-S08-NATIVE-OPERATOR-GATE-DENIED",
+      "reason": "bounded native replay unavailable — operator gate token absent; no producer invocation attempted; no candidate/run materialised"
+    }
+  ],
+  "producer_line": "M16-S08-NATIVE",
+  "atomic_write": {
+    "strategy": "rename_temp_into_place",
+    "verified": true,
+    "temp_relpath": "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json.tmp-canonical",
+    "final_relpath": "runtime-evidence/M016-S08-native-seven-agent-scope-decision.json"
+  },
+  "verify_protocol_ref": "runtime-evidence/M016-S08-native-seven-agent-verify-protocol.json",
+  "negative_fixtures_ref": "runtime-evidence/M016-S08-native-seven-agent-negative-fixtures.json"
+}

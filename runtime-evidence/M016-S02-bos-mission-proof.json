@@ -1,0 +1,236 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s02-bos-mission-proof.v1.json",
+  "schema_version": "v1",
+  "bundle_id": "m016-s02-bos-mission-proof-v1",
+  "bundle_kind": "bos-mission-proof",
+  "milestone": "M016-txa3vu",
+  "slice": "S02",
+  "task": "T02",
+  "generated": "2026-07-28T03:50:31.713Z",
+  "sidecar_id": "4df2c6a6f331170580b6638211f4f0c6d04aaebe63b8074bfcc9158abcd1a72c",
+  "provenance_hash": "20f1fb3ea6024dd35cb8eca566d0fdccb3b0c9439ef78e3ca1e7a32fcc376eba",
+  "sources": [
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "kind": "mission_evidence",
+      "raw_sha256": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166",
+      "sanitised_sha256": "1b7581bab4486930976cc50fac42a7d192a251463fd189c1fffaef9947bda518",
+      "independence_group": "mission-topology",
+      "size_bytes": 2804,
+      "claim_ids": [
+        "m015-div1-hco-orchestration",
+        "m015-div2-masterplanner-orchestration",
+        "m015-div3-treasury-orchestration",
+        "m015-div4-production-orchestration",
+        "m015-div5-qualificationslibrarylearning-orchestration",
+        "m015-div6-external-orchestration",
+        "m015-div7-missioncontrol-orchestration",
+        "m015-mission-documents-bridge",
+        "m015-heartbeat-runs-launch"
+      ],
+      "captured_at": "2026-07-17T12:00:00.000Z"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S01-m015-regression-fixture.json",
+      "kind": "regression_fixture",
+      "raw_sha256": "6d8b550e76c0cb5556175927ac341fa5d3387c71f2ff5a9c10348c595625dcf1",
+      "sanitised_sha256": "ee0807c8d9ec08eb4fc0b01597ff35730bef457686dda71f1f01eb5c8034a55e",
+      "independence_group": "regression-fixture",
+      "size_bytes": 3775,
+      "claim_ids": [
+        "m015-div1-hco-orchestration",
+        "m015-div2-masterplanner-orchestration",
+        "m015-div3-treasury-orchestration",
+        "m015-div4-production-orchestration",
+        "m015-div5-qualificationslibrarylearning-orchestration",
+        "m015-div6-external-orchestration",
+        "m015-div7-missioncontrol-orchestration",
+        "m015-mission-documents-bridge",
+        "m015-heartbeat-runs-launch"
+      ],
+      "captured_at": "2026-07-18T23:00:00Z"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S01-classification-protocol.json",
+      "kind": "classification_protocol",
+      "raw_sha256": "77b75fe2451234f17f0dfbd1cbc4d45788a6cbc5cfd188c126f25ca84e466139",
+      "sanitised_sha256": "296fb746c95ca5c1d0b93ebcaf99f580d106a7fb525614e3508d9ab6868a64df",
+      "independence_group": "classification-protocol",
+      "size_bytes": 3024,
+      "claim_ids": [
+        "m015-div1-hco-orchestration",
+        "m015-div2-masterplanner-orchestration",
+        "m015-div3-treasury-orchestration",
+        "m015-div4-production-orchestration",
+        "m015-div5-qualificationslibrarylearning-orchestration",
+        "m015-div6-external-orchestration",
+        "m015-div7-missioncontrol-orchestration",
+        "m015-mission-documents-bridge",
+        "m015-heartbeat-runs-launch"
+      ],
+      "captured_at": "2026-07-27T19:07:51.254Z"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S01-classification-verification.json",
+      "kind": "classification_verification",
+      "raw_sha256": "656e3aab945583ab8ebf96c1ebc641aebd916d46e5fc673326067924cb03ea92",
+      "sanitised_sha256": "576b375aec8aa040dca741f464b1835f3a4d5d89dc3914eea02f4cf3929cfe0a",
+      "independence_group": "classification-verification",
+      "size_bytes": 8000,
+      "claim_ids": [
+        "m015-div1-hco-orchestration",
+        "m015-div2-masterplanner-orchestration",
+        "m015-div3-treasury-orchestration",
+        "m015-div4-production-orchestration",
+        "m015-div5-qualificationslibrarylearning-orchestration",
+        "m015-div6-external-orchestration",
+        "m015-div7-missioncontrol-orchestration",
+        "m015-mission-documents-bridge",
+        "m015-heartbeat-runs-launch"
+      ],
+      "captured_at": "2026-07-27T19:07:51.255Z"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S01-classification-validation.json",
+      "kind": "classification_verification",
+      "raw_sha256": "08b1fda4856a92d0ee9f36f1d3f90387270911f1c2b3207ea3f80a6e507ea7ff",
+      "sanitised_sha256": "0bb26e3b05fb4781c5889099de49b1033fc765681e00dea057b0157bd63f8f8c",
+      "independence_group": "classification-validation",
+      "size_bytes": 8615,
+      "claim_ids": [
+        "m015-div1-hco-orchestration",
+        "m015-div2-masterplanner-orchestration",
+        "m015-div3-treasury-orchestration",
+        "m015-div4-production-orchestration",
+        "m015-div5-qualificationslibrarylearning-orchestration",
+        "m015-div6-external-orchestration",
+        "m015-div7-missioncontrol-orchestration",
+        "m015-mission-documents-bridge",
+        "m015-heartbeat-runs-launch"
+      ],
+      "captured_at": "2026-07-27T19:07:51.255Z"
+    }
+  ],
+  "indepenence_groups": [
+    "classification-protocol",
+    "classification-validation",
+    "classification-verification",
+    "mission-topology",
+    "regression-fixture"
+  ],
+  "redaction_posture": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false,
+    "raw_reasoning": false,
+    "raw_body": false,
+    "raw_result_json_result": false,
+    "vendor_reuse_strings": false,
+    "bounded_digests_only": true,
+    "redaction_bounds_loaded": true
+  },
+  "classification": {
+    "evaluator": "S01-classification-contract",
+    "evaluator_version": "v1",
+    "raw_state": "PARTIAL",
+    "numeric_mapping": {
+      "orchestration": 1,
+      "evidence": 0.6666666666666666,
+      "launch": 0.3333333333333333
+    },
+    "weight": 0.6666666666666666,
+    "verdicts": {
+      "orchestration": "PASS",
+      "evidence": "PARTIAL",
+      "launch": "PREPARATION_ONLY"
+    },
+    "hard_gates": {
+      "HG1": "pass",
+      "HG2": "pass",
+      "HG3": "not_proven",
+      "HG4": "not_proven",
+      "HG5": "not_proven",
+      "HG6": "not_proven"
+    },
+    "worksheet": {
+      "steps": [
+        {
+          "step_id": "s02-classification-frozen",
+          "description": "embed S01 classification at orchestration PASS, evidence PARTIAL, launch PREPARATION_ONLY with HG3..HG6 bounded to not_proven so the sidecar cannot promote to launch proof",
+          "verify_cmd": "node scripts/test_m016_s02_bos_mission_proof_contract.js",
+          "observed_status": "pass",
+          "observed_evidence": "BG5 classification_frozen PASS BG6 launch_not_promoted PASS"
+        }
+      ],
+      "completed_at": "2026-07-28T03:50:31.713Z",
+      "completed_by": "classifier"
+    },
+    "completed_at": "2026-07-28T03:50:31.713Z",
+    "completed_by": "classifier"
+  },
+  "sanitised_artifacts": [
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-div1-hco-orchestration",
+      "sanitised_artifact": "m015-div1-hco-orchestration:orchestration:EXECUTED",
+      "sanitised_hash": "c6430111b6c4c2e7cce1ebaab45ca4f8c33c5457dc2b4e28aecc13ceed33b99e"
+    },
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-div2-masterplanner-orchestration",
+      "sanitised_artifact": "m015-div2-masterplanner-orchestration:orchestration:EXECUTED",
+      "sanitised_hash": "2506a8683dfae89bf5d73d6572104466f76c884f39ebc91282b77771a9c37919"
+    },
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-div3-treasury-orchestration",
+      "sanitised_artifact": "m015-div3-treasury-orchestration:orchestration:EXECUTED",
+      "sanitised_hash": "13c604ab735ce47a9ee950d0cfbde7cf842e56fc88a45db062f6f669bfc4bef9"
+    },
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-div4-production-orchestration",
+      "sanitised_artifact": "m015-div4-production-orchestration:orchestration:EXECUTED",
+      "sanitised_hash": "866609f2de598a3c16eec539463660fed49c09351a0425bc99b066c98e511687"
+    },
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-div5-qualificationslibrarylearning-orchestration",
+      "sanitised_artifact": "m015-div5-qualificationslibrarylearning-orchestration:orchestration:EXECUTED",
+      "sanitised_hash": "b40153bb698f2a747a9f07a36a8993fabf44010b0e443599b8188fd48b045f72"
+    },
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-div6-external-orchestration",
+      "sanitised_artifact": "m015-div6-external-orchestration:orchestration:EXECUTED",
+      "sanitised_hash": "0c022efd9e58ef05e25e7a19e6d22a68bd2239bda5a0c921ec912f1196228d1c"
+    },
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-div7-missioncontrol-orchestration",
+      "sanitised_artifact": "m015-div7-missioncontrol-orchestration:orchestration:EXECUTED",
+      "sanitised_hash": "56a4503204a9417f6638e258bf619c88010669795aa1be4c1b7c66ff2c6ed77b"
+    },
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-mission-documents-bridge",
+      "sanitised_artifact": "m015-mission-documents-bridge:evidence:EXECUTED",
+      "sanitised_hash": "75d74c989ea2784d819c9f336bc6842a9367cf6a86b3989681e11bae5b5a1882"
+    },
+    {
+      "source_ref": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+      "claim_id": "m015-heartbeat-runs-launch",
+      "sanitised_artifact": "m015-heartbeat-runs-launch:launch:EXECUTED",
+      "sanitised_hash": "bdc8231e89b453e98be49cb653c0daddc27cc56a856c53eff91522e01521fee1"
+    }
+  ],
+  "replay_keys": {
+    "first_run_provenance_hash": "20f1fb3ea6024dd35cb8eca566d0fdccb3b0c9439ef78e3ca1e7a32fcc376eba",
+    "second_run_provenance_hash": "20f1fb3ea6024dd35cb8eca566d0fdccb3b0c9439ef78e3ca1e7a32fcc376eba",
+    "match": true,
+    "byte_identical": true,
+    "verified_at": "2026-07-28T03:50:31.713Z"
+  },
+  "blockers": []
+}

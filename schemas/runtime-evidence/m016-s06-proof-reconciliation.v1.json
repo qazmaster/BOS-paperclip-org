@@ -1,0 +1,304 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s06-proof-reconciliation.v1.json",
+  "title": "M016 S06 Proof Reconciliation v1",
+  "description": "Canonical sanitised proof reconciliation sidecar produced by scripts/verify_m016_s06_proof_reconciliation.js. Reconciles the M015 native seven-division baseline against M016 S01..S05 frozen sidecars, audits the BOS Light capability ledger without performing illegal promotion, and records an evidence-backed recommendation between `plugin-owned proof integration, deferred-unvalidated` and `adapter-native proof integration, deferred-unvalidated`. The sidecar MUST stay bounded-internal PREPARATION_ONLY; raw bodies, credentials, full UUIDs, vendor-reuse strings, and result_json.result MUST NEVER appear. launch_posture.keep_no_promote and bounded_internal MUST be true.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "reconciliation_id",
+    "reconciliation_kind",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "reference_time",
+    "verifier_line",
+    "canonical_protocol",
+    "operator_gate",
+    "inputs",
+    "source_hashes",
+    "m015_baseline_ref",
+    "m015_baseline_sha256",
+    "s05_verifier",
+    "m015_score",
+    "m015_all_pass_against_expected",
+    "orchestration_score",
+    "evidence_score",
+    "pass_through_count",
+    "promotion_refused_count",
+    "criterion_diff",
+    "capability_action_ledger_ref",
+    "capability_promotion_blocked",
+    "recommendation",
+    "aggregate_verdict",
+    "launch_posture",
+    "limits",
+    "raw_bodies_persisted",
+    "redaction_posture",
+    "blockers",
+    "byte_digest"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "https://gsd.local/schemas/runtime-evidence/m016-s06-proof-reconciliation.v1.json"
+    },
+    "schema_version": {"const": "v1"},
+    "reconciliation_id": {"const": "m016-s06-proof-reconciliation-v1"},
+    "reconciliation_kind": {"const": "proof-reconciliation"},
+    "milestone": {"const": "M016-txa3vu"},
+    "slice": {"const": "S06"},
+    "task": {"const": "T01"},
+    "generated": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "reference_time": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "verifier_line": {"const": "M16-S06-RECONCILE"},
+    "canonical_protocol": {"const": "PROTOCOL-M16-S06-RECONCILE-V1"},
+    "operator_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["token", "confirmed", "confirmed_at"],
+      "properties": {
+        "token": {"const": "--confirm-operator-gate-s06"},
+        "confirmed": {"type": "boolean"},
+        "confirmed_at": {
+          "type": ["string", "null"],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["m015_baseline", "s02_proof", "s05_bundle", "s05_worksheet", "s05_verify_protocol", "s05_producer_protocol", "s05_probe_run", "s05_admission", "capability_ledger"],
+      "properties": {
+        "m015_baseline": {"type": "string", "pattern": "^runtime-evidence/M015-[A-Za-z0-9._/-]+\\.json$"},
+        "s02_proof": {"type": "string", "pattern": "^runtime-evidence/M016-S02-[A-Za-z0-9._/-]+\\.json$"},
+        "s05_bundle": {"type": "string", "pattern": "^runtime-evidence/M016-S05-[A-Za-z0-9._/-]+\\.json$"},
+        "s05_worksheet": {"type": "string", "pattern": "^runtime-evidence/M016-S05-[A-Za-z0-9._/-]+\\.json$"},
+        "s05_verify_protocol": {"type": "string", "pattern": "^runtime-evidence/M016-S05-[A-Za-z0-9._/-]+\\.json$"},
+        "s05_producer_protocol": {"type": "string", "pattern": "^runtime-evidence/M016-S05-[A-Za-z0-9._/-]+\\.json$"},
+        "s05_probe_run": {"type": "string", "pattern": "^runtime-evidence/M016-S05-[A-Za-z0-9._/-]+\\.json$"},
+        "s05_admission": {"type": "string", "pattern": "^runtime-evidence/M016-S05-[A-Za-z0-9._/-]+\\.json$"},
+        "capability_ledger": {"type": "string", "pattern": "^plugin-bos-light/[A-Za-z0-9._/-]+\\.json$"},
+        "s01_auxiliary": {"type": "array", "maxItems": 8, "items": {"type": "string", "pattern": "^runtime-evidence/M016-S01-[A-Za-z0-9._/-]+\\.json$"}},
+        "s02_auxiliary": {"type": "array", "maxItems": 8, "items": {"type": "string", "pattern": "^runtime-evidence/M016-S02-[A-Za-z0-9._/-]+\\.json$"}},
+        "s03_auxiliary": {"type": "array", "maxItems": 8, "items": {"type": "string", "pattern": "^runtime-evidence/M016-S03-[A-Za-z0-9._/-]+\\.json$"}},
+        "s04_auxiliary": {"type": "array", "maxItems": 8, "items": {"type": "string", "pattern": "^runtime-evidence/M016-S04-[A-Za-z0-9._/-]+\\.json$"}}
+      }
+    },
+    "source_hashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(runtime-evidence/M016-S[0-9]{2}-[A-Za-z0-9._/-]+\\.json|runtime-evidence/M015-[A-Za-z0-9._/-]+\\.json|plugin-bos-light/[A-Za-z0-9._/-]+\\.json)$": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "m015_baseline_ref": {"const": "runtime-evidence/M015-native-seven-division-mission-20260717.json"},
+    "m015_baseline_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "s05_verifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exit_code", "producer_cli_imported", "network_calls", "mutation_count", "blockers", "replay_keys", "protocol_path"],
+      "properties": {
+        "exit_code": {"type": "integer", "minimum": -1, "maximum": 599},
+        "producer_cli_imported": {"type": "boolean"},
+        "network_calls": {"type": "integer", "minimum": 0, "maximum": 16},
+        "mutation_count": {"type": "integer", "minimum": 0, "maximum": 64},
+        "blockers": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code", "reason"],
+            "properties": {
+              "code": {"type": "string", "pattern": "^M16-S0[0-9]-(REPLAY|VERIFY|RECONCILE)-[A-Za-z0-9._-]+$"},
+              "reason": {"type": "string", "minLength": 1, "maxLength": 512}
+            }
+          }
+        },
+        "replay_keys": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["match", "byte_identical", "verified_at"],
+              "properties": {
+                "match": {"type": "boolean"},
+                "byte_identical": {"type": "boolean"},
+                "verified_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"}
+              }
+            }
+          ]
+        },
+        "protocol_path": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^(runtime-evidence|tmp|M016-S0[0-9](-[A-Za-z0-9]+)?)/[A-Za-z0-9._/-]+\\.json$"},
+            {"type": "string", "pattern": "^/(tmp|private/tmp|var/folders/[^/]+)(/m016-s06-scratch)?/[A-Za-z0-9._/-]+\\.json$"},
+            {"type": "string", "pattern": "^M016-S0[0-9](-[A-Za-z0-9]+)?/[A-Za-z0-9._/-]+\\.json$"}
+          ]
+        }
+      }
+    },
+    "m015_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "m015_all_pass_against_expected": {"type": "boolean"},
+    "orchestration_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "evidence_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "pass_through_count": {"type": "integer", "minimum": 0, "maximum": 9},
+    "promotion_refused_count": {"type": "integer", "minimum": 0, "maximum": 9},
+    "criterion_diff": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {"$ref": "#/definitions/criterion_row"}
+    },
+    "capability_action_ledger_ref": {"const": "runtime-evidence/M016-S06-capability-reconciliation.json"},
+    "capability_promotion_blocked": {"type": "boolean"},
+    "recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value", "rationale", "requires_future_proof", "evidence_criterion_ids"],
+      "properties": {
+        "kind": {"enum": ["plugin-owned", "adapter-native"]},
+        "value": {"enum": [
+          "plugin-owned proof integration, deferred-unvalidated",
+          "adapter-native proof integration, deferred-unvalidated"
+        ]},
+        "rationale": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "requires_future_proof": {"const": true},
+        "evidence_criterion_ids": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^M16-S06-CRITERION-[A-Za-z0-9_-]+$"}
+        }
+      }
+    },
+    "aggregate_verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orchestration", "evidence", "launch", "overall"],
+      "properties": {
+        "orchestration": {"enum": ["PASS", "PARTIAL", "NOT_PROVEN"]},
+        "evidence": {"enum": ["PASS", "PARTIAL", "NOT_PROVEN"]},
+        "launch": {"enum": ["PREPARATION_ONLY", "NO_GO"]},
+        "overall": {"enum": ["PREPARATION_ONLY", "NO_GO"]}
+      }
+    },
+    "launch_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keep_no_promote", "bounded_internal", "no_promotion_to_m016_pass_leaked", "preparation_only"],
+      "properties": {
+        "keep_no_promote": {"const": true},
+        "bounded_internal": {"const": true},
+        "no_promotion_to_m016_pass_leaked": {"type": "boolean"},
+        "preparation_only": {"const": true}
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_criterion_rows", "max_capability_rows", "max_blocker_codes", "max_blocker_reason_chars"],
+      "properties": {
+        "max_criterion_rows": {"const": 9},
+        "max_capability_rows": {"const": 64},
+        "max_blocker_codes": {"const": 96},
+        "max_blocker_reason_chars": {"const": 512}
+      }
+    },
+    "raw_bodies_persisted": {"const": false},
+    "redaction_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_ids", "credentials", "xiaomi_endpoint_reuse", "synthetic_bos",
+        "raw_reasoning", "raw_body", "raw_result_json_result", "vendor_reuse_strings",
+        "bounded_digests_only", "redaction_bounds_loaded"
+      ],
+      "properties": {
+        "full_ids": {"const": false},
+        "credentials": {"const": false},
+        "xiaomi_endpoint_reuse": {"const": false},
+        "synthetic_bos": {"const": false},
+        "raw_reasoning": {"const": false},
+        "raw_body": {"const": false},
+        "raw_result_json_result": {"const": false},
+        "vendor_reuse_strings": {"const": false},
+        "bounded_digests_only": {"const": true},
+        "redaction_bounds_loaded": {"const": true}
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 96,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "reason"],
+        "properties": {
+          "code": {"type": "string", "pattern": "^M16-S06-RECONCILE-[A-Za-z0-9._-]+$"},
+          "reason": {"type": "string", "minLength": 1, "maxLength": 512}
+        }
+      }
+    },
+    "byte_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "definitions": {
+    "criterion_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criterion_id",
+        "label",
+        "m015_field",
+        "m015_expected_state",
+        "m015_observed_state",
+        "m015_source_ref",
+        "m016_back_refs",
+        "m016_required_back_refs",
+        "pass_through",
+        "m016_verdict",
+        "pass_through_rule_text"
+      ],
+      "properties": {
+        "criterion_id": {"type": "string", "pattern": "^M16-S06-CRITERION-[A-Za-z0-9_-]+$"},
+        "label": {"type": "string", "minLength": 1, "maxLength": 128},
+        "m015_field": {"type": "string", "pattern": "^verdict\\.[a-z_]+$"},
+        "m015_expected_state": {"enum": ["PROVEN", "NOT_PROVEN", "NOT_REQUIRED"]},
+        "m015_observed_state": {"enum": ["PROVEN", "NOT_PROVEN", "NOT_REQUIRED", "REQUIRED", "REGRESSED", "UNRECOGNISED"]},
+        "m015_observed_value": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "minLength": 1, "maxLength": 128},
+            {"type": "boolean"}
+          ]
+        },
+        "m015_source_ref": {"type": "string", "pattern": "^runtime-evidence/M015-[A-Za-z0-9._/-]+\\.json$"},
+        "m016_back_refs": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "oneOf": [
+              {"type": "string", "pattern": "^runtime-evidence/M016-S[0-9]{2}-[A-Za-z0-9._/-]+\\.json$"},
+              {"type": "string", "pattern": "^plugin-bos-light/[A-Za-z0-9._/-]+\\.json$"}
+            ]
+          }
+        },
+        "m016_required_back_refs": {"type": "integer", "minimum": 0, "maximum": 8},
+        "pass_through": {"type": "boolean"},
+        "m016_verdict": {"enum": ["PASS", "PARTIAL", "NOT_PROVEN", "NOT_REQUIRED"]},
+        "pass_through_rule_text": {"type": "string", "minLength": 1, "maxLength": 512}
+      }
+    }
+  }
+}

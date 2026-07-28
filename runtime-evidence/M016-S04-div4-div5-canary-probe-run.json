@@ -1,0 +1,95 @@
+{
+  "schema_id": "m016-s04-div4-div5-canary-probe-run-v1",
+  "schema_namespace": "m016-s04-div4-div5-canary-probe-run-v1",
+  "schema_version": "v1",
+  "bundle_id": "m016-s04-div4-div5-canary-bundle-v1",
+  "canary_division_pair": {
+    "producer": "Div4.Production",
+    "validator": "Div5.QualificationsLibraryLearning"
+  },
+  "milestone": "M016-txa3vu",
+  "slice": "S04",
+  "task": "T03",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "line_class": "M16-S04-CANARY",
+  "canonical_protocol": "PROTOCOL-M16-S04-CANARY-V1",
+  "reference_time": "2026-07-20T12:00:00.000Z",
+  "agent_run_id": "M16-S04-CANARY-RUN-default",
+  "record_count": 3,
+  "live_record_count": 2,
+  "drill_record_count": 1,
+  "executed_count": 2,
+  "not_proven_count": 1,
+  "correlation_rows": [
+    {
+      "probe_id": "M16-S03-PROBE-div2-masterplanner-no-target-5deb9249",
+      "evidence_id": "m016-s04-canary-evidence-div2-masterplanner-no-target-5deb9249",
+      "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div2-master-planner"
+    },
+    {
+      "probe_id": "M16-S03-PROBE-secret_posture-probe-ea022dda",
+      "evidence_id": "m016-s04-canary-evidence-secret_posture-probe-ea022dda",
+      "criterion_id": "HG5 SECURITY_POSTURE",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-secret-posture"
+    },
+    {
+      "probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
+      "evidence_id": "m016-s04-canary-evidence-budget_stop_drill-drill-11-14e9883c",
+      "criterion_id": "HG8 SCRATCH_ISOLATION",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-budget-stop-drill"
+    }
+  ],
+  "agent_run_to_probe_rows": [
+    {
+      "agent_run_id": "M16-S04-CANARY-RUN-default",
+      "probe_id": "M16-S03-PROBE-div2-masterplanner-no-target-5deb9249",
+      "started_at": "2026-07-19T14:56:43.284Z",
+      "finished_at": "2026-07-19T14:56:43.284Z",
+      "duration_ms": 0,
+      "exit_code": -1
+    },
+    {
+      "agent_run_id": "M16-S04-CANARY-RUN-default",
+      "probe_id": "M16-S03-PROBE-secret_posture-probe-ea022dda",
+      "started_at": "2026-07-19T14:56:43.286Z",
+      "finished_at": "2026-07-19T14:56:43.286Z",
+      "duration_ms": 0,
+      "exit_code": 0
+    },
+    {
+      "agent_run_id": "M16-S04-CANARY-RUN-default",
+      "probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
+      "started_at": "2026-07-19T12:00:00.000Z",
+      "finished_at": "2026-07-19T12:00:00.000Z",
+      "duration_ms": 0,
+      "exit_code": 0
+    }
+  ],
+  "evidence_to_criterion_rows": [
+    {
+      "evidence_id": "m016-s04-canary-evidence-div2-masterplanner-no-target-5deb9249",
+      "criterion_id": "HG1 SEMANTIC_RULE_COMPLIANCE",
+      "weight": 0,
+      "raw_state": "NOT_PROVEN",
+      "numeric_mapping": 0
+    },
+    {
+      "evidence_id": "m016-s04-canary-evidence-secret_posture-probe-ea022dda",
+      "criterion_id": "HG5 SECURITY_POSTURE",
+      "weight": 1,
+      "raw_state": "EXECUTED",
+      "numeric_mapping": 1
+    },
+    {
+      "evidence_id": "m016-s04-canary-evidence-budget_stop_drill-drill-11-14e9883c",
+      "criterion_id": "HG8 SCRATCH_ISOLATION",
+      "weight": 1,
+      "raw_state": "EXECUTED",
+      "numeric_mapping": 1
+    }
+  ]
+}

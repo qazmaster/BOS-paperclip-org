@@ -1,0 +1,90 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-admission.v1.json",
+  "schema_version": "v1",
+  "admission_id": "m016-s08-native-seven-agent-admission-v1",
+  "admission_kind": "native-seven-agent-integration-admission",
+  "milestone": "M016-txa3vu",
+  "slice": "S08",
+  "task": "T01",
+  "generated": "2026-07-20T12:00:00.000Z",
+  "operator_gate": {
+    "token": "--confirm-native-seven-agent-replay",
+    "confirmed": false,
+    "confirmed_at": null,
+    "source": "history",
+    "replay_key": "6e74da3950bc3a030361c68ab558a77a617addb6b6e1d5a49d416ba6580c4a3b"
+  },
+  "bos_identity_probe": {
+    "required_company_paths": [
+      "/BOS"
+    ],
+    "forbidden_company_paths": [
+      "/BOSA"
+    ],
+    "observed_company_paths": [
+      "/BOS"
+    ],
+    "stale_marker_detected": false,
+    "fresh_readonly_probe": false,
+    "probe_digest_sha256": "a692929f113477d31ece463b677b9e5bdc1b117dac957afdb642bc7e3c5df45e",
+    "expected_agent_count": 7,
+    "observed_agent_count": 0,
+    "agent_role_paths": [
+      "Div1.HCO",
+      "Div2.MasterPlanner",
+      "Div3.Treasury",
+      "Div4.Production",
+      "Div5.QualificationsLibraryLearning",
+      "Div6.External",
+      "Div7.MissionControl"
+    ]
+  },
+  "source_refs": [
+    "runtime-evidence/M015-S04-native-mission-contract.json",
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+    "runtime-evidence/M016-S05-seven-division-replay-admission.json",
+    "runtime-evidence/M016-S05-seven-division-replay-probe-run.json",
+    "runtime-evidence/M016-S05-seven-division-replay-verify-protocol.json"
+  ],
+  "source_hashes": [],
+  "mission_keys": {
+    "mission_id": "m016-s08-native-mission-canonical",
+    "idempotency_keys": [
+      "m016-s08-native-idempotency-canonical"
+    ],
+    "recovery_keys": [
+      "m016-s08-native-recovery-canonical"
+    ],
+    "replay_key_sha256": "bfcdadf44b09e6d07a9176ccda12904d9ed47cc40e08d2e02f44ec42763ca445"
+  },
+  "mutation_plan": {
+    "expected_root_mutation_count": 1,
+    "expected_mutation_kind": "bounded_root_intake",
+    "expected_mutation_subject": "paperclip_native_root_artifact",
+    "forbidden_mutation_kinds": [
+      "rollback",
+      "delete",
+      "update_existing",
+      "mass_intake",
+      "plugin_state_change",
+      "approval_state_change",
+      "external_send",
+      "result_json_bos_injection"
+    ]
+  },
+  "network_allowlist": [
+    "localhost"
+  ],
+  "deadline": "2026-07-20T12:10:00.000Z",
+  "expected_single_root_mutation": true,
+  "sanitised": true,
+  "raw_bodies_persisted": false,
+  "blockers": [
+    {
+      "code": "M16-S08-NATIVE-OPERATOR-GATE-DENIED",
+      "reason": "operator gate was not confirmed"
+    }
+  ],
+  "producer_line": "M16-S08-NATIVE",
+  "denial_diagnostic_only": true
+}

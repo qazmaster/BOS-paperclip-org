@@ -1,0 +1,74 @@
+{
+  "$schema": "gsd/m016-s02-bos-mission-proof-protocol-v1",
+  "milestone": "M016-txa3vu",
+  "slice": "S02",
+  "task": "T02",
+  "generated": "2026-07-28T03:50:31.777Z",
+  "status": "protocol_recorded",
+  "bundle_gate_ids": [
+    "BG1_SCHEMA_COMPLIANCE",
+    "BG2_SOURCE_ALLOWLIST",
+    "BG3_REDACTION_POSTURE",
+    "BG4_PROVENANCE_INTEGRITY",
+    "BG5_CLASSIFICATION_FROZEN",
+    "BG6_LAUNCH_NOT_PROMOTED"
+  ],
+  "bundle_gate_labels": {
+    "schema_compliance_pass": "BG1 SCHEMA_COMPLIANCE: bundle matches the M016-S02 bos-mission-proof v1 JSON Schema",
+    "source_allowlist_pass": "BG2 SOURCE_ALLOWLIST: every source_ref is inside runtime-evidence/ or scripts/ and in the explicit allowlist",
+    "redaction_posture_pass": "BG3 REDACTION_POSTURE: declared flags are all safe and the scanner finds no leak markers anywhere in the bundle",
+    "provenance_integrity_pass": "BG4 PROVENANCE_INTEGRITY: every source carries raw_sha256 + sanitised_sha256 + claim_ids; provenance_hash matches the canonical source list",
+    "classification_frozen_pass": "BG5 CLASSIFICATION_FROZEN: embedded classification stays orchestration=PASS, evidence=PARTIAL, launch=PREPARATION_ONLY with HG3..HG6 NOT_PROVEN",
+    "launch_not_promoted_pass": "BG6 LAUNCH_NOT_PROMOTED: launch dimension never exceeds PREPARATION_ONLY and no embedded classification attempts to promote the bundle to a launch proof"
+  },
+  "gates": {
+    "BG1_SCHEMA_COMPLIANCE": "pass",
+    "BG2_SOURCE_ALLOWLIST": "pass",
+    "BG3_REDACTION_POSTURE": "pass",
+    "BG4_PROVENANCE_INTEGRITY": "pass",
+    "BG5_CLASSIFICATION_FROZEN": "pass",
+    "BG6_LAUNCH_NOT_PROMOTED": "pass"
+  },
+  "verdicts": {
+    "PROVENANCE_PRESERVED": "PROVENANCE_PRESERVED",
+    "REDACTION_SAFE": "REDACTION_SAFE",
+    "REPLAY_DETERMINISTIC": "REPLAY_DETERMINISTIC",
+    "CLASSIFICATION_FROZEN": "CLASSIFICATION_FROZEN",
+    "LAUNCH_NOT_PROMOTED": "LAUNCH_NOT_PROMOTED",
+    "NEGATIVE_SUITE_OK": "NEGATIVE_SUITE_OK"
+  },
+  "source_count": 5,
+  "artifact_count": 9,
+  "independence_group_count": 5,
+  "expected_provenance_hash": "20f1fb3ea6024dd35cb8eca566d0fdccb3b0c9439ef78e3ca1e7a32fcc376eba",
+  "expected_sidecar_id": "4df2c6a6f331170580b6638211f4f0c6d04aaebe63b8074bfcc9158abcd1a72c",
+  "scanner_hits_count": 0,
+  "classification_drift_count": 0,
+  "launch_promotion_attempts": 0,
+  "replay_failures_count": 0,
+  "blocker_codes": [],
+  "blockers_count": 0,
+  "paths": {
+    "bundle": "runtime-evidence/M016-S02-bos-mission-proof.json",
+    "inventory": "runtime-evidence/M016-S02-input-inventory.json",
+    "redaction_contract": "runtime-evidence/M016-S02-redaction-contract.json",
+    "protocol": "runtime-evidence/M016-S02-collect-protocol.json",
+    "schema": "schemas/runtime-evidence/m016-s02-bos-mission-proof.v1.json"
+  },
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false,
+    "raw_reasoning": false,
+    "raw_body": false,
+    "raw_result_json_result": false,
+    "vendor_reuse_strings": false,
+    "bounded_digests_only": true,
+    "redaction_bounds_loaded": true
+  },
+  "options": {
+    "accept_safe_block": false,
+    "dual_run": true
+  }
+}

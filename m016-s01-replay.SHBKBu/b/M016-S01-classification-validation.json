@@ -1,0 +1,208 @@
+{
+  "$schema": "gsd/m016-s01-classification-validation-v1",
+  "milestone": "M016-txa3vu",
+  "slice": "S01",
+  "task": "T02",
+  "generated": "2026-07-19T05:53:39.047Z",
+  "status": "validation_recorded",
+  "hard_gate_ids": [
+    "HG1 SEMANTIC_RULE_COMPLIANCE",
+    "HG2 PROVENANCE_INTEGRITY",
+    "HG3 INDEPENDENCE_GROUP_ISOLATION",
+    "HG4 ARTIFACT_BINDING",
+    "HG5 WORKSHEET_INTEGRITY",
+    "HG6 VERDICT_DERIVATION_BOUNDED"
+  ],
+  "hard_gate_labels": {
+    "semantic_rule_compliance_pass": "HG1 SEMANTIC_RULE_COMPLIANCE: every claim declares a frozen semantic_rule and matches the claim_id / independence_group / dimension patterns",
+    "provenance_integrity_pass": "HG2 PROVENANCE_INTEGRITY: every EXECUTED claim carries identity, timestamps, exit_code, sanitised_digest, artifact_reference and artifact_hash; non-EXECUTED claims carry no executed_provenance",
+    "independence_group_isolation_pass": "HG3 INDEPENDENCE_GROUP_ISOLATION: every claim has a unique independence_group; reuse across EXECUTED claims requires a shared artifact_hash and is rejected otherwise",
+    "artifact_binding_pass": "HG4 ARTIFACT_BINDING: source_ref paths are bounded inside runtime-evidence/, schemas/ or scripts/; EXECUTED claims additionally bind to an artifact_hash and reference",
+    "worksheet_integrity_pass": "HG5 WORKSHEET_INTEGRITY: a worksheet is present with at least one step, completed_at and completed_by; missing or incomplete worksheets block the score",
+    "verdict_derivation_bounded_pass": "HG6 VERDICT_DERIVATION_BOUNDED: launch dimension never emits GO; diagnostic payloads are sanitised; no score is derived without a complete worksheet"
+  },
+  "gates": {
+    "HG1_SEMANTIC_RULE_COMPLIANCE": "pass",
+    "HG2_PROVENANCE_INTEGRITY": "pass",
+    "HG3_INDEPENDENCE_GROUP_ISOLATION": "pass",
+    "HG4_ARTIFACT_BINDING": "pass",
+    "HG5_WORKSHEET_INTEGRITY": "pass",
+    "HG6_VERDICT_DERIVATION_BOUNDED": "pass"
+  },
+  "verdicts": {
+    "orchestration": "PASS",
+    "evidence": "PARTIAL",
+    "launch": "PREPARATION_ONLY"
+  },
+  "per_claim_count": 9,
+  "per_dimension_summary": {
+    "orchestration": {
+      "verdict": "PASS",
+      "claim_count": 7,
+      "executed_native_run_count": 7,
+      "worksheet_present_count": 7,
+      "rejected_count": 0
+    },
+    "evidence": {
+      "verdict": "PARTIAL",
+      "claim_count": 1,
+      "executed_native_run_count": 1,
+      "worksheet_present_count": 1,
+      "rejected_count": 0
+    },
+    "launch": {
+      "verdict": "PREPARATION_ONLY",
+      "claim_count": 1,
+      "executed_native_run_count": 1,
+      "worksheet_present_count": 1,
+      "rejected_count": 0
+    }
+  },
+  "blockers": [],
+  "gate_diagnostics": {
+    "hg1_semantic_rule_compliance": {
+      "total_claims": 9,
+      "rule_distribution": {
+        "EXECUTED": 9
+      },
+      "shape_violations": 0
+    },
+    "hg2_provenance_integrity": {
+      "executed_count": 9,
+      "native_run_count": 9,
+      "non_executed_with_provenance": 0,
+      "exit_code_nonzero": 0
+    },
+    "hg3_independence_group_isolation": {
+      "groups_seen": {
+        "div1-hco-orchestration": 1,
+        "div2-master-planner-orchestration": 1,
+        "div3-treasury-orchestration": 1,
+        "div4-production-orchestration": 1,
+        "div5-qualifications-orchestration": 1,
+        "div6-external-orchestration": 1,
+        "div7-mission-control-orchestration": 1,
+        "mission-documents": 1,
+        "heartbeat-runs": 1
+      },
+      "reused_groups": [],
+      "shared_artifact_hash_pairs": []
+    },
+    "hg4_artifact_binding": {
+      "bounded_paths": 9,
+      "missing_source_ref": [],
+      "executed_without_artifact_hash": []
+    },
+    "hg5_worksheet_integrity": {
+      "total_claims": 9,
+      "worksheet_present": 9,
+      "worksheet_absent": []
+    },
+    "hg6_verdict_derivation_bounded": {
+      "launch_go_attempts": 0,
+      "prohibited_verdicts": [],
+      "redaction_safe_claims": 9,
+      "sanitisation_leaks": 0
+    }
+  },
+  "regression": {
+    "$schema": "gsd/m016-s01-regression-fixture-v1",
+    "milestone": "M016-txa3vu",
+    "slice": "S01",
+    "task": "T03",
+    "generated": "2026-07-18T23:00:00Z",
+    "purpose": "Frozen regression fixture asserting the historical M015 mission deterministically classifies as orchestration PASS / evidence PARTIAL / launch PREPARATION_ONLY with all six hard gates passing. The fixture is consumed by scripts/validate_m016_s01_proof_classification.js; any divergence exits REGRESSION_MISMATCH (6).",
+    "input_evidence": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+    "schema": "schemas/runtime-evidence/m016-s01-evidence-claim.v1.json",
+    "claims_derivation": {
+      "rationale": "9 EXECUTED claims are derived from the M015 evidence: 7 orchestration claims (one per canonical division with unique independence_group), 1 evidence bridge claim (Div7.MissionControl on mission-documents), 1 launch readiness claim (Div7.MissionControl on heartbeat-runs). All EXECUTED claims carry native_run provenance, sha256 artifact_hash, bounded artifact_reference, and a worksheet; unique independence_groups keep HG3 in pass state.",
+      "claim_ids": [
+        "m015-div1-hco-orchestration",
+        "m015-div2-masterplanner-orchestration",
+        "m015-div3-treasury-orchestration",
+        "m015-div4-production-orchestration",
+        "m015-div5-qualificationslibrarylearning-orchestration",
+        "m015-div6-external-orchestration",
+        "m015-div7-missioncontrol-orchestration",
+        "m015-mission-documents-bridge",
+        "m015-heartbeat-runs-launch"
+      ],
+      "independence_groups": [
+        "div1-hco-orchestration",
+        "div2-master-planner-orchestration",
+        "div3-treasury-orchestration",
+        "div4-production-orchestration",
+        "div5-qualifications-orchestration",
+        "div6-external-orchestration",
+        "div7-mission-control-orchestration",
+        "mission-documents",
+        "heartbeat-runs"
+      ]
+    },
+    "expected_runner_status": "PASS",
+    "expected_runner_exit_code": 0,
+    "expected_classification_count": 9,
+    "expected_semantic_rule_distribution": {
+      "EXECUTED": 9,
+      "OBSERVED": 0,
+      "INFERRED": 0,
+      "PROPOSED": 0,
+      "NOT_PROVEN": 0
+    },
+    "expected_dimension_distribution": {
+      "orchestration": 7,
+      "evidence": 1,
+      "launch": 1
+    },
+    "expected_independence_groups_seen": 9,
+    "expected_gates": {
+      "HG1_SEMANTIC_RULE_COMPLIANCE": "pass",
+      "HG2_PROVENANCE_INTEGRITY": "pass",
+      "HG3_INDEPENDENCE_GROUP_ISOLATION": "pass",
+      "HG4_ARTIFACT_BINDING": "pass",
+      "HG5_WORKSHEET_INTEGRITY": "pass",
+      "HG6_VERDICT_DERIVATION_BOUNDED": "pass"
+    },
+    "expected_verdicts": {
+      "orchestration": "PASS",
+      "evidence": "PARTIAL",
+      "launch": "PREPARATION_ONLY"
+    },
+    "expected_dimension_reasons": {
+      "orchestration": "orchestration: native_run EXECUTED + HG1+HG2+HG3 pass + worksheet present",
+      "evidence": "evidence: only 1 native_run EXECUTED",
+      "launch": "launch: native_readback present but capped at PREPARATION_ONLY by historical evidence rule"
+    },
+    "expected_blockers_count": 0,
+    "expected_blocker_codes": [],
+    "expected_redaction_safe_claims": 9,
+    "expected_redaction_unsafe_claims": 0,
+    "expected_launch_go_attempts": 0,
+    "expected_sanitisation_leaks": 0,
+    "fail_closed_cases": {
+      "missing_provenance": "REJECTED_MALFORMED (exit 1) — HG2 fail_closed",
+      "reused_independence_group_conflicting_hash": "REJECTED_FAIL_CLOSED (exit 2) — HG3 fail_closed",
+      "missing_artifact_hash": "REJECTED_FAIL_CLOSED (exit 2) — HG4 fail_closed",
+      "incomplete_worksheet": "GATE_NOT_PROVEN (exit 5) — HG5 fail_closed",
+      "uuid_or_bearer_in_sanitised_digest": "REJECTED_FAIL_CLOSED (exit 2) — HG6 fail_closed",
+      "launch_go_attempt": "REJECTED_FAIL_CLOSED (exit 2) — HG6 fail_closed"
+    }
+  },
+  "paths": {
+    "input_evidence": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+    "schema": "schemas/runtime-evidence/m016-s01-evidence-claim.v1.json",
+    "output_dir": "m016-s01-replay.SHBKBu/b",
+    "protocol_output": "runtime-evidence/M016-S01-classification-protocol.json",
+    "verification_output": "runtime-evidence/M016-S01-classification-verification.json",
+    "validation_output": "runtime-evidence/M016-S01-classification-validation.json"
+  },
+  "redaction": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false,
+    "redaction_bounds_loaded": true
+  },
+  "runner_status": "PASS",
+  "runner_exit_code": 0
+}

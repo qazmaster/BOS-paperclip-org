@@ -1,0 +1,992 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s04-div4-div5-canary-bundle.v1.json",
+  "title": "M016-S04 Div4 to Div5 Evidence Canary Bundle v1",
+  "description": "Machine-readable schema for the bounded Div4 to Div5 evidence canary bundle issued by M016-txa3vu/S04. Frozen bundle discriminator `div4-to-div5-canary-bundle`; allowed producer line class `M16-S04-CANARY`; allowed validator line class `M16-S04-VERIFY`. Embeds frozen s02/s03 immutability window, evidence_chain (s02_baseline, s03_pack, canary_probe_run), bounded correlation_contract (agent_run_id → probe_id → evidence_id → criterion_id), embedded classification with CG1..CG8 canary gates and a launch verdict frozen at PREPARATION_ONLY, replay_keys proving byte-identical offline dual-run determinism, and redaction posture carrying the same 10 REDACTION_FLAG_VALUES as the S03 safe-probe record. No full UUIDs, no credentials, no Xiaomi/MiMo vendor-reuse strings, no raw reasoning, no raw body, no result_json.result, no agent vendor markers, no absolute filesystem paths.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "bundle_id",
+    "bundle_kind",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "bundle_digest",
+    "canary_division_pair",
+    "evidence_chain",
+    "correlation_contract",
+    "records",
+    "redaction_posture",
+    "embedded_classification",
+    "replay_keys",
+    "blockers",
+    "raw_input_immutability_verified",
+    "producer_verdict_line"
+  ],
+  "properties": {
+    "schema_id": {
+      "type": "string",
+      "const": "https://gsd.local/schemas/runtime-evidence/m016-s04-div4-div5-canary-bundle.v1.json"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "bundle_id": {
+      "type": "string",
+      "description": "Stable kebab-case identifier of this bundle.",
+      "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "bundle_kind": {
+      "type": "string",
+      "description": "Frozen bundle discriminator.",
+      "const": "div4-to-div5-canary-bundle"
+    },
+    "milestone": {
+      "type": "string",
+      "const": "M016-txa3vu"
+    },
+    "slice": {
+      "type": "string",
+      "const": "S04"
+    },
+    "task": {
+      "type": "string",
+      "enum": ["T03", "t03"]
+    },
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of bundle generation."
+    },
+    "bundle_digest": {
+      "type": "string",
+      "description": "Deterministic sha256 of the canonical bundle body (excluding bundle_digest itself).",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "reference_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Frozen reference time used by the producer for deterministic replay."
+    },
+    "role_subset": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "pattern": "^(Div[1-7]\\.(HCO|MasterPlanner|Treasury|Production|QualificationsLibraryLearning|External|MissionControl)|paperclip_health|hermes_environment|secret_posture|cost_snapshot|isolation_invariant|restore_drill|budget_stop_drill|failure_drill|redaction_posture_audit)$"
+      }
+    },
+    "drill_subset": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "string",
+        "enum": ["restore-drill", "budget-stop-drill", "failure-drill"]
+      }
+    },
+    "canary_division_pair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer", "validator"],
+      "properties": {
+        "producer": {
+          "type": "string",
+          "const": "Div4.Production"
+        },
+        "validator": {
+          "type": "string",
+          "const": "Div5.QualificationsLibraryLearning"
+        }
+      }
+    },
+    "evidence_chain": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "description": "Three frozen rows (s02_baseline, s03_pack, canary_probe_run) carrying pre/post hashes so the verifier can independently reproduce producer immutability claims from disk.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chain_role",
+          "source_ref",
+          "pre_hash_sha256",
+          "post_hash_sha256",
+          "unchanged"
+        ],
+        "properties": {
+          "chain_role": {
+            "type": "string",
+            "enum": ["s02_baseline", "s03_pack", "canary_probe_run", "s03_verify_protocol", "s03_collect_protocol", "s03_input_inventory"]
+          },
+          "source_ref": {
+            "type": "string",
+            "pattern": "^runtime-evidence/M016-S[0-9]{2}-[A-Za-z0-9._/-]+\\.json$",
+            "maxLength": 256
+          },
+          "pre_hash_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "post_hash_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "unchanged": {
+            "type": "boolean",
+            "const": true
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4194304
+          },
+          "independence_group": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]{2,63}$"
+          },
+          "runner_status": {
+            "type": "string",
+            "enum": ["PASS", "FAIL_CLOSED", "NOT_PROVEN"]
+          }
+        }
+      }
+    },
+    "correlation_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_run_id",
+        "probe_to_criterion",
+        "agent_run_to_probe",
+        "evidence_to_criterion"
+      ],
+      "properties": {
+        "agent_run_id": {
+          "type": "string",
+          "pattern": "^M16-S04-CANARY-RUN-[A-Za-z0-9._-]+$",
+          "minLength": 18,
+          "maxLength": 96
+        },
+        "probe_to_criterion": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "probe_id",
+              "evidence_id",
+              "criterion_id",
+              "classification",
+              "independence_group"
+            ],
+            "properties": {
+              "probe_id": {
+                "type": "string",
+                "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$",
+                "minLength": 16,
+                "maxLength": 80
+              },
+              "agent_run_id": {
+                "type": "string",
+                "pattern": "^M16-S04-CANARY-RUN-[A-Za-z0-9._-]+$"
+              },
+              "evidence_id": {
+                "type": "string",
+                "pattern": "^m016-s04-canary-evidence-[a-z][a-z0-9._-]{2,63}$",
+                "minLength": 18,
+                "maxLength": 96
+              },
+              "criterion_id": {
+                "type": "string",
+                "pattern": "^(HG[1-8] SEMANTIC_RULE_COMPLIANCE|HG[1-8] PROVENANCE_INTEGRITY|HG[1-8] RECOVERY_EVIDENCE|HG[1-8] FINANCIAL_PROTECTION|HG[1-8] SECURITY_POSTURE|HG[1-8] COMPLIANCE_POSTURE|HG[1-8] READ_ONLY_BOUNDARY|HG[1-8] SCRATCH_ISOLATION|CG[1-8] CANARY_PRODUCER_VALID|CG[1-8] CANARY_VALIDATOR_INDEPENDENT|CG[1-8] EVIDENCE_CHAIN_INTACT|CG[1-8] CORRELATION_CONTRACT_VALID|CG[1-8] REDACTION_SAFE|CG[1-8] S02_BASELINE_IMMUTABLE|CG[1-8] S03_PACK_IMMUTABLE|CG[1-8] DETERMINISTIC_REPLAY)$",
+                "minLength": 18,
+                "maxLength": 96
+              },
+              "classification": {
+                "type": "string",
+                "enum": ["EXECUTED", "NOT_PROVEN"]
+              },
+              "independence_group": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+                "minLength": 3,
+                "maxLength": 64
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        },
+        "agent_run_to_probe": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "agent_run_id",
+              "probe_id",
+              "started_at",
+              "finished_at",
+              "duration_ms",
+              "exit_code"
+            ],
+            "properties": {
+              "agent_run_id": {
+                "type": "string",
+                "pattern": "^M16-S04-CANARY-RUN-[A-Za-z0-9._-]+$"
+              },
+              "probe_id": {
+                "type": "string",
+                "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "finished_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "duration_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000
+              },
+              "exit_code": {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 599
+              }
+            }
+          }
+        },
+        "evidence_to_criterion": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "evidence_id",
+              "criterion_id",
+              "weight",
+              "raw_state",
+              "numeric_mapping"
+            ],
+            "properties": {
+              "evidence_id": {
+                "type": "string",
+                "pattern": "^m016-s04-canary-evidence-[a-z][a-z0-9._-]{2,63}$"
+              },
+              "criterion_id": {
+                "type": "string",
+                "pattern": "^(HG[1-8] SEMANTIC_RULE_COMPLIANCE|HG[1-8] PROVENANCE_INTEGRITY|HG[1-8] RECOVERY_EVIDENCE|HG[1-8] FINANCIAL_PROTECTION|HG[1-8] SECURITY_POSTURE|HG[1-8] COMPLIANCE_POSTURE|HG[1-8] READ_ONLY_BOUNDARY|HG[1-8] SCRATCH_ISOLATION|CG[1-8] CANARY_PRODUCER_VALID|CG[1-8] CANARY_VALIDATOR_INDEPENDENT|CG[1-8] EVIDENCE_CHAIN_INTACT|CG[1-8] CORRELATION_CONTRACT_VALID|CG[1-8] REDACTION_SAFE|CG[1-8] S02_BASELINE_IMMUTABLE|CG[1-8] S03_PACK_IMMUTABLE|CG[1-8] DETERMINISTIC_REPLAY)$"
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "raw_state": {
+                "type": "string",
+                "enum": ["PARTIAL", "EXECUTED", "NOT_PROVEN"]
+              },
+              "numeric_mapping": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 24,
+      "description": "Bounded canary subset of S03 probe records (live_canary_record and/or drill_canary_record) re-validated through the canary contract. Each record's `kind` discriminator is required.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "role",
+          "classification",
+          "independence_group",
+          "reused_probe_id",
+          "evidence_id",
+          "criterion_id",
+          "method",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "scope",
+          "limitations",
+          "source_identity",
+          "isolation_invariant",
+          "mutation_audit",
+          "redaction",
+          "verdict",
+          "blocker_codes"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["live_canary_record", "drill_canary_record"]
+          },
+          "role": {
+            "type": "string",
+            "pattern": "^(Div[1-7]\\.(HCO|MasterPlanner|Treasury|Production|QualificationsLibraryLearning|External|MissionControl)|paperclip_health|hermes_environment|secret_posture|cost_snapshot|isolation_invariant|restore_drill|budget_stop_drill|failure_drill|redaction_posture_audit)$"
+          },
+          "classification": {
+            "type": "string",
+            "enum": ["EXECUTED", "NOT_PROVEN"]
+          },
+          "independence_group": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+            "minLength": 3,
+            "maxLength": 64
+          },
+          "reused_probe_id": {
+            "type": "string",
+            "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$"
+          },
+          "evidence_id": {
+            "type": "string",
+            "pattern": "^m016-s04-canary-evidence-[a-z][a-z0-9._-]{2,63}$"
+          },
+          "criterion_id": {
+            "type": "string",
+            "pattern": "^(HG[1-8] SEMANTIC_RULE_COMPLIANCE|HG[1-8] PROVENANCE_INTEGRITY|HG[1-8] RECOVERY_EVIDENCE|HG[1-8] FINANCIAL_PROTECTION|HG[1-8] SECURITY_POSTURE|HG[1-8] COMPLIANCE_POSTURE|HG[1-8] READ_ONLY_BOUNDARY|HG[1-8] SCRATCH_ISOLATION|CG[1-8] CANARY_PRODUCER_VALID|CG[1-8] CANARY_VALIDATOR_INDEPENDENT|CG[1-8] EVIDENCE_CHAIN_INTACT|CG[1-8] CORRELATION_CONTRACT_VALID|CG[1-8] REDACTION_SAFE|CG[1-8] S02_BASELINE_IMMUTABLE|CG[1-8] S03_PACK_IMMUTABLE|CG[1-8] DETERMINISTIC_REPLAY)$"
+          },
+          "method": {
+            "type": "string",
+            "pattern": "^(GET\\s+/api/[A-Za-z0-9._\\-/{}]+|(restore-drill|budget-stop-drill|failure-drill))$",
+            "minLength": 5,
+            "maxLength": 256,
+            "not": {
+              "pattern": "^(?:POST|PUT|PATCH|DELETE|DESTROY)\\b"
+            }
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400,
+            "pattern": "^[A-Za-z0-9 .:;,_<>/\\-{}?&=%@]+$",
+            "not": {
+              "pattern": "(?:sk-|tp-|bearer\\s+[A-Za-z])"
+            }
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 600000
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+          },
+          "limitations": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^[A-Za-z0-9 .:;,_<>/\\-{}?&=%@]+$",
+              "not": {
+                "pattern": "(?:sk-|tp-|bearer\\s+[A-Za-z])"
+              }
+            }
+          },
+          "source_identity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["paperclip_api_readonly", "scratch_drill", "offline_bundle_read", "observed"]
+              },
+              "company_kind": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._-]+$"
+              },
+              "auth_method": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._-]+$"
+              },
+              "scratch_root": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256,
+                "pattern": "^/[A-Za-z0-9._/\\-]+$"
+              },
+              "drill_kind": {
+                "type": "string",
+                "enum": ["restore-drill", "budget-stop-drill", "failure-drill"]
+              },
+              "bundle_ref": {
+                "type": "string",
+                "pattern": "^runtime-evidence/[A-Za-z0-9._/\\-]+\\.json$",
+                "minLength": 18,
+                "maxLength": 256
+              }
+            },
+            "oneOf": [
+              {
+                "properties": {
+                  "kind": { "const": "paperclip_api_readonly" }
+                },
+                "required": ["kind", "company_kind", "auth_method"]
+              },
+              {
+                "properties": {
+                  "kind": { "const": "scratch_drill" }
+                },
+                "required": ["kind", "scratch_root", "drill_kind"]
+              },
+              {
+                "properties": {
+                  "kind": { "const": "offline_bundle_read" }
+                },
+                "required": ["kind", "bundle_ref"]
+              },
+              {
+                "properties": {
+                  "kind": { "const": "observed" }
+                },
+                "required": ["kind"]
+              }
+            ]
+          },
+          "isolation_invariant": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["read_only_boundary_pass", "scratch_target_used"],
+            "properties": {
+              "read_only_boundary_pass": { "type": "boolean" },
+              "scratch_target_used": { "type": "boolean" },
+              "boundary_blocker_code": {
+                "oneOf": [
+                  { "type": "null" },
+                  {
+                    "type": "string",
+                    "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$",
+                    "minLength": 16,
+                    "maxLength": 96
+                  }
+                ]
+              }
+            }
+          },
+          "mutation_audit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "issues_created", "issues_business_updated",
+              "documents_created", "documents_business_updated",
+              "projects_created", "projects_business_updated",
+              "goals_created", "goals_business_updated",
+              "plugins_created", "plugins_updated",
+              "agents_created", "agents_operational_updated",
+              "business_mutations_recorded"
+            ],
+            "properties": {
+              "issues_created": { "type": "integer", "minimum": 0 },
+              "issues_business_updated": { "type": "integer", "minimum": 0 },
+              "documents_created": { "type": "integer", "minimum": 0 },
+              "documents_business_updated": { "type": "integer", "minimum": 0 },
+              "projects_created": { "type": "integer", "minimum": 0 },
+              "projects_business_updated": { "type": "integer", "minimum": 0 },
+              "goals_created": { "type": "integer", "minimum": 0 },
+              "goals_business_updated": { "type": "integer", "minimum": 0 },
+              "plugins_created": { "type": "integer", "minimum": 0 },
+              "plugins_updated": { "type": "integer", "minimum": 0 },
+              "agents_created": { "type": "integer", "minimum": 0 },
+              "agents_operational_updated": { "type": "integer", "minimum": 0 },
+              "business_mutations_recorded": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "redaction": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "full_ids", "credentials", "xiaomi_endpoint_reuse", "synthetic_bos",
+              "raw_reasoning", "raw_body", "raw_result_json_result",
+              "vendor_reuse_strings", "bounded_digests_only", "redaction_bounds_loaded"
+            ],
+            "properties": {
+              "full_ids": { "type": "boolean", "const": false },
+              "credentials": { "type": "boolean", "const": false },
+              "xiaomi_endpoint_reuse": { "type": "boolean", "const": false },
+              "synthetic_bos": { "type": "boolean", "const": false },
+              "raw_reasoning": { "type": "boolean", "const": false },
+              "raw_body": { "type": "boolean", "const": false },
+              "raw_result_json_result": { "type": "boolean", "const": false },
+              "vendor_reuse_strings": { "type": "boolean", "const": false },
+              "bounded_digests_only": { "type": "boolean", "const": true },
+              "redaction_bounds_loaded": { "type": "boolean", "const": true }
+            }
+          },
+          "verdict": {
+            "type": "string",
+            "enum": ["pass", "not_proven", "fail_closed"]
+          },
+          "blocker_codes": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$",
+              "minLength": 16,
+              "maxLength": 96
+            },
+            "uniqueItems": true
+          },
+          "exit_code": {
+            "type": "integer",
+            "minimum": -1,
+            "maximum": 255
+          },
+          "sanitised_digest": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 256,
+            "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+          },
+          "artifact_reference": {
+            "type": "string",
+            "pattern": "^(runtime-evidence|scripts)/[A-Za-z0-9._/\\-]+$",
+            "minLength": 1,
+            "maxLength": 256,
+            "not": { "pattern": "(?:\\.\\./|^/)" }
+          },
+          "artifact_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$|^[a-f0-9]{128}$"
+          },
+          "attempted_exit_code": {
+            "type": "integer",
+            "minimum": -1,
+            "maximum": 599
+          },
+          "observed_blocker_code": {
+            "type": "string",
+            "pattern": "^M16-S03-PROBE-[A-Za-z0-9._-]+$",
+            "minLength": 16,
+            "maxLength": 96
+          },
+          "observed_blocker_reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400,
+            "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+          }
+        },
+        "allOf": [
+          {
+            "description": "EXECUTED branch on records requires the four objective fields; verdict vocabulary is 'pass' or 'fail_closed'; NOT_PROVEN-only fields are forbidden.",
+            "if": {
+              "properties": {
+                "classification": { "const": "EXECUTED" }
+              },
+              "required": ["classification"]
+            },
+            "then": {
+              "required": ["exit_code", "sanitised_digest", "artifact_reference", "artifact_hash"],
+              "properties": {
+                "verdict": {
+                  "enum": ["pass", "fail_closed"]
+                }
+              },
+              "not": {
+                "anyOf": [
+                  { "required": ["attempted_exit_code"] },
+                  { "required": ["observed_blocker_code"] },
+                  { "required": ["observed_blocker_reason"] }
+                ]
+              }
+            }
+          },
+          {
+            "description": "NOT_PROVEN branch forbids EXECUTED-only fields and freezes verdict to 'not_proven'.",
+            "if": {
+              "properties": {
+                "classification": { "const": "NOT_PROVEN" }
+              },
+              "required": ["classification"]
+            },
+            "then": {
+              "required": ["attempted_exit_code", "observed_blocker_code", "observed_blocker_reason"],
+              "properties": {
+                "verdict": { "const": "not_proven" }
+              },
+              "not": {
+                "anyOf": [
+                  { "required": ["exit_code"] },
+                  { "required": ["sanitised_digest"] },
+                  { "required": ["artifact_reference"] },
+                  { "required": ["artifact_hash"] }
+                ]
+              }
+            }
+          },
+          {
+            "description": "Scratch drill records MUST report scratch_target_used=true and read_only_boundary_pass=true so a containment escape cannot pass the schema.",
+            "if": {
+              "properties": {
+                "source_identity": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "scratch_drill"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                }
+              },
+              "required": [
+                "source_identity"
+              ]
+            },
+            "then": {
+              "properties": {
+                "isolation_invariant": {
+                  "properties": {
+                    "scratch_target_used": {
+                      "const": true
+                    },
+                    "read_only_boundary_pass": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "description": "Live paperclip_api_readonly records MUST report scratch_target_used=false and read_only_boundary_pass=true so the schema cannot smuggle a drill under a live classification.",
+            "if": {
+              "properties": {
+                "source_identity": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "const": "paperclip_api_readonly"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                }
+              },
+              "required": [
+                "source_identity"
+              ]
+            },
+            "then": {
+              "properties": {
+                "isolation_invariant": {
+                  "properties": {
+                    "scratch_target_used": {
+                      "const": false
+                    },
+                    "read_only_boundary_pass": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "redaction_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_ids", "credentials", "xiaomi_endpoint_reuse", "synthetic_bos",
+        "raw_reasoning", "raw_body", "raw_result_json_result",
+        "vendor_reuse_strings", "bounded_digests_only", "redaction_bounds_loaded"
+      ],
+      "properties": {
+        "full_ids": { "type": "boolean", "const": false },
+        "credentials": { "type": "boolean", "const": false },
+        "xiaomi_endpoint_reuse": { "type": "boolean", "const": false },
+        "synthetic_bos": { "type": "boolean", "const": false },
+        "raw_reasoning": { "type": "boolean", "const": false },
+        "raw_body": { "type": "boolean", "const": false },
+        "raw_result_json_result": { "type": "boolean", "const": false },
+        "vendor_reuse_strings": { "type": "boolean", "const": false },
+        "bounded_digests_only": { "type": "boolean", "const": true },
+        "redaction_bounds_loaded": { "type": "boolean", "const": true }
+      }
+    },
+    "embedded_classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluator",
+        "evaluator_version",
+        "raw_state",
+        "numeric_mapping",
+        "weight",
+        "verdicts",
+        "hard_gates",
+        "canary_gates",
+        "worksheet",
+        "completed_at",
+        "completed_by"
+      ],
+      "properties": {
+        "evaluator": {
+          "type": "string",
+          "const": "S04-div4-div5-canary-contract"
+        },
+        "evaluator_version": {
+          "type": "string",
+          "const": "v1"
+        },
+        "raw_state": {
+          "type": "string",
+          "enum": ["PARTIAL", "EXECUTED", "NOT_PROVEN"]
+        },
+        "numeric_mapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["orchestration", "evidence", "launch"],
+          "properties": {
+            "orchestration": { "type": "number", "minimum": 0, "maximum": 1 },
+            "evidence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "launch": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "verdicts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["orchestration", "evidence", "launch"],
+          "properties": {
+            "orchestration": { "type": "string", "enum": ["PASS", "PARTIAL", "NOT_PROVEN"] },
+            "evidence": { "type": "string", "enum": ["PASS", "PARTIAL", "NOT_PROVEN"] },
+            "launch": { "type": "string", "const": "PREPARATION_ONLY" }
+          }
+        },
+        "hard_gates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "HG1 SEMANTIC_RULE_COMPLIANCE",
+            "HG2 PROVENANCE_INTEGRITY",
+            "HG3 RECOVERY_EVIDENCE",
+            "HG4 FINANCIAL_PROTECTION",
+            "HG5 SECURITY_POSTURE",
+            "HG6 COMPLIANCE_POSTURE",
+            "HG7 READ_ONLY_BOUNDARY",
+            "HG8 SCRATCH_ISOLATION"
+          ],
+          "properties": {
+            "HG1 SEMANTIC_RULE_COMPLIANCE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG2 PROVENANCE_INTEGRITY": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG3 RECOVERY_EVIDENCE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG4 FINANCIAL_PROTECTION": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG5 SECURITY_POSTURE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG6 COMPLIANCE_POSTURE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG7 READ_ONLY_BOUNDARY": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "HG8 SCRATCH_ISOLATION": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] }
+          }
+        },
+        "canary_gates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "CG1 CANARY_PRODUCER_VALID",
+            "CG2 CANARY_VALIDATOR_INDEPENDENT",
+            "CG3 EVIDENCE_CHAIN_INTACT",
+            "CG4 CORRELATION_CONTRACT_VALID",
+            "CG5 REDACTION_SAFE",
+            "CG6 S02_BASELINE_IMMUTABLE",
+            "CG7 S03_PACK_IMMUTABLE",
+            "CG8 DETERMINISTIC_REPLAY"
+          ],
+          "properties": {
+            "CG1 CANARY_PRODUCER_VALID": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "CG2 CANARY_VALIDATOR_INDEPENDENT": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "CG3 EVIDENCE_CHAIN_INTACT": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "CG4 CORRELATION_CONTRACT_VALID": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "CG5 REDACTION_SAFE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "CG6 S02_BASELINE_IMMUTABLE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "CG7 S03_PACK_IMMUTABLE": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] },
+            "CG8 DETERMINISTIC_REPLAY": { "type": "string", "enum": ["pass", "not_proven", "fail_closed"] }
+          }
+        },
+        "worksheet": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["step_orchestration", "step_evidence", "step_launch"],
+          "properties": {
+            "step_orchestration": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["weight", "numeric_mapping", "observed_status"],
+              "properties": {
+                "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+                "numeric_mapping": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["producer_executed", "validator_replay_match"],
+                  "properties": {
+                    "producer_executed": { "type": "integer", "minimum": 0, "maximum": 16 },
+                    "validator_replay_match": { "type": "integer", "enum": [0, 1] }
+                  }
+                },
+                "observed_status": {
+                  "type": "string",
+                  "enum": ["pass", "not_proven", "fail_closed"]
+                }
+              }
+            },
+            "step_evidence": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["weight", "numeric_mapping", "observed_status"],
+              "properties": {
+                "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+                "numeric_mapping": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["sources_sanitised", "s02_unchanged", "s03_unchanged", "correlation_unique"],
+                  "properties": {
+                    "sources_sanitised": { "type": "integer", "minimum": 0, "maximum": 6 },
+                    "s02_unchanged": { "type": "integer", "enum": [0, 1] },
+                    "s03_unchanged": { "type": "integer", "enum": [0, 1] },
+                    "correlation_unique": { "type": "integer", "enum": [0, 1] }
+                  }
+                },
+                "observed_status": {
+                  "type": "string",
+                  "enum": ["pass", "not_proven", "fail_closed"]
+                }
+              }
+            },
+            "step_launch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["weight", "numeric_mapping", "observed_status"],
+              "properties": {
+                "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+                "numeric_mapping": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["verdict_frozen", "replay_byte_identical"],
+                  "properties": {
+                    "verdict_frozen": { "type": "string", "const": "PREPARATION_ONLY" },
+                    "replay_byte_identical": { "type": "integer", "enum": [0, 1] }
+                  }
+                },
+                "observed_status": {
+                  "type": "string",
+                  "enum": ["fail_closed"]
+                }
+              }
+            }
+          }
+        },
+        "completed_at": { "type": "string", "format": "date-time" },
+        "completed_by": { "type": "string", "const": "producer" }
+      }
+    },
+    "replay_keys": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "first_run_provenance_hash",
+        "second_run_provenance_hash",
+        "match",
+        "byte_identical",
+        "verified_at"
+      ],
+      "properties": {
+        "first_run_provenance_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "second_run_provenance_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "match": { "type": "boolean", "const": true },
+        "byte_identical": { "type": "boolean", "const": true },
+        "verified_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "reason"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^M16-S04-CANARY-[A-Za-z0-9._-]+$",
+            "minLength": 16,
+            "maxLength": 96
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400,
+            "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+          },
+          "source_ref": {
+            "type": "string",
+            "pattern": "^runtime-evidence/M016-S[0-9]{2}-[A-Za-z0-9._/-]+\\.json$",
+            "maxLength": 256
+          }
+        }
+      }
+    },
+    "raw_input_immutability_verified": { "type": "boolean", "const": true },
+    "producer_verdict_line": {
+      "type": "string",
+      "minLength": 18,
+      "maxLength": 1024,
+      "pattern": "^M16-S04-CANARY\\s+verdict=[A-Z0-9_]+(\\s+exit=[0-9]+)?(\\s+[A-Za-z0-9_]+=[!-~]+)*$"
+    }
+  }
+}

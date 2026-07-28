@@ -1,0 +1,20 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+  "schema_version": "v1",
+  "milestone": "M016-txa3vu",
+  "slice": "S03",
+  "task": "T04",
+  "generated": "2026-07-19T12:00:00.000Z",
+  "drill_kinds": [
+    "restore-drill",
+    "budget-stop-drill",
+    "failure-drill"
+  ],
+  "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+  "owned_marker_present": false,
+  "isolation_violation": false,
+  "residue_detected": false,
+  "stop_reason": null,
+  "bounded_drill_count": 3,
+  "ledger_total_entries": 28
+}

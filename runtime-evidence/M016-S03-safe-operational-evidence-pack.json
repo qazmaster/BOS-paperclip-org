@@ -1,0 +1,1765 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-operational-evidence-pack.v1.json",
+  "schema_version": "v1",
+  "pack_id": "m016-s03-safe-operational-evidence-pack-v1",
+  "pack_kind": "safe-operational-evidence-pack",
+  "milestone": "M016-txa3vu",
+  "slice": "S03",
+  "task": "T05",
+  "generated": "2026-07-28T03:52:00.463Z",
+  "pack_digest": "37c95cfe45fce98c9668f23cfa8574546fc0dfc2263da6f8750a458e133ffcf6",
+  "sources": [
+    {
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "kind": "live_probe_results",
+      "pre_hash_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "post_hash_sha256": "69f0e243978fd91cccd673189e9b6ed57ae525fa5614b7c56264b84b32471fc3",
+      "sanitised_sha256": "951618958ade1b19af7e96f6448a14217f78564e57b8596d290e98b666ffb3d2",
+      "independence_group": "m016-s03-probe-live",
+      "size_bytes": 42267,
+      "claim_ids": [
+        "m016-s03-live-div1-hco",
+        "m016-s03-live-div2-master-planner",
+        "m016-s03-live-div3-treasury",
+        "m016-s03-live-div4-production",
+        "m016-s03-live-div5-qualifications",
+        "m016-s03-live-div6-external",
+        "m016-s03-live-div7-mission-control",
+        "m016-s03-live-paperclip-health",
+        "m016-s03-live-hermes-environment",
+        "m016-s03-live-secret-posture",
+        "m016-s03-live-cost-snapshot",
+        "m016-s03-live-isolation-invariant",
+        "m016-s03-live-redaction-posture"
+      ],
+      "projection_keys": [
+        "canonical_protocol",
+        "executed_count",
+        "fail_closed_count",
+        "generated",
+        "line_class",
+        "milestone",
+        "mutation_stopped",
+        "not_proven_count",
+        "protocol_digest",
+        "record_count",
+        "records",
+        "schema_id",
+        "schema_version",
+        "session",
+        "slice",
+        "stop_reason",
+        "task"
+      ],
+      "captured_at": "2026-07-19T14:56:43.290Z",
+      "record_count": 16,
+      "executed_count": 4,
+      "not_proven_count": 12
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "kind": "scratch_drill_results",
+      "pre_hash_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+      "post_hash_sha256": "297100483b53b6aa61476d2e0b872b20b3f7ae2e4059ddf264cf4e27988eff0c",
+      "sanitised_sha256": "a5654b6216278c3ab38dd90fbac37652f2a0fdaa573d1d2335a9bf5bf3f33cc3",
+      "independence_group": "m016-s03-probe-drill",
+      "size_bytes": 9159,
+      "claim_ids": [
+        "m016-s03-drill-restore",
+        "m016-s03-drill-budget-stop",
+        "m016-s03-drill-failure"
+      ],
+      "projection_keys": [
+        "canonical_protocol",
+        "drill_ledger_summary",
+        "executed_count",
+        "fail_closed_count",
+        "generated",
+        "isolation_violation",
+        "line_class",
+        "milestone",
+        "not_proven_count",
+        "protocol_digest",
+        "record_count",
+        "records",
+        "residue_detected",
+        "schema_id",
+        "schema_version",
+        "session",
+        "slice",
+        "stop_reason",
+        "task"
+      ],
+      "captured_at": "2026-07-19T12:00:00.000Z",
+      "record_count": 3,
+      "executed_count": 3,
+      "not_proven_count": 0
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-isolation-invariant.json",
+      "kind": "isolation_invariant",
+      "pre_hash_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
+      "post_hash_sha256": "005e9dddf4261daaaf9b8eb38d5a3a28ab248ae1e5e4e0c6e33e1ecd59587e65",
+      "sanitised_sha256": "3cd20b1c9d8d249535b10c429f46ef1a2153738a112421c0c75d2582abcfa3b1",
+      "independence_group": "m016-s03-probe-drill-isolation",
+      "size_bytes": 548,
+      "claim_ids": [
+        "m016-s03-isolation-invariant"
+      ],
+      "projection_keys": [
+        "bounded_drill_count",
+        "drill_kinds",
+        "generated",
+        "isolation_violation",
+        "ledger_total_entries",
+        "milestone",
+        "owned_marker_present",
+        "residue_detected",
+        "schema_id",
+        "schema_version",
+        "scratch_root",
+        "slice",
+        "stop_reason",
+        "task"
+      ],
+      "captured_at": "2026-07-19T12:00:00.000Z"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-live-probe-protocol.json",
+      "kind": "live_probe_protocol",
+      "pre_hash_sha256": "86d3e44775b70edfcaf8eb68ec160c58fd62fc2cd7f32119c3213a5d986ea990",
+      "post_hash_sha256": "86d3e44775b70edfcaf8eb68ec160c58fd62fc2cd7f32119c3213a5d986ea990",
+      "sanitised_sha256": "7b03ae4f4a69594da3f8730d27335159d9244b6191788bc6246d27b3f254ca09",
+      "independence_group": "m016-s03-probe-live-protocol",
+      "size_bytes": 1797,
+      "claim_ids": [
+        "m016-s03-live-protocol"
+      ],
+      "projection_keys": [
+        "canonical_protocol",
+        "executed_count",
+        "fail_closed_count",
+        "gates",
+        "generated",
+        "line_class",
+        "milestone",
+        "not_proven_count",
+        "protocol_digest",
+        "record_count",
+        "replays_deterministic",
+        "schema_id",
+        "schema_version",
+        "session",
+        "slice",
+        "task",
+        "verdict"
+      ],
+      "captured_at": "2026-07-19T12:00:00.000Z"
+    },
+    {
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-protocol.json",
+      "kind": "scratch_drill_protocol",
+      "pre_hash_sha256": "d3e9c8df410bebba199bc56fe34a9e63ba37547e7e465b0fbdcd2cec05d9d6b1",
+      "post_hash_sha256": "d3e9c8df410bebba199bc56fe34a9e63ba37547e7e465b0fbdcd2cec05d9d6b1",
+      "sanitised_sha256": "c6e238d3a01d622c6c977e67548f43a8e3622eaf431cdcb176f7cb149a76f397",
+      "independence_group": "m016-s03-probe-drill-protocol",
+      "size_bytes": 1448,
+      "claim_ids": [
+        "m016-s03-drill-protocol"
+      ],
+      "projection_keys": [
+        "canonical_protocol",
+        "executed_count",
+        "fail_closed_count",
+        "gates",
+        "generated",
+        "line_class",
+        "milestone",
+        "not_proven_count",
+        "protocol_digest",
+        "record_count",
+        "replays_deterministic",
+        "schema_id",
+        "schema_version",
+        "session",
+        "slice",
+        "task",
+        "verdict"
+      ],
+      "captured_at": "2026-07-19T12:00:00.000Z"
+    }
+  ],
+  "s02_baseline": {
+    "source_ref": "runtime-evidence/M016-S02-bos-mission-proof.json",
+    "pre_canonical_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
+    "post_canonical_hash": "84c606a3c5fb0a6f22d1cf752337d847a654ab9f27c7ac3b2f7f1127c2b4a788",
+    "unchanged": true
+  },
+  "role_matrix": [
+    {
+      "role": "Div1.HCO",
+      "role_class": "division",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div1-hco",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-div1-hco-no-target-400ce295",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "Div2.MasterPlanner",
+      "role_class": "division",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div2-master-planner",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-div2-masterplanner-no-target-5deb9249",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "Div3.Treasury",
+      "role_class": "division",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div3-treasury",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-div3-treasury-no-target-2bd09913",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "Div4.Production",
+      "role_class": "division",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div4-production",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-div4-production-no-target-4516d67f",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "Div5.QualificationsLibraryLearning",
+      "role_class": "division",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div5-qualifications",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-div5-qualificationslibrarylearning-no-target-7a0381eb",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "Div6.External",
+      "role_class": "division",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div6-external",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-div6-external-no-target-4537f75b",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "Div7.MissionControl",
+      "role_class": "division",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div7-mission-control",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-div7-missioncontrol-no-target-421b3417",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "paperclip_health",
+      "role_class": "infrastructure",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-paperclip-health",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-paperclip_health-no-target-962e3e75",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "hermes_environment",
+      "role_class": "infrastructure",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-hermes-environment",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-hermes_environment-no-target-b972fa5d",
+      "methodology": "live-readonly"
+    },
+    {
+      "role": "secret_posture",
+      "role_class": "infrastructure",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-secret-posture",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-secret_posture-probe-ea022dda",
+      "methodology": "observed"
+    },
+    {
+      "role": "cost_snapshot",
+      "role_class": "infrastructure",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-cost-snapshot",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-cost_snapshot-probe-7cf5323f",
+      "methodology": "observed"
+    },
+    {
+      "role": "isolation_invariant",
+      "role_class": "infrastructure",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-isolation-invariant",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-isolation_invariant-probe-be2ad5b9",
+      "methodology": "observed"
+    },
+    {
+      "role": "restore_drill",
+      "role_class": "infrastructure",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-restore-drill",
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "probe_id": "M16-S03-PROBE-restore_drill-drill-6-0b703773",
+      "methodology": "scratch-drill"
+    },
+    {
+      "role": "budget_stop_drill",
+      "role_class": "infrastructure",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-budget-stop-drill",
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
+      "methodology": "scratch-drill"
+    },
+    {
+      "role": "failure_drill",
+      "role_class": "infrastructure",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-failure-drill",
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "probe_id": "M16-S03-PROBE-failure_drill-drill-11-13ff26c8",
+      "methodology": "scratch-drill"
+    },
+    {
+      "role": "redaction_posture_audit",
+      "role_class": "infrastructure",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-redaction-posture-audit",
+      "source_ref": "runtime-evidence/M016-S03-live-probe-results.json",
+      "probe_id": "M16-S03-PROBE-redaction_posture_audit-probe-047e97db",
+      "methodology": "observed"
+    }
+  ],
+  "drill_matrix": [
+    {
+      "drill_kind": "restore-drill",
+      "role": "restore_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-restore-drill",
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "probe_id": "M16-S03-PROBE-restore_drill-drill-6-0b703773",
+      "isolation_violation": false,
+      "residue_detected": false
+    },
+    {
+      "drill_kind": "budget-stop-drill",
+      "role": "budget_stop_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-budget-stop-drill",
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
+      "isolation_violation": false,
+      "residue_detected": false
+    },
+    {
+      "drill_kind": "failure-drill",
+      "role": "failure_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-failure-drill",
+      "source_ref": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "probe_id": "M16-S03-PROBE-failure_drill-drill-11-13ff26c8",
+      "isolation_violation": false,
+      "residue_detected": false
+    }
+  ],
+  "records": [
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.281Z",
+      "probe_id": "M16-S03-PROBE-div1-hco-no-target-400ce295",
+      "role_class": "division",
+      "role": "Div1.HCO",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div1-hco",
+      "method": "GET /api/companies/{companyId}/agents",
+      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
+      "started_at": "2026-07-19T14:56:43.281Z",
+      "finished_at": "2026-07-19T14:56:43.281Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-discover-divisions",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div1.HCO",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div1.HCO"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.284Z",
+      "probe_id": "M16-S03-PROBE-div2-masterplanner-no-target-5deb9249",
+      "role_class": "division",
+      "role": "Div2.MasterPlanner",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div2-master-planner",
+      "method": "GET /api/companies/{companyId}/agents",
+      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
+      "started_at": "2026-07-19T14:56:43.284Z",
+      "finished_at": "2026-07-19T14:56:43.284Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-discover-divisions",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div2.MasterPlanner",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div2.MasterPlanner"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.285Z",
+      "probe_id": "M16-S03-PROBE-div3-treasury-no-target-2bd09913",
+      "role_class": "division",
+      "role": "Div3.Treasury",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div3-treasury",
+      "method": "GET /api/companies/{companyId}/agents",
+      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
+      "started_at": "2026-07-19T14:56:43.285Z",
+      "finished_at": "2026-07-19T14:56:43.285Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-discover-divisions",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div3.Treasury",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div3.Treasury"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.285Z",
+      "probe_id": "M16-S03-PROBE-div4-production-no-target-4516d67f",
+      "role_class": "division",
+      "role": "Div4.Production",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div4-production",
+      "method": "GET /api/companies/{companyId}/agents",
+      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
+      "started_at": "2026-07-19T14:56:43.285Z",
+      "finished_at": "2026-07-19T14:56:43.285Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-discover-divisions",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div4.Production",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div4.Production"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.285Z",
+      "probe_id": "M16-S03-PROBE-div5-qualificationslibrarylearning-no-target-7a0381eb",
+      "role_class": "division",
+      "role": "Div5.QualificationsLibraryLearning",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div5-qualifications",
+      "method": "GET /api/companies/{companyId}/agents",
+      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
+      "started_at": "2026-07-19T14:56:43.285Z",
+      "finished_at": "2026-07-19T14:56:43.285Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-discover-divisions",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div5.QualificationsLibraryLearning",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div5.QualificationsLibraryLearning"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.285Z",
+      "probe_id": "M16-S03-PROBE-div6-external-no-target-4537f75b",
+      "role_class": "division",
+      "role": "Div6.External",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div6-external",
+      "method": "GET /api/companies/{companyId}/agents",
+      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
+      "started_at": "2026-07-19T14:56:43.285Z",
+      "finished_at": "2026-07-19T14:56:43.285Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-discover-divisions",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div6.External",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div6.External"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.285Z",
+      "probe_id": "M16-S03-PROBE-div7-missioncontrol-no-target-421b3417",
+      "role_class": "division",
+      "role": "Div7.MissionControl",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-div7-mission-control",
+      "method": "GET /api/companies/{companyId}/agents",
+      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/agents",
+      "started_at": "2026-07-19T14:56:43.285Z",
+      "finished_at": "2026-07-19T14:56:43.285Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-discover-divisions",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-Div7.MissionControl",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-Div7.MissionControl"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T04",
+      "generated": "2026-07-19T12:00:00.000Z",
+      "probe_id": "M16-S03-PROBE-budget_stop_drill-drill-11-14e9883c",
+      "role_class": "infrastructure",
+      "role": "budget_stop_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-budget-stop-drill",
+      "method": "budget-stop-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill budget-stop-drill",
+      "started_at": "2026-07-19T12:00:00.000Z",
+      "finished_at": "2026-07-19T12:00:00.000Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-isolated-budget-stop",
+      "limitations": [
+        "synthetic in-memory budget state; no real Paperclip counter is touched",
+        "decision logic is the same off-by-one rule applied at 99/100/101 used",
+        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "drill_kind": "budget-stop-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "budget-drill:decisions:ALLOW-DENY-DENY-DENY",
+      "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "artifact_hash": "bf8a48699a3a975b92e965e6c4df33a61ae5aad4ea87df1ffbf80d18f2f1bf8d",
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.288Z",
+      "probe_id": "M16-S03-PROBE-budget_stop_drill-no-target-8279328b",
+      "role_class": "infrastructure",
+      "role": "budget_stop_drill",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-budget-stop-drill",
+      "method": "budget-stop-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill budget-stop-drill",
+      "started_at": "2026-07-19T14:56:43.288Z",
+      "finished_at": "2026-07-19T14:56:43.288Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-deferred-to-t04",
+      "limitations": [
+        "scratch-drill evidence materialises in T04: restore-drill, budget-stop-drill, failure-drill",
+        "T03 emits honest NOT_PROVEN to keep role cardinality complete",
+        "drill_kind preserved for cross-record independence tracking"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-scratch/budget-stop-drill-001",
+        "drill_kind": "budget-stop-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-budget_stop_drill",
+      "observed_blocker_reason": "scratch-drill evidence materialises in T04 -- budget-stop-drill. T03 emits honest NOT_PROVEN to keep role cardinality complete",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-budget_stop_drill"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.287Z",
+      "probe_id": "M16-S03-PROBE-cost_snapshot-probe-7cf5323f",
+      "role_class": "infrastructure",
+      "role": "cost_snapshot",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-cost-snapshot",
+      "method": "GET /api/companies/{companyId}/missions",
+      "command": "READ runtime-evidence/M016-S02-bos-mission-proof.json",
+      "started_at": "2026-07-19T14:56:43.287Z",
+      "finished_at": "2026-07-19T14:56:43.287Z",
+      "duration_ms": 0,
+      "scope": "offline-bundle-readonly-no-mutation",
+      "limitations": [
+        "reads only the allowlisted M016-S02-bos-mission-proof.json bundle",
+        "no live HTTP call; bounded path under runtime-evidence/",
+        "redaction scan applied before any artifact_hash computation"
+      ],
+      "source_identity": {
+        "kind": "offline_bundle_read",
+        "bundle_ref": "runtime-evidence/M016-S02-bos-mission-proof.json"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "cost_snapshot:observed:f9c552ea578cd47aa0f71ff7501b558d",
+      "artifact_reference": "runtime-evidence/M016-S02-bos-mission-proof.json",
+      "artifact_hash": "f9c552ea578cd47aa0f71ff7501b558d2be1b0ca5c1708b11c147c8b101d3e97",
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T04",
+      "generated": "2026-07-19T12:00:00.000Z",
+      "probe_id": "M16-S03-PROBE-failure_drill-drill-11-13ff26c8",
+      "role_class": "infrastructure",
+      "role": "failure_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-failure-drill",
+      "method": "failure-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill failure-drill",
+      "started_at": "2026-07-19T12:00:00.000Z",
+      "finished_at": "2026-07-19T12:00:00.000Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-isolated-failure-cleanup",
+      "limitations": [
+        "synchronous simulated timeout; real async setTimeout-based aborts use the same cleanup hook",
+        "residue check is enforced after both partial-write and timeout scenarios",
+        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "drill_kind": "failure-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "failure-drill:cleanup-residue-free:partial-2-timeout-1",
+      "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "artifact_hash": "045cf2bd7f81d1beed309bbbbe3859f77a5ece280730d2ae17fcf3a730d8b56a",
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.288Z",
+      "probe_id": "M16-S03-PROBE-failure_drill-no-target-f390ace0",
+      "role_class": "infrastructure",
+      "role": "failure_drill",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-failure-drill",
+      "method": "failure-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill failure-drill",
+      "started_at": "2026-07-19T14:56:43.288Z",
+      "finished_at": "2026-07-19T14:56:43.288Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-deferred-to-t04",
+      "limitations": [
+        "scratch-drill evidence materialises in T04: restore-drill, budget-stop-drill, failure-drill",
+        "T03 emits honest NOT_PROVEN to keep role cardinality complete",
+        "drill_kind preserved for cross-record independence tracking"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-scratch/failure-drill-001",
+        "drill_kind": "failure-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-failure_drill",
+      "observed_blocker_reason": "scratch-drill evidence materialises in T04 -- failure-drill. T03 emits honest NOT_PROVEN to keep role cardinality complete",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-failure_drill"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.285Z",
+      "probe_id": "M16-S03-PROBE-hermes_environment-no-target-b972fa5d",
+      "role_class": "infrastructure",
+      "role": "hermes_environment",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-hermes-environment",
+      "method": "GET /api/companies/{companyId}/adapters/hermes/test-environment",
+      "command": "GET http://127.0.0.1:43131/api/companies/{companyId}/adapters/hermes/test-environment",
+      "started_at": "2026-07-19T14:56:43.285Z",
+      "finished_at": "2026-07-19T14:56:43.285Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-hermes-test-env-readonly",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-hermes_environment",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-hermes_environment"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.288Z",
+      "probe_id": "M16-S03-PROBE-isolation_invariant-probe-be2ad5b9",
+      "role_class": "infrastructure",
+      "role": "isolation_invariant",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-isolation-invariant",
+      "method": "GET /api/health",
+      "command": "OBSERVE http://127.0.0.1:43131/api/health",
+      "started_at": "2026-07-19T14:56:43.288Z",
+      "finished_at": "2026-07-19T14:56:43.288Z",
+      "duration_ms": 0,
+      "scope": "local-observed-no-mutation",
+      "limitations": [
+        "observation reads only sanitised sidecars in runtime-evidence/",
+        "no HTTP call; no mutation; UUIDs and credentials never persisted",
+        "verifies redaction posture rather than external state"
+      ],
+      "source_identity": {
+        "kind": "observed"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "isolation_invariant:observed:6c352dbe4152c42733832661a10827e4",
+      "artifact_reference": "runtime-evidence/M016-S02-bos-mission-proof.json",
+      "artifact_hash": "6c352dbe4152c42733832661a10827e453d80a88b2c64523af545d1cfd696036",
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.285Z",
+      "probe_id": "M16-S03-PROBE-paperclip_health-no-target-962e3e75",
+      "role_class": "infrastructure",
+      "role": "paperclip_health",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-paperclip-health",
+      "method": "GET /api/health",
+      "command": "GET http://127.0.0.1:43131/api/health",
+      "started_at": "2026-07-19T14:56:43.285Z",
+      "finished_at": "2026-07-19T14:56:43.285Z",
+      "duration_ms": 0,
+      "scope": "live-paperclip-health-readonly",
+      "limitations": [
+        "GET-only allowlist; mutation verbs rejected at every layer",
+        "identity discovered fresh per session; no hardcoded UUIDs",
+        "raw HTTP body sanitised; never persisted; only digest and hash leave runner"
+      ],
+      "source_identity": {
+        "kind": "paperclip_api_readonly",
+        "company_kind": "bos-light",
+        "auth_method": "bearer_token_env"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-paperclip_health",
+      "observed_blocker_reason": "live session disabled or no credentials",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-paperclip_health"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.288Z",
+      "probe_id": "M16-S03-PROBE-redaction_posture_audit-probe-047e97db",
+      "role_class": "infrastructure",
+      "role": "redaction_posture_audit",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-redaction-posture-audit",
+      "method": "GET /api/health",
+      "command": "OBSERVE http://127.0.0.1:43131/api/health",
+      "started_at": "2026-07-19T14:56:43.288Z",
+      "finished_at": "2026-07-19T14:56:43.288Z",
+      "duration_ms": 0,
+      "scope": "local-observed-no-mutation",
+      "limitations": [
+        "observation reads only sanitised sidecars in runtime-evidence/",
+        "no HTTP call; no mutation; UUIDs and credentials never persisted",
+        "verifies redaction posture rather than external state"
+      ],
+      "source_identity": {
+        "kind": "observed"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "redaction_posture_audit:observed:999455358a41925254e5f095dd19587",
+      "artifact_reference": "runtime-evidence/M016-S02-redaction-contract.json",
+      "artifact_hash": "999455358a41925254e5f095dd1958783b8975cf43b99591706b1faeb711c4d1",
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T04",
+      "generated": "2026-07-19T12:00:00.000Z",
+      "probe_id": "M16-S03-PROBE-restore_drill-drill-6-0b703773",
+      "role_class": "infrastructure",
+      "role": "restore_drill",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-restore-drill",
+      "method": "restore-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill restore-drill",
+      "started_at": "2026-07-19T12:00:00.000Z",
+      "finished_at": "2026-07-19T12:00:00.000Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-isolated-restore",
+      "limitations": [
+        "fixture payload is random scratch bytes; no production state touched",
+        "restore step proves pre/post hash equality only; it does not validate side-channel state",
+        "cleanup runs in finally; residue check is a precondition for EXECUTED"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-canonical/drill-PKrJA6",
+        "drill_kind": "restore-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "restore-drill:backup-to-restore:hash-equal-true",
+      "artifact_reference": "runtime-evidence/M016-S03-scratch-drill-results.json",
+      "artifact_hash": "43fb7be4a0418cac608be5f60419d4854f6e0f1e530bceedcd64e264de532c2b",
+      "verdict": "pass",
+      "blocker_codes": []
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.288Z",
+      "probe_id": "M16-S03-PROBE-restore_drill-no-target-c1adca5f",
+      "role_class": "infrastructure",
+      "role": "restore_drill",
+      "classification": "NOT_PROVEN",
+      "independence_group": "m016-s03-probe-restore-drill",
+      "method": "restore-drill",
+      "command": "node scripts/run_m016_s03_scratch_drills.js --drill restore-drill",
+      "started_at": "2026-07-19T14:56:43.288Z",
+      "finished_at": "2026-07-19T14:56:43.288Z",
+      "duration_ms": 0,
+      "scope": "scratch-drill-deferred-to-t04",
+      "limitations": [
+        "scratch-drill evidence materialises in T04: restore-drill, budget-stop-drill, failure-drill",
+        "T03 emits honest NOT_PROVEN to keep role cardinality complete",
+        "drill_kind preserved for cross-record independence tracking"
+      ],
+      "source_identity": {
+        "kind": "scratch_drill",
+        "scratch_root": "/tmp/m016-s03-scratch/restore-drill-001",
+        "drill_kind": "restore-drill"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": true,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "attempted_exit_code": -1,
+      "observed_blocker_code": "M16-S03-PROBE-TARGET-UNAVAILABLE-restore_drill",
+      "observed_blocker_reason": "scratch-drill evidence materialises in T04 -- restore-drill. T03 emits honest NOT_PROVEN to keep role cardinality complete",
+      "verdict": "not_proven",
+      "blocker_codes": [
+        "M16-S03-PROBE-TARGET-UNAVAILABLE-restore_drill"
+      ]
+    },
+    {
+      "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s03-safe-probe.v1.json",
+      "schema_version": "v1",
+      "milestone": "M016-txa3vu",
+      "slice": "S03",
+      "task": "T03",
+      "generated": "2026-07-19T14:56:43.286Z",
+      "probe_id": "M16-S03-PROBE-secret_posture-probe-ea022dda",
+      "role_class": "infrastructure",
+      "role": "secret_posture",
+      "classification": "EXECUTED",
+      "independence_group": "m016-s03-probe-secret-posture",
+      "method": "GET /api/health",
+      "command": "OBSERVE http://127.0.0.1:43131/api/health",
+      "started_at": "2026-07-19T14:56:43.286Z",
+      "finished_at": "2026-07-19T14:56:43.286Z",
+      "duration_ms": 0,
+      "scope": "local-observed-no-mutation",
+      "limitations": [
+        "observation reads only sanitised sidecars in runtime-evidence/",
+        "no HTTP call; no mutation; UUIDs and credentials never persisted",
+        "verifies redaction posture rather than external state"
+      ],
+      "source_identity": {
+        "kind": "observed"
+      },
+      "isolation_invariant": {
+        "read_only_boundary_pass": true,
+        "scratch_target_used": false,
+        "boundary_blocker_code": null
+      },
+      "mutation_audit": {
+        "issues_created": 0,
+        "issues_business_updated": 0,
+        "documents_created": 0,
+        "documents_business_updated": 0,
+        "projects_created": 0,
+        "projects_business_updated": 0,
+        "goals_created": 0,
+        "goals_business_updated": 0,
+        "plugins_created": 0,
+        "plugins_updated": 0,
+        "agents_created": 0,
+        "agents_operational_updated": 0,
+        "business_mutations_recorded": 0
+      },
+      "redaction": {
+        "full_ids": false,
+        "credentials": false,
+        "xiaomi_endpoint_reuse": false,
+        "synthetic_bos": false,
+        "raw_reasoning": false,
+        "raw_body": false,
+        "raw_result_json_result": false,
+        "vendor_reuse_strings": false,
+        "bounded_digests_only": true,
+        "redaction_bounds_loaded": true
+      },
+      "exit_code": 0,
+      "sanitised_digest": "secret_posture:observed:514a88a944bcb91a5b07e484432593a6",
+      "artifact_reference": "runtime-evidence/M016-S02-redaction-contract.json",
+      "artifact_hash": "514a88a944bcb91a5b07e484432593a6f78fe06d66b17d044e5fb4995488e0dc",
+      "verdict": "pass",
+      "blocker_codes": []
+    }
+  ],
+  "raw_state_worksheet": {
+    "step_orchestration": {
+      "weight": 1,
+      "numeric_mapping": {
+        "live_signed": 1,
+        "division_agents_mapped": 0
+      },
+      "observed_status": "pass"
+    },
+    "step_evidence": {
+      "weight": 1,
+      "numeric_mapping": {
+        "sources_sanitised": 5,
+        "s02_unchanged": 1
+      },
+      "observed_status": "pass"
+    },
+    "step_launch": {
+      "weight": 0,
+      "numeric_mapping": {
+        "executed_count": 7,
+        "verdict_frozen": "PREPARATION_ONLY"
+      },
+      "observed_status": "fail_closed"
+    }
+  },
+  "redaction_posture": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false,
+    "raw_reasoning": false,
+    "raw_body": false,
+    "raw_result_json_result": false,
+    "vendor_reuse_strings": false,
+    "bounded_digests_only": true,
+    "redaction_bounds_loaded": true
+  },
+  "embedded_classification": {
+    "evaluator": "S03-safe-operational-evidence-pack-contract",
+    "evaluator_version": "v1",
+    "raw_state": "PARTIAL",
+    "numeric_mapping": {
+      "orchestration": 1,
+      "evidence": 1,
+      "launch": 0
+    },
+    "weight": 0.5714285714285714,
+    "verdicts": {
+      "orchestration": "PASS",
+      "evidence": "PASS",
+      "launch": "PREPARATION_ONLY"
+    },
+    "hard_gates": {
+      "HG1 SEMANTIC_RULE_COMPLIANCE": "pass",
+      "HG2 PROVENANCE_INTEGRITY": "pass",
+      "HG3 RECOVERY_EVIDENCE": "pass",
+      "HG4 FINANCIAL_PROTECTION": "pass",
+      "HG5 SECURITY_POSTURE": "pass",
+      "HG6 COMPLIANCE_POSTURE": "pass",
+      "HG7 READ_ONLY_BOUNDARY": "pass",
+      "HG8 SCRATCH_ISOLATION": "pass"
+    },
+    "worksheet": {
+      "steps": [
+        {
+          "step_id": "s03-collector-sources-loaded",
+          "description": "load allowlisted S03 inputs through pre/post SHA check, realpath containment, no symlink",
+          "verify_cmd": "node scripts/test_collect_m016_s03_safe_operational_evidence.js",
+          "observed_status": "pass",
+          "observed_evidence": "BG1 sources_allowlisted PASS BG2 s02_unchanged PASS"
+        },
+        {
+          "step_id": "s03-collector-records-validated",
+          "description": "replay S03 safe-probe contract over every record; complete role matrix materialised",
+          "verify_cmd": "node scripts/test_m016_s03_safe_probe_contract.js",
+          "observed_status": "pass",
+          "observed_evidence": "BG3 records_schema_valid PASS BG4 role_matrix_complete PASS"
+        },
+        {
+          "step_id": "s03-collector-replay-byte-identical",
+          "description": "dual-run replay produces byte-identical provenance hash and pack bytes",
+          "verify_cmd": "node scripts/test_collect_m016_s03_safe_operational_evidence.js",
+          "observed_status": "pass",
+          "observed_evidence": "BG5 replay_deterministic PASS"
+        },
+        {
+          "step_id": "s03-collector-launch-not-promoted",
+          "description": "embedded launch verdict stays frozen at PREPARATION_ONLY regardless of executed_count",
+          "verify_cmd": "node scripts/test_collect_m016_s03_safe_operational_evidence.js",
+          "observed_status": "pass",
+          "observed_evidence": "BG6 launch_not_promoted PASS"
+        }
+      ],
+      "completed_at": "2026-07-28T03:52:00.463Z",
+      "completed_by": "collector"
+    },
+    "completed_at": "2026-07-28T03:52:00.463Z",
+    "completed_by": "collector"
+  },
+  "replay_keys": {
+    "first_run_provenance_hash": "2f4b0c7dd9c666c91ec7edf1a85fdda4b81d1e5b9c582ec8de62ed5a33dfa030",
+    "second_run_provenance_hash": "2f4b0c7dd9c666c91ec7edf1a85fdda4b81d1e5b9c582ec8de62ed5a33dfa030",
+    "match": true,
+    "byte_identical": true,
+    "verified_at": "2026-07-28T03:52:00.463Z"
+  },
+  "blockers": [],
+  "raw_input_immutability_verified": true
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-producer-protocol.v1.json",
+  "title": "M016 S05 Seven Division Replay Producer Protocol v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "schema_version", "protocol_id", "protocol_kind", "milestone", "slice", "task", "generated", "line_class", "canonical_protocol", "admission_ref", "input_inventory_ref", "probe_run_ref", "bundle_ref", "worksheet_ref", "records_count", "replay_keys", "verdicts", "blockers"],
+  "properties": {
+    "schema_id": {"const": "https://gsd.local/schemas/runtime-evidence/m016-s05-seven-division-replay-producer-protocol.v1.json"},
+    "schema_version": {"const": "v1"},
+    "protocol_id": {"const": "m016-s05-seven-division-replay-producer-protocol-v1"},
+    "protocol_kind": {"const": "seven-division-evidence-replay-producer-protocol"},
+    "milestone": {"const": "M016-txa3vu"},
+    "slice": {"const": "S05"},
+    "task": {"const": "T02"},
+    "generated": {"$ref": "#/definitions/timestamp"},
+    "line_class": {"const": "M16-S05-REPLAY"},
+    "canonical_protocol": {"const": "PROTOCOL-M16-S05-REPLAY-V1"},
+    "admission_ref": {"const": "runtime-evidence/M016-S05-seven-division-replay-admission.json"},
+    "input_inventory_ref": {"const": "runtime-evidence/M016-S05-seven-division-replay-input-inventory.json"},
+    "probe_run_ref": {"const": "runtime-evidence/M016-S05-seven-division-replay-probe-run.json"},
+    "bundle_ref": {"const": "runtime-evidence/M016-S05-seven-division-replay-bundle.json"},
+    "worksheet_ref": {"const": "runtime-evidence/M016-S05-seven-division-replay-scoring-worksheet.json"},
+    "records_count": {"const": 19},
+    "replay_keys": {"$ref": "#/definitions/replayKeys"},
+    "verdicts": {
+      "type": "object", "additionalProperties": false, "required": ["orchestration", "evidence", "launch"],
+      "properties": {"orchestration": {"enum": ["PASS", "PARTIAL", "NOT_PROVEN"]}, "evidence": {"enum": ["PASS", "PARTIAL", "NOT_PROVEN"]}, "launch": {"enum": ["GO_BOUNDED_INTERNAL", "PREPARATION_ONLY", "NO_GO"]}}
+    },
+    "blockers": {"type": "array", "maxItems": 0}
+  },
+  "definitions": {
+    "timestamp": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "replayKeys": {
+      "type": "object", "additionalProperties": false, "required": ["first_run_provenance_hash", "second_run_provenance_hash", "match", "byte_identical", "replay_key", "verified_at"],
+      "properties": {"first_run_provenance_hash": {"$ref": "#/definitions/digest"}, "second_run_provenance_hash": {"$ref": "#/definitions/digest"}, "match": {"const": true}, "byte_identical": {"const": true}, "replay_key": {"$ref": "#/definitions/digest"}, "verified_at": {"$ref": "#/definitions/timestamp"}}
+    }
+  }
+}

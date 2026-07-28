@@ -1,0 +1,83 @@
+{
+  "$schema": "gsd/m016-s01-regression-fixture-v1",
+  "milestone": "M016-txa3vu",
+  "slice": "S01",
+  "task": "T03",
+  "generated": "2026-07-18T23:00:00Z",
+  "purpose": "Frozen regression fixture asserting the historical M015 mission deterministically classifies as orchestration PASS / evidence PARTIAL / launch PREPARATION_ONLY with all six hard gates passing. The fixture is consumed by scripts/validate_m016_s01_proof_classification.js; any divergence exits REGRESSION_MISMATCH (6).",
+  "input_evidence": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+  "schema": "schemas/runtime-evidence/m016-s01-evidence-claim.v1.json",
+  "claims_derivation": {
+    "rationale": "9 EXECUTED claims are derived from the M015 evidence: 7 orchestration claims (one per canonical division with unique independence_group), 1 evidence bridge claim (Div7.MissionControl on mission-documents), 1 launch readiness claim (Div7.MissionControl on heartbeat-runs). All EXECUTED claims carry native_run provenance, sha256 artifact_hash, bounded artifact_reference, and a worksheet; unique independence_groups keep HG3 in pass state.",
+    "claim_ids": [
+      "m015-div1-hco-orchestration",
+      "m015-div2-masterplanner-orchestration",
+      "m015-div3-treasury-orchestration",
+      "m015-div4-production-orchestration",
+      "m015-div5-qualificationslibrarylearning-orchestration",
+      "m015-div6-external-orchestration",
+      "m015-div7-missioncontrol-orchestration",
+      "m015-mission-documents-bridge",
+      "m015-heartbeat-runs-launch"
+    ],
+    "independence_groups": [
+      "div1-hco-orchestration",
+      "div2-master-planner-orchestration",
+      "div3-treasury-orchestration",
+      "div4-production-orchestration",
+      "div5-qualifications-orchestration",
+      "div6-external-orchestration",
+      "div7-mission-control-orchestration",
+      "mission-documents",
+      "heartbeat-runs"
+    ]
+  },
+  "expected_runner_status": "PASS",
+  "expected_runner_exit_code": 0,
+  "expected_classification_count": 9,
+  "expected_semantic_rule_distribution": {
+    "EXECUTED": 9,
+    "OBSERVED": 0,
+    "INFERRED": 0,
+    "PROPOSED": 0,
+    "NOT_PROVEN": 0
+  },
+  "expected_dimension_distribution": {
+    "orchestration": 7,
+    "evidence": 1,
+    "launch": 1
+  },
+  "expected_independence_groups_seen": 9,
+  "expected_gates": {
+    "HG1_SEMANTIC_RULE_COMPLIANCE": "pass",
+    "HG2_PROVENANCE_INTEGRITY": "pass",
+    "HG3_INDEPENDENCE_GROUP_ISOLATION": "pass",
+    "HG4_ARTIFACT_BINDING": "pass",
+    "HG5_WORKSHEET_INTEGRITY": "pass",
+    "HG6_VERDICT_DERIVATION_BOUNDED": "pass"
+  },
+  "expected_verdicts": {
+    "orchestration": "PASS",
+    "evidence": "PARTIAL",
+    "launch": "PREPARATION_ONLY"
+  },
+  "expected_dimension_reasons": {
+    "orchestration": "orchestration: native_run EXECUTED + HG1+HG2+HG3 pass + worksheet present",
+    "evidence": "evidence: only 1 native_run EXECUTED",
+    "launch": "launch: native_readback present but capped at PREPARATION_ONLY by historical evidence rule"
+  },
+  "expected_blockers_count": 0,
+  "expected_blocker_codes": [],
+  "expected_redaction_safe_claims": 9,
+  "expected_redaction_unsafe_claims": 0,
+  "expected_launch_go_attempts": 0,
+  "expected_sanitisation_leaks": 0,
+  "fail_closed_cases": {
+    "missing_provenance": "REJECTED_MALFORMED (exit 1) — HG2 fail_closed",
+    "reused_independence_group_conflicting_hash": "REJECTED_FAIL_CLOSED (exit 2) — HG3 fail_closed",
+    "missing_artifact_hash": "REJECTED_FAIL_CLOSED (exit 2) — HG4 fail_closed",
+    "incomplete_worksheet": "GATE_NOT_PROVEN (exit 5) — HG5 fail_closed",
+    "uuid_or_bearer_in_sanitised_digest": "REJECTED_FAIL_CLOSED (exit 2) — HG6 fail_closed",
+    "launch_go_attempt": "REJECTED_FAIL_CLOSED (exit 2) — HG6 fail_closed"
+  }
+}

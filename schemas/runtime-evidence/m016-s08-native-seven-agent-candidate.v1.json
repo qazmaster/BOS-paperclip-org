@@ -1,0 +1,319 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-candidate.v1.json",
+  "title": "M016 S08 Native Seven Agent Candidate v1",
+  "description": "Sanitised one-to-one candidate graph: admission -> mission -> root/children intake -> runs -> Div1..Div7 -> evidence/criteria. Holds only IDs, identities, statuses, exit codes, timestamps, safe metadata digests, and source refs. Raw bodies, reasoning, credentials, PII and synthetic BOS fields are forbidden.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "candidate_id",
+    "candidate_kind",
+    "milestone",
+    "slice",
+    "task",
+    "generated",
+    "admission_ref",
+    "mission",
+    "intake_root",
+    "intake_children",
+    "agent_runs",
+    "evidence_chain",
+    "correlation_contract",
+    "mutation_ledger",
+    "timing",
+    "terminal_disposition",
+    "redaction_posture",
+    "source_refs",
+    "sanitised",
+    "raw_bodies_persisted",
+    "blockers",
+    "producer_line",
+    "atomic_write"
+  ],
+  "properties": {
+    "schema_id": {"const": "https://gsd.local/schemas/runtime-evidence/m016-s08-native-seven-agent-candidate.v1.json"},
+    "schema_version": {"const": "v1"},
+    "candidate_id": {"type": "string", "pattern": "^(m016-s08-native-seven-agent-candidate-v1|m016-s08-native-seven-agent-candidate-v1-[a-z0-9._-]{1,32})$"},
+    "candidate_kind": {"const": "native-seven-agent-integration-candidate"},
+    "milestone": {"const": "M016-txa3vu"},
+    "slice": {"const": "S08"},
+    "task": {"const": "T02"},
+    "generated": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+    "admission_ref": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-admission\\.json$"},
+    "mission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mission_id", "idempotency_keys", "recovery_keys", "started_at", "replay_key_sha256"],
+      "properties": {
+        "mission_id": {"type": "string", "pattern": "^m016-s08-native-mission-[a-z0-9._-]{2,63}$"},
+        "idempotency_keys": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+        "recovery_keys": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+        "started_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+        "replay_key_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "intake_root": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intake_id", "kind", "disposition", "started_at", "finished_at", "duration_ms", "source_ref", "subject_ref"],
+      "properties": {
+        "intake_id": {"type": "string", "pattern": "^m016-s08-native-intake-root-[a-z0-9._-]{2,63}$"},
+        "kind": {"const": "bounded_root_intake"},
+        "disposition": {"enum": ["SUCCEEDED", "FAILED", "ABANDONED"]},
+        "started_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+        "finished_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+        "duration_ms": {"type": "integer", "minimum": 0, "maximum": 600000},
+        "source_ref": {"type": "string", "pattern": "^runtime-evidence/M0(?:15|16)-(S0[0-9]|native)-[A-Za-z0-9._/-]+\\.json$"},
+        "subject_ref": {"const": "paperclip_native_root_artifact"},
+        "sanitised_digest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "intake_children": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["intake_id", "kind", "disposition", "started_at", "finished_at", "duration_ms", "source_ref"],
+        "properties": {
+          "intake_id": {"type": "string", "pattern": "^m016-s08-native-intake-child-[a-z0-9._-]{2,63}$"},
+          "kind": {"const": "bounded_readback_observer"},
+          "disposition": {"enum": ["SUCCEEDED", "FAILED", "ABANDONED"]},
+          "started_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+          "finished_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+          "duration_ms": {"type": "integer", "minimum": 0, "maximum": 300000},
+          "source_ref": {"type": "string", "pattern": "^runtime-evidence/M0(?:15|16)-(S0[0-9]|native)-[A-Za-z0-9._/-]+\\.json$"},
+          "sanitised_digest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "agent_runs": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["agent_run_id", "division", "role", "agent_label_path", "independence_group", "status", "exit_code", "started_at", "finished_at", "duration_ms", "evidence_id", "criterion_id"],
+        "properties": {
+          "agent_run_id": {"type": "string", "pattern": "^M16-S08-NATIVE-RUN-[A-Za-z0-9._-]+-[A-Fa-f0-9]{8,16}$"},
+          "division": {"type": "string", "pattern": "^Div[1-7]$"},
+          "role": {"type": "string", "pattern": "^Div[1-7]\\.[A-Za-z]+$"},
+          "agent_label_path": {"type": "string", "pattern": "^/BOS/agents/[A-Za-z0-9._-]{2,63}$"},
+          "independence_group": {"type": "string", "minLength": 4, "maxLength": 128},
+          "status": {"enum": ["SUCCEEDED", "FAILED", "ABANDONED"]},
+          "exit_code": {"type": "integer", "minimum": -128, "maximum": 127},
+          "started_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+          "finished_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+          "duration_ms": {"type": "integer", "minimum": 0, "maximum": 300000},
+          "evidence_id": {"type": "string", "pattern": "^m016-s08-native-evidence-[a-z][a-z0-9._-]{2,63}$"},
+          "criterion_id": {"type": "string", "pattern": "^(HG[1-8] [A-Z_]+|SG[1-4] [A-Z_]+)$"},
+          "sanitised_digest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "source_ref": {"type": "string", "pattern": "^runtime-evidence/M0(?:15|16)-(S0[0-9]|native)-[A-Za-z0-9._/-]+\\.json$"}
+        }
+      }
+    },
+    "evidence_chain": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_ref", "kind", "chain_role", "independence_group", "pre_hash_sha256", "post_hash_sha256", "unchanged", "scope", "limitations"],
+        "properties": {
+          "source_ref": {"type": "string", "pattern": "^runtime-evidence/M0(?:15|16)-(S0[0-9]|native)-[A-Za-z0-9._/-]+\\.json$"},
+          "kind": {"type": "string", "minLength": 2, "maxLength": 64},
+          "chain_role": {"type": "string", "minLength": 2, "maxLength": 64},
+          "independence_group": {"type": "string", "minLength": 4, "maxLength": 128},
+          "pre_hash_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "post_hash_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "unchanged": {"type": "boolean"},
+          "scope": {"type": "string", "minLength": 1, "maxLength": 128},
+          "limitations": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"type": "string", "minLength": 1, "maxLength": 256}, "uniqueItems": true}
+        }
+      }
+    },
+    "correlation_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent_run_id", "probe_to_criterion", "agent_run_to_probe", "evidence_to_criterion"],
+      "properties": {
+        "agent_run_id": {"type": "string", "pattern": "^M16-S08-NATIVE-RUN-[A-Za-z0-9._-]+-[A-Fa-f0-9]{8,16}$"},
+        "probe_to_criterion": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["probe_id", "agent_run_id", "evidence_id", "criterion_id", "division", "independence_group"],
+            "properties": {
+              "probe_id": {"type": "string", "pattern": "^M16-S08-NATIVE-PROBE-[A-Za-z0-9._-]+$"},
+              "agent_run_id": {"type": "string", "pattern": "^M16-S08-NATIVE-RUN-[A-Za-z0-9._-]+-[A-Fa-f0-9]{8,16}$"},
+              "evidence_id": {"type": "string", "pattern": "^m016-s08-native-evidence-[a-z][a-z0-9._-]{2,63}$"},
+              "criterion_id": {"type": "string", "pattern": "^(HG[1-8] [A-Z_]+|SG[1-4] [A-Z_]+)$"},
+              "division": {"type": "string", "pattern": "^Div[1-7]$"},
+              "independence_group": {"type": "string", "minLength": 4, "maxLength": 128},
+              "weight": {"type": "integer", "enum": [0, 1]}
+            }
+          }
+        },
+        "agent_run_to_probe": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["agent_run_id", "probe_id", "started_at", "finished_at", "duration_ms", "exit_code"],
+            "properties": {
+              "agent_run_id": {"type": "string", "pattern": "^M16-S08-NATIVE-RUN-[A-Za-z0-9._-]+-[A-Fa-f0-9]{8,16}$"},
+              "probe_id": {"type": "string", "pattern": "^M16-S08-NATIVE-PROBE-[A-Za-z0-9._-]+$"},
+              "started_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+              "finished_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"},
+              "duration_ms": {"type": "integer", "minimum": 0, "maximum": 300000},
+              "exit_code": {"type": "integer", "minimum": -128, "maximum": 127}
+            }
+          }
+        },
+        "evidence_to_criterion": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["evidence_id", "criterion_id", "division", "raw_state", "numeric_mapping"],
+            "properties": {
+              "evidence_id": {"type": "string", "pattern": "^m016-s08-native-evidence-[a-z][a-z0-9._-]{2,63}$"},
+              "criterion_id": {"type": "string", "pattern": "^(HG[1-8] [A-Z_]+|SG[1-4] [A-Z_]+)$"},
+              "division": {"type": "string", "pattern": "^Div[1-7]$"},
+              "raw_state": {"enum": ["SUCCEEDED", "FAILED", "ABANDONED"]},
+              "numeric_mapping": {"type": "integer", "enum": [0, 1]}
+            }
+          }
+        }
+      }
+    },
+    "mutation_ledger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_mutation_count", "observed_mutation_count", "unexpected_mutation_count", "expected_mutations", "observed_mutations", "unexpected_mutations"],
+      "properties": {
+        "expected_mutation_count": {"const": 1},
+        "observed_mutation_count": {"const": 1},
+        "unexpected_mutation_count": {"type": "integer", "minimum": 0, "maximum": 64},
+        "expected_mutations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "subject_ref", "mutation_index_sha256"],
+            "properties": {
+              "kind": {"const": "bounded_root_intake"},
+              "subject_ref": {"const": "paperclip_native_root_artifact"},
+              "mutation_index_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+            }
+          }
+        },
+        "observed_mutations": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "subject_ref", "mutation_index_sha256", "phase"],
+            "properties": {
+              "kind": {"type": "string", "minLength": 2, "maxLength": 64},
+              "subject_ref": {"type": "string", "minLength": 2, "maxLength": 128},
+              "mutation_index_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+              "phase": {"enum": ["preflight", "admission", "intake", "readback", "closure"]}
+            }
+          }
+        },
+        "unexpected_mutations": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 0,
+          "items": {"type": "object"}
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bounded_duration_ms", "preflight_ms", "admission_ms", "intake_ms", "readback_ms", "closure_ms", "polling_cadence_ms", "poll_count"],
+      "properties": {
+        "bounded_duration_ms": {"type": "integer", "minimum": 0, "maximum": 600000},
+        "preflight_ms": {"type": "integer", "minimum": 0, "maximum": 60000},
+        "admission_ms": {"type": "integer", "minimum": 0, "maximum": 30000},
+        "intake_ms": {"type": "integer", "minimum": 0, "maximum": 120000},
+        "readback_ms": {"type": "integer", "minimum": 0, "maximum": 300000},
+        "closure_ms": {"type": "integer", "minimum": 0, "maximum": 60000},
+        "polling_cadence_ms": {"type": "integer", "minimum": 100, "maximum": 5000},
+        "poll_count": {"type": "integer", "minimum": 0, "maximum": 600}
+      }
+    },
+    "terminal_disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root_intake_disposition", "agent_run_dispositions"],
+      "properties": {
+        "root_intake_disposition": {"enum": ["SUCCEEDED", "FAILED", "ABANDONED"]},
+        "agent_run_dispositions": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": {"enum": ["SUCCEEDED", "FAILED", "ABANDONED"]}
+        }
+      }
+    },
+    "redaction_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bounded_digests_only", "raw_bodies_persisted", "redaction_bounds_loaded", "synthetic_bos_detected", "vendor_reuse_strings", "external_messages"],
+      "properties": {
+        "bounded_digests_only": {"const": true},
+        "raw_bodies_persisted": {"const": false},
+        "redaction_bounds_loaded": {"const": true},
+        "synthetic_bos_detected": {"const": false},
+        "vendor_reuse_strings": {"const": false},
+        "external_messages": {"const": false}
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^runtime-evidence/M0(?:15|16)-(S0[0-9]|native)-[A-Za-z0-9._/-]+\\.json$"}
+    },
+    "sanitised": {"const": true},
+    "raw_bodies_persisted": {"const": false},
+    "blockers": {
+      "type": "array",
+      "maxItems": 0,
+      "items": {"type": "object"}
+    },
+    "producer_line": {"const": "M16-S08-NATIVE"},
+    "atomic_write": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "verified"],
+      "properties": {
+        "strategy": {"const": "rename_temp_into_place"},
+        "verified": {"const": true},
+        "temp_relpath": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-candidate\\.json\\.tmp-[a-z0-9._-]{1,32}$"},
+        "final_relpath": {"type": "string", "pattern": "^runtime-evidence/M016-S08-native-seven-agent-candidate\\.json$"}
+      }
+    }
+  }
+}

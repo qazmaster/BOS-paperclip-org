@@ -1,0 +1,359 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gsd.local/schemas/runtime-evidence/m016-s01-evidence-claim.v1.json",
+  "title": "M016-S01 Evidence Claim v1",
+  "description": "Machine-readable schema for fail-closed evidence claims used by the M016-S01 historical M015 proof classifier. Each claim declares a semantic rule (OBSERVED/EXECUTED/INFERRED/PROPOSED/NOT_PROVEN), maps to one of three verdict dimensions (orchestration/evidence/launch), and binds to a unique independence group. EXECUTED claims additionally carry provenance, identity, timestamps, exit code, sanitised digest, and an artifact reference with hash so the classifier cannot be tricked into treating unverified text as execution. Worksheet steps are required before any score can be derived, and bounded diagnostics enforce redaction of UUIDs, bearer tokens, and credential assignments.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_id",
+    "semantic_rule",
+    "verdict_dimension",
+    "independence_group",
+    "scope",
+    "limitations",
+    "source_ref",
+    "gate_status"
+  ],
+  "properties": {
+    "claim_id": {
+      "type": "string",
+      "description": "Stable, unique within the mission. Lowercase kebab-case. MUST be human-readable so diagnostics remain traceable.",
+      "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "semantic_rule": {
+      "type": "string",
+      "description": "Frozen semantic rule. EXECUTED is the only rule that can promote a claim to evidence; OBSERVED may promote orchestration only; INFERRED/PROPOSED/NOT_PROVEN never promote.",
+      "enum": ["OBSERVED", "EXECUTED", "INFERRED", "PROPOSED", "NOT_PROVEN"]
+    },
+    "verdict_dimension": {
+      "type": "string",
+      "description": "One of three independent verdict dimensions. The classifier emits a verdict per dimension; an orchestration PASS MUST NOT be reinterpreted as a launch GO.",
+      "enum": ["orchestration", "evidence", "launch"]
+    },
+    "independence_group": {
+      "type": "string",
+      "description": "Identifier of the independence group the claim belongs to. No two EXECUTED claims may share an independence_group unless they reference the same artifact_hash; the classifier rejects reuse as a fail-closed error.",
+      "pattern": "^[a-z][a-z0-9._-]{2,63}$",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "scope": {
+      "type": "string",
+      "description": "What the claim covers. Sanitised plain text. Bounded to 200 characters.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "limitations": {
+      "type": "string",
+      "description": "Explicit limitations of the claim. MUST be non-empty so the classifier cannot promote a claim without acknowledging what it does NOT cover.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400
+    },
+    "source_ref": {
+      "description": "Pointer to the upstream artifact the claim was derived from. Use either a bounded relative path or a structured { kind, path } envelope.",
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^(runtime-evidence|schemas|scripts)/[A-Za-z0-9._/\\-]+$",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "path"],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": ["mission_evidence", "agent_run", "issue_event", "document", "comment", "classifier_input"]
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^(runtime-evidence|schemas|scripts)/[A-Za-z0-9._/\\-]+$",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          }
+        }
+      ]
+    },
+    "gate_status": {
+      "type": "string",
+      "description": "Per-claim outcome of the hard-gate evaluation. NOT_PROVEN is the only fail-closed status; PASS is reserved for claims whose evidence is complete and independent.",
+      "enum": ["PASS", "NOT_PROVEN", "FAIL_CLOSED"]
+    },
+    "executed_provenance": {
+      "type": "object",
+      "description": "Required when semantic_rule is EXECUTED. Describes provenance, identity, timestamps, exit code, sanitised digest, artifact reference and hash, scope and limitations. Any missing field forces gate_status to NOT_PROVEN.",
+      "additionalProperties": false,
+      "required": [
+        "provenance_kind",
+        "identity",
+        "started_at",
+        "ended_at",
+        "exit_code",
+        "sanitised_digest",
+        "artifact_reference",
+        "artifact_hash",
+        "scope",
+        "limitations"
+      ],
+      "properties": {
+        "provenance_kind": {
+          "type": "string",
+          "description": "How the execution was witnessed. native_run is the only kind that can fully promote; agent_log, harness_log and replay are demoted to PARTIAL/INFERRED.",
+          "enum": ["native_run", "agent_log", "harness_log", "replay"]
+        },
+        "identity": {
+          "description": "Identity of the executor. Either an agent name (canonical division) or a runner id; oneOf forbids mixing the two shapes.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["agent_name"],
+              "properties": {
+                "agent_name": {
+                  "type": "string",
+                  "enum": [
+                    "Div1.HCO",
+                    "Div2.MasterPlanner",
+                    "Div3.Treasury",
+                    "Div4.Production",
+                    "Div5.QualificationsLibraryLearning",
+                    "Div6.External",
+                    "Div7.MissionControl"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["runner_id"],
+              "properties": {
+                "runner_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9._-]{2,63}$"
+                }
+              }
+            }
+          ]
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp of execution start. MUST be a parseable UTC date-time."
+        },
+        "ended_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp of execution end. MUST be parseable and >= started_at."
+        },
+        "exit_code": {
+          "type": "integer",
+          "description": "Process exit code. 0 indicates success; any non-zero value demotes the claim to PARTIAL or NOT_PROVEN.",
+          "minimum": -1,
+          "maximum": 255
+        },
+        "sanitised_digest": {
+          "type": "string",
+          "description": "Bounded, redacted digest of the execution output. MUST NOT contain raw UUIDs, bearer tokens, or credential assignments. Bounded to 256 chars.",
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+        },
+        "artifact_reference": {
+          "type": "string",
+          "description": "Bounded relative path to the artifact that the digest was derived from. MUST be inside runtime-evidence/ or scripts/.",
+          "pattern": "^(runtime-evidence|scripts)/[A-Za-z0-9._/\\-]+$",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "artifact_hash": {
+          "type": "string",
+          "description": "Hex-encoded hash of the artifact contents (e.g. sha256). Lowercase hex; bound to 64 chars (sha256) or 128 chars (sha512).",
+          "pattern": "^[a-f0-9]{64}$|^[a-f0-9]{128}$"
+        },
+        "scope": {
+          "type": "string",
+          "description": "What the execution covered. Sanitised plain text.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "limitations": {
+          "type": "string",
+          "description": "Explicit limitations acknowledged by the executor.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        }
+      }
+    },
+    "observed_refs": {
+      "type": "array",
+      "description": "Bounded list of cross-references for OBSERVED claims. Each ref is a relative path or a structured kind/path pair.",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "pattern": "^(runtime-evidence|schemas|scripts)/[A-Za-z0-9._/\\-]+$",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "path"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["mission_evidence", "agent_run", "issue_event", "document", "comment"]
+              },
+              "path": {
+                "type": "string",
+                "pattern": "^(runtime-evidence|schemas|scripts)/[A-Za-z0-9._/\\-]+$",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            }
+          }
+        ]
+      },
+      "maxItems": 16
+    },
+    "worksheet": {
+      "type": "object",
+      "description": "Worksheet the classifier consumes before any score can be derived. Required when the classifier is asked to score this claim. Each step records what was checked and the observed outcome. Missing required fields force the worksheet to incomplete.",
+      "additionalProperties": false,
+      "required": [
+        "steps",
+        "completed_at",
+        "completed_by"
+      ],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["step_id", "description", "verify_cmd", "observed_status"],
+            "properties": {
+              "step_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9._-]{2,63}$",
+                "minLength": 3,
+                "maxLength": 64
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "verify_cmd": {
+                "type": "string",
+                "description": "Sanitised, bounded verification command. MUST NOT contain bearer tokens, raw UUIDs, or credential assignments. Bounded to 200 chars.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+              },
+              "observed_status": {
+                "type": "string",
+                "enum": ["pass", "warn", "fail", "not_proven"]
+              },
+              "observed_evidence": {
+                "type": "string",
+                "description": "Bounded redacted observation. MUST NOT contain raw UUIDs, bearer tokens, or credential assignments. Bounded to 200 chars.",
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]*$"
+              }
+            }
+          }
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_by": {
+          "type": "string",
+          "description": "Who completed the worksheet. Either a canonical division name or the literal 'classifier' for self-attested worksheet completion.",
+          "type": "string",
+          "pattern": "^(Div[1-7]\\.[A-Za-z]+|classifier)$"
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "description": "Bounded, sanitised diagnostic for the claim. MUST NOT contain raw UUIDs, bearer tokens, or credential assignments. Used only for offline review.",
+      "additionalProperties": false,
+      "required": ["summary", "redaction_applied"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9 .:;,_<>/\\-]+$"
+        },
+        "redaction_applied": {
+          "type": "boolean",
+          "description": "Whether sanitisation was applied to summary. Classifier MUST set this to true; setting false is allowed only when no payload fields could carry UUIDs/tokens."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "EXECUTED claims MUST carry the executed_provenance block.",
+      "if": {
+        "properties": {
+          "semantic_rule": { "const": "EXECUTED" }
+        },
+        "required": ["semantic_rule"]
+      },
+      "then": {
+        "required": ["executed_provenance"]
+      }
+    },
+    {
+      "description": "Non-EXECUTED claims MUST NOT carry executed_provenance (fail-closed against fake execution).",
+      "if": {
+        "properties": {
+          "semantic_rule": { "enum": ["OBSERVED", "INFERRED", "PROPOSED", "NOT_PROVEN"] }
+        },
+        "required": ["semantic_rule"]
+      },
+      "then": {
+        "not": {
+          "required": ["executed_provenance"]
+        }
+      }
+    },
+    {
+      "description": "Launch dimension claims with EXECUTED semantic_rule require the artifact_hash to be present so the classifier can validate artifact binding.",
+      "if": {
+        "properties": {
+          "verdict_dimension": { "const": "launch" },
+          "semantic_rule": { "const": "EXECUTED" }
+        },
+        "required": ["verdict_dimension", "semantic_rule"]
+      },
+      "then": {
+        "properties": {
+          "executed_provenance": {
+            "required": ["artifact_hash", "artifact_reference"]
+          }
+        }
+      }
+    }
+  ]
+}

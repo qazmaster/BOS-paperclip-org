@@ -1,0 +1,129 @@
+{
+  "schema_id": "https://gsd.local/schemas/runtime-evidence/m016-s07-replay-cleanup-proof.v1.json",
+  "schema_version": "v1",
+  "proof_id": "m016-s07-replay-cleanup-proof-v1",
+  "proof_kind": "replay-cleanup-proof",
+  "milestone": "M016-txa3vu",
+  "slice": "S07",
+  "task": "T01",
+  "generated": "2026-07-28T04:25:04.000Z",
+  "reference_time": "2026-07-21T12:00:00.000Z",
+  "verifier_line": "M16-S07-CLEANUP",
+  "canonical_protocol": "PROTOCOL-M16-S07-REPLAY-CLEANUP-V1",
+  "canonical_verdict_line": "M016_S07_REPLAY_CLEANUP=PASS|FAIL",
+  "canonical_verdict_line_status": "PASS",
+  "bounded_exit_code": 0,
+  "inputs": {
+    "s01_schema": "schemas/runtime-evidence/m016-s01-evidence-claim.v1.json",
+    "s01_fixture": "runtime-evidence/M016-S01-m015-regression-fixture.json",
+    "s01_protocol": "runtime-evidence/M016-S01-classification-protocol.json",
+    "s01_validation": "runtime-evidence/M016-S01-classification-validation.json",
+    "s01_verification": "runtime-evidence/M016-S01-classification-verification.json",
+    "m015_baseline": "runtime-evidence/M015-native-seven-division-mission-20260717.json",
+    "s01_classifier_cli": "scripts/validate_m016_s01_proof_classification.js"
+  },
+  "source_hashes": {
+    "schemas/runtime-evidence/m016-s01-evidence-claim.v1.json": "d82a49fea3e8cccd84ba833663d79d1c759ceab5ff20a47b356576eaaf81427e",
+    "runtime-evidence/M016-S01-m015-regression-fixture.json": "6d8b550e76c0cb5556175927ac341fa5d3387c71f2ff5a9c10348c595625dcf1",
+    "runtime-evidence/M016-S01-classification-protocol.json": "77b75fe2451234f17f0dfbd1cbc4d45788a6cbc5cfd188c126f25ca84e466139",
+    "runtime-evidence/M016-S01-classification-validation.json": "08b1fda4856a92d0ee9f36f1d3f90387270911f1c2b3207ea3f80a6e507ea7ff",
+    "runtime-evidence/M016-S01-classification-verification.json": "656e3aab945583ab8ebf96c1ebc641aebd916d46e5fc673326067924cb03ea92",
+    "runtime-evidence/M015-native-seven-division-mission-20260717.json": "19b80c983d56600eb190b2362c702cedaf455060fe842662f8641d531a69f166"
+  },
+  "cleanup_marker": {
+    "relpath": "runtime-evidence/.m016-s07-replay-scratch/.m016-s07-replay-marker",
+    "contents": "M16-S07-CLEANUP-MARKER",
+    "sha256": "435229bffa0103a85d974f7d330a7cabdf57dfa05eec75976cd53e617c452cc1"
+  },
+  "scratch_root_relpath": "runtime-evidence/.m016-s07-replay-scratch",
+  "replay_subprocess_invocations": 1,
+  "cleanup_trace": [
+    {
+      "phase": "pre_run",
+      "action": "marker_missing",
+      "target_relpath": "runtime-evidence/.m016-s07-replay-scratch",
+      "outcome": "success",
+      "reason": "pre-run scratch root absent; no leftover residue from prior run"
+    },
+    {
+      "phase": "replay",
+      "action": "subprocess_invoked",
+      "target_relpath": "scripts/validate_m016_s01_proof_classification.js",
+      "outcome": "success",
+      "reason": "exactly one allowlisted node subprocess replay invocation"
+    },
+    {
+      "phase": "post_run",
+      "action": "marker_validated",
+      "target_relpath": "runtime-evidence/.m016-s07-replay-scratch/.m016-s07-replay-marker",
+      "outcome": "success",
+      "reason": "marker contents match frozen value"
+    },
+    {
+      "phase": "post_run",
+      "action": "removed",
+      "target_relpath": "runtime-evidence/.m016-s07-replay-scratch",
+      "outcome": "success",
+      "reason": "scratch root removed after replay"
+    },
+    {
+      "phase": "post_run",
+      "action": "post_run_absent",
+      "target_relpath": "runtime-evidence/.m016-s07-replay-scratch",
+      "outcome": "success",
+      "reason": "post-run absence check confirmed"
+    }
+  ],
+  "pre_run_absence_check": {
+    "relpath": "runtime-evidence/.m016-s07-replay-scratch",
+    "present_before": false,
+    "present_after": false
+  },
+  "post_run_absence_check": {
+    "relpath": "runtime-evidence/.m016-s07-replay-scratch",
+    "present_before": true,
+    "present_after": false
+  },
+  "atomic_temp_cleanup_check": {
+    "relpath": "runtime-evidence/.m016-s07-replay-scratch/.tmp-fallback",
+    "removed": true
+  },
+  "canonical_sidecar_overwrite_refusal": {
+    "attempted": false,
+    "refused": true
+  },
+  "canonical_output_overwrite_refusal": {
+    "attempted": false,
+    "refused": true
+  },
+  "verdict_triple": {
+    "orchestration": "PASS",
+    "evidence": "PARTIAL",
+    "launch": "PREPARATION_ONLY"
+  },
+  "semantic_digest": "f341c1bbeccda1dda8c21326090ad55a44e89a4ffa41ea368c43733af2482b00",
+  "reproducibility_count": 1,
+  "limits": {
+    "max_cleanup_trace_rows": 16,
+    "max_blocker_codes": 96,
+    "max_blocker_reason_chars": 512,
+    "max_replay_subprocess_invocations": 1,
+    "max_source_refs": 8,
+    "max_reproducibility_runs": 4
+  },
+  "raw_bodies_persisted": false,
+  "redaction_posture": {
+    "full_ids": false,
+    "credentials": false,
+    "xiaomi_endpoint_reuse": false,
+    "synthetic_bos": false,
+    "raw_reasoning": false,
+    "raw_body": false,
+    "raw_result_json_result": false,
+    "vendor_reuse_strings": false,
+    "bounded_digests_only": true,
+    "redaction_bounds_loaded": true
+  },
+  "blockers": [],
+  "byte_digest": "ba34690e75fc2a93306073c587d14d96f8b0d37b8cd5bf95da6638196cce6516"
+}
